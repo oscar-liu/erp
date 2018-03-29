@@ -3,6 +3,9 @@ package com.len.base;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import com.len.util.Md5Util;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +30,7 @@ public class CurrentUser implements Serializable {
 
     private Integer age;
 
-    private String email;
+    private String email; 
 
     private String photo;
 

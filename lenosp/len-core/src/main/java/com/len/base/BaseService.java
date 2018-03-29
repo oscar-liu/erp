@@ -29,20 +29,6 @@ public interface BaseService <T,E extends Serializable>{
 	  public String show(T t, int page, int limit);
 	  
 	  /**
-	   * 插入
-	   * @param record 实体类
-	   * @return
-	   */
-	  int insert(T record);
-
-	  /**
-	   *插入非空字段
-	   * @param record
-	   * @return
-	   */
-	  int insertSelective(T record);
-	  
-	  /**
 	   * 更新非空数据
 	   * @param record
 	   * @return
@@ -55,6 +41,20 @@ public interface BaseService <T,E extends Serializable>{
 	   * @return
 	   */
 	  int updateByPrimaryKey(T record);
+	  
+	  /**
+	   * 插入
+	   * @param record 实体类
+	   * @return
+	   */
+	  int insert(T record);
+
+	  /**
+	   *插入非空字段
+	   * @param record
+	   * @return
+	   */
+	  int insertSelective(T record);
 	  
 	  /**
 	   * 根据id删除

@@ -10,10 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.hibernate.validator.internal.util.logging.Log_.logger;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+
+import com.sun.media.jfxmedia.logging.Logger;
 
 /**
  * 控制器基类
@@ -33,7 +36,7 @@ public abstract class BaseController<T> {
 
   @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
   public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
-    if (isAjaxRequest(request)){
+  /*  if (isAjaxRequest(request)){
         Map<String,Object> map = new HashMap<>();
         map.put("code", "-998");
         map.put("message", "无权限");
@@ -46,7 +49,18 @@ public abstract class BaseController<T> {
         e.printStackTrace();
       }
       return "redirect:/error/403?message="+message;
-    }
+    }*/
+	  
+	  if (!isAjaxRequest(request)){
+		  String message="权限不足";
+		  try {
+			message = URLEncoder.encode(message,"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	      return "redirect:/error/403?message="+message;
+	    }
+	  return null;
   }
   
   /**

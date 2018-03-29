@@ -95,7 +95,7 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
    * @param flag
    * @return
    */
-  private T  addValue(T record,boolean flag){
+  protected T  addValue(T record,boolean flag){
     CurrentUser currentUser= (CurrentUser) SecurityUtils.getSubject().getSession().getAttribute("curentUser");
     //统一处理公共字段
     Class<?> clazz=record.getClass();

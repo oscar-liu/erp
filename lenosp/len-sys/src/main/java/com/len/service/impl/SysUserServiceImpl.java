@@ -41,7 +41,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   @Autowired
   RoleUserService roleUserService;
   @Override
-  public BaseMapper<SysUser, String> getMappser() {
+  public BaseMapper<SysUser, String> getMapper() {
     return sysUserMapper;
   }
 

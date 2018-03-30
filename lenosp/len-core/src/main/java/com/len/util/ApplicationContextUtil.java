@@ -5,13 +5,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * @author zhuxiaomeng
- * @date 2018/1/5.
- * @email 154040976@qq.com
+ * 应用上下文配置
+ * @author chencong
+ * 2018年3月30日 下午7:52:35
  */
 public class ApplicationContextUtil implements ApplicationContextAware {
 
   private static ApplicationContext applicationContext;
+  
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     ApplicationContextUtil.applicationContext=applicationContext;

@@ -26,7 +26,7 @@ public interface BaseService <T,E extends Serializable>{
 	   */
 	  List<T> selectListByPage(T record);
 	  
-	  public String show(T t, int page, int limit);
+	  /*public String show(T t, int page, int limit);*/
 	  
 	  /**
 	   * 更新非空数据

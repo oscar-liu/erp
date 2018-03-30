@@ -1,9 +1,9 @@
 package com.len.exception;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/15.
- * @email 154040976@qq.com
+ * 运行时异常
+ * @author chencong
+ * 2018年3月30日 下午4:52:23
  */
 public class MyException extends RuntimeException {
 

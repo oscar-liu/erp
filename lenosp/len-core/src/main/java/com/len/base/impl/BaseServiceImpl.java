@@ -1,13 +1,13 @@
 package com.len.base.impl;
 
-import com.alibaba.fastjson.JSON;
+/*import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageHelper;*/
 import com.len.base.BaseMapper;
 import com.len.base.BaseService;
 import com.len.base.CurrentUser;
-import com.len.exception.MyException;
-import com.len.util.ReType;
+/*import com.len.exception.MyException;
+import com.len.util.ReType;*/
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Date;
@@ -35,8 +35,8 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
   }
   
   @Override
-  public List<T> selectListByPage(T record){
-      return getMapper().selectListByPage(record);
+  public List<T> selectListByPage(T model){
+      return getMapper().selectListByPage(model);
   }
   
   /**
@@ -46,7 +46,7 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
    * @param limit 行
    * @return
    */
-  @Override
+ /* @Override
   public String  show(T t,int page,int limit){
     List<T> tList=null;
     Page<T> tPage= PageHelper.startPage(page,limit);
@@ -58,30 +58,30 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
     }
     ReType reType=new ReType(tPage.getTotal(),tList);
     return JSON.toJSONString(reType);
-  }
+  }*/
   
   @Override
-  public int insert(T record) {
-    record=addValue(record,true);
-    return getMapper().insert(record);
+  public int insert(T model) {
+	model=addValue(model,true);
+    return getMapper().insert(model);
   }
 
   @Override
-  public int insertSelective(T record) {
-    record=addValue(record,true);
-    return getMapper().insertSelective(record);
+  public int insertSelective(T model) {
+    model=addValue(model,true);
+    return getMapper().insertSelective(model);
   }
   
   @Override
-  public int updateByPrimaryKeySelective(T record) {
-    record=addValue(record,false);
-    return getMapper().updateByPrimaryKeySelective(record);
+  public int updateByPrimaryKeySelective(T model) {
+    model=addValue(model,false);
+    return getMapper().updateByPrimaryKeySelective(model);
   }
   
   @Override
-  public int updateByPrimaryKey(T record) {
-    record=addValue(record,false);
-    return getMapper().updateByPrimaryKey(record);
+  public int updateByPrimaryKey(T model) {
+    model=addValue(model,false);
+    return getMapper().updateByPrimaryKey(model);
   }
 
   @Override
@@ -90,37 +90,37 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
   }
   
   /**
-   * 通用注入创建 更新信息 可通过super调用
-   * @param record
-   * @param flag
-   * @return
+   * 公共字段注入创建更新实体信息 可通过super调用
+   * @param model 实体类
+   * @param flag true添加  false更新
+   * @return 更新后的实体类
    */
-  protected T  addValue(T record,boolean flag){
+  protected T  addValue(T model,boolean flag){
     CurrentUser currentUser= (CurrentUser) SecurityUtils.getSubject().getSession().getAttribute("curentUser");
     //统一处理公共字段
-    Class<?> clazz=record.getClass();
+    Class<?> clazz=model.getClass();
     try {
       if(flag){
         Field field=clazz.getDeclaredField("createBy");
         field.setAccessible(true);
-        field.set(record,currentUser.getId());
+        field.set(model,currentUser.getId());
         Field fieldDate=clazz.getDeclaredField("createDate");
         fieldDate.setAccessible(true);
-        fieldDate.set(record,new Date());
+        fieldDate.set(model,new Date());
       }else{
         Field field=clazz.getDeclaredField("updateBy");
         field.setAccessible(true);
-        field.set(record,currentUser.getId());
+        field.set(model,currentUser.getId());
         Field fieldDate=clazz.getDeclaredField("updateDate");
         fieldDate.setAccessible(true);
-        fieldDate.set(record,new Date());
+        fieldDate.set(model,new Date());
       }
     } catch (NoSuchFieldException e) {
-      //无此字段
+    	logger.error("公共字段注入创建更新实体信息报错："+e.getMessage());
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+    	logger.error("公共字段注入创建更新实体信息报错："+e.getMessage());
     }
-    return record;
+    return model;
   }
 
 }

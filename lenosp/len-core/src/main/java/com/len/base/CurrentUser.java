@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.len.util.Md5Util;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

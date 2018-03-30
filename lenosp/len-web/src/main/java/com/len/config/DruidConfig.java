@@ -3,29 +3,23 @@ package com.len.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
-import com.alibaba.druid.support.spring.stat.DruidStatInterceptor;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import javax.sql.DataSource;
-import org.springframework.aop.support.JdkRegexpMethodPointcut;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 /**
- * @author zhuxiaomeng
- * @date 2018/1/2.
- * @email 154040976@qq.com
+ * Druid数据源配置
+ * @author chencong
+ * 2018年3月30日 下午8:04:17
  */
 @Configuration
 @EnableTransactionManagement
@@ -33,16 +27,22 @@ public class DruidConfig {
 
   @Value("${spring.datasource.url}")
   private String url;
+  
   @Value("${spring.datasource.username}")
   private String username;
+  
   @Value("${spring.datasource.password}")
   private String password;
+  
   @Value("${spring.datasource.filters}")
   private String filters;
+  
   @Value("${spring.datasource.driver-class-name}")
   private String driverClassName;
+  
   @Value("${spring.datasource.initialSize}")
   private int initialSize;
+  
   @Value("${spring.datasource.minIdle}")
   private int minIdle;
 
@@ -50,7 +50,6 @@ public class DruidConfig {
   @Primary
   public DataSource getDataSource(){
     DruidDataSource datasource = new DruidDataSource();
-
     datasource.setUrl(url);
     datasource.setUsername(username);
     datasource.setPassword(password);
@@ -74,7 +73,6 @@ public class DruidConfig {
     DelegatingFilterProxy proxy = new DelegatingFilterProxy();
     proxy.setTargetFilterLifecycle(true);
     proxy.setTargetBeanName("shiroFilter");
-
     filterRegistrationBean.setFilter(proxy);
     return filterRegistrationBean;
   }
@@ -90,19 +88,5 @@ public class DruidConfig {
     servletRegistrationBean.setInitParameters(initParameters);
     return servletRegistrationBean;
   }
-/*
-  @Bean
-  public DruidStatInterceptor getDruidStatInterceptor(){
-    return new DruidStatInterceptor();
-  }
-
-  @Bean
-  @Scope("prototype")
-  public JdkRegexpMethodPointcut getJdkRegexpMethodPointcut(){
-    JdkRegexpMethodPointcut pointcut=new JdkRegexpMethodPointcut();
-    String[] str={"com.len.service.*","com.len.mapper.*"};
-    pointcut.setPatterns(str);
-    return pointcut;
-  }*/
-
+  
 }

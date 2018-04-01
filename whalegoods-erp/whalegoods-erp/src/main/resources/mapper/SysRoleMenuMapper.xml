@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.len.mapper.SysRoleMenuMapper">
-  <resultMap id="BaseResultMap" type="com.len.entity.SysRoleMenu">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysRoleMenu">
     <id column="role_id" jdbcType="VARCHAR" property="roleId" />
     <id column="menu_id" jdbcType="VARCHAR" property="menuId" />
   </resultMap>
@@ -10,17 +10,17 @@
     role_id, menu_id
   </sql>
 
-  <delete id="deleteByPrimaryKey" parameterType="com.len.entity.SysRoleMenu">
+  <delete id="deleteByPrimaryKey" parameterType="com.whalegoods.entity.SysRoleMenu">
     delete from sys_role_menu
     where role_id = #{roleId,jdbcType=VARCHAR}
       and menu_id = #{menuId,jdbcType=VARCHAR}
   </delete>
 
-  <insert id="insert" parameterType="com.len.entity.SysRoleMenu">
+  <insert id="insert" parameterType="com.whalegoods.entity.SysRoleMenu">
     insert into sys_role_menu (role_id, menu_id)
     values (#{roleId,jdbcType=VARCHAR}, #{menuId,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.len.entity.SysRoleMenu">
+  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysRoleMenu">
     insert into sys_role_menu
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="roleId != null">
@@ -39,7 +39,7 @@
       </if>
     </trim>
   </insert>
-  <select id="selectByCondition" parameterType="com.len.entity.SysRoleMenu" resultMap="BaseResultMap">
+  <select id="selectByCondition" parameterType="com.whalegoods.entity.SysRoleMenu" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from sys_role_menu
@@ -49,7 +49,7 @@
     </where>
   </select>
 
-  <select id="selectCountByCondition" parameterType="com.len.entity.SysRoleMenu" resultType="java.lang.Integer">
+  <select id="selectCountByCondition" parameterType="com.whalegoods.entity.SysRoleMenu" resultType="java.lang.Integer">
     select
     count(*)
     from sys_role_menu

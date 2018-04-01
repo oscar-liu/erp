@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.len.mapper.SysRoleMapper">
-  <resultMap id="BaseResultMap" type="com.len.entity.SysRole">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysRole">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -23,7 +23,7 @@
     delete from sys_role
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.len.entity.SysRole">
+  <insert id="insert" parameterType="com.whalegoods.entity.SysRole">
     insert into sys_role (id, role_name, remark, create_by,
       create_date, update_by, update_date
       )
@@ -31,7 +31,7 @@
       #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.len.entity.SysRole">
+  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysRole">
     <selectKey resultType="String" keyProperty="id" order="BEFORE">
       select replace(uuid(),"-","") from dual
     </selectKey>
@@ -83,7 +83,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.len.entity.SysRole">
+  <update id="updateByPrimaryKeySelective" parameterType="com.whalegoods.entity.SysRole">
     update sys_role
     <set>
       <if test="roleName != null">
@@ -107,7 +107,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.len.entity.SysRole">
+  <update id="updateByPrimaryKey" parameterType="com.whalegoods.entity.SysRole">
     update sys_role
     set role_name = #{roleName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
@@ -117,7 +117,7 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <select id="selectListByPage" parameterType="com.len.entity.SysRole" resultMap="BaseResultMap">
+  <select id="selectListByPage" parameterType="com.whalegoods.entity.SysRole" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/>
     from sys_role
     <where>

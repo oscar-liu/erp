@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.len.mapper.SysLogMapper">
-  <resultMap id="BaseResultMap" type="com.len.entity.SysLog">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysLog">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
@@ -23,7 +23,7 @@
     delete from sys_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.len.entity.SysLog">
+  <insert id="insert" parameterType="com.whalegoods.entity.SysLog">
     insert into sys_log (id, user_name, ip, 
       type, text,param,create_time
       )
@@ -32,7 +32,7 @@
        #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.len.entity.SysLog">
+  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysLog">
     insert into sys_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -81,7 +81,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.len.entity.SysLog">
+  <update id="updateByPrimaryKeySelective" parameterType="com.whalegoods.entity.SysLog">
     update sys_log
     <set>
       <if test="userName != null">
@@ -105,7 +105,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.len.entity.SysLog">
+  <update id="updateByPrimaryKey" parameterType="com.whalegoods.entity.SysLog">
     update sys_log
     set user_name = #{userName,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
@@ -116,7 +116,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectListByPage" parameterType="com.len.entity.SysLog" resultMap="BaseResultMap">
+  <select id="selectListByPage" parameterType="com.whalegoods.entity.SysLog" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/>
     from sys_log
     <where>

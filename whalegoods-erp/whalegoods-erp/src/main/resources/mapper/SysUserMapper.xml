@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.len.mapper.SysUserMapper">
-  <resultMap id="BaseResultMap" type="com.len.entity.SysUser">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysUser">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -32,7 +32,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
 
-  <insert id="insert" parameterType="com.len.entity.SysUser">
+  <insert id="insert" parameterType="com.whalegoods.entity.SysUser">
     insert into sys_user (id, username, password, 
       age, email, photo, 
       real_name, create_by, update_by, 
@@ -124,7 +124,7 @@
       </if>
     </trim>
   </sql>
-  <insert id="insertSelective" parameterType="com.len.entity.SysUser">
+  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysUser">
     <selectKey resultType="String" keyProperty="id" order="BEFORE">
       select replace(uuid(),"-","") from dual
     </selectKey>
@@ -207,7 +207,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.len.entity.SysUser">
+  <update id="updateByPrimaryKeySelective" parameterType="com.whalegoods.entity.SysUser">
     update sys_user
     <set>
       <if test="username != null">
@@ -246,7 +246,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.len.entity.SysUser">
+  <update id="updateByPrimaryKey" parameterType="com.whalegoods.entity.SysUser">
     update sys_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -296,7 +296,7 @@
     from sys_user
     where username=#{username,jdbcType=VARCHAR}
   </select>
-  <select id="selectListByPage" parameterType="com.len.entity.SysUser" resultMap="BaseResultMap">
+  <select id="selectListByPage" parameterType="com.whalegoods.entity.SysUser" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/>
     from sys_user
     <where>
@@ -308,7 +308,7 @@
   <select id="count" resultType="java.lang.Integer">
     select count(*) from sys_user
   </select>
-  <insert id="add" parameterType="com.len.entity.SysUser" >
+  <insert id="add" parameterType="com.whalegoods.entity.SysUser" >
     <selectKey resultType="String" keyProperty="id" order="BEFORE">
       select replace(uuid(),"-","") from dual
     </selectKey>
@@ -326,7 +326,7 @@
   <select id="checkUser" parameterType="java.lang.String" resultType="java.lang.Integer">
     select count(1) from sys_user where username=#{username}
   </select>
-  <update id="rePass" parameterType="com.len.entity.SysUser">
+  <update id="rePass" parameterType="com.whalegoods.entity.SysUser">
     update sys_user set password=#{password,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

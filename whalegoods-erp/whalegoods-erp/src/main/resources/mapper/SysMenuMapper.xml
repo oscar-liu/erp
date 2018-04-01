@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.len.mapper.SysMenuMapper">
-  <resultMap id="BaseResultMap" type="com.len.entity.SysMenu">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysMenu">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="p_id" jdbcType="VARCHAR" property="pId" />
@@ -15,7 +15,7 @@
     <result column="permission" jdbcType="VARCHAR" property="permission" />
     <result column="menu_type" jdbcType="TINYINT" property="menuType" />
   </resultMap>
-  <resultMap id="menuAndRoleMap" type="com.len.entity.SysMenu">
+  <resultMap id="menuAndRoleMap" type="com.whalegoods.entity.SysMenu">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="p_id" jdbcType="VARCHAR" property="pId" />
@@ -28,7 +28,7 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="permission" jdbcType="VARCHAR" property="permission" />
     <result column="menu_type" jdbcType="TINYINT" property="menuType" />
-    <collection property="roleList" ofType="com.len.entity.SysRole">
+    <collection property="roleList" ofType="com.whalegoods.entity.SysRole">
       <id column="rid" jdbcType="VARCHAR" property="id" />
       <result column="role_name" jdbcType="VARCHAR" property="roleName" />
       <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -48,7 +48,7 @@
     delete from sys_menu
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.len.entity.SysMenu">
+  <insert id="insert" parameterType="com.whalegoods.entity.SysMenu">
     <selectKey  order="BEFORE" keyProperty="id" resultType="java.lang.String">
       select replace(uuid(),'-','') from dual
     </selectKey>
@@ -63,7 +63,7 @@
       #{updateDate,jdbcType=TIMESTAMP}, #{permission,jdbcType=VARCHAR}, #{menuType,jdbcType=TINYINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.len.entity.SysMenu">
+  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysMenu">
     <selectKey  order="BEFORE" keyProperty="id" resultType="java.lang.String">
       select replace(uuid(),'-','') from dual
     </selectKey>
@@ -145,7 +145,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.len.entity.SysMenu">
+  <update id="updateByPrimaryKeySelective" parameterType="com.whalegoods.entity.SysMenu">
     update sys_menu
     <set>
       <if test="name != null">
@@ -184,7 +184,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.len.entity.SysMenu">
+  <update id="updateByPrimaryKey" parameterType="com.whalegoods.entity.SysMenu">
     update sys_menu
     set name = #{name,jdbcType=VARCHAR},
       p_id = #{pId,jdbcType=VARCHAR},

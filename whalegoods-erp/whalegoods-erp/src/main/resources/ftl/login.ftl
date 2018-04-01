@@ -20,7 +20,7 @@
 <body class="login-bg">
 
 <div class="login">
-    <div class="message">len-脚手架</div>
+    <div class="message">鲸品智能后台管理系统</div>
     <div id="darkbannerwrap"></div>
 
     <form method="post" action="/login" class="layui-form" >

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>len-脚手架</title>
+  <title>鲸品智能后台管理系统</title>
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/layui/css/layui.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/font-awesome/css/font-awesome.min.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/build/css/app.css" media="all" />
@@ -18,7 +18,7 @@
 <body class="kit-theme">
 <div class="layui-layout layui-layout-admin kit-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">len-脚手架</div>
+    <div class="layui-logo">鲸品智能后台管理系统</div>
     <div class="layui-logo kit-logo-mobile"></div>
     <div class="layui-hide-xs">
     <ul class="layui-nav layui-layout-left kit-nav">

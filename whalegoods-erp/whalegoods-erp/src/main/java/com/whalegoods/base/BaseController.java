@@ -31,22 +31,7 @@ public abstract class BaseController<T> {
   }
 
   @ExceptionHandler({ UnauthorizedException.class, AuthorizationException.class })
-  public String authorizationException(HttpServletRequest request, HttpServletResponse response) {
-  /*  if (isAjaxRequest(request)){
-        Map<String,Object> map = new HashMap<>();
-        map.put("code", "-998");
-        map.put("message", "无权限");
-        return null;
-    } else {
-      String message="权限不足";
-      try {
-        message = URLEncoder.encode(message,"utf-8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
-      return "redirect:/error/403?message="+message;
-    }*/
-	  
+  public String authorizationException(HttpServletRequest request, HttpServletResponse response) {	  
 	  if (!isAjaxRequest(request)){
 		  String message="权限不足";
 		  try {

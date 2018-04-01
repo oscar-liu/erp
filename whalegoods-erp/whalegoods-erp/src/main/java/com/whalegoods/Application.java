@@ -9,20 +9,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
- * 启动类
+ * SpringBoot启动类
  * @author chencong
  *
  */
 @EnableWebMvc
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan(basePackages = {"com.len.mapper"})
+@MapperScan(basePackages = {"com.whalegoods.mapper"})
 public class Application {
 
   public static void main(String[] args) {
     ApplicationContext applicationContext=SpringApplication.run(Application.class,args);
     String[] names = applicationContext.getBeanDefinitionNames();
-    Arrays.asList(names).forEach(name -> System.out.println(name));//1.8 forEach循环
+    Arrays.asList(names).forEach(name -> System.out.println("初始化bean名称："+name));
   }
 
 

@@ -16,7 +16,6 @@ import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,9 +181,4 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
     return sysUserMapper.rePass(user);
   }
 
-@Override
-public String show(SysUser t, int page, int limit) {
-	// TODO Auto-generated method stub
-	return null;
-}
 }

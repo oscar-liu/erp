@@ -22,7 +22,7 @@
     <div class="layui-logo kit-logo-mobile"></div>
     <div class="layui-hide-xs">
     <ul class="layui-nav layui-layout-left kit-nav">
-      <li class="layui-nav-item"><a href="javascript:s();">会员管理</a></li>
+     <!--  <li class="layui-nav-item"><a href="javascript:s();">会员管理</a></li>
       <li class="layui-nav-item"><a href="javascript:;">博客管理</a></li>
       <#--<li class="layui-nav-item"><a href="javascript:;" id="pay"><i class="fa fa-gratipay" aria-hidden="true"></i> 捐赠我</a></li>-->
       <li class="layui-nav-item">
@@ -32,11 +32,11 @@
           <dd><a href="javascript:;">消息管理</a></dd>
           <dd><a href="javascript:;">授权管理</a></dd>
         </dl>
-      </li>
+      </li> -->
     </ul>
     </div>
     <ul class="layui-nav layui-layout-right kit-nav">
-      <li class="layui-nav-item">
+     <!--  <li class="layui-nav-item">
         <a href="javascript:;">
           <i class="layui-icon">&#xe63f;</i> 皮肤</a>
         </a>
@@ -48,16 +48,16 @@
           <dd><a href="javascript:;" data-skin="blue.1" style="color:#00c0ef;"><i class="layui-icon">&#xe658;</i> 天空蓝</a></dd>
           <dd><a href="javascript:;" data-skin="red" style="color:#dd4b39;"><i class="layui-icon">&#xe658;</i> 枫叶红</a></dd>
         </dl>
-      </li>
+      </li> -->
       <li class="layui-nav-item">
         <a href="javascript:;">
         <#assign currentUser = Session["curentUser"]>
-          <img src="${currentUser.photo}" class="layui-nav-img">${currentUser.username}
+          欢迎你，${currentUser.username}
         </a>
-        <dl class="layui-nav-child">
+       <!--  <dl class="layui-nav-child">
           <dd><a href="javascript:;" kit-target data-options="{url:'basic.html',icon:'&#xe658;',title:'基本资料',id:'966'}"><span>基本资料</span></a></dd>
           <dd><a href="javascript:;">安全设置</a></dd>
-        </dl>
+        </dl> -->
       </li>
       <li class="layui-nav-item"><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a></li>
     </ul>
@@ -97,12 +97,10 @@
     <div style="padding: 15px;"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop">&#xe63e;</i> 请稍等...</div>
   </div>
 
-  <div class="layui-footer">
-  <!-- 底部固定区域 -->
+ <!--  <div class="layui-footer">
   2018 &copy;
   <a target="_blank" href="http://www.whalegoods.com/">www.whalegoods.com/</a>深圳鲸品智能商业有限公司
-  
-</div>
+   </div> -->
 </div>
 <script src="${re.contextPath}/plugin/plugins/layui/layui.js"></script>
 <script src="${re.contextPath}/plugin/tools/main.js"></script>

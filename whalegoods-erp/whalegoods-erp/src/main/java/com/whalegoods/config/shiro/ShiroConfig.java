@@ -1,14 +1,11 @@
-/*package com.whalegoods.config;
-
-import com.whalegoods.core.filter.PermissionFilter;
-import com.whalegoods.core.filter.VerfityCodeFilter;
-import com.whalegoods.shiro.LoginRealm;
-import com.whalegoods.shiro.RetryLimitCredentialsMatcher;
+package com.whalegoods.config.shiro;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import javax.servlet.Filter;
+
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -16,14 +13,19 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
-*//**
+import com.whalegoods.core.filter.PermissionFilter;
+import com.whalegoods.core.filter.VerfityCodeFilter;
+
+/**
  * shiro配置
  * @author henry-sun
  *
- *//*
+ */
 @Configuration
 public class ShiroConfig {
 
@@ -125,4 +127,3 @@ public class ShiroConfig {
 
 
 }
-*/

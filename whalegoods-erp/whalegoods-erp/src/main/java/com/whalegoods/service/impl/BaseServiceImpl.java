@@ -1,30 +1,31 @@
-/*package com.whalegoods.base.impl;
+package com.whalegoods.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.BaseService;
-import com.whalegoods.base.CurrentUser;
-import com.whalegoods.base.impl.BaseServiceImpl;
-import com.whalegoods.exception.MyException;
-import com.whalegoods.util.ReType;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-*//**
+import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.whalegoods.base.CurrentUser;
+import com.whalegoods.exception.MyException;
+import com.whalegoods.mapper.BaseMapper;
+import com.whalegoods.service.BaseService;
+import com.whalegoods.util.ReType;
+
+/**
  * 通用service层{@link=BaseService}实现类
  * @author chencong
  *
  * @param <T>
  * @param <E>
- *//*
+ */
 public abstract class BaseServiceImpl <T,E extends Serializable> implements BaseService<T,E> {
 
   private static Logger logger= LoggerFactory.getLogger(BaseServiceImpl.class);
@@ -41,13 +42,13 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
       return getMapper().selectListByPage(model);
   }
   
-  *//**
+  /**
    * 公共展示类
    * @param t 实体
    * @param page 页
    * @param limit 行
    * @return
-   *//*
+   */
  @Override
   public String  show(T t,int page,int limit){
     List<T> tList=null;
@@ -91,12 +92,12 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
     return getMapper().deleteByPrimaryKey(id);
   }
   
-  *//**
+  /**
    * 公共字段注入创建更新实体信息 可通过super调用
    * @param model 实体类
    * @param flag true添加  false更新
    * @return 更新后的实体类
-   *//*
+   */
   protected T  addValue(T model,boolean flag){
     CurrentUser currentUser= (CurrentUser) SecurityUtils.getSubject().getSession().getAttribute("curentUser");
     //统一处理公共字段
@@ -126,4 +127,3 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
   }
 
 }
-*/

@@ -1,15 +1,14 @@
-/*package com.whalegoods.config;
+package com.whalegoods.config.log;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.whalegoods.log.LogAspect;
 
-*//**
+/**
  * log配置
  * @author henry-sun
  *
- *//*
+ */
 @Configuration
 public class LogConfig {
 
@@ -19,4 +18,3 @@ public class LogConfig {
   }
 
 }
-*/

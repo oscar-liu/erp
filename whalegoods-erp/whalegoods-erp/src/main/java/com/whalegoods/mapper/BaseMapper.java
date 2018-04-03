@@ -1,15 +1,15 @@
-/*package com.whalegoods.base;
+package com.whalegoods.mapper;
 
 import java.io.Serializable;
 import java.util.List;
 
-*//**
+/**
  * mapper封装CRUD操作
  * @author chencong
  *
  * @param <T>
  * @param <E>
- *//*
+ */
 public interface BaseMapper<T,E extends Serializable>{
 
     T selectByPrimaryKey(E id);
@@ -27,4 +27,3 @@ public interface BaseMapper<T,E extends Serializable>{
     int deleteByPrimaryKey(E id);
    
 }
-*/

@@ -1,4 +1,4 @@
-/*package com.whalegoods.config;
+package com.whalegoods.config.freemarker;
 
 import freemarker.template.TemplateException;
 import java.io.IOException;
@@ -10,11 +10,11 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
-*//**
+/**
  * freemarker配置
  * @author henry-sun
  *
- *//*
+ */
 @Configuration
 public class FreeMarkerConfig{
 
@@ -53,4 +53,4 @@ public class FreeMarkerConfig{
     return result;
   }
 
-}*/
+}

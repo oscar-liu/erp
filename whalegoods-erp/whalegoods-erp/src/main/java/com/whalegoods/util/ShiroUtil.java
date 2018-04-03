@@ -1,5 +1,4 @@
-package com.whalegoods.config.shiro;
-/*package com.whalegoods.shiro;
+package com.whalegoods.util;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -22,4 +21,3 @@ public class ShiroUtil {
     }
 
 }
-*/

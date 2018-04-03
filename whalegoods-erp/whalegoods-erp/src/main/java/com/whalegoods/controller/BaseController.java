@@ -1,4 +1,4 @@
-/*package com.whalegoods.base;
+package com.whalegoods.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 
 
-*//**
+/**
  * 控制器基类
  * @author chencong
  *
  * @param <T> 实体类
- *//*
+ */
 public abstract class BaseController<T> {
 
   @InitBinder
@@ -44,11 +44,11 @@ public abstract class BaseController<T> {
 	  return null;
   }
   
-  *//**
+  /**
    * 判断是否是Ajax请求
    * @param request
    * @return
-   *//*
+   */
   private static boolean isAjaxRequest(HttpServletRequest request) {
     String requestedWith = request.getHeader("x-requested-with");
     if (requestedWith != null && requestedWith.equalsIgnoreCase("XMLHttpRequest"))
@@ -57,4 +57,3 @@ public abstract class BaseController<T> {
   }
 
 }
-*/

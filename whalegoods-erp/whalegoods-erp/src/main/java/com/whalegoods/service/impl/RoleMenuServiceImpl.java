@@ -1,14 +1,16 @@
 package com.whalegoods.service.impl;
 
-import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.impl.BaseServiceImpl;
-import com.whalegoods.entity.SysRoleMenu;
-import com.whalegoods.mapper.SysRoleMenuMapper;
-import com.whalegoods.service.RoleMenuService;
-
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+/*import com.whalegoods.base.BaseMapper;
+import com.whalegoods.base.impl.BaseServiceImpl;*/
+import com.whalegoods.entity.SysRoleMenu;
+import com.whalegoods.mapper.BaseMapper;
+import com.whalegoods.mapper.SysRoleMenuMapper;
+import com.whalegoods.service.RoleMenuService;
 
 /**
  * @author zhuxiaomeng

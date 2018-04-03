@@ -1,11 +1,19 @@
 package com.whalegoods.service.impl;
 
-import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.impl.BaseServiceImpl;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/*import com.whalegoods.base.BaseMapper;
+import com.whalegoods.base.impl.BaseServiceImpl;*/
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.exception.MyException;
+import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.SysRoleUserMapper;
 import com.whalegoods.mapper.SysUserMapper;
 import com.whalegoods.service.RoleService;
@@ -14,12 +22,6 @@ import com.whalegoods.service.SysUserService;
 import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
-
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author zhuxiaomeng

@@ -1,7 +1,7 @@
 package com.whalegoods.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.whalegoods.base.BaseService;
+/*import com.whalegoods.base.BaseService;*/
 import com.whalegoods.entity.SysMenu;
 
 import java.util.List;

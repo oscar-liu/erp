@@ -7,13 +7,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/29.
- * @email 154040976@qq.com
- *
  * 验证码拦截
+ * @author henry-sun
+ *
  */
 public class VerfityCodeFilter extends AccessControlFilter{
+	
     /** 是否开启验证码验证   默认true*/
     private boolean verfitiCode = true;
 

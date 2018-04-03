@@ -1,9 +1,9 @@
-package com.whalegoods.config;
+/*package com.whalegoods.config;
 
 import com.whalegoods.core.filter.PermissionFilter;
 import com.whalegoods.core.filter.VerfityCodeFilter;
-import com.whalegoods.core.shiro.LoginRealm;
-import com.whalegoods.core.shiro.RetryLimitCredentialsMatcher;
+import com.whalegoods.shiro.LoginRealm;
+import com.whalegoods.shiro.RetryLimitCredentialsMatcher;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -16,18 +16,14 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.DelegatingFilterProxy;
 
-/**
- * @author zhuxiaomeng
- * @date 2018/1/1.
- * @email 154040976@qq.com
- *spring shiro
- * 元旦快乐：code everybody
- */
+*//**
+ * shiro配置
+ * @author henry-sun
+ *
+ *//*
 @Configuration
 public class ShiroConfig {
 
@@ -93,7 +89,6 @@ public class ShiroConfig {
     sfb.setFilters(filters);
     Map<String, String> filterMap = new LinkedHashMap<>();
     filterMap.put("/login","verCode,anon");
-    //filterMap.put("/login","anon");
     filterMap.put("/getCode","anon");
     filterMap.put("/logout","logout");
     filterMap.put("/plugin/**","anon");
@@ -116,7 +111,7 @@ public class ShiroConfig {
     as.setSecurityManager(securityManager);
     return as;
   }
-/*
+
   @Bean
   public FilterRegistrationBean delegatingFilterProxy(){
     FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
@@ -126,7 +121,8 @@ public class ShiroConfig {
 
     filterRegistrationBean.setFilter(proxy);
     return filterRegistrationBean;
-  }*/
+  }
 
 
 }
+*/

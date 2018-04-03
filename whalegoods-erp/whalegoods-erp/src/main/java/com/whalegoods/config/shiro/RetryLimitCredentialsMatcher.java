@@ -1,4 +1,4 @@
-package com.whalegoods.core.shiro;
+package com.whalegoods.config.shiro;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -12,8 +12,11 @@ import org.slf4j.LoggerFactory;
 
 /** 
  * 验证器，增加了登录次数校验功能 
- */  
+ * @author henry-sun
+ *
+ */
 public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher {  
+	
     private static final Logger log = LoggerFactory.getLogger(RetryLimitCredentialsMatcher.class);
 
     private Cache<String, AtomicInteger> loginRetryCache;

@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title></title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
-  <link href="" rel="stylesheet">
   <link rel="stylesheet" href="${re.contextPath}/plugin/layuitree/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/lenos/main.css"/>
 </head>
@@ -28,36 +24,72 @@
 </body>
 <script type="text/javascript" src="${re.contextPath}/plugin/layuitree/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript">
+
+  //添加函数
+  function add(title, url, w, h) {
+    if (title == null || title == '') {
+        title = false;
+    }
+    ;
+    if (url == null || url == '') {
+        url = "404.html";
+    }
+    ;
+    if (w == null || w == '') {
+        w = ($(window).width() * 0.9);
+    }
+    ;
+    if (h == null || h == '') {
+        h = ($(window).height() - 50);
+    }
+    ;
+    layer.open({
+        id: 'user-add',
+        type: 2,
+        area: [w + 'px', h + 'px'],
+        fix: false,
+        maxmin: true,
+        shadeClose: false,
+        shade: 0.4,
+        title: title,
+        content: url
+    });
+}
+
+  //删除函数
   function del(nodeId) {
     console.info(nodeId);
     alert(nodeId)
   }
-
+  
+  //定义列表界面模版对象
   var layout = [
-    { name: '菜单名称', treeNodes: true, headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%'
-    },
+    { name: '菜单名称', treeNodes: true, headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%'},
     { name: 'url',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
-      render: function(row) {
-        return '<div class="layui-table-cell laytable-cell-1-username">'+(typeof(row.url)=="undefined"?'':row.url)+'</div>'; //列渲染
+      render: function(row) { 
+    	  return '<div class="layui-table-cell laytable-cell-1-username">'+(typeof(row.url)=="undefined"?'':row.url)+'</div>'; //列渲染
       }
-    }, { name: '类型',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
+    }, 
+    { name: '类型',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
       render: function(row) {
         return '<div class="layui-table-cell laytable-cell-1-username">'+(row.menuType=="1"?'按钮':'菜单')+'</div>'; //列渲染
       }
-    }, { name: '权限',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
+    }, 
+    { name: '权限',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
       render: function(row) {
         return '<div class="layui-table-cell laytable-cell-1-username">'+(typeof(row.permission)=="undefined"?'':row.permission)+'</div>'; //列渲染
       }
-    },{ name: '图标',headerClass: 'value_col', colClass: 'value_col', style: 'width: 5%',
+    },
+    { name: '图标',headerClass: 'value_col', colClass: 'value_col', style: 'width: 5%',
       render: function(row) {
         return '<div class="layui-table-cell laytable-cell-1-username"><i class="layui-icon">'+(typeof(row.icon)=="undefined"?'':row.icon)+'</i></div>'; //列渲染
       }
-    },{ name: '序号',headerClass: 'value_col', colClass: 'value_col', style: 'width: 5%',
+    },
+    { name: '序号',headerClass: 'value_col', colClass: 'value_col', style: 'width: 5%',
           render: function(row) {
               return '<div class="layui-table-cell laytable-cell-1-username"><i class="layui-icon">'+(typeof(row.orderNum)=="undefined"?'':row.orderNum)+'</i></div>'; //列渲染
           }
-      },
-
+     },
     {
       name: '操作',
       headerClass: 'value_col',
@@ -77,7 +109,6 @@
 
   layui.use(['tree', 'layer'], function() {
     var layer = layui.layer;
-
     layui.treeGird({
       elem: '#menuTree',
       nodes:${menus},
@@ -93,35 +124,7 @@
         active[type] ? active[type].call(this) : '';
     });
   });
-  function add(title, url, w, h) {
-      if (title == null || title == '') {
-          title = false;
-      }
-      ;
-      if (url == null || url == '') {
-          url = "404.html";
-      }
-      ;
-      if (w == null || w == '') {
-          w = ($(window).width() * 0.9);
-      }
-      ;
-      if (h == null || h == '') {
-          h = ($(window).height() - 50);
-      }
-      ;
-      layer.open({
-          id: 'user-add',
-          type: 2,
-          area: [w + 'px', h + 'px'],
-          fix: false,
-          maxmin: true,
-          shadeClose: false,
-          shade: 0.4,
-          title: title,
-          content: url
-      });
-  }
+
 </script>
 
 </html>

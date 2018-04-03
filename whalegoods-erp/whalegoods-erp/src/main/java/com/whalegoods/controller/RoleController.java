@@ -1,9 +1,8 @@
 package com.whalegoods.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.whalegoods.base.BaseController;
-import com.whalegoods.core.annotation.Log;
-import com.whalegoods.core.annotation.Log.LOG_TYPE;
+import com.whalegoods.config.log.Log;
+import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysRoleMenu;
 import com.whalegoods.entity.SysRoleUser;
@@ -54,7 +53,6 @@ public class RoleController extends BaseController<Object> {
     return "/system/role/roleList";
   }
 
-  /*@ApiOperation(value = "/showRoleList", httpMethod = "GET", notes = "展示角色")*/
   @GetMapping(value = "showRoleList")
   @ResponseBody
   @RequiresPermissions("role:show")
@@ -69,7 +67,7 @@ public class RoleController extends BaseController<Object> {
     return "/system/role/add-role";
   }
 
-  /*@ApiOperation(value = "/addRole", httpMethod = "POST", notes = "添加角色")*/
+ 
   @Log(desc = "添加角色")
   @PostMapping(value = "addRole")
   @ResponseBody
@@ -110,7 +108,7 @@ public class RoleController extends BaseController<Object> {
     return "system/role/update-role";
   }
 
-  /*@ApiOperation(value = "/updateRole", httpMethod = "POST", notes = "更新角色")*/
+
   @Log(desc = "更新角色")
   @PostMapping(value = "updateRole")
   @ResponseBody
@@ -146,7 +144,7 @@ public class RoleController extends BaseController<Object> {
     return jsonUtil;
   }
 
-  /*@ApiOperation(value = "/del", httpMethod = "POST", notes = "删除角色")*/
+
   @Log(desc = "删除角色",type = LOG_TYPE.DEL)
   @PostMapping(value = "del")
   @ResponseBody

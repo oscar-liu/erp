@@ -1,8 +1,7 @@
 package com.whalegoods.controller;
 
-import com.whalegoods.base.BaseController;
-import com.whalegoods.core.annotation.Log;
-import com.whalegoods.core.annotation.Log.LOG_TYPE;
+import com.whalegoods.config.log.Log;
+import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.core.quartz.JobTask;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
@@ -14,7 +13,6 @@ import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
 
-import io.swagger.annotations.ApiOperation;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -77,7 +75,6 @@ public class UserController  extends BaseController<Object>{
     return "/system/user/add-user";
   }
 
-  @ApiOperation(value = "/addUser", httpMethod = "POST", notes = "添加用户")
   @Log(desc = "添加用户")
   @PostMapping(value = "addUser")
   @ResponseBody
@@ -129,7 +126,7 @@ public class UserController  extends BaseController<Object>{
     return "system/user/update-user";
   }
 
-  @ApiOperation(value = "/updateUser", httpMethod = "POST", notes = "更新用户")
+
   @Log(desc = "更新用户",type = LOG_TYPE.UPDATE)
   @PostMapping(value = "updateUser")
   @ResponseBody
@@ -166,7 +163,6 @@ public class UserController  extends BaseController<Object>{
   }
 
   @Log(desc = "删除用户",type = LOG_TYPE.DEL)
-  @ApiOperation(value = "/del", httpMethod = "POST", notes = "删除用户")
   @PostMapping(value = "/del")
   @ResponseBody
   @RequiresPermissions("user:del")

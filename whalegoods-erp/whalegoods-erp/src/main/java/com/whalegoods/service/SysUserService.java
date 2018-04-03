@@ -1,7 +1,7 @@
 package com.whalegoods.service;
 
 
-import com.whalegoods.base.BaseService;
+/*import com.whalegoods.base.BaseService;*/
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.util.Checkbox;

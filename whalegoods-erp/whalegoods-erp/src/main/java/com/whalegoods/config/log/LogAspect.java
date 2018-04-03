@@ -1,15 +1,10 @@
-package com.whalegoods.core.annotation;
-
-import com.alibaba.fastjson.JSON;
-import com.whalegoods.base.CurrentUser;
-import com.whalegoods.core.shiro.ShiroUtil;
-import com.whalegoods.entity.SysLog;
-import com.whalegoods.mapper.SysLogMapper;
-import com.whalegoods.util.IpUtil;
+package com.whalegoods.config.log;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -23,6 +18,13 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.alibaba.fastjson.JSON;
+import com.whalegoods.base.CurrentUser;
+import com.whalegoods.entity.SysLog;
+import com.whalegoods.mapper.SysLogMapper;
+import com.whalegoods.util.IpUtil;
+import com.whalegoods.util.ShiroUtil;
+
 /**
  * 为增删改添加监控
  * @author chencong
@@ -35,7 +37,7 @@ public class LogAspect {
     @Autowired
     private SysLogMapper logMapper;
 
-    @Pointcut("@annotation(com.whalegoods.core.annotation.Log)")
+    @Pointcut("@annotation(com.whalegoods.config.log.Log)")
     private void pointcut() {
 
     }
@@ -73,7 +75,6 @@ public class LogAspect {
             CurrentUser currentUser = ShiroUtil.getCurrentUse();
             log.setUserName(currentUser.getUsername());
         }catch (UnavailableSecurityManagerException e){
-
         }
         logMapper.insert(log);
     }

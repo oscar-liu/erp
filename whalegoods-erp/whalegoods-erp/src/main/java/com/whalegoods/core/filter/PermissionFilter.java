@@ -14,10 +14,9 @@ import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/11.
- * @email 154040976@qq.com
  * 拦截器 校验用户是否已授权 未授权返回到登录界面
+ * @author henry-sun
+ *
  */
 public class PermissionFilter extends AuthorizationFilter {
 

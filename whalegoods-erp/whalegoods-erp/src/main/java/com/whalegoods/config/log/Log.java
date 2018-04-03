@@ -1,4 +1,4 @@
-package com.whalegoods.core.annotation;
+package com.whalegoods.config.log;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,20 +8,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/28.
- * @email 154040976@qq.com
+ * log注解
+ * @author henry-sun
  *
- * 记录日志
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented
 @Inherited
 public @interface Log {
+	
     public enum LOG_TYPE{ADD,UPDATE,DEL,SELECT,ATHOR};
+    
     /**内容*/
     String desc();
+    
     /**类型 curd*/
     LOG_TYPE type() default LOG_TYPE.ATHOR;
 }

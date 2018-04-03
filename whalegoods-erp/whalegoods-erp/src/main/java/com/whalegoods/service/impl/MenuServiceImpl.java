@@ -1,22 +1,24 @@
 package com.whalegoods.service.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONArray;
-import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.impl.BaseServiceImpl;
+/*import com.whalegoods.base.BaseMapper;
+import com.whalegoods.base.impl.BaseServiceImpl;*/
 import com.whalegoods.entity.SysMenu;
 import com.whalegoods.entity.SysRoleMenu;
+import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.SysMenuMapper;
 import com.whalegoods.mapper.SysRoleMenuMapper;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.service.SysUserService;
 import com.whalegoods.util.TreeUtil;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author zhuxiaomeng

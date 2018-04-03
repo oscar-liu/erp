@@ -1,4 +1,4 @@
-package com.whalegoods.freemarker;
+/*package com.whalegoods.freemarker;
 
 import com.jagregory.shiro.freemarker.ShiroTags;
 import freemarker.template.Configuration;
@@ -6,11 +6,11 @@ import freemarker.template.TemplateException;
 import java.io.IOException;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-/**
+*//**
  * freemarker结合shiro配置
  * @author chencong
  *
- */
+ *//*
 public class MyFreemarkerConfig extends FreeMarkerConfigurer {
 
   @Override
@@ -21,3 +21,4 @@ public class MyFreemarkerConfig extends FreeMarkerConfigurer {
     configuration.setNumberFormat("#");
   }
 }
+*/

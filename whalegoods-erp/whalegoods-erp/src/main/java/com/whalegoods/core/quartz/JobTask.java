@@ -1,7 +1,7 @@
 package com.whalegoods.core.quartz;
 
-import com.whalegoods.core.annotation.Log;
-import com.whalegoods.core.annotation.Log.LOG_TYPE;
+import com.whalegoods.config.log.Log;
+import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.entity.SysJob;
 
 import java.util.Date;

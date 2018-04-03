@@ -1,4 +1,4 @@
-package com.whalegoods.config;
+/*package com.whalegoods.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +14,11 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/**
- * @author zhuxiaomeng
- * @date 2017/12/31.
- * @email 154040976@qq.com
- */
+*//**
+ * swagger配置
+ * @author henry-sun
+ *
+ *//*
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig  extends WebMvcConfigurerAdapter{
@@ -47,3 +47,4 @@ public class SwaggerConfig  extends WebMvcConfigurerAdapter{
         registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
     }
 }
+*/

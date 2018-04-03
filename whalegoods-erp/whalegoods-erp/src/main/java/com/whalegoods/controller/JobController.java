@@ -1,19 +1,14 @@
 package com.whalegoods.controller;
 
-import com.whalegoods.base.BaseController;
-import com.whalegoods.core.annotation.Log;
-import com.whalegoods.core.annotation.Log.LOG_TYPE;
+import com.whalegoods.config.log.Log;
+import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.core.quartz.JobTask;
 import com.whalegoods.entity.SysJob;
-import com.whalegoods.entity.SysUser;
 import com.whalegoods.exception.MyException;
 import com.whalegoods.service.JobService;
 import com.whalegoods.util.BeanUtil;
-import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 
-import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +54,6 @@ public class JobController extends BaseController<SysJob> {
     return "/system/job/add-job";
   }
 
-  @ApiOperation(value = "/addJob", httpMethod = "POST", notes = "添加任务类")
   @Log(desc = "添加任务")
   @PostMapping(value = "addJob")
   @ResponseBody
@@ -89,7 +83,7 @@ public class JobController extends BaseController<SysJob> {
   }
 
 
-  @ApiOperation(value = "/updateJob", httpMethod = "POST", notes = "更新任务")
+  
   @Log(desc = "更新任务",type = LOG_TYPE.UPDATE)
   @PostMapping(value = "updateJob")
   @ResponseBody
@@ -118,7 +112,6 @@ public class JobController extends BaseController<SysJob> {
   }
 
   @Log(desc = "删除任务",type = LOG_TYPE.DEL)
-  @ApiOperation(value = "/del", httpMethod = "POST", notes = "删除任务")
   @PostMapping(value = "del")
   @ResponseBody
   @RequiresPermissions("job:del")

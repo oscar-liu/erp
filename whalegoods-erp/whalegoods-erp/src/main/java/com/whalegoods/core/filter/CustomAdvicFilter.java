@@ -1,4 +1,4 @@
-package com.whalegoods.core.filter;
+/*package com.whalegoods.core.filter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.service.SysUserService;
 
-/**
- * @author zhuxiaomeng
- * @date 2017/12/13.
- * @email 154040976@qq.com
+*//**
  * 自定义拦截器 暂时不用
- */
+ * @author henry-sun
+ *
+ *//*
 public class CustomAdvicFilter extends FormAuthenticationFilter {
 
   @Autowired
@@ -28,3 +27,4 @@ public class CustomAdvicFilter extends FormAuthenticationFilter {
       return true;
   }
 }
+*/

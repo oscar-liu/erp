@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Random;
 import javax.imageio.ImageIO;
 
-public class VerifyCodeUtils {
+public class VerifyCodeUtils{  
   
     //使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符  
     public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";  
@@ -48,7 +48,7 @@ public class VerifyCodeUtils {
   
     /** 
      * 使用系统默认字符源生成验证码 
-     * @param verifySize    验证码长度 
+     * @param
      * @return 
      */  
     public static Verify generateVerify(){  

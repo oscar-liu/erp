@@ -1,6 +1,6 @@
 package com.whalegoods.service;
 
-import com.whalegoods.base.BaseService;
+/*import com.whalegoods.base.BaseService;*/
 import com.whalegoods.entity.SysRoleMenu;
 
 import java.util.List;

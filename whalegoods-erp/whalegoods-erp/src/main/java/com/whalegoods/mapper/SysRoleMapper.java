@@ -1,6 +1,6 @@
 package com.whalegoods.mapper;
 
-import com.whalegoods.base.BaseMapper;
+/*import com.whalegoods.base.BaseMapper;*/
 import com.whalegoods.entity.SysRole;
 
 import java.util.List;

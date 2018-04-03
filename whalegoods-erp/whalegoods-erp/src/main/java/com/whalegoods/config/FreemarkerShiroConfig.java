@@ -1,15 +1,15 @@
-package com.whalegoods.config;
+/*package com.whalegoods.config;
 
 import com.jagregory.shiro.freemarker.ShiroTags;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author zhuxiaomeng
- * @date 2018/1/16.
- * @email 154040976@qq.com
- */
+*//**
+ * freemarker结合shiro配置
+ * @author henry-sun
+ *
+ *//*
 @Component
 public class FreemarkerShiroConfig implements InitializingBean {
 
@@ -21,3 +21,4 @@ public class FreemarkerShiroConfig implements InitializingBean {
     configuration.setSharedVariable("shiro", new ShiroTags());
   }
 }
+*/

@@ -3,10 +3,14 @@ package com.whalegoods.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -24,6 +28,8 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 @Configuration
 @EnableTransactionManagement
 public class DruidConfig {
+	
+	private static Logger logger= LoggerFactory.getLogger(DruidConfig.class);
 
   @Value("${spring.datasource.url}")
   private String url;
@@ -59,7 +65,7 @@ public class DruidConfig {
     try {
       datasource.setFilters(filters);
     } catch (SQLException e) {
-      e.printStackTrace();
+      logger.error("Druid数据源配置=>getDataSource()方法报错："+e.getMessage());
     }
     return datasource;
   }

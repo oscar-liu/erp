@@ -3,7 +3,7 @@ package com.whalegoods.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.whalegoods.base.BaseController;
+/*import com.whalegoods.base.BaseController;*/
 import com.whalegoods.entity.SysLog;
 import com.whalegoods.exception.MyException;
 import com.whalegoods.mapper.SysLogMapper;

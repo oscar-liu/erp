@@ -1,14 +1,12 @@
 package com.whalegoods.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.whalegoods.base.BaseController;
-import com.whalegoods.core.annotation.Log;
+import com.whalegoods.config.log.Log;
 import com.whalegoods.entity.SysMenu;
 import com.whalegoods.exception.MyException;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.util.JsonUtil;
 
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/13.
- * @email 154040976@qq.com
- * 菜单
+ * 菜单控制器
+ * @author henry-sun
+ *
  */
 @Controller
 @RequestMapping(value = "/menu")
-public class MenuController extends BaseController{
+public class MenuController extends BaseController<Object>{
 
   @Autowired
   private MenuService menuService;
@@ -37,7 +34,6 @@ public class MenuController extends BaseController{
    * @param model
    * @return
    */
-  @ApiOperation(value = "/showMenu", httpMethod = "GET", notes = "展示菜单")
   @Log(desc = "展示菜单",type = Log.LOG_TYPE.SELECT)
   @GetMapping(value = "showMenu")
   @RequiresPermissions("menu:show")
@@ -55,11 +51,10 @@ public class MenuController extends BaseController{
     return "/system/menu/add-menu";
   }
 
-  @ApiOperation(value = "/addMenu", httpMethod = "POST", notes = "添加菜单")
   @PostMapping(value = "addMenu")
   @ResponseBody
-  public JsonUtil  addMenu(SysMenu sysMenu,Model model){
-    if(StringUtils.isEmpty(sysMenu.getPId())){
+  public JsonUtil addMenu(SysMenu sysMenu,Model model){
+	  if(StringUtils.isEmpty(sysMenu.getPId())){
       sysMenu.setPId(null);
     }
     if(StringUtils.isEmpty(sysMenu.getUrl())){
@@ -69,7 +64,6 @@ public class MenuController extends BaseController{
       sysMenu.setPermission(null);
     }
     JsonUtil jsonUtil=new JsonUtil();
-    jsonUtil.setFlag(false);
     if(sysMenu==null){
       jsonUtil.setMsg("获取数据失败");
       return jsonUtil;
@@ -78,8 +72,14 @@ public class MenuController extends BaseController{
       if(sysMenu.getMenuType()==2){
         sysMenu.setMenuType((byte)0);
       }
-      menuService.insertSelective(sysMenu);
-      jsonUtil.setMsg("添加成功");
+      if(menuService.insertSelective(sysMenu)!=0){
+          jsonUtil.setFlag(true);
+          jsonUtil.setMsg("添加成功");
+      }
+      else {
+    	  jsonUtil.setFlag(false);
+          jsonUtil.setMsg("添加失败");
+	}
     }catch (MyException e){
       e.printStackTrace();
       jsonUtil.setMsg("添加失败");

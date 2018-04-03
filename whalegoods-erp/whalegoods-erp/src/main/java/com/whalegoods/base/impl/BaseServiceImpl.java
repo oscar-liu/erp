@@ -1,4 +1,4 @@
-package com.whalegoods.base.impl;
+/*package com.whalegoods.base.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -18,13 +18,13 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
+*//**
  * 通用service层{@link=BaseService}实现类
  * @author chencong
  *
  * @param <T>
  * @param <E>
- */
+ *//*
 public abstract class BaseServiceImpl <T,E extends Serializable> implements BaseService<T,E> {
 
   private static Logger logger= LoggerFactory.getLogger(BaseServiceImpl.class);
@@ -41,13 +41,13 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
       return getMapper().selectListByPage(model);
   }
   
-  /**
+  *//**
    * 公共展示类
    * @param t 实体
    * @param page 页
    * @param limit 行
    * @return
-   */
+   *//*
  @Override
   public String  show(T t,int page,int limit){
     List<T> tList=null;
@@ -91,12 +91,12 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
     return getMapper().deleteByPrimaryKey(id);
   }
   
-  /**
+  *//**
    * 公共字段注入创建更新实体信息 可通过super调用
    * @param model 实体类
    * @param flag true添加  false更新
    * @return 更新后的实体类
-   */
+   *//*
   protected T  addValue(T model,boolean flag){
     CurrentUser currentUser= (CurrentUser) SecurityUtils.getSubject().getSession().getAttribute("curentUser");
     //统一处理公共字段
@@ -126,3 +126,4 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
   }
 
 }
+*/

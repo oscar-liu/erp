@@ -1,36 +1,30 @@
-package com.whalegoods.config;
+/*package com.whalegoods.config;
 
-import com.jagregory.shiro.freemarker.ShiroTags;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateModelException;
 import java.io.IOException;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-/**
- * @author zhuxiaomeng
- * @date 2018/1/2.
- * @email 154040976@qq.com
- */
+
+*//**
+ * freemarker配置
+ * @author henry-sun
+ *
+ *//*
 @Configuration
 public class FreeMarkerConfig{
-
 
   @Bean
   public ViewResolver viewResolver() {
     FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
     resolver.setCache(false);
     resolver.setViewClass(org.springframework.web.servlet.view.freemarker.FreeMarkerView.class);
+    //配置上下文根目录，在模版页中使用re开头获取路径
     resolver.setRequestContextAttribute("re");
-    //resolver.setExposeSpringMacroHelpers(true);
     resolver.setExposeRequestAttributes(true);
     resolver.setExposeSessionAttributes(true);
     resolver.setSuffix(".ftl");
@@ -59,4 +53,4 @@ public class FreeMarkerConfig{
     return result;
   }
 
-}
+}*/

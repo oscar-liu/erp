@@ -1,15 +1,8 @@
-<#--Created by IntelliJ IDEA.
-User: Administrator
-Date: 2017/12/27
-Time: 12:40
-To change this template use File | Settings | File Templates.-->
-
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
-  <title>菜单管理</title>
+  <title>添加菜单</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -42,13 +35,10 @@ To change this template use File | Settings | File Templates.-->
             </div>
         </div>
         <div class="layui-form-item" id="pDiv">
-            <label for="pName" class="layui-form-label">
-                父级菜单
-            </label>
+            <label for="pName" class="layui-form-label">父级菜单</label>
             <div class="layui-input-inline">
                 <input type="hidden" name="pId" id="pId">
-                <input type="text" id="pName"  onclick="showTree();"  lay-verify="pName"
-                      class="layui-input">
+                <input type="text" id="pName"  onclick="showTree();"  lay-verify="pName" class="layui-input">
             </div>
             <div id="treeNode"  style="display:none; position: absolute;z-index:1000;background-color: white;">
                 <div  id="tree"></div>
@@ -105,19 +95,15 @@ To change this template use File | Settings | File Templates.-->
       <div style="height: 60px"></div>
     </div>
     </div>
-  <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6;
-  position: fixed;bottom: 1px;margin-left:-20px;">
+  <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6;position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
-      <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit="">
-        增加
-      </button>
-      <button  class="layui-btn layui-btn-primary" id="close">
-        取消
-      </button>
+      <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 增加 </button>
+      <button  class="layui-btn layui-btn-primary" id="close"> 取消 </button>
     </div>
   </div>
   </form>
 </div>
+
 <script>
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
@@ -137,7 +123,7 @@ To change this template use File | Settings | File Templates.-->
   });
 
     //自定义验证规则
-      var type=$('#menuType');
+    var type=$('#menuType');
     form.verify({
     menuType:function(v){
         console.info(v=='')
@@ -205,14 +191,17 @@ To change this template use File | Settings | File Templates.-->
         url:'addMenu',
         type:'post',
         data:data.field,
-        async:false, dataType: "json", traditional: true,
+        async:false, 
+        dataType: "json",
+        traditional: true,
         success:function(data){
           console.info(data.msg);
           var index = parent.layer.getFrameIndex(window.name);
           window.top.layer.msg(data.msg,{icon:6,offset: 'rb',area:['120px','80px'],anim:2});
           parent.layer.close(index);
-        },error:function(){
-            var index = parent.layer.getFrameIndex(window.name);
+        },
+        error:function(){
+          var index = parent.layer.getFrameIndex(window.name);
           window.top.layer.msg('请求失败',{icon:5,offset: 'rb',area:['120px','80px'],anim:2});
           parent.layer.close(index);
         }
@@ -236,14 +225,16 @@ To change this template use File | Settings | File Templates.-->
       $('body').bind('mousedown', onBodyDown);
       $('#treeNode').css('display','inline');
   }
+  
   function hideMenu() {
       $('#treeNode').fadeOut('fast');
       $('body').unbind('blur', onBodyDown);
   }
+  
   function onBodyDown(event) {
       if (! ( event.target.id == 'treeNode' || $(event.target).parents('#treeNode').length > 0)) {
-          hideMenu();
-      }
+          hideMenu(); 
+     }
   }
 </script>
 </body>

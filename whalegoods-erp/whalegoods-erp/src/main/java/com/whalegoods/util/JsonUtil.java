@@ -4,22 +4,23 @@ package com.whalegoods.util;
 import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.util.JsonUtil;
 
-import net.minidev.json.JSONUtil;
+
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/15.
- * @email 154040976@qq.com
- * ajax 回执
+ * 返回结果封装类
+ * @author henry-sun
+ *
  */
 public class JsonUtil {
 
   //默认成功
   private boolean flag=true;
+  
   private String msg;
-  private JSONObject josnObj;
+  
+ private JSONObject josnObj;
 
-  public boolean isFlag() {
+  public boolean getFlag() {
     return flag;
   }
 
@@ -35,14 +36,13 @@ public class JsonUtil {
     this.msg = msg;
   }
 
-  public JSONObject getJosnObj() {
+ public JSONObject getJosnObj() {
     return josnObj;
   }
 
   public void setJosnObj(JSONObject josnObj) {
     this.josnObj = josnObj;
   }
-
 
   public JsonUtil() {
   }
@@ -52,10 +52,10 @@ public class JsonUtil {
     this.msg = msg;
   }
 
-  /**restful 返回*/
   public static JsonUtil error(String msg){
     return new JsonUtil(false,msg);
   }
+  
   public  static JsonUtil sucess(String msg){
     return new JsonUtil(true,msg);
   }

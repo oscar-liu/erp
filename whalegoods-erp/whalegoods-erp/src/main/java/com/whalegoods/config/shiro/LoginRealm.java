@@ -1,22 +1,10 @@
-package com.whalegoods.core.shiro;
-
-import com.alibaba.fastjson.JSONArray;
-import com.whalegoods.base.CurrentMenu;
-import com.whalegoods.base.CurrentRole;
-import com.whalegoods.base.CurrentUser;
-import com.whalegoods.entity.SysMenu;
-import com.whalegoods.entity.SysRole;
-import com.whalegoods.entity.SysUser;
-import com.whalegoods.service.MenuService;
-import com.whalegoods.service.RoleMenuService;
-import com.whalegoods.service.RoleUserService;
-import com.whalegoods.service.SysUserService;
+package com.whalegoods.config.shiro;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -33,11 +21,18 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @author zhuxiaomeng
- * @date 2017/12/4.
- * @email 154040976@qq.com
- */
+import com.alibaba.fastjson.JSONArray;
+import com.whalegoods.base.CurrentMenu;
+import com.whalegoods.base.CurrentRole;
+import com.whalegoods.base.CurrentUser;
+import com.whalegoods.entity.SysMenu;
+import com.whalegoods.entity.SysRole;
+import com.whalegoods.entity.SysUser;
+import com.whalegoods.service.MenuService;
+import com.whalegoods.service.SysUserService;
+import com.whalegoods.util.ShiroUtil;
+
+
 @Service
 public class LoginRealm extends AuthorizingRealm{
 
@@ -47,11 +42,11 @@ public class LoginRealm extends AuthorizingRealm{
   @Autowired
   private MenuService menuService;
 
-  @Autowired
+/*  @Autowired
   private RoleUserService roleUserService;
 
   @Autowired
-  private RoleMenuService roleMenuService;
+  private RoleMenuService roleMenuService;*/
 
   /**
    * 获取认证

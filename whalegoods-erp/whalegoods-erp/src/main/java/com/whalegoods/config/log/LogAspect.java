@@ -19,7 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSON;
-import com.whalegoods.base.CurrentUser;
+import com.whalegoods.common.CurrentUser;
 import com.whalegoods.entity.SysLog;
 import com.whalegoods.mapper.SysLogMapper;
 import com.whalegoods.util.IpUtil;

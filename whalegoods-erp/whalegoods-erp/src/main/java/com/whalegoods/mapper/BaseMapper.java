@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * mapper封装CRUD操作
+ * mapper封装公共CRUD操作
  * @author chencong
  *
  * @param <T>
@@ -13,6 +13,8 @@ import java.util.List;
 public interface BaseMapper<T,E extends Serializable>{
 
     T selectByPrimaryKey(E id);
+    
+    T selectById(E id);
     
     List<T> selectListByPage(T record);
     

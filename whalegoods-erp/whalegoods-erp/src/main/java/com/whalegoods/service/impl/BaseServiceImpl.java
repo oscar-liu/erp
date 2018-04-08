@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.whalegoods.base.CurrentUser;
+import com.whalegoods.common.CurrentUser;
 import com.whalegoods.exception.MyException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.service.BaseService;

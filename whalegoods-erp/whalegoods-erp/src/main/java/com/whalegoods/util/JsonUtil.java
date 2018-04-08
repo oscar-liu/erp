@@ -19,32 +19,32 @@ public class JsonUtil {
   private String msg;
   
  private JSONObject josnObj;
+ 
+ public boolean isFlag() {
+	return flag;
+}
 
-  public boolean getFlag() {
-    return flag;
-  }
+public void setFlag(boolean flag) {
+	this.flag = flag;
+}
 
-  public void setFlag(boolean flag) {
-    this.flag = flag;
-  }
+public String getMsg() {
+	return msg;
+}
 
-  public String getMsg() {
-    return msg;
-  }
+public void setMsg(String msg) {
+	this.msg = msg;
+}
 
-  public void setMsg(String msg) {
-    this.msg = msg;
-  }
+public JSONObject getJosnObj() {
+	return josnObj;
+}
 
- public JSONObject getJosnObj() {
-    return josnObj;
-  }
+public void setJosnObj(JSONObject josnObj) {
+	this.josnObj = josnObj;
+}
 
-  public void setJosnObj(JSONObject josnObj) {
-    this.josnObj = josnObj;
-  }
-
-  public JsonUtil() {
+public JsonUtil() {
   }
 
   public JsonUtil(boolean flag, String msg) {

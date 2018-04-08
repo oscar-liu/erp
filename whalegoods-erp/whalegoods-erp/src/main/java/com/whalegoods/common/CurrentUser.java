@@ -1,11 +1,11 @@
-package com.whalegoods.base;
+package com.whalegoods.common;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.whalegoods.base.CurrentMenu;
-import com.whalegoods.base.CurrentRole;
+import com.whalegoods.common.CurrentMenu;
+import com.whalegoods.common.CurrentRole;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.whalegoods.base;
+package com.whalegoods.common;
 
 import lombok.Getter;
 import lombok.Setter;

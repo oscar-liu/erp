@@ -22,9 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.whalegoods.base.CurrentMenu;
-import com.whalegoods.base.CurrentRole;
-import com.whalegoods.base.CurrentUser;
+import com.whalegoods.common.CurrentMenu;
+import com.whalegoods.common.CurrentRole;
+import com.whalegoods.common.CurrentUser;
 import com.whalegoods.entity.SysMenu;
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysUser;

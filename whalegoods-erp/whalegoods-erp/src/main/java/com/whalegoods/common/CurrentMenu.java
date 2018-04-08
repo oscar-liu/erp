@@ -1,4 +1,4 @@
-package com.whalegoods.base;
+package com.whalegoods.common;
 
 import java.util.Date;
 import lombok.Getter;

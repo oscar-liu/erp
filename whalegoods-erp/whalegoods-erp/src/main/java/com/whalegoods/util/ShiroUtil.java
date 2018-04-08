@@ -4,7 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
-import com.whalegoods.base.CurrentUser;
+import com.whalegoods.common.CurrentUser;
 
 
 public class ShiroUtil {

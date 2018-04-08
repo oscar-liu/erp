@@ -4,7 +4,7 @@ package com.whalegoods.util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 
-import com.whalegoods.base.CurrentUser;
+import com.whalegoods.common.CurrentUser;
 
 /**
  * @author zhuxiaomeng

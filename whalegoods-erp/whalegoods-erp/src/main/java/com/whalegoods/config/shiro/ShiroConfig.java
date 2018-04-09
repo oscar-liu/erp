@@ -95,6 +95,8 @@ public class ShiroConfig {
     filterMap.put("/logout","logout");
     filterMap.put("/plugin/**","anon");
     filterMap.put("/user/**","per");
+    filterMap.put("/v1/**","anon");
+    filterMap.put("/v2/**","anon");
     filterMap.put("/**","authc");
     sfb.setFilterChainDefinitionMap(filterMap);
     return sfb;

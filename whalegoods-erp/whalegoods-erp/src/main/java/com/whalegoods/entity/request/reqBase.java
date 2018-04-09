@@ -9,18 +9,21 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 设备状态上报接口（1服务中 2停用 3下线）请求映射实体类 
+ * API请求映射实体类 基类
  * @author chencong
- * 2018年4月9日 下午5:16:17
+ * 2018年4月9日 下午5:15:12
  */
 @Getter
 @Setter
 @ToString
-public class reqUpDeviceStatus extends reqBase implements Serializable{
+public class reqBase implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@JsonProperty("device_status")
-	private Integer deviceStatus;
+	@JsonProperty("device_code_sup")
+	private String deviceCodeSup;
+	
+	@JsonProperty("device_code_wg")
+	private String deviceCodeWg;
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.response.ResGoodsAdsTop;
 import com.whalegoods.service.GoodsAdsMiddleService;
@@ -50,7 +51,7 @@ public class V1AdsController  extends BaseController<Object>{
 	  Map<String,Object> condition=new HashMap<>();
 	  condition.put("deviceIdJp",device_code_wg);
 	  condition.put("deviceIdSupp",device_code_sup);
-	  Map<String,Object> resultMap=goodsAdsMiddleService.selectByDeviceRoadId(condition);
+	  Map<String,Object> resultMap=goodsAdsMiddleService.selectByDeviceId(condition);
 	  ResBody resBody=new ResBody();
 	  resBody.setResultCode(0);
 	  resBody.setResultMsg("成功");

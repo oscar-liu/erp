@@ -93,4 +93,14 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements
 		return deviceMapper.updateDeviceStatus(condition);
 	}
 
+	@Override
+	public int getOperateStatus(Map<String, Object> condition) {
+		return deviceMapper.getOperateStatus(condition);
+	}
+
+	@Override
+	public Map<String,Object> getApk(Map<String, Object> condition) {
+		return deviceMapper.getApk(condition);
+	}
+
 }

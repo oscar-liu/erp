@@ -14,12 +14,11 @@ import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.entity.response.ResGoodsAdsMiddle;
-import com.whalegoods.entity.response.ResGoodsAdsMiddleJson;
+import com.whalegoods.entity.response.ResGoodsAdsMiddleData;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.GoodsAdsMiddleMapper;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.util.Checkbox;
-import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.JsonUtil;
 
 
@@ -30,24 +29,25 @@ public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,St
 	GoodsAdsMiddleMapper GoodsAdsMiddleMapper;
 	
 	@Override
-	public Map<String,Object> selectByDeviceRoadId(Map<String, Object> condition) throws IllegalAccessException, InvocationTargetException {
-		List<ResGoodsAdsMiddle> list=GoodsAdsMiddleMapper.selectByDeviceRoadId(condition);
-		List<ResGoodsAdsMiddleJson> list1=new ArrayList<>();
-		List<ResGoodsAdsMiddleJson> list2=new ArrayList<>();
+	public Map<String,Object> selectByDeviceId(Map<String, Object> condition) throws IllegalAccessException, InvocationTargetException {
+		List<ResGoodsAdsMiddle> list=GoodsAdsMiddleMapper.selectByDeviceId(condition);
+		List<ResGoodsAdsMiddleData> list1=new ArrayList<>();
+		List<ResGoodsAdsMiddleData> list2=new ArrayList<>();
 		Map<String,Object> map=new HashMap<>();
 		for (ResGoodsAdsMiddle item : list) {
-			ResGoodsAdsMiddleJson object=new ResGoodsAdsMiddleJson();
+			ResGoodsAdsMiddleData object=new ResGoodsAdsMiddleData();
 			BeanUtils.copyProperties(object,item);
 			if(item.getType()==1)
 			{
-				//计算剩余时间，到秒
-				int restTime=DateUtil.secsSub(item.getStartTime(), item.getEndTime());
-				map.put("rest_time", restTime);
+				map.put("now_start_time", item.getStartTime());
+				map.put("now_end_time", item.getEndTime());
 				list1.add(object);
 				map.put("now", list1);
 			}
 			if(item.getType()==2)
 			{
+				map.put("next_start_time", item.getStartTime());
+				map.put("next_end_time", item.getEndTime());
 				list2.add(object);
 				map.put("next", list2);
 			}
@@ -57,7 +57,6 @@ public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,St
 
 	@Override
 	public int deleteByPrimaryKey(String id) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

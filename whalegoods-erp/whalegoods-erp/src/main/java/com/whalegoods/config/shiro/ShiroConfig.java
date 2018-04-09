@@ -95,9 +95,13 @@ public class ShiroConfig {
     filterMap.put("/logout","logout");
     filterMap.put("/plugin/**","anon");
     filterMap.put("/user/**","per");
+    //移动客户端请求的接口不做shiro校验
     filterMap.put("/v1/**","anon");
     filterMap.put("/v2/**","anon");
-    filterMap.put("/**","authc");
+    filterMap.put("/v3/**","anon");
+    filterMap.put("/v4/**","anon");
+    filterMap.put("/v5/**","anon");
+    /*filterMap.put("/**","authc");*/
     sfb.setFilterChainDefinitionMap(filterMap);
     return sfb;
   }

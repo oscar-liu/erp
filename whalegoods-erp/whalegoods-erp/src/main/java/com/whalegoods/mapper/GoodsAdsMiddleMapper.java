@@ -43,5 +43,5 @@ public interface GoodsAdsMiddleMapper extends BaseMapper<GoodsAdsMiddle,String> 
 
     int rePass(GoodsAdsMiddle user);
 
-    List<ResGoodsAdsMiddle> selectByDeviceRoadId(Map<String,Object> condition);
+    List<ResGoodsAdsMiddle> selectByDeviceId(Map<String,Object> condition);
 }

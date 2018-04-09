@@ -2,10 +2,8 @@ package com.whalegoods.service;
 
 
 import com.whalegoods.entity.GoodsAdsMiddle;
-import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
-import com.whalegoods.entity.response.ResGoodsAdsMiddle;
 import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 
@@ -64,7 +62,7 @@ public interface GoodsAdsMiddleService extends BaseService<GoodsAdsMiddle,String
    */
   int rePass(GoodsAdsMiddle user);
   
-  Map<String, Object> selectByDeviceRoadId(Map<String,Object> condition) throws IllegalAccessException, InvocationTargetException;
+  Map<String, Object> selectByDeviceId(Map<String,Object> condition) throws IllegalAccessException, InvocationTargetException;
 
 int deleteByPrimaryKey(String id);
 

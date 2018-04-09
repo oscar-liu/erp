@@ -3,7 +3,7 @@
 <mapper namespace="com.whalegoods.mapper.GoodsAdsTopMapper">
 
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.response.ResGoodsAdsTop">
-    <result column="goods_code" jdbcType="VARCHAR" property="GoodsCode" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="big_pic_url" jdbcType="VARCHAR" property="bigPicUrl" />
     <result column="tiny_pic_url" jdbcType="VARCHAR" property="tinyPicUrl" />
   </resultMap>

@@ -3,7 +3,7 @@
 <mapper namespace="com.whalegoods.mapper.GoodsAdsMiddleMapper">
 
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.response.ResGoodsAdsMiddle">
-    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="sale_price" jdbcType="VARCHAR" property="salePrice" />
     <result column="start_time" jdbcType="VARCHAR" property="startTime" />
@@ -11,9 +11,9 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
   </resultMap>
   
-    <select id="selectByDeviceRoadId" parameterType="java.util.Map" resultMap="BaseResultMap">
+    <select id="selectByDeviceId" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT 
-    c.goods_name,
+    c.goods_code,
     c.pic_url,
     b.sale_price,
     a.start_time,

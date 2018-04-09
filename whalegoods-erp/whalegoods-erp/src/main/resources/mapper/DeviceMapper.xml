@@ -7,5 +7,17 @@
     SET a.device_status=#{deviceStatus}
     WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
 	</update>
+	
+  <select id="getOperateStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+  SELECT a.run_status 
+  FROM device a 
+  WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
+  </select>
+  
+    <select id="getApk" parameterType="java.util.Map" resultType="java.util.Map">
+   SELECT b.apk_version,b.apk_url
+    FROM device a INNER JOIN  apk_version b ON a.apk_version_id=b.id
+  WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
+  </select>
 
 </mapper>

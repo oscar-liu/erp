@@ -9,6 +9,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 
+/**
+ * 根据设备编号获取所有商品信息列表接口API  返回结果data字段  实体类
+ * @author chencong
+ * 2018年4月9日 下午3:04:12
+ */
 @Getter
 @Setter
 @ToString

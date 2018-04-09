@@ -2,7 +2,6 @@ package com.whalegoods.mapper;
 
 
 import com.whalegoods.entity.Device;
-import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -44,4 +43,10 @@ public interface DeviceMapper extends BaseMapper<Device,String> {
     int rePass(Device user);
     
     int updateDeviceStatus(Map<String,Object> condition);
+    
+    int updateClient(Map<String,Object> condition);
+
+    Map<String,Object> getApk(Map<String, Object> condition);
+
+	int getOperateStatus(Map<String, Object> condition);
 }

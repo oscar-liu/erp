@@ -20,7 +20,7 @@ import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.service.DeviceRoadService;
 
 /**
- * 货道信息控制器
+ * 货道商品信息API
  * @author henry-sun
  *
  */

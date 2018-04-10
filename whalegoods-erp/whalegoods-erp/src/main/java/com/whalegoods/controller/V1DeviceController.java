@@ -18,7 +18,7 @@ import com.whalegoods.entity.request.reqUpDeviceStatus;
 import com.whalegoods.service.DeviceService;
 
 /**
- * 设备管理控制器
+ * 设备管理API
  * @author henry-sun
  *
  */

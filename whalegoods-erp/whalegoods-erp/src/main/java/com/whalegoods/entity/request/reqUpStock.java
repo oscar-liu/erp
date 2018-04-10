@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 库存上报接口  请求映射实体类 
+ * 库存上报API  请求映射实体类 
  * @author chencong
  * 2018年4月9日 下午5:16:17
  */

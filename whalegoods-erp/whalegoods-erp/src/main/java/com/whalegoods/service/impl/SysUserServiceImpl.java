@@ -66,7 +66,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   @Override
   public int insertSelective(SysUser record) {
 
-    String pwd= Md5Util.getMD5(record.getPassword().trim(),record.getUsername().trim());
+    String pwd= Md5Util.getMd5(record.getPassword().trim(),record.getUsername().trim());
     record.setPassword(pwd);
     return super.insertSelective(record);
   }
@@ -109,7 +109,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   @Override
   public int add(SysUser user) {
     //密码加密
-  String pwd= Md5Util.getMD5(user.getPassword().trim(),user.getUsername().trim());
+  String pwd= Md5Util.getMd5(user.getPassword().trim(),user.getUsername().trim());
   user.setPassword(pwd);
     return sysUserMapper.add(user);
   }

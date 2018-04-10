@@ -200,8 +200,8 @@ public class UserController  extends BaseController<Object>{
       return j;
     }
     SysUser user=userService.selectByPrimaryKey(id);
-    newPwd=Md5Util.getMD5(newPwd,user.getUsername());
-    pass=Md5Util.getMD5(pass,user.getUsername());
+    newPwd=Md5Util.getMd5(newPwd,user.getUsername());
+    pass=Md5Util.getMd5(pass,user.getUsername());
     if(!pass.equals(user.getPassword())){
         j.setMsg("密码不正确");
         return j;

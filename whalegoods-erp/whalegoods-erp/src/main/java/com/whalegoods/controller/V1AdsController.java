@@ -12,14 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.response.ResGoodsAdsTop;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
 
 /**
- * 广告促销控制器
+ * 广告促销API
  * @author henry-sun
  *
  */

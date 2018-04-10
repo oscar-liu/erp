@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 设备状态上报接口（1服务中 2停用 3下线）请求映射实体类 
+ * 设备状态上报API（1服务中 2停用 3下线）请求映射实体类 
  * @author chencong
  * 2018年4月9日 下午5:16:17
  */

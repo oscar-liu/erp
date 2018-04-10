@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class reqUpStock extends reqBase implements Serializable{
+public class ReqUpStock extends ReqBase implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 

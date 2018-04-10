@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.common.ResBody;
-import com.whalegoods.entity.request.reqUpStock;
+import com.whalegoods.entity.request.ReqUpStock;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.service.DeviceRoadService;
 
@@ -78,7 +78,7 @@ public class V1GoodsController  extends BaseController<Object>{
    * 2018年4月9日 下午5:08:14
    */
   @PostMapping(value="/upStock")
-  ResBody upStock(@RequestBody reqUpStock model) {
+  ResBody upStock(@RequestBody ReqUpStock model) {
 	  Map<String,Object> condition=new HashMap<>();
 	  ResBody resBody=new ResBody();
 	  resBody.setResultCode(0);

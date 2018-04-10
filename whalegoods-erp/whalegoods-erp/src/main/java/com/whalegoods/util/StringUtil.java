@@ -1,5 +1,9 @@
 package com.whalegoods.util;
 
+import java.util.UUID;
+
+import com.whalegoods.constant.ConstSysParamName;
+
 /**
  * 字符串工具类
  * @author chencong
@@ -32,5 +36,23 @@ public class StringUtil {
 			}
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * 生成系统订单号
+	 * @author chencong
+	 * 2018年4月10日 下午1:38:41
+	 */
+	public static String getOrderId(){
+		StringBuffer sb=new StringBuffer();
+		sb.append(ConstSysParamName.ORDER_ID_PREFIX);
+		sb.append(String.valueOf(System.currentTimeMillis()));
+		sb.append(randomString(17));
+		return sb.toString();
+	}
+	
+	
+	public static String getUUID(){
+		return UUID.randomUUID().toString().replace(ConstSysParamName.GANG,"");
 	}
 }

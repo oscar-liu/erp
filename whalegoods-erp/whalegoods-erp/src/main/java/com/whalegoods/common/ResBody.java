@@ -27,5 +27,10 @@ public class ResBody  implements Serializable {
     private String resultMsg;
     
     private Object data;
+    
+    public ResBody(Integer resultCode,String resultMsg){
+    	this.resultCode=resultCode;
+    	this.resultMsg=resultMsg;
+    }
 
 }

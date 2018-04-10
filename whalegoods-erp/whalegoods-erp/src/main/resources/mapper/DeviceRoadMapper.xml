@@ -83,7 +83,7 @@
     WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
   </select>
   
-   <!--  根据设备编号和货道编号查询所有商品 -->
+   <!--  根据当前设备商品编号或货道号获取商品信息 -->
     <select id="selectByPathOrGoodsCode" parameterType="java.util.Map" resultMap="BaseResultMap2">
     SELECT 
     <include refid="Base_Column_List2" />

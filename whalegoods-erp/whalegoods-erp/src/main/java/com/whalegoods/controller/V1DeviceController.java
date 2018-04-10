@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.common.ResBody;
-import com.whalegoods.entity.request.reqUpDeviceStatus;
+import com.whalegoods.entity.request.ReqUpDeviceStatus;
 import com.whalegoods.service.DeviceService;
 
 /**
@@ -35,7 +35,7 @@ public class V1DeviceController  extends BaseController<Object>{
    * 2018年4月9日 上午11:06:19
    */
   @PostMapping(value="/updateDeviceStatus")
-  ResBody updateDeviceStatus(@RequestBody reqUpDeviceStatus model) {
+  ResBody updateDeviceStatus(@RequestBody ReqUpDeviceStatus model) {
 	  Map<String,Object> condition=new HashMap<>();
 	  condition.put("deviceIdJp",model.getDeviceCodeWg());
 	  condition.put("deviceIdSupp",model.getDeviceCodeSup());

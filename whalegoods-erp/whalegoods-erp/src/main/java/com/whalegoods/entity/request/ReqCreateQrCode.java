@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class reqCreateQrCode extends reqBase{
+public class ReqCreateQrCode extends ReqBase{
 
 	private static final long serialVersionUID = 1L;
 

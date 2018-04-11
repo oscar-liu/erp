@@ -1,10 +1,14 @@
 package com.whalegoods.exception;
 
 
-
+/**
+ * DAO层异常
+ * @author chencong
+ * 2018年4月11日 上午9:25:59
+ */
 public class BizDaoException extends BizException {
 
-	private static final long serialVersionUID = -2400481044433310559L;
+	private static final long serialVersionUID = 1L;
 
 	public BizDaoException(Throwable cause) {
 		super(cause);

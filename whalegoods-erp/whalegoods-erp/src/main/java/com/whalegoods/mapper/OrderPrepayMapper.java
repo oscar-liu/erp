@@ -12,6 +12,7 @@ public interface OrderPrepayMapper extends BaseMapper<OrderPrepay,String> {
     @Override
     int deleteByPrimaryKey(String id);
 
+    @Override
     int insert(OrderPrepay record);
 
     @Override

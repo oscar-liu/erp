@@ -3,6 +3,7 @@ package com.whalegoods.service;
 
 import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.request.ReqCreateQrCode;
+import com.whalegoods.exception.SystemException;
 
 
 /**
@@ -12,6 +13,6 @@ import com.whalegoods.entity.request.ReqCreateQrCode;
  */
 public interface PayService {
 	
-	ResBody getQrCode(ReqCreateQrCode model) throws Exception;
+	ResBody getQrCode(ReqCreateQrCode model) throws SystemException;
 	
 }

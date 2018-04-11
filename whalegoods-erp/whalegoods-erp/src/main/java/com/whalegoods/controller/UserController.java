@@ -5,7 +5,7 @@ import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.core.quartz.JobTask;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.RoleUserService;
 import com.whalegoods.service.SysUserService;
 import com.whalegoods.util.BeanUtil;
@@ -32,9 +32,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 用户管理控制器
+ * 系统用户API
  * @author chencong
- *
+ * 2018年4月11日 上午9:34:57
  */
 @Controller
 @RequestMapping(value = "/user")
@@ -105,7 +105,7 @@ public class UserController  extends BaseController<Object>{
         roleUserService.insertSelective(sysRoleUser);
       }
       j.setMsg("保存成功");
-    } catch (MyException e) {
+    } catch (BizApiException e) {
       j.setMsg("保存失败");
       j.setFlag(false);
       e.printStackTrace();
@@ -156,7 +156,7 @@ public class UserController  extends BaseController<Object>{
       }
       jsonUtil.setFlag(true);
       jsonUtil.setMsg("修改成功");
-    } catch (MyException e) {
+    } catch (BizApiException e) {
       e.printStackTrace();
     }
     return jsonUtil;
@@ -216,7 +216,7 @@ public class UserController  extends BaseController<Object>{
       userService.rePass(user);
       j.setMsg("修改成功");
       j.setFlag(true);
-    }catch (MyException e){
+    }catch (BizApiException e){
       e.printStackTrace();
     }
     return j;

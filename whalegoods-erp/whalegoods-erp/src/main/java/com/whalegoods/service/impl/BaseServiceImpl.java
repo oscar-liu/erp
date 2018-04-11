@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.whalegoods.common.CurrentUser;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizServiceException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.service.BaseService;
 import com.whalegoods.util.ReType;
@@ -55,7 +55,7 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
     Page<T> tPage= PageHelper.startPage(page,limit);
     try{
       tList=getMapper().selectListByPage(t);
-    }catch (MyException e){
+    }catch (BizServiceException e){
       logger.error("class:BaseServiceImpl ->method:show->message:"+e.getMessage());
       e.printStackTrace();
     }

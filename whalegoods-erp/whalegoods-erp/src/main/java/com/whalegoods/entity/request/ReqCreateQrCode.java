@@ -1,5 +1,11 @@
 package com.whalegoods.entity.request;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -19,18 +25,26 @@ public class ReqCreateQrCode extends ReqBase{
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("path_code")
+	@NotEmpty(message="path_code必填")
 	private String pathCode;
 	
 	@JsonProperty("view_time")
-	private Integer viewTime;
+	private Long viewTime;
 	
 	@JsonProperty("sale_type")
-	private Integer saleType;
+	@NotNull(message="sale_type必填")
+	@Max(2)
+	@Min(1)
+	private Byte saleType;
 	
 	@JsonProperty("pay_type")
-	private Integer payType;
+	@NotNull(message="pay_type必填")
+	@Max(2)
+	@Min(1)
+	private Byte payType;
 	
 	@JsonProperty("goods_code")
-	private Integer goodsCode;
+	@NotEmpty(message="goods_code必填")
+	private String goodsCode;
 	
 }

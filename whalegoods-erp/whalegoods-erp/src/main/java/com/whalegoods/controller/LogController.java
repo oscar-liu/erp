@@ -3,9 +3,8 @@ package com.whalegoods.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-/*import com.whalegoods.base.BaseController;*/
 import com.whalegoods.entity.SysLog;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.mapper.SysLogMapper;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.ReType;
@@ -21,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/29.
- * @email 154040976@qq.com
- *
- * 日志监控
+ * 系统日志API
+ * @author chencong
+ * 2018年4月11日 上午9:32:50
  */
 @Controller
 @RequestMapping(value = "/log")
@@ -53,7 +50,7 @@ public class LogController  extends BaseController{
         Page<SysLog> tPage= PageHelper.startPage(Integer.valueOf(page),Integer.valueOf(limit));
         try{
             tList=logMapper.selectListByPage(sysLog);
-        }catch (MyException e){
+        }catch (BizApiException e){
             logger.error("class:LogController ->method:showLog->message:"+e.getMessage());
             e.printStackTrace();
         }
@@ -74,7 +71,7 @@ public class LogController  extends BaseController{
         try{
             for(String id:ids)
             logMapper.deleteByPrimaryKey(Integer.valueOf(id));
-        }catch (MyException e){
+        }catch (BizApiException e){
             msg="删除失败";
             logger.error(msg+e.getMessage());
         }

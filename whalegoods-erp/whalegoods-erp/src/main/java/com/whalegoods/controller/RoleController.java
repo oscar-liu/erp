@@ -6,7 +6,7 @@ import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysRoleMenu;
 import com.whalegoods.entity.SysRoleUser;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.service.RoleMenuService;
 import com.whalegoods.service.RoleService;
@@ -14,7 +14,6 @@ import com.whalegoods.service.RoleUserService;
 import com.whalegoods.util.BeanUtil;
 import com.whalegoods.util.JsonUtil;
 
-/*import io.swagger.annotations.ApiOperation;*/
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -27,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 角色相关控制器
+ * 角色处理API
  * @author chencong
- *
+ * 2018年4月11日 上午9:34:26
  */
 @Controller
 @RequestMapping(value = "/role")
@@ -88,7 +87,7 @@ public class RoleController extends BaseController<Object> {
         roleMenuService.insert(sysRoleMenu);
       }
       j.setMsg("保存成功");
-    }catch (MyException e){
+    }catch (BizApiException e){
       j.setMsg("保存失败");
       j.setFlag(false);
       e.printStackTrace();
@@ -137,7 +136,7 @@ public class RoleController extends BaseController<Object> {
       }
       jsonUtil.setFlag(true);
       jsonUtil.setMsg("修改成功");
-    } catch (MyException e) {
+    } catch (BizApiException e) {
       jsonUtil.setMsg("修改失败");
       e.printStackTrace();
     }
@@ -163,7 +162,7 @@ public class RoleController extends BaseController<Object> {
      }
         roleService.deleteByPrimaryKey(id);
      j.setMsg("删除成功");
-    } catch (MyException e) {
+    } catch (BizApiException e) {
       j.setMsg("删除失败");
       j.setFlag(false);
       e.printStackTrace();

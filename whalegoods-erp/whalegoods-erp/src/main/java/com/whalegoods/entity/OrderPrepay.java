@@ -23,25 +23,13 @@ public class OrderPrepay extends BaseEntity implements Serializable {
     
     private Date orderTime;
     
-    private String prcodeUrl;
-    
     private Byte orderStatus;
     
-    private String goodsSkuId;
+    private String goodsCode;
     
     private String goodsName;
     
     private Double salePrice;
-    
-    private String spec;
-    
-    private Double oneCost;
-    
-    private String deviceRoadId;
-    
-    private String deviceIdJp;
-    
-    private Date deviceIdSupp;
     
     private Byte ctn;
     
@@ -53,14 +41,8 @@ public class OrderPrepay extends BaseEntity implements Serializable {
     
     private String prepayId;
     
-    private String prepayStatusCode;
+    private String deviceIdJp;
     
-    private String prepayInfo;
-    
-    private String prepayResult;
-    
-    private String prepayErrorCode;
-    
-    private String prepayErrorInfo;
+    private String deviceIdSupp;
 
 }

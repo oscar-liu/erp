@@ -1,5 +1,7 @@
 package com.whalegoods.exception;
 
+import com.whalegoods.constant.ConstApiResCode;
+
 public class BizException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
@@ -15,7 +17,7 @@ public class BizException extends RuntimeException {
 
 
   public BizException(Throwable cause) {
-    this(cause, BaseApiCode.EXCEPTION_UNKNOWN);
+    this(cause, ConstApiResCode.EXCEPTION_UNKNOWN);
     if (cause instanceof BizException || cause instanceof SystemException) {
       setCode(((BizException) cause).getCode());
 

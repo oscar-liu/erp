@@ -1,4 +1,4 @@
-package com.whalegoods.exception;
+/*package com.whalegoods.exception;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,11 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.whalegoods.exception.MyException;
 
-/**
+*//**
  * 全局异常处理
  * @author chencong
  * 2018年3月30日 下午4:53:44
- */
+ *//*
 public class CustomException implements HandlerExceptionResolver {
 
   @Override
@@ -39,3 +39,4 @@ public class CustomException implements HandlerExceptionResolver {
     return mv;
   }
 }
+*/

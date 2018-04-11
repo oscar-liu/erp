@@ -42,8 +42,7 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
  */
 public class HttpUtils {
 
-	private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
-	
+	private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);	
 	
 	/**
 	 * 功能描述:  get方式
@@ -170,7 +169,6 @@ public class HttpUtils {
 				if (i != -1)
 					buffer.append((char) i);
 			}
-
 			in.close();
 			result = new String(buffer.toString().getBytes("iso-8859-1"),"UTF-8");
 		} catch (Exception e) {

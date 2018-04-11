@@ -3,7 +3,7 @@ package com.whalegoods.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.whalegoods.config.log.Log;
 import com.whalegoods.entity.SysMenu;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.util.JsonUtil;
 
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 菜单控制器
- * @author henry-sun
- *
+ * 菜单API
+ * @author chencong
+ * 2018年4月11日 上午9:34:02
  */
 @Controller
 @RequestMapping(value = "/menu")
@@ -80,7 +80,7 @@ public class MenuController extends BaseController<Object>{
     	  jsonUtil.setFlag(false);
           jsonUtil.setMsg("添加失败");
 	}
-    }catch (MyException e){
+    }catch (BizApiException e){
       e.printStackTrace();
       jsonUtil.setMsg("添加失败");
     }

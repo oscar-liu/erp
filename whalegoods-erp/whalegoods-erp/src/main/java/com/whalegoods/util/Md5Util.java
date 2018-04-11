@@ -1,5 +1,7 @@
 package com.whalegoods.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import org.apache.shiro.crypto.hash.Md5Hash;
@@ -7,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
+import com.whalegoods.exception.SystemException;
 /**
  * MD5工具类
  * @author chencong
@@ -41,7 +45,7 @@ public class Md5Util {
 			}
 			buffer.append(ConstSysParamName.KEY_LAST);
 			buffer.append(secretkey);
-			serverSign=getMd5(buffer.toString(),null).toUpperCase();
+			serverSign=getMd532(buffer.toString()).toUpperCase();
 		} catch (Exception e) {
 			logger.error("exec getSign() error:{}",e.toString());
 		}
@@ -52,7 +56,30 @@ public class Md5Util {
 	 * 生成MD5值
 	 * @author chencong
 	 * 2018年4月10日 下午4:14:09
+	 * @throws SystemException 
 	 */
+	private static String getMd532(String values) throws SystemException {
+		StringBuffer buf = new StringBuffer("");
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(values.getBytes());
+			byte b[] = md.digest();
+			int i;
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0)
+					i += 256;
+				if (i < 16)
+					buf.append("0");
+				buf.append(Integer.toHexString(i));
+			}
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("exec MD5EncryptBy32() error:{}",e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
+		return buf.toString();
+	}
+	
 	  public static String getMd5(String msg,String salt){
 		    return new Md5Hash(msg,salt,4).toString();
 	  }

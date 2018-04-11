@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/19.
- * @email 154040976@qq.com
- * 404 403 500
+ * 错误处理API
+ * @author chencong
+ * 2018年4月11日 上午9:29:17
  */
 @Controller
 @RequestMapping(value = "/error")

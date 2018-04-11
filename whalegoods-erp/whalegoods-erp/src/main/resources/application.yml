@@ -37,7 +37,7 @@ mybatis:
 
 mapper:
     mappers:
-        - com.len.base.BaseMapper
+        - com.whalegoods.mapper.BaseMapper
     not-empty: false
     identity: MYSQL
 
@@ -51,4 +51,4 @@ pagehelper:
 
 logging:
   level:
-      com.len.mapper: debug
+      com.whalegoods.mapper: debug

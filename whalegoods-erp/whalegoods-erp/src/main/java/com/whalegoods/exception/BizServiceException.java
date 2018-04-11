@@ -1,21 +1,23 @@
 package com.whalegoods.exception;
 
 /**
- * 统一错误码异常
- * <p>
- * Created by simon on 14/03/2017.
+ * Service层异常
+ * @author chencong
+ * 2018年4月11日 上午9:24:23
  */
 public class BizServiceException extends BizException {
 
-  public BizServiceException(Throwable cause) {
-    super(cause);
-  }
+	private static final long serialVersionUID = 1L;
+	
+	public BizServiceException(Throwable cause) {
+	    super(cause);
+	  }
+	
+	  public BizServiceException(Throwable cause, int code, String... params) {
+		    super(cause, code, params);
+		  }
 
-  public BizServiceException(Throwable cause, int code, String... params) {
-    super(cause, code, params);
-  }
-
-  public BizServiceException(int code, String... params) {
-    super(code, params);
-  }
+		  public BizServiceException(int code, String... params) {
+		    super(code, params);
+		  }
 }

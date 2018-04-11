@@ -4,7 +4,7 @@ import com.whalegoods.config.log.Log;
 import com.whalegoods.config.log.Log.LOG_TYPE;
 import com.whalegoods.core.quartz.JobTask;
 import com.whalegoods.entity.SysJob;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.JobService;
 import com.whalegoods.util.BeanUtil;
 import com.whalegoods.util.JsonUtil;
@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @author zhuxiaomeng
- * @date 2018/1/6.
- * @email 154040976@qq.com
- *
- * 定时任务 controller
+ * 任务调度API
+ * @author chencong
+ * 2018年4月11日 上午9:29:35
  */
 @Controller
 @RequestMapping("/job")
@@ -63,7 +61,7 @@ public class JobController extends BaseController<SysJob> {
     job.setStatus(false);
     try {
       jobService.insertSelective(job);
-    }catch (MyException e){
+    }catch (BizApiException e){
       msg="保存失败";
       j.setFlag(false);
       e.printStackTrace();
@@ -104,7 +102,7 @@ public class JobController extends BaseController<SysJob> {
       jobService.updateByPrimaryKey(oldJob);
       j.setFlag(true);
       j.setMsg("修改成功");
-    }catch (MyException e){
+    }catch (BizApiException e){
       j.setMsg("更新失败");
       e.printStackTrace();
     }
@@ -136,7 +134,7 @@ public class JobController extends BaseController<SysJob> {
       jobService.deleteByPrimaryKey(id);
       j.setFlag(true);
       j.setMsg("任务删除成功");
-    }catch (MyException e){
+    }catch (BizApiException e){
       j.setMsg("任务删除异常");
       e.printStackTrace();
     }
@@ -162,7 +160,7 @@ public class JobController extends BaseController<SysJob> {
       job.setStatus(true);
       jobService.updateByPrimaryKey(job);
       msg="启动成功";
-    }catch (MyException e){
+    }catch (BizApiException e){
       e.printStackTrace();
     }
     j.setMsg(msg);
@@ -187,7 +185,7 @@ public class JobController extends BaseController<SysJob> {
       job.setStatus(false);
       jobService.updateByPrimaryKey(job);
       msg="停止成功";
-    }catch (MyException e){
+    }catch (BizApiException e){
       e.printStackTrace();
     }
     j.setMsg(msg);

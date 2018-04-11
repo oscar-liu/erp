@@ -27,7 +27,7 @@ public class ResDeviceGoodsInfo implements Serializable {
 	@JsonProperty("goods_name")
 	private String goodsName;
 	
-	private Integer ctn;
+	private Byte ctn;
 	
 	private String spec;
 	
@@ -46,7 +46,7 @@ public class ResDeviceGoodsInfo implements Serializable {
 	@JsonProperty("path_code")
 	private String pathCode;
 	
-	private Integer floor;
+	private Byte floor;
 	
 	@JsonProperty("pic_url")
 	private String picUrl;

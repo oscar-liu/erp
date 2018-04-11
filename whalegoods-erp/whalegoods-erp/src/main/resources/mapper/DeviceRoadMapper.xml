@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.whalegoods.mapper.DeviceRoadMapper">
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.DeviceRoad">
     <id column="id" jdbcType="VARCHAR" property="id" />
@@ -61,18 +62,18 @@
   </sql>
   
    <sql id="Base_Column_List2">
-    b.goods_code, 
-    b.goods_name, 
-    a.ctn, 
-    b.spec, 
-    b.goods_detail, 
-    b.made_in, 
-    b.market_price,
     a.sale_price,
     a.path_code,
     a.floor,
+    a.ctn, 
+    a.stock,
+    b.goods_code, 
+    b.goods_name, 
+    b.spec, 
+    b.goods_detail, 
     b.pic_url,
-    a.stock 
+    b.made_in, 
+    b.market_price
   </sql>
   
  <!--  根据设备编号查询所有商品 -->
@@ -80,7 +81,8 @@
     SELECT 
     <include refid="Base_Column_List2" />
     FROM device_road a INNER JOIN goods_sku b ON a.goods_sku_id=b.id
-    WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
+    INNER JOIN device c  ON c.id=a.device_id
+    WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
   </select>
   
    <!--  根据当前设备商品编号或货道号获取商品信息 -->
@@ -88,8 +90,9 @@
     SELECT 
     <include refid="Base_Column_List2" />
     FROM device_road a INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
     <where>
-			a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
+			c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
 			<if test="type ==1">
 				AND b.goods_code=#{goodsOrPathCode}
 			</if>

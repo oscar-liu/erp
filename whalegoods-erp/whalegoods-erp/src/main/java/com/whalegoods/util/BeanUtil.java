@@ -17,9 +17,9 @@ public class BeanUtil {
   public static String[] getNullPropertyNames(Object source) {
     final BeanWrapper src = new BeanWrapperImpl(source);
     PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
+    
     Set<String> emptyNames = new HashSet<>();
-    for (PropertyDescriptor pd : pds) {
+    for (PropertyDescriptor pd : pds) {			
       Object srcValue = src.getPropertyValue(pd.getName());
       if (srcValue == null){
         emptyNames.add(pd.getName());

@@ -5,6 +5,8 @@ package com.whalegoods.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.common.ResBody;
+import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqUpDeviceStatus;
 import com.whalegoods.service.DeviceService;
 
@@ -37,8 +40,8 @@ public class V1DeviceController  extends BaseController<Object>{
   @PostMapping(value="/updateDeviceStatus")
   ResBody updateDeviceStatus(@RequestBody ReqUpDeviceStatus model) {
 	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",model.getDeviceCodeWg());
-	  condition.put("deviceIdSupp",model.getDeviceCodeSup());
+	/*  condition.put("deviceIdJp",model.getDeviceCodeWg());
+	  condition.put("deviceIdSupp",model.getDeviceCodeSupp());*/
 	  deviceService.updateDeviceStatus(condition);
 	  ResBody resBody=new ResBody();
 	  resBody.setResultCode(0);
@@ -52,10 +55,10 @@ public class V1DeviceController  extends BaseController<Object>{
    * 2018年4月9日 上午11:05:57
    */
   @GetMapping(value="/getOperateStatus")
-  ResBody getOperateStatus(@RequestParam String device_code_wg,@RequestParam String device_code_sup) {
+  ResBody getOperateStatus(@Valid ReqBase model) {
 	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",device_code_wg);
-	  condition.put("deviceIdSupp",device_code_sup);
+	  condition.put("deviceIdJp",model.getDevice_code_wg());
+	  condition.put("deviceIdSupp",model.getDevice_code_sup());
 	  int status=deviceService.getOperateStatus(condition);
 	  ResBody resBody=new ResBody();
 	  resBody.setResultCode(0);
@@ -70,10 +73,10 @@ public class V1DeviceController  extends BaseController<Object>{
    * 2018年4月9日 上午11:05:57
    */
   @GetMapping(value="/updateClient")
-  ResBody updateClient(@RequestParam String device_code_wg,@RequestParam String device_code_sup) {
+  ResBody updateClient(@Valid ReqBase model) {
 	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",device_code_wg);
-	  condition.put("deviceIdSupp",device_code_sup);
+	  condition.put("deviceIdJp",model.getDevice_code_wg());
+	  condition.put("deviceIdSupp",model.getDevice_code_sup());
 	  Map<String,Object> dataMap=deviceService.getApk(condition);
 	  ResBody resBody=new ResBody();
 	  resBody.setResultCode(0);

@@ -7,12 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/*import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.impl.BaseServiceImpl;*/
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
-import com.whalegoods.exception.MyException;
+import com.whalegoods.exception.BizServiceException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.SysRoleUserMapper;
 import com.whalegoods.mapper.SysUserMapper;
@@ -141,7 +139,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
         sysUserMapper.delById(id);
       }
       j.setMsg("删除成功");
-    } catch (MyException e) {
+    } catch (BizServiceException e) {
       j.setMsg("删除失败");
       j.setFlag(false);
       e.printStackTrace();

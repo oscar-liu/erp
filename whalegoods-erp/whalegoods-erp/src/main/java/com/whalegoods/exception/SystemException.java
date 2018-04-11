@@ -20,20 +20,20 @@ public class SystemException extends Exception {
 
 	public SystemException(Integer code) {
     this.code = code;
-  }
+	}
+	
+	  public String getLocalizedMessage() {
+		    return ConstApiResCode.getResultMsg(code);
+		  }
 
-  public String getLocalizedMessage() {
-    return ConstApiResCode.getZhMsg(code);
-  }
+		  public SystemException(Integer code, String msg) {
+		    super(msg);
+		    this.code = code;
+		  }
 
-  public SystemException(Integer code, String msg) {
-    super(msg);
-    this.code = code;
-  }
-
-  public SystemException(Integer code, String msg, Throwable cause) {
-    super(msg, cause);
-    this.code = code;
-  }
+		  public SystemException(Integer code, String msg, Throwable cause) {
+		    super(msg, cause);
+		    this.code = code;
+		  }
 
 }

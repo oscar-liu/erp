@@ -25,21 +25,16 @@ import com.whalegoods.config.log.Log;
 import com.whalegoods.entity.SysMenu;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.service.MenuService;
-import com.whalegoods.service.SysUserService;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.VerifyCodeUtils;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/4.
- * @email 154040976@qq.com
- * 登录、退出页面
+ * 登录退出API
+ * @author chencong
+ * 2018年4月11日 上午9:33:21
  */
 @Controller
 public class LoginController {
-
-  @Autowired
-  private SysUserService userService;
 
   @Autowired
   private MenuService menuService;

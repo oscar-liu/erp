@@ -1,6 +1,6 @@
 package com.whalegoods.controller;
 
-import java.util.Map;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.request.ReqCreateQrCode;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.PayService;
 
 /**
@@ -29,12 +30,9 @@ public class V1OrderController  extends BaseController<Object>{
 	public PayService payService;
 
   @PostMapping(value="/createQrCode")
-  ResBody getlistGoodsAdsTop(@RequestBody ReqCreateQrCode model) {
+  ResBody getlistGoodsAdsTop(@RequestBody @Valid ReqCreateQrCode model) throws SystemException {
 	  logger.info("收到生成商品支付二维码接口："+model.toString());
-	  Map<String,Object> mapData=payService.getPrepayMapData(model);
-	  ResBody resBody=new ResBody(0,"成功");
-	  resBody.setData(mapData);
-	  return resBody;
+	  return payService.getQrCode(model);
 	}
   
 }

@@ -15,10 +15,10 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 @Configuration
 public class TransactionalConfig {
 
-  private static final String  PROPAGATION_REQUIRED="PROPAGATION_REQUIRED,-Throwable";
-  private static final String  PROPAGATION_REQUIRED_READ="PROPAGATION_REQUIRED,-Throwable,readOnly";
-  private static final String[]  REQUIRED_RULE_TRANSACTION={"insert*","add*","update*","del*","create*"};
-  private static final String[]  READ_RULE_TRANSACTION={"select*","get*","count*","find*"};
+	  private static final String[]  REQUIRED_RULE_TRANSACTION={"insert*","add*","update*","del*","create*"};
+	  private static final String  PROPAGATION_REQUIRED="PROPAGATION_REQUIRED,-Throwable";
+	  private static final String[]  READ_RULE_TRANSACTION={"select*","get*","count*","find*"};
+	  private static final String  PROPAGATION_REQUIRED_READ="PROPAGATION_REQUIRED,-Throwable";
 
   /**
    *aop
@@ -39,6 +39,7 @@ public class TransactionalConfig {
     interceptor.setTransactionAttributes(properties);
     return interceptor;
   }
+  
   @Bean
     public BeanNameAutoProxyCreator getBeanNameAutoProxyCreator(){
       BeanNameAutoProxyCreator proxyCreator=new BeanNameAutoProxyCreator();

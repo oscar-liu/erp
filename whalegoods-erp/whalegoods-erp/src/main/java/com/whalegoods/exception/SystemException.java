@@ -4,6 +4,7 @@ import com.whalegoods.constant.ConstApiResCode;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 系统异常
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class SystemException extends Exception {
 	
 	private static final long serialVersionUID = 1L;

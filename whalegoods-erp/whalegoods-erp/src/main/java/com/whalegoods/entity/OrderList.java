@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class OrderPrepay extends BaseEntity implements Serializable {
+public class OrderList extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 

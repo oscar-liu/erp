@@ -1,15 +1,22 @@
 package com.whalegoods.util;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.exception.SystemException;
@@ -22,6 +29,7 @@ import com.whalegoods.exception.SystemException;
  */
 public class XmlUtil{
 	
+	private static Logger logger = LoggerFactory.getLogger(XmlUtil.class);
 	
 	  public static String mapToXml(Map map) {    
 	        StringBuffer sb = new StringBuffer();  
@@ -84,4 +92,46 @@ public class XmlUtil{
 	      }  
 	      return map;  
 	    }  
+	    
+	    /**
+	     * 解析POST XML请求流
+	     * @param request
+	     * @return
+	     * @throws SystemException 
+	     */
+	    public static HashMap<String, String> parseXML(HttpServletRequest request) throws SystemException{
+            // 将解析结果存储在HashMap中
+            HashMap<String, String> map = new HashMap<String, String>();
+            try {
+                // 从request中取得输入流
+                InputStream inputStream = request.getInputStream();
+                // 读取输入流
+                SAXReader reader = new SAXReader();
+                Document document = reader.read(request.getInputStream());
+                // 得到xml根元素
+                Element root = document.getRootElement();
+                recursiveParseXML(root,map);
+                inputStream.close();
+                inputStream = null;
+			} catch (Exception e) {
+				logger.error("执行parseXML方法错误："+e.getMessage());
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}
+            return map;
+        }
+	    
+	    private static void recursiveParseXML(Element root,HashMap<String, String> map){
+            // 得到根元素的所有子节点
+            @SuppressWarnings("unchecked")
+			List<Element> elementList = root.elements();
+            //判断有没有子元素列表
+            if(elementList.size() == 0){
+                map.put(root.getName(), root.getText());
+            }else{
+                //遍历
+                for (Element e : elementList){
+                    recursiveParseXML(e,map);
+                }
+            }
+        }
 }

@@ -19,13 +19,13 @@ import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.constant.ConstSysParamValue;
-import com.whalegoods.entity.OrderPrepay;
+import com.whalegoods.entity.OrderList;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.exception.BizServiceException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.DeviceRoadMapper;
-import com.whalegoods.mapper.OrderPrepayMapper;
+import com.whalegoods.mapper.OrderListMapper;
 import com.whalegoods.service.PayService;
 import com.whalegoods.util.HttpUtils;
 import com.whalegoods.util.IpUtil;
@@ -43,7 +43,7 @@ public class PayServiceImpl implements PayService{
 	private DeviceRoadMapper deviceRoadMapper;
 	
 	@Autowired
-	private OrderPrepayMapper orderPrepayMapper;
+	private OrderListMapper orderListMapper;
 	
 	@Transactional
 	@SuppressWarnings("deprecation")
@@ -64,7 +64,7 @@ public class PayServiceImpl implements PayService{
 		String goodsName=info.getGoodsName();
 		Double salePrice=info.getSalePrice();
 		String orderId=StringUtil.getOrderId();
-		//若是微信支付
+		//微信
 		if(model.getPayType()==1){
 			Map<String, String> mapPpRst;
 			try {
@@ -81,7 +81,7 @@ public class PayServiceImpl implements PayService{
 					mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToString(mapPpRst.get("code_url").getBytes())));
 					resBody.setData(mapData);
 					//记录预支付订单信息
-					OrderPrepay orderPrepay=new OrderPrepay();
+					OrderList orderPrepay=new OrderList();
 					BeanUtils.copyProperties(info,orderPrepay);
 					orderPrepay.setId(StringUtil.getUUID());
 					orderPrepay.setOrderId(orderId);
@@ -91,7 +91,12 @@ public class PayServiceImpl implements PayService{
 					orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
 					orderPrepay.setPayType(model.getPayType());
 					orderPrepay.setPrepayId(mapPpRst.get("prepay_id"));
-					orderPrepayMapper.insert(orderPrepay);
+					try {
+						orderListMapper.insert(orderPrepay);
+					} catch (Exception e) {
+						//插入数据记录异常，不影响用户扫码支付，故不应中断结果返回
+						logger.error("微信支付，插入预支付记录失败："+orderPrepay.toString());
+					}
 				}
 				else {
 					logger.error("微信预支付二级失败,错误代码："+mapPpRst.get("err_code")+" 描述："+mapPpRst.get("err_code_des"));
@@ -103,6 +108,10 @@ public class PayServiceImpl implements PayService{
 				logger.error("微信预支付一级失败："+mapPpRst.get("return_msg"));
 				throw new BizServiceException(ConstApiResCode.WX_PREPAY_ONE_FAILD);
 			}
+		}
+		//支付宝
+		if(model.getPayType()==2){
+			
 		}
 		return resBody;
 	}
@@ -133,6 +142,40 @@ public class PayServiceImpl implements PayService{
 		String xmlResult=HttpUtils.sendPost(ConstSysParamValue.WX_PREPAY_URL,xmlData,null);
 		logger.info("结果："+xmlResult);
 		return XmlUtil.xmlToMap(xmlResult);
+	}
+
+	@Override
+	public ResBody wxNofity(Map<String, String> mapNotify) {
+		if(mapNotify.get("return_code").equals(ConstSysParamName.SUCCESS))
+		{
+			if(mapNotify.get("result_code").equals(ConstSysParamName.SUCCESS)){
+				Map<String,Object> mapInfo=new HashMap<>();
+				mapInfo.put("openId",mapInfo.get("openid"));
+				mapInfo.put("orderId",mapInfo.get("out_trade_no"));
+				mapInfo.put("payTime",mapInfo.get("pay_time"));
+				mapInfo.put("orderStatus",2);
+				orderListMapper.updateByOrderId(mapInfo);
+			}
+			else {
+				logger.error("微信支付结果通知二级失败,错误代码："+mapNotify.get("err_code")+" 描述："+mapNotify.get("err_code_des"));
+				throw new BizServiceException(ConstApiResCode.WX_NOTIFY_TWO_FAILD);
+			}
+		}
+		else
+		{
+			logger.error("微信支付结果通知一级失败："+mapNotify.get("return_msg"));
+			throw new BizServiceException(ConstApiResCode.WX_NOTIFY_ONE_FAILD);
+		}
+		return null;
+	}
+
+	@Override
+	public ResBody getOrderStatus(String orderId) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		Map<String,Object> mapData=new HashMap<>();
+		mapData.put("order_status", orderListMapper.selectOrderStatus(orderId));
+		resBody.setData(mapData);
+		return resBody;
 	}
 
 }

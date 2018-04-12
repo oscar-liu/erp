@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="com.whalegoods.mapper.OrderPrepayMapper">
-  	<!-- 插入个人账户银行信息 -->
-	<insert id="insert" parameterType="com.whalegoods.entity.OrderPrepay">
+<mapper namespace="com.whalegoods.mapper.OrderListMapper">
+  	<!-- 插入预支付订单信息 -->
+	<insert id="insert" parameterType="com.whalegoods.entity.OrderList">
 		INSERT INTO order_prepay (
 			id,
 			device_id_jp,
@@ -20,7 +19,7 @@
 			pay_type,
 			prepay_id,
 			create_date,
-			update_date,
+			update_date
 			) 
 			VALUES
 			(
@@ -42,5 +41,16 @@
 				now()
 			)
 	</insert>
+	
+	<!-- 根据订单号更新订单信息 -->
+		<update id="updateByOrderId" parameterType="java.util.Map">
+		UPDATE order_list a set a.open_id=#{openId} ,a.pay_time=#{payTime},a.order_status=#{orderStatus}
+		WHERE  a.order_id=#{orderId}
+	</update>
+	
+	 <!--  根据订单号查询订单状态 -->
+    <select id="selectOrderStatus" parameterType="java.lang.String" resultType="java.lang.Byte">
+   SELECT a.order_status FROM order_list a WHERE a.order_id=#{orderId}
+  </select>
   
 </mapper>

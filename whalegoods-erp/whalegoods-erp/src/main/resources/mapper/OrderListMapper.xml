@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.OrderListMapper">
+ 
+   <!--  根据订单号查询未支付预支付订单信息 -->
+    <select id="selectByOrderIdAndStatus" parameterType="java.util.Map" resultMap="com.whalegoods.entity.OrderList">
+    SELECT a.goods_name goodsName,a.sale_price salePrice,a.pay_type payType 
+    FROM order_list a 
+    		<where>
+		    <if test="orderStatus !=null and orderStatus !=''">
+				AND a.order_status=#{orderStatus}
+			</if>
+			<if test="order !=null and order !=''">
+				AND a.order_id=#{order} 
+			</if>
+		 </where>
+  </select>
+  
   	<!-- 插入预支付订单信息 -->
 	<insert id="insert" parameterType="com.whalegoods.entity.OrderList">
-		INSERT INTO order_prepay (
+		INSERT INTO order_list (
 			id,
 			device_id_jp,
 			device_id_supp,
@@ -16,8 +31,6 @@
 			ctn,
 			path_code,
 			floor,
-			pay_type,
-			prepay_id,
 			create_date,
 			update_date
 			) 
@@ -35,8 +48,6 @@
 				#{ctn},
 				#{pathCode},
 				#{floor},
-				#{payType},
-				#{prepayId},
 				now(),
 				now()
 			)
@@ -48,9 +59,14 @@
 		WHERE  a.order_id=#{orderId}
 	</update>
 	
-	 <!--  根据订单号查询订单状态 -->
-    <select id="selectOrderStatus" parameterType="java.lang.String" resultType="java.lang.Byte">
-   SELECT a.order_status FROM order_list a WHERE a.order_id=#{orderId}
-  </select>
+		<!-- 根据订单号等信息更新预支付单号和支付方式 -->
+		<update id="updatePrepayidAndPayType" parameterType="com.whalegoods.entity.OrderList">
+		UPDATE order_list a 
+	   <set>
+      <if test="wxPrepayId != null and wxPrepayId != ''">a.wx_prepay_id=#{wxPrepayId},</if>
+      <if test="payType != null and payType != ''">a.pay_type=#{payType},</if>
+      </set>
+		WHERE  a.order_id=#{orderId}
+	</update>
   
 </mapper>

@@ -37,7 +37,8 @@ public abstract class ConstApiResCode {
     public final static Integer WX_PREPAY_ONE_FAILD= 9001;
     public final static Integer WX_PREPAY_TWO_FAILD= 9002;
     public final static Integer WX_NOTIFY_ONE_FAILD= 9003;
-    public final static Integer WX_NOTIFY_TWO_FAILD= 9003;
+    public final static Integer WX_NOTIFY_TWO_FAILD= 9004;
+    public final static Integer ORDER_PREPAY_NOT_EXIST= 9005;
     
     
 	static {
@@ -51,6 +52,7 @@ public abstract class ConstApiResCode {
 		resMap.put(WX_PREPAY_TWO_FAILD,"微信预支付-二级失败");
 		resMap.put(WX_NOTIFY_ONE_FAILD,"微信支付结果通知-一级失败");
 		resMap.put(WX_NOTIFY_TWO_FAILD,"微信支付结果通知-二级失败");
+		resMap.put(ORDER_PREPAY_NOT_EXIST,"预支付订单不存在");
 		
 	}
 	

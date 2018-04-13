@@ -1,7 +1,6 @@
 package com.whalegoods.mapper;
 
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.OrderList;
 
 import java.util.List;
@@ -46,6 +45,13 @@ public interface OrderListMapper extends BaseMapper<OrderList,String> {
     
     int updateByOrderId(Map<String,Object> condition);
     
-    ResBody selectOrderStatus(String orderId);
+    /**
+     * 根据订单号和订单状态查询预支付订单信息
+     * @param order
+     * @return
+     */
+    OrderList selectByOrderIdAndStatus(Map<String,Object> mapCdt);
+    
+    int updatePrepayidAndPayType(OrderList model);
 
 }

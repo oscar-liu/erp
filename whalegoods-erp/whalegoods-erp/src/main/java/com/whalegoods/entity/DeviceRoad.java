@@ -34,7 +34,7 @@ public class DeviceRoad extends BaseEntity implements Serializable {
     
     private Byte capacity;
     
-    private Byte stock;
+    private Integer stock;
     
     private Byte warningNum;
     

@@ -3,12 +3,16 @@ package com.whalegoods.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.DeviceMapper;
 import com.whalegoods.service.DeviceService;
@@ -18,6 +22,8 @@ import com.whalegoods.util.JsonUtil;
 
 @Service
 public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements DeviceService {
+	
+	private static Logger logger = LoggerFactory.getLogger(PayServiceImpl.class);
 	
 	@Autowired
 	DeviceMapper deviceMapper;
@@ -89,8 +95,13 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements
 	}
 
 	@Override
-	public int updateDeviceStatus(Map<String, Object> condition) {
-		return deviceMapper.updateDeviceStatus(condition);
+	public void updateDevice(Device model) throws SystemException {
+		try {
+			deviceMapper.updateDevice(model);
+		} catch (Exception e) {
+			logger.error("更新设备信息失败："+model.toString()+" 原因："+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		} 
 	}
 
 	@Override

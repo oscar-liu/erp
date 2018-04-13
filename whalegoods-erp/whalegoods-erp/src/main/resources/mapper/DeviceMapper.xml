@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.whalegoods.mapper.DeviceMapper">
 
-<update id="updateDeviceStatus"  parameterType="java.util.Map" >
-	UPDATE device a 
-    SET a.device_status=#{deviceStatus}
-    WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
+<!-- 根据条件更新 -->
+	<update id="updateDevice" parameterType="com.whalegoods.entity.Device">
+		UPDATE device a 
+	   <set>
+      <if test="deviceStatus != null and deviceStatus != ''">a.device_status=#{deviceStatus},</if>
+      </set>
+        <where>
+	  <if test="deviceIdJp !=null and deviceIdJp !=''">
+		    AND a.device_id_jp = #{deviceIdJp}
+	  </if>
+	  <if test="deviceIdSupp !=null and deviceIdSupp !=''">
+		    AND a.device_id_supp = #{deviceIdSupp}
+	  </if>
+		</where>
 	</update>
 	
   <select id="getOperateStatus" parameterType="java.util.Map" resultType="java.lang.Integer">

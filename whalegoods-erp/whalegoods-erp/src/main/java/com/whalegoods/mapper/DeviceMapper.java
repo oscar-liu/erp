@@ -42,7 +42,7 @@ public interface DeviceMapper extends BaseMapper<Device,String> {
 
     int rePass(Device user);
     
-    int updateDeviceStatus(Map<String,Object> condition);
+    int updateDevice(Device model);
     
     int updateClient(Map<String,Object> condition);
 

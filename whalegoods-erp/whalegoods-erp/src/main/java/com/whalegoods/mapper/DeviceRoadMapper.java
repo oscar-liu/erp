@@ -1,6 +1,7 @@
 package com.whalegoods.mapper;
 
 
+import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 
@@ -46,4 +47,6 @@ public interface DeviceRoadMapper extends BaseMapper<SysUser,String> {
     List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
     
     ResDeviceGoodsInfo selectByPathOrGoodsCode(Map<String,Object> condition);
+    
+    int updateDeviceRoad(DeviceRoad model);
 }

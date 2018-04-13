@@ -1,10 +1,12 @@
 package com.whalegoods.service;
 
 
+import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 
@@ -66,6 +68,8 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
   ResDeviceGoodsInfo selectByPathOrGoodsCode(Map<String,Object> condition);
 
-int deleteByPrimaryKey(String id);
+  int deleteByPrimaryKey(String id);
+  
+  void updateDeviceRoad(DeviceRoad model) throws SystemException;
 
 }

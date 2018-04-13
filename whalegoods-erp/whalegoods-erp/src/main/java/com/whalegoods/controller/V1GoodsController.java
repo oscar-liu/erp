@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqGetInfoByPathOrGoodsCode;
-import com.whalegoods.entity.request.ReqUpStock;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceRoadService;
 
 /**
@@ -73,14 +76,22 @@ public class V1GoodsController  extends BaseController<Object>{
    * 库存上报接口
    * @author chencong
    * 2018年4月9日 下午5:08:14
+ * @throws SystemException 
    */
   @PostMapping(value="/upStock")
-  ResBody upStock(@RequestBody ReqUpStock model) {
-	  Map<String,Object> condition=new HashMap<>();
-	  ResBody resBody=new ResBody();
-	  resBody.setResultCode(0);
-	  resBody.setResultMsg("成功");
-	  resBody.setData(model);
+  ResBody upStock(@RequestBody String json) throws SystemException {
+	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	  JSONObject jsonObject=JSONObject.parseObject(json);	  
+	  List<Map> mapList=JSON.parseArray(jsonObject.getString("data"),Map.class);
+	  for (Map map : mapList) {
+		//生成要更新的对象
+		  DeviceRoad deviceRoad=new DeviceRoad();
+		  deviceRoad.setDeviceIdJp(jsonObject.getString("device_code_wg"));
+		  deviceRoad.setDeviceIdSupp(jsonObject.getString("device_code_sup"));
+		  deviceRoad.setPathCode(map.get("path_code").toString());
+		  deviceRoad.setStock((Integer)map.get("stock"));
+		  deviceRoadService.updateDeviceRoad(deviceRoad);
+	}
 	  return resBody;
 	}
   

@@ -52,4 +52,6 @@ public class ResDeviceGoodsInfo implements Serializable {
 	private String picUrl;
 	
 	private Integer stock;
+	
+	private Byte type;
 }

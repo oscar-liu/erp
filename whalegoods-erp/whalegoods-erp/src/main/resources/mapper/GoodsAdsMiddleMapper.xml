@@ -22,7 +22,8 @@
     a.type
     FROM goods_ads_middle a INNER JOIN  device_road b ON a.device_road_id=b.id 
     INNER JOIN goods_sku c ON b.goods_sku_id=c.id
-    WHERE b.device_id_jp=#{deviceIdJp} AND b.device_id_supp=#{deviceIdSupp}
+    INNER JOIN device d ON  d.id=b.device_id
+    WHERE d.device_id_jp=#{deviceIdJp} AND d.device_id_supp=#{deviceIdSupp}
     ORDER BY a.type
   </select>
 

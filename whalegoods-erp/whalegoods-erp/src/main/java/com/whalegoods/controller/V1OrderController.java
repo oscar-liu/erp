@@ -64,9 +64,10 @@ public class V1OrderController  extends BaseController<Object>{
    * 查询交易状态
    * @param order
    * @return
+ * @throws SystemException 
    */
   @GetMapping(value="/getOrderStatus")
-  ResBody getOrderStatus(@RequestParam String order)  {
+  ResBody getOrderStatus(@RequestParam String order) throws SystemException  {
 	  logger.info("收到查询交易状态API请求："+order);
 	  return payService.getOrderStatus(order);
 	}
@@ -75,9 +76,10 @@ public class V1OrderController  extends BaseController<Object>{
    * 退款申请
    * @param order
    * @return
+ * @throws SystemException 
    */
   @GetMapping(value="/refund")
-  ResBody refund(@RequestParam String order)  {
+  ResBody refund(@RequestParam String order) throws SystemException  {
 	  logger.info("收到退款申请API请求："+order);
 	  return payService.getOrderStatus(order);
 	}

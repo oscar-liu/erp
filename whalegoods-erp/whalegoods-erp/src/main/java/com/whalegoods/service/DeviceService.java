@@ -4,6 +4,7 @@ package com.whalegoods.service;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 
@@ -60,11 +61,12 @@ public interface DeviceService extends BaseService<Device,String> {
   int deleteByPrimaryKey(String id);
   
   /**
-   * 设备状态上报
+   * 更新设备信息
    * @author chencong
    * 2018年4月9日 上午11:00:39
+ * @throws SystemException 
    */
-  int updateDeviceStatus(Map<String,Object> condition);
+  void updateDevice(Device model) throws SystemException;
   
   /**
    * 查询设备运营状态，运营状态（1正在运行 2停止运行）

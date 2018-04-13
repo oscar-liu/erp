@@ -20,7 +20,9 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayOpenPublicTemplateMessageIndustryModifyRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayOpenPublicTemplateMessageIndustryModifyResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstOrderStatus;
@@ -59,6 +61,43 @@ public class PayServiceImpl implements PayService{
 	private OrderListMapper orderListMapper;
 	
 	@Transactional
+	@Override
+	public ResBody createPrepay(ReqCreatePrepay model) throws SystemException {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		Map<String,Object> mapCdt=new HashMap<>();
+		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
+		mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
+		mapCdt.put("goodsOrPathCode",model.getPathCode());
+		mapCdt.put("type",2);
+		//根据设备编号和货道编号查询商品信息
+		ResDeviceGoodsInfo info=deviceRoadMapper.selectByPathOrGoodsCode(mapCdt);
+		if(info==null){
+			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
+		}
+		//生成预支付订单记录
+		String orderId=StringUtil.getOrderId();
+		OrderList orderPrepay=new OrderList();
+		BeanUtils.copyProperties(info,orderPrepay);
+		orderPrepay.setId(StringUtil.getUUID());
+		orderPrepay.setOrderId(orderId);
+		orderPrepay.setOrderTime(new Date());
+		orderPrepay.setOrderStatus((byte) 1);
+		orderPrepay.setDeviceIdJp(model.getDevice_code_wg());
+		orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
+		try {
+			orderListMapper.insertOrderList(orderPrepay);
+		} catch (Exception e) {
+			logger.error("生成预支付记录失败，数据："+orderPrepay.toString()+" 原因："+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
+		Map<String,Object> mapData=new HashMap<>();
+		mapData.put("order",orderId);
+		resBody.setData(mapData);
+		return resBody;
+	}
+	
+	
+	@Transactional
 	@SuppressWarnings("deprecation")
 	@Override
 	public ResBody getQrCode(ReqCreateQrCode model) throws SystemException{
@@ -75,10 +114,10 @@ public class PayServiceImpl implements PayService{
 		//请求第三方支付预支付API
 		String goodsName=orderList.getGoodsName();
 		Double salePrice=orderList.getSalePrice();
-		String orderId=StringUtil.getOrderId();
+		String orderId=model.getOrder();
 		//微信
 		if(model.getPayType()==1){
-			Map<String, String> mapPpRst;
+			Map<String, Object> mapPpRst;
 			try {
 				mapPpRst = this.wxPrepay(goodsName, salePrice, orderId);
 			} catch (Exception e) {
@@ -88,9 +127,9 @@ public class PayServiceImpl implements PayService{
 			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS))
 			{
 				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS)){					
-					mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToString(mapPpRst.get("code_url").getBytes())));
+					mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToString(mapPpRst.get("code_url").toString().getBytes())));
 					resBody.setData(mapData);
-					orderList.setWxPrepayId(mapPpRst.get("prepay_id"));
+					orderList.setWxPrepayId(mapPpRst.get("prepay_id").toString());
 				}
 				else {
 					logger.error("微信预支付二级失败,错误代码："+mapPpRst.get("err_code")+" 描述："+mapPpRst.get("err_code_des"));
@@ -112,7 +151,7 @@ public class PayServiceImpl implements PayService{
 		//更新预支付订单信息
 		orderList.setPayType(model.getPayType());		
 		try {
-			orderListMapper.updatePrepayidAndPayType(orderList);
+			orderListMapper.updateOrderList(orderList);
 		} catch (Exception e) {
 			//更新预支付记录异常不影响生成二维码
 			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
@@ -120,12 +159,153 @@ public class PayServiceImpl implements PayService{
 		return resBody;
 	}
 	
+	
+	@Transactional
+	@Override
+	public ResBody getOrderStatus(String orderId) throws SystemException {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		//根据订单号查找预支付记录
+		Map<String,Object> mapCdt=new HashMap<>();
+		mapCdt.put("order",orderId);
+		OrderList orderList=orderListMapper.selectByOrderIdAndStatus(mapCdt);
+		if(orderList==null){
+			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
+		}
+		Map<String, Object> mapQrRst;
+		//微信
+		if(orderList.getPayType()==1){
+			try {
+				mapQrRst = this.wxOrderQuery(orderId);
+			} catch (Exception e) {
+				logger.error("执行wxOrderQuery()方法出错："+e.getMessage());
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}	
+			if(mapQrRst.get("return_code").equals(ConstSysParamName.SUCCESS))
+			{
+				if(mapQrRst.get("result_code").equals(ConstSysParamName.SUCCESS)){
+					if(mapQrRst.get("trade_state").equals(ConstSysParamName.SUCCESS)){
+						//用于更新订单信息的新对象
+						orderList=new OrderList();
+						orderList.setOrderId(orderId);
+						orderList.setWxOpenId(mapQrRst.get("openid").toString());
+						orderList.setPayTime(mapQrRst.get("time_end").toString());
+						orderList.setOrderStatus(ConstOrderStatus.PAID);
+					}
+					else{
+						logger.error("微信查询订单交易失败,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));
+						throw new BizServiceException(ConstApiResCode.WX_ORDER_FAILD);
+					}
+				}
+				else {
+					logger.error("微信查询订单二级失败,错误代码："+mapQrRst.get("err_code")+" 描述："+mapQrRst.get("err_code_des"));
+					throw new BizServiceException(ConstApiResCode.WX_QUERY_TWO_FAILD);
+				}
+			}
+			else
+			{
+				logger.error("微信查询订单一级失败："+mapQrRst.get("return_msg"));
+				throw new BizServiceException(ConstApiResCode.WX_QUERY_ONE_FAILD);
+			}
+		}
+		//支付宝
+		else if(orderList.getPayType()==2){
+			mapQrRst=this.alipayOrderQuery(orderId);
+			//用于更新订单信息的新对象
+			orderList=new OrderList();
+			orderList.setBuyerLogonId(mapQrRst.get("buyerLogonId").toString());
+			orderList.setOrderStatus((Byte)mapQrRst.get("orderStatus"));
+			orderList.setPayTime(mapQrRst.get("sendPayDate").toString());
+		}
+		else {
+			throw new BizServiceException(ConstApiResCode.PAY_TYPE_ERROR);
+		}
+		//更新订单信息
+		try {
+			orderListMapper.updateOrderList(orderList);
+		} catch (Exception e) {
+			//更新订单记录异常不影响给前端返回结果
+			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
+		}
+		return resBody;
+	}
+	
+	/**
+	 * 调用微信查询订单API
+	 * @author chencong
+	 * 2018年4月11日 下午3:29:30
+	 */
+	private  Map<String,Object> wxOrderQuery(String orderId) throws Exception {
+		//定义请求数据集合
+		Map<String,Object> map=new HashMap<>();
+		map.put("appid",ConstSysParamValue.WX_APPID);
+		map.put("mch_id",ConstSysParamValue.WX_MCHID);
+		map.put("nonce_str",StringUtil.randomString(32));
+		map.put("out_trade_no",orderId);
+		//生成签名值
+		JSONObject json=JSONObject.parseObject(JSON.toJSONString(map));
+		String sign=Md5Util.getSign(json,ConstSysParamValue.WX_KEY);
+		map.put("sign",sign);
+		String xmlData=XmlUtil.mapToXml(map);
+		logger.info("微信查询订单请求数据："+xmlData);
+		String xmlResult=HttpUtils.sendPost(ConstSysParamValue.WX_QUERY,xmlData,null);
+		logger.info("结果："+xmlResult);
+		return XmlUtil.xmlToMap(xmlResult);
+	}
+	
+	/**
+	 * 调用支付宝查询订单API
+	 * @author chencong
+	 * 2018年4月11日 下午3:29:30
+	 * @throws SystemException 
+	 */
+	private  Map<String,Object> alipayOrderQuery(String orderId) throws SystemException  {
+		Map<String,Object> mapResult=new HashMap<>();
+		//实例化客户端
+		AlipayClient alipayClient = new DefaultAlipayClient(
+				ConstSysParamValue.ALIPAY_QUERY,
+				ConstSysParamValue.ALIPAY_APPID,
+				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","utf-8", 
+				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
+		AlipayTradeQueryRequest  request = new AlipayTradeQueryRequest();
+		JSONObject sonJson=new JSONObject();
+		sonJson.put("out_trade_no",orderId);
+		request.setBizContent(sonJson.toJSONString());
+		AlipayTradeQueryResponse  response;
+		try {
+			response = alipayClient.execute(request);
+		} catch (AlipayApiException e) {
+			logger.error("发送支付宝订单查询API请求失败："+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		} 
+		//调用成功
+		if(response.isSuccess()){
+			mapResult.put("buyerLogonId",response.getParams().get("buyer_logon_id"));
+			String tradeStatus=response.getParams().get("trade_status");
+			if(tradeStatus.equals(ConstSysParamName.SUCCESS)){
+				mapResult.put("orderStatus",ConstOrderStatus.PAID);
+				mapResult.put("sendPayDate",response.getParams().get("send_pay_date"));
+			}
+			else
+			{
+				logger.error("支付宝交易失败："+tradeStatus);
+				mapResult.put("orderStatus",ConstOrderStatus.PAY_ERROR);
+			}
+		}
+		else
+		{
+			logger.error("调用支付宝预支付API失败："+response.getMsg());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
+		return mapResult;
+	}
+
+
 	/**
 	 * 调用微信预支付API
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
 	 */
-	private  Map<String,String> wxPrepay(String goodsName,Double salePrice,String orderId) throws Exception {
+	private  Map<String,Object> wxPrepay(String goodsName,Double salePrice,String orderId) throws Exception {
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -181,57 +361,9 @@ public class PayServiceImpl implements PayService{
 		}
 		else
 		{
-			logger.error("调用支付宝预支付API返回结果失败："+response.getMsg());
+			logger.error("调用支付宝预支付API失败："+response.getMsg());
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
-	}
-
-	@Override
-	public ResBody getOrderStatus(String orderId) {
-		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		//根据订单号查找预支付记录
-		Map<String,Object> mapCdt=new HashMap<>();
-		mapCdt.put("order",orderId);
-		OrderList orderList=orderListMapper.selectByOrderIdAndStatus(mapCdt);
-		if(orderList==null){
-			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
-		}
-		/*resBody.setData(mapData);*/
-		return resBody;
-	}
-
-	@Override
-	public ResBody createPrepay(ReqCreatePrepay model) throws SystemException {
-		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		Map<String,Object> mapCdt=new HashMap<>();
-		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
-		mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
-		mapCdt.put("goodsOrPathCode",model.getPathCode());
-		mapCdt.put("type",2);
-		//根据设备编号和货道编号查询商品信息
-		ResDeviceGoodsInfo info=deviceRoadMapper.selectByPathOrGoodsCode(mapCdt);
-		if(info==null){
-			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
-		}
-		//生成预支付订单记录
-		String orderId=StringUtil.getOrderId();
-		OrderList orderPrepay=new OrderList();
-		BeanUtils.copyProperties(info,orderPrepay);
-		orderPrepay.setId(StringUtil.getUUID());
-		orderPrepay.setOrderId(orderId);
-		orderPrepay.setOrderTime(new Date());
-		orderPrepay.setOrderStatus((byte) 1);
-		orderPrepay.setDeviceIdJp(model.getDevice_code_wg());
-		orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
-		try {
-			orderListMapper.insert(orderPrepay);
-		} catch (Exception e) {
-			logger.error("生成预支付记录失败，数据："+orderPrepay.toString()+" 原因："+e.getMessage());
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-		}
-		Map<String,Object> mapData=new HashMap<>();
-		mapData.put("order",orderId);
-		return resBody;
 	}
 
 }

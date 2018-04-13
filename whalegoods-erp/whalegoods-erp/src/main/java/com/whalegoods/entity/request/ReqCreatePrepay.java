@@ -39,6 +39,6 @@ public class ReqCreatePrepay extends ReqBase{
 	@NotNull(message="sale_type必填")
 	@Max(2)
 	@Min(1)
-	private Integer saleType;
+	private Byte saleType;
 	
 }

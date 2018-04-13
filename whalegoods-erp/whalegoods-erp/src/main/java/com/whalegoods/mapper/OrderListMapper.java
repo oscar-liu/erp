@@ -42,9 +42,7 @@ public interface OrderListMapper extends BaseMapper<OrderList,String> {
     int checkUser(String username);
 
     int rePass(OrderList user);
-    
-    int updateByOrderId(Map<String,Object> condition);
-    
+        
     /**
      * 根据订单号和订单状态查询预支付订单信息
      * @param order
@@ -52,6 +50,8 @@ public interface OrderListMapper extends BaseMapper<OrderList,String> {
      */
     OrderList selectByOrderIdAndStatus(Map<String,Object> mapCdt);
     
-    int updatePrepayidAndPayType(OrderList model);
+    int updateOrderList(OrderList model);
+    
+    int insertOrderList(OrderList model);
 
 }

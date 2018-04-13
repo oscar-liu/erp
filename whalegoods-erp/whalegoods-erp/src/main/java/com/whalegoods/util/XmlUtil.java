@@ -74,9 +74,9 @@ public class XmlUtil{
 	     * @return  
 	     * @throws SystemException 
 	     */  
-	    public static Map<String,String> xmlToMap(String xml) throws SystemException  
+	    public static Map<String,Object> xmlToMap(String xml) throws SystemException  
 	    {  
-	        Map<String,String> map = new HashMap<String, String>();  
+	        Map<String,Object> map =new HashMap<>();
 	        Document doc = null;  
 	        try {  
 	            doc = DocumentHelper.parseText(xml);  

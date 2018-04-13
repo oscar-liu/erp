@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.OrderListMapper">
- 
+
    <!--  根据订单号查询未支付预支付订单信息 -->
-    <select id="selectByOrderIdAndStatus" parameterType="java.util.Map" resultMap="com.whalegoods.entity.OrderList">
-    SELECT a.goods_name goodsName,a.sale_price salePrice,a.pay_type payType 
+    <select id="selectByOrderIdAndStatus" parameterType="java.util.Map" resultType="com.whalegoods.entity.OrderList">
+    SELECT a.goods_name goodsName,a.sale_price salePrice,a.pay_type payType,a.order_id orderId
     FROM order_list a 
     		<where>
 		    <if test="orderStatus !=null and orderStatus !=''">
@@ -17,7 +17,7 @@
   </select>
   
   	<!-- 插入预支付订单信息 -->
-	<insert id="insert" parameterType="com.whalegoods.entity.OrderList">
+	<insert id="insertOrderList" parameterType="com.whalegoods.entity.OrderList">
 		INSERT INTO order_list (
 			id,
 			device_id_jp,
@@ -53,18 +53,15 @@
 			)
 	</insert>
 	
-	<!-- 根据订单号更新订单信息 -->
-		<update id="updateByOrderId" parameterType="java.util.Map">
-		UPDATE order_list a set a.open_id=#{openId} ,a.pay_time=#{payTime},a.order_status=#{orderStatus}
-		WHERE  a.order_id=#{orderId}
-	</update>
-	
-		<!-- 根据订单号等信息更新预支付单号和支付方式 -->
-		<update id="updatePrepayidAndPayType" parameterType="com.whalegoods.entity.OrderList">
+		<!-- 根据条件更新信息 -->
+		<update id="updateOrderList" parameterType="com.whalegoods.entity.OrderList">
 		UPDATE order_list a 
 	   <set>
       <if test="wxPrepayId != null and wxPrepayId != ''">a.wx_prepay_id=#{wxPrepayId},</if>
+      <if test="orderStatus != null and orderStatus != ''">a.order_status=#{orderStatus},</if>
       <if test="payType != null and payType != ''">a.pay_type=#{payType},</if>
+      <if test="payTime != null and payTime != ''">a.pay_time=#{payTime},</if>
+      <if test="wxOpenId != null and wxOpenId != ''">a.wx_open_id=#{wxOpenId},</if>
       </set>
 		WHERE  a.order_id=#{orderId}
 	</update>

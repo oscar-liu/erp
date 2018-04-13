@@ -4,6 +4,7 @@ package com.whalegoods.service;
 import java.util.Map;
 
 import com.whalegoods.common.ResBody;
+import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.exception.SystemException;
 
@@ -17,7 +18,7 @@ public interface PayService {
 	
 	ResBody getQrCode(ReqCreateQrCode model) throws SystemException;
 	
-	ResBody wxNofity(Map<String,String> mapNotify);
-	
 	ResBody getOrderStatus(String orderId);
+	
+	ResBody createPrepay(ReqCreatePrepay model) throws SystemException;
 }

@@ -18,14 +18,18 @@ import lombok.ToString;
 public class OrderList extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	
+    private String deviceIdJp;
+    
+    private String deviceIdSupp;
 
+    private String goodsCode;
+	
     private String orderId;
     
     private Date orderTime;
     
     private Byte orderStatus;
-    
-    private String goodsCode;
     
     private String goodsName;
     
@@ -39,10 +43,8 @@ public class OrderList extends BaseEntity implements Serializable {
     
     private Byte payType;
     
-    private String prepayId;
+    private String wxPrepayId;
     
-    private String deviceIdJp;
-    
-    private String deviceIdSupp;
+    private String wxOpenId;
 
 }

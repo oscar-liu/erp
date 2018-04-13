@@ -1,7 +1,5 @@
 package com.whalegoods.entity.request;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -15,24 +13,32 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 生成商品支付二维码API 请求映射实体类 
+ * 生成预支付订单API 请求映射实体类 
  * @author chencong
  *
  */
 @Getter
 @Setter
 @ToString
-public class ReqCreateQrCode implements Serializable {
+public class ReqCreatePrepay extends ReqBase{
 
 	private static final long serialVersionUID = 1L;
+
+	@JsonProperty("path_code")
+	@NotEmpty(message="path_code必填")
+	private String pathCode;
 	
-	@NotEmpty(message="order必填")
-	private String order;
+	@JsonProperty("goods_code")
+	@NotEmpty(message="goods_code必填")
+	private String goodsCode;
 	
-	@JsonProperty("pay_type")
-	@NotNull(message="pay_type必填")
+	@JsonProperty("view_time")
+	private Long viewTime;
+	
+	@JsonProperty("sale_type")
+	@NotNull(message="sale_type必填")
 	@Max(2)
 	@Min(1)
-	private Byte payType;
+	private Integer saleType;
 	
 }

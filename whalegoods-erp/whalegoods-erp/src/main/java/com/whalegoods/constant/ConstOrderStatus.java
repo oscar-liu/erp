@@ -9,7 +9,7 @@ public abstract class ConstOrderStatus {
 
     public final static Byte NOT_PAY= 1;
     public final static Byte PAID= 2;
-    public final static Byte PAY_ERROR= 3;
+    public final static Byte PAY_FAILED= 3;
     public final static Byte REFUND= 4;
     
 }

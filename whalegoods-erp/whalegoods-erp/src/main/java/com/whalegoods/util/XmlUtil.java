@@ -74,9 +74,9 @@ public class XmlUtil{
 	     * @return  
 	     * @throws SystemException 
 	     */  
-	    public static Map<String,Object> xmlToMap(String xml) throws SystemException  
+	    public static Map<String,String> xmlToMap(String xml) throws SystemException  
 	    {  
-	        Map<String,Object> map =new HashMap<>();
+	        Map<String,String> map =new HashMap<>();
 	        Document doc = null;  
 	        try {  
 	            doc = DocumentHelper.parseText(xml);  
@@ -86,7 +86,8 @@ public class XmlUtil{
 	        if(doc ==null)  
 	            return map;  
 	        Element root = doc.getRootElement();  
-	      for (Iterator iterator = root.elementIterator(); iterator.hasNext();) {  
+	      for (@SuppressWarnings("rawtypes")
+		Iterator iterator = root.elementIterator(); iterator.hasNext();) {  
 	         Element e = (Element) iterator.next();  
 	         map.put(e.getName(), e.getText());  
 	      }  

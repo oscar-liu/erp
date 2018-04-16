@@ -1,6 +1,9 @@
 package com.whalegoods.service.impl;
 
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,7 +101,6 @@ public class PayServiceImpl implements PayService{
 	
 	
 	@Transactional
-	@SuppressWarnings("deprecation")
 	@Override
 	public ResBody getQrCode(ReqCreateQrCode model) throws SystemException{
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
@@ -117,19 +119,24 @@ public class PayServiceImpl implements PayService{
 		String orderId=model.getOrder();
 		//微信
 		if(model.getPayType()==1){
-			Map<String, Object> mapPpRst;
+			Map<String, String> mapPpRst;
 			try {
 				mapPpRst = this.wxPrepay(goodsName, salePrice, orderId);
 			} catch (Exception e) {
 				logger.error("执行wxPrepay()方法出错："+e.getMessage());
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}	
-			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS))
+			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
 			{
-				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS)){					
-					mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToString(mapPpRst.get("code_url").toString().getBytes())));
+				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){					
+					try {
+						mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToUrlSafeString(mapPpRst.get("code_url").getBytes()),"utf-8"));
+					} catch (UnsupportedEncodingException e) {
+						logger.error("微信预支付二维码编码失败");
+						throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+					}
 					resBody.setData(mapData);
-					orderList.setWxPrepayId(mapPpRst.get("prepay_id").toString());
+					orderList.setWxPrepayId(mapPpRst.get("prepay_id"));
 				}
 				else {
 					logger.error("微信预支付二级失败,错误代码："+mapPpRst.get("err_code")+" 描述："+mapPpRst.get("err_code_des"));
@@ -144,8 +151,8 @@ public class PayServiceImpl implements PayService{
 		}
 		//支付宝
 		if(model.getPayType()==2){
-			String qrCode=this.alipayPrepay(goodsName, salePrice, orderId);
-			mapData.put("qrcode_url", qrCode);
+			/*String qrCode=this.alipayPrepay(goodsName, salePrice, orderId);*/
+			mapData.put("qrcode_url", nullValue());
 			resBody.setData(mapData);
 		}
 		//更新预支付订单信息
@@ -164,6 +171,7 @@ public class PayServiceImpl implements PayService{
 	@Override
 	public ResBody getOrderStatus(String orderId) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		Map<String,Object> mapData=new HashMap<>();
 		//根据订单号查找预支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
@@ -171,7 +179,9 @@ public class PayServiceImpl implements PayService{
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
-		Map<String, Object> mapQrRst;
+		Map<String, String> mapQrRst;
+		//用于更新订单信息的新对象
+		orderList=new OrderList();
 		//微信
 		if(orderList.getPayType()==1){
 			try {
@@ -180,20 +190,18 @@ public class PayServiceImpl implements PayService{
 				logger.error("执行wxOrderQuery()方法出错："+e.getMessage());
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}	
-			if(mapQrRst.get("return_code").equals(ConstSysParamName.SUCCESS))
+			if(mapQrRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
 			{
-				if(mapQrRst.get("result_code").equals(ConstSysParamName.SUCCESS)){
-					if(mapQrRst.get("trade_state").equals(ConstSysParamName.SUCCESS)){
-						//用于更新订单信息的新对象
-						orderList=new OrderList();
+				if(mapQrRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
+					if(mapQrRst.get("trade_state").equals(ConstSysParamName.SUCCESS_WX)){
 						orderList.setOrderId(orderId);
-						orderList.setWxOpenId(mapQrRst.get("openid").toString());
-						orderList.setPayTime(mapQrRst.get("time_end").toString());
+						orderList.setWxOpenId(mapQrRst.get("openid"));
+						orderList.setPayTime(mapQrRst.get("time_end"));
 						orderList.setOrderStatus(ConstOrderStatus.PAID);
 					}
 					else{
-						logger.error("微信查询订单交易失败,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));
-						throw new BizServiceException(ConstApiResCode.WX_ORDER_FAILD);
+						logger.error("微信查询订单API结果：交易失败,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));
+						orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
 					}
 				}
 				else {
@@ -209,12 +217,12 @@ public class PayServiceImpl implements PayService{
 		}
 		//支付宝
 		else if(orderList.getPayType()==2){
-			mapQrRst=this.alipayOrderQuery(orderId);
+			/*mapQrRst=this.alipayOrderQuery(orderId);*/
 			//用于更新订单信息的新对象
 			orderList=new OrderList();
-			orderList.setBuyerLogonId(mapQrRst.get("buyerLogonId").toString());
+		/*	orderList.setBuyerLogonId(mapQrRst.get("buyerLogonId").toString());
 			orderList.setOrderStatus((Byte)mapQrRst.get("orderStatus"));
-			orderList.setPayTime(mapQrRst.get("sendPayDate").toString());
+			orderList.setPayTime(mapQrRst.get("sendPayDate").toString());*/
 		}
 		else {
 			throw new BizServiceException(ConstApiResCode.PAY_TYPE_ERROR);
@@ -226,6 +234,8 @@ public class PayServiceImpl implements PayService{
 			//更新订单记录异常不影响给前端返回结果
 			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
 		}
+		mapData.put("order_status",orderList.getOrderStatus());
+		resBody.setData(mapData);
 		return resBody;
 	}
 	
@@ -234,7 +244,7 @@ public class PayServiceImpl implements PayService{
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
 	 */
-	private  Map<String,Object> wxOrderQuery(String orderId) throws Exception {
+	private  Map<String,String> wxOrderQuery(String orderId) throws Exception {
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -281,14 +291,14 @@ public class PayServiceImpl implements PayService{
 		if(response.isSuccess()){
 			mapResult.put("buyerLogonId",response.getParams().get("buyer_logon_id"));
 			String tradeStatus=response.getParams().get("trade_status");
-			if(tradeStatus.equals(ConstSysParamName.SUCCESS)){
+			if(tradeStatus.equals(ConstSysParamName.SUCCESS_WX)){
 				mapResult.put("orderStatus",ConstOrderStatus.PAID);
 				mapResult.put("sendPayDate",response.getParams().get("send_pay_date"));
 			}
 			else
 			{
 				logger.error("支付宝交易失败："+tradeStatus);
-				mapResult.put("orderStatus",ConstOrderStatus.PAY_ERROR);
+				mapResult.put("orderStatus",ConstOrderStatus.PAY_FAILED);
 			}
 		}
 		else
@@ -305,7 +315,7 @@ public class PayServiceImpl implements PayService{
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
 	 */
-	private  Map<String,Object> wxPrepay(String goodsName,Double salePrice,String orderId) throws Exception {
+	private  Map<String,String> wxPrepay(String goodsName,Double salePrice,String orderId) throws Exception {
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -335,7 +345,7 @@ public class PayServiceImpl implements PayService{
 	 * @throws SystemException 
 	 */
 	@SuppressWarnings("deprecation")
-	private  String alipayPrepay(String goodsName,Double salePrice,String orderId) throws SystemException {
+	private  Map<String,String> alipayPrepay(String goodsName,Double salePrice,String orderId) throws SystemException {
 		//实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient(
 				ConstSysParamValue.ALIPAY_PREPAY_URL,
@@ -357,7 +367,15 @@ public class PayServiceImpl implements PayService{
 		} 
 		//调用成功
 		if(response.isSuccess()){
-			return URLEncoder.encode(Base64Utils.encodeToString(response.getParams().get("qr_code").getBytes()));		
+			if(response.getCode().equals(ConstSysParamName.SUCCESS_ALIPAY)){
+				
+			}
+			else
+			{
+				logger.error("调用支付宝预支付API失败："+response.getMsg());
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}
+			return response.getParams();
 		}
 		else
 		{

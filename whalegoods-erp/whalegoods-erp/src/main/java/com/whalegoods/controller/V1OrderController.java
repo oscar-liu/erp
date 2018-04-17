@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
+import com.whalegoods.entity.request.ReqRefund;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.PayService;
 
@@ -79,9 +80,9 @@ public class V1OrderController  extends BaseController<Object>{
  * @throws SystemException 
    */
   @GetMapping(value="/refund")
-  ResBody refund(@RequestParam String order) throws SystemException  {
-	  logger.info("收到退款申请API请求："+order);
-	  return payService.getOrderStatus(order);
+  ResBody refund(@RequestBody @Valid ReqRefund model) throws SystemException  {
+	  logger.info("收到退款申请API请求："+model.toString());
+	  return payService.refund(model);
 	}
   
 }

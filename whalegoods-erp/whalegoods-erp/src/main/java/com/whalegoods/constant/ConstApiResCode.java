@@ -44,6 +44,8 @@ public abstract class ConstApiResCode {
     /*public final static Integer WX_ORDER_FAILD= 9008;*/
     public final static Integer PAY_TYPE_ERROR= 9009;
     public final static Integer ALIPAY_ORDER_FAILD= 9010;
+    public final static Integer WX_APPLY_REFUND_ONE_FAILD= 9011;
+    public final static Integer WX_APPLY_REFUND_TWO_FAILD= 9012;
     
     
 	static {
@@ -63,6 +65,8 @@ public abstract class ConstApiResCode {
 		/*resMap.put(WX_ORDER_FAILD,"微信订单交易失败");*/
 		resMap.put(PAY_TYPE_ERROR,"支付类型错误");
 		resMap.put(ALIPAY_ORDER_FAILD,"支付宝订单交易失败");
+		resMap.put(WX_APPLY_REFUND_ONE_FAILD,"微信申请退款-一级失败");
+		resMap.put(WX_APPLY_REFUND_TWO_FAILD,"微信申请退款-二级失败");
 		
 	}
 	

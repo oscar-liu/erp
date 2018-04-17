@@ -24,5 +24,9 @@ public class ConstSysParamValue {
 	public static String WX_QUERY="https://api.mch.weixin.qq.com/pay/orderquery";
 	//支付宝查询地址
 	public static String ALIPAY_QUERY="https://openapi.alipay.com/gateway.do";
+	//微信申请退款地址
+	public static String WX_APPLY_REFUND="https://api.mch.weixin.qq.com/secapi/pay/refund";
+	//支付宝申请退款地址
+	public static String ALIPAY_APPLY_REFUND="https://openapi.alipay.com/gateway.do";
 	
 }

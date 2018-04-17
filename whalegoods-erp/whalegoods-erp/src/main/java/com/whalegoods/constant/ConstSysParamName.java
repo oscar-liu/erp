@@ -16,6 +16,8 @@ public class ConstSysParamName {
 	
 	public static String SUCCESS_WX="SUCCESS";
 	
-	public static String SUCCESS_ALIPAY="10000";
+	public static String SUCCESS_PREPAY_ALIPAY="10000";
+	
+	public static String SUCCESS_TRADE_ALIPAY="TRADE_SUCCESS";
 	
 }

@@ -4,6 +4,7 @@ package com.whalegoods.service;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
+import com.whalegoods.entity.request.ReqRefund;
 import com.whalegoods.exception.SystemException;
 
 
@@ -19,4 +20,6 @@ public interface PayService {
 	ResBody getOrderStatus(String orderId) throws SystemException;
 	
 	ResBody createPrepay(ReqCreatePrepay model) throws SystemException;
+	
+	ResBody refund(ReqRefund model) throws SystemException;
 }

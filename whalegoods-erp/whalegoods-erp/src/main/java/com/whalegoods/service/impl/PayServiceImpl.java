@@ -1,7 +1,9 @@
 package com.whalegoods.service.impl;
 
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,11 +22,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.domain.OrderRefundInfo;
 import com.alipay.api.request.AlipayOpenPublicTemplateMessageIndustryModifyRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayOpenPublicTemplateMessageIndustryModifyResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstOrderStatus;
@@ -140,13 +143,13 @@ public class PayServiceImpl implements PayService{
 				}
 				else {
 					logger.error("微信预支付二级失败,错误代码："+mapPpRst.get("err_code")+" 描述："+mapPpRst.get("err_code_des"));
-					throw new BizServiceException(ConstApiResCode.WX_PREPAY_TWO_FAILD);
+					throw new BizServiceException(ConstApiResCode.WX_PREPAY_TWO_FAILED);
 				}
 			}
 			else
 			{
 				logger.error("微信预支付一级失败："+mapPpRst.get("return_msg"));
-				throw new BizServiceException(ConstApiResCode.WX_PREPAY_ONE_FAILD);
+				throw new BizServiceException(ConstApiResCode.WX_PREPAY_ONE_FAILED);
 			}
 		}
 		//支付宝
@@ -200,19 +203,27 @@ public class PayServiceImpl implements PayService{
 						orderList.setOrderStatus(ConstOrderStatus.PAID);
 					}
 					else{
-						logger.error("微信查询订单API结果：交易失败,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));
-						orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
+						logger.error("微信查询订单API结果：,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));			
+						if(mapQrRst.get("trade_state").equals(ConstSysParamName.WX_NOTPAY)){
+							orderList.setOrderStatus(ConstOrderStatus.NOT_PAY);
+						}
+						else if (mapQrRst.get("trade_state").equals(ConstSysParamName.WX_REFUND)) {
+							orderList.setOrderStatus(ConstOrderStatus.REFUND);
+						}
+						else {
+							orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
+						}
 					}
 				}
 				else {
 					logger.error("微信查询订单二级失败,错误代码："+mapQrRst.get("err_code")+" 描述："+mapQrRst.get("err_code_des"));
-					throw new BizServiceException(ConstApiResCode.WX_QUERY_TWO_FAILD);
+					throw new BizServiceException(ConstApiResCode.WX_QUERY_TWO_FAILED);
 				}
 			}
 			else
 			{
 				logger.error("微信查询订单一级失败："+mapQrRst.get("return_msg"));
-				throw new BizServiceException(ConstApiResCode.WX_QUERY_ONE_FAILD);
+				throw new BizServiceException(ConstApiResCode.WX_QUERY_ONE_FAILED);
 			}
 		}
 		//支付宝
@@ -239,6 +250,7 @@ public class PayServiceImpl implements PayService{
 		return resBody;
 	}
 	
+	@Transactional
 	@Override
 	public ResBody refund(ReqRefund model) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
@@ -254,52 +266,44 @@ public class PayServiceImpl implements PayService{
 		if(orderList.getPayType()==1){
 			try {
 				mapRfRst = this.wxApplyRefund(orderList);
-			} catch (Exception e) {
+			} catch (SystemException e) {
 				logger.error("执行wxApplyRefund()方法出错："+e.getMessage());
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}	
 			if(mapRfRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
 			{
-				if(mapRfRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
-					//生成更新预支付订单信息
-					orderList=new OrderList();
-					orderList.setOrderId(model.getOrder());
-					orderList.setOrderStatus(ConstOrderStatus.REFUND);
-					//生成退款信息
-					
-				}
-				else {
+				if(!mapRfRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
 					logger.error("微信申请退款二级失败,错误代码："+mapRfRst.get("err_code")+" 描述："+mapRfRst.get("err_code_des"));
-					throw new BizServiceException(ConstApiResCode.WX_APPLY_REFUND_TWO_FAILD);
+					throw new BizServiceException(ConstApiResCode.WX_APPLY_REFUND_TWO_FAILED);
 				}
 			}
 			else
 			{
 				logger.error("微信申请退款一级失败："+mapRfRst.get("return_msg"));
-				throw new BizServiceException(ConstApiResCode.WX_APPLY_REFUND_ONE_FAILD);
+				throw new BizServiceException(ConstApiResCode.WX_APPLY_REFUND_ONE_FAILED);
 			}
 		}
 		//支付宝
 		else if(orderList.getPayType()==2){
-			/*mapQrRst=this.alipayApplyRefund(orderId);*/
-			//用于更新订单信息的新对象
-			/*orderList=new OrderList();
-			orderList.setBuyerLogonId(mapQrRst.get("buyerLogonId").toString());
-			orderList.setOrderStatus(Byte.valueOf(mapQrRst.get("orderStatus")));
-			orderList.setPayTime(mapQrRst.get("sendPayDate").toString());*/
+			if(!this.alipayApplyRefund(orderList)){
+				throw new BizServiceException(ConstApiResCode.ALIPAY_REFUND_FALID);
+			}
 		}
 		else {
 			throw new BizServiceException(ConstApiResCode.PAY_TYPE_ERROR);
 		}
-		//更新订单信息
 		try {
+			//更新预支付订单信息
+			orderList=new OrderList();
+			orderList.setOrderId(model.getOrder());
+			orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);
+			//生成退款信息
 			orderListMapper.updateOrderList(orderList);
+			//生成退款记录
 		} catch (Exception e) {
-			//更新订单记录异常不影响给前端返回结果
-			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
+			//上面两个操作异常不影响给前端返回结果
+			logger.error("更新预支付记录或生成退款记录失败："+orderList.toString()+" 原因："+e.getMessage());
 		}
-	/*	mapData.put("order_status",orderList.getOrderStatus());
-		resBody.setData(mapData);*/
 		return resBody;
 	}
 	
@@ -336,7 +340,7 @@ public class PayServiceImpl implements PayService{
 		Map<String,String> mapResult=new HashMap<>();
 		//实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient(
-				ConstSysParamValue.ALIPAY_QUERY,
+				ConstSysParamValue.ALIPAY_URL,
 				ConstSysParamValue.ALIPAY_APPID,
 				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","utf-8", 
 				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
@@ -358,6 +362,9 @@ public class PayServiceImpl implements PayService{
 			if(tradeStatus.equals(ConstSysParamName.SUCCESS_TRADE_ALIPAY)){
 				mapResult.put("orderStatus",ConstOrderStatus.PAID.toString());
 				mapResult.put("sendPayDate",response.getParams().get("send_pay_date"));
+			}
+			else if (tradeStatus.equals(ConstSysParamName.ALIPAY_WAIT_BUYER_PAY)) {
+				mapResult.put("orderStatus",ConstOrderStatus.NOT_PAY.toString());
 			}
 			else
 			{
@@ -412,13 +419,13 @@ public class PayServiceImpl implements PayService{
 	private String alipayPrepay(String goodsName,Double salePrice,String orderId) throws SystemException {
 		//实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient(
-				ConstSysParamValue.ALIPAY_PREPAY_URL,
+				ConstSysParamValue.ALIPAY_URL,
 				ConstSysParamValue.ALIPAY_APPID,
 				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","utf-8", 
 				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
 		AlipayOpenPublicTemplateMessageIndustryModifyRequest request = new AlipayOpenPublicTemplateMessageIndustryModifyRequest();
 		JSONObject sonJson=new JSONObject();
-		sonJson.put("out_trade_no",StringUtil.getOrderId());
+		sonJson.put("out_trade_no",orderId);
 		sonJson.put("total_amount",salePrice);
 		sonJson.put("subject",goodsName);
 		request.setBizContent(sonJson.toJSONString());
@@ -444,9 +451,10 @@ public class PayServiceImpl implements PayService{
 	 * 调用微信申请退款API
 	 * @param orderId
 	 * @return
+	 * @throws SystemException 
 	 * @throws Exception
 	 */
-	private  Map<String,String> wxApplyRefund(OrderList orderList) throws Exception {
+	private  Map<String,String> wxApplyRefund(OrderList orderList) throws SystemException  {
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -462,44 +470,46 @@ public class PayServiceImpl implements PayService{
 		map.put("sign",sign);
 		String xmlData=XmlUtil.mapToXml(map);
 		logger.info("微信申请退款请求数据："+xmlData);
-		String xmlResult=HttpUtils.sendPost(ConstSysParamValue.WX_QUERY,xmlData,null);
+		//获得密钥库文件流
+		InputStream is = this.getClass().getResourceAsStream("/apiclient_cert.p12");
+		String xmlResult=HttpUtils.sendPostWithCert(ConstSysParamValue.WX_MCHID,is,ConstSysParamValue.WX_APPLY_REFUND,xmlData,null);
 		logger.info("结果："+xmlResult);
 		return XmlUtil.xmlToMap(xmlResult);
 	}
 	
 	/**
-	 * 调用支付宝预支付API
+	 * 调用支付宝申请退款API
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
 	 * @throws SystemException 
 	 */
-	@SuppressWarnings("deprecation")
-	private String alipayApplyRefund(String orderId) throws SystemException {
+	private Boolean alipayApplyRefund(OrderList orderList) throws SystemException {
 		//实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient(
-				ConstSysParamValue.ALIPAY_PREPAY_URL,
+				ConstSysParamValue.ALIPAY_URL,
 				ConstSysParamValue.ALIPAY_APPID,
-				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","utf-8", 
+				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","GBK", 
 				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
-		AlipayOpenPublicTemplateMessageIndustryModifyRequest request = new AlipayOpenPublicTemplateMessageIndustryModifyRequest();
+		AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
 		JSONObject sonJson=new JSONObject();
-		sonJson.put("out_trade_no",StringUtil.getOrderId());
+		sonJson.put("out_trade_no",orderList.getOrderId());
+		sonJson.put("refund_amount",orderList.getSalePrice());
 		request.setBizContent(sonJson.toJSONString());
-		AlipayOpenPublicTemplateMessageIndustryModifyResponse response;
+		AlipayTradeRefundResponse  response;
 		try {
-			response = alipayClient.execute(request);
+			response =  alipayClient.execute(request);
 		} catch (AlipayApiException e) {
-			logger.error("发送支付宝预支付API请求失败："+e.getMessage());
+			logger.error("请求支付宝退款申请API失败："+e.getMessage());
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		} 
 		//调用成功
 		if(response.isSuccess()){
-			return URLEncoder.encode(Base64Utils.encodeToUrlSafeString(response.getParams().get("qr_code").getBytes()));
+			return true;
 		}
 		else
 		{
-			logger.error("调用支付宝预支付API失败："+response.getMsg());
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			logger.error("调用支付宝退款申请API结果失败："+response.getMsg());
+			return false;
 		}
 	}
 

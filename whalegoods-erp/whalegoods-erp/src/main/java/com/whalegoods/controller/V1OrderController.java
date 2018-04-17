@@ -79,7 +79,7 @@ public class V1OrderController  extends BaseController<Object>{
    * @return
  * @throws SystemException 
    */
-  @GetMapping(value="/refund")
+  @PostMapping(value="/refund")
   ResBody refund(@RequestBody @Valid ReqRefund model) throws SystemException  {
 	  logger.info("收到退款申请API请求："+model.toString());
 	  return payService.refund(model);

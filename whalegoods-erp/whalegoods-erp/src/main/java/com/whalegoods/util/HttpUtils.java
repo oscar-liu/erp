@@ -1,16 +1,30 @@
 package com.whalegoods.util;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -34,6 +48,8 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
+import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.exception.SystemException;
 
 /**
  * http请求工具类
@@ -138,7 +154,8 @@ public class HttpUtils {
 		logger.debug("sendPost Url:" + url);
 		logger.debug("sendPost xml:" + requestXml);
 		String result = "";
-		try {
+		
+		try {	
 			URL u0 = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) u0.openConnection();
 			conn.setRequestMethod("POST");
@@ -175,6 +192,23 @@ public class HttpUtils {
 			logger.error("请求异常: " + e.getMessage(), e);
 		}
 		return result;
+	}
+	
+	/**
+	 * POST XML
+	 * @author chencong
+	 * 2018年4月10日 上午10:51:04
+	 * @throws SystemException 
+	 */
+	public static String sendPostWithCert(String password,InputStream is,String url, String requestXml, Map<String, String> heads) throws SystemException {
+		try {
+			initHttpsURLConnection(password, is);
+		} catch (UnrecoverableKeyException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException
+				| CertificateException | SystemException | IOException e) {
+			logger.error("执行sendPostWithCert()方法出错："+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR,e.getMessage());
+		}
+		return sendPost(url, requestXml, heads);
 	}
 	
 	/**
@@ -327,5 +361,75 @@ public class HttpUtils {
 		}
 	}
 	
+	
+	/**
+	 * 获得KeyStore. 
+	 * @author chencong
+	 * 2018年4月17日 下午5:05:52
+	 * @throws KeyStoreException 
+	 * @throws IOException 
+	 * @throws CertificateException 
+	 * @throws NoSuchAlgorithmException 
+	 */
+	  private static KeyStore getKeyStore(String password, InputStream is) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {  
+	        // 实例化密钥库 KeyStore用于存放证书，创建对象时 指定交换数字证书的加密标准 
+	        //指定交换数字证书的加密标准 
+	        KeyStore ks = KeyStore.getInstance("JKS");  
+	        // 加载密钥库  
+	        ks.load(is, password.toCharArray());
+	        // 关闭密钥库文件流  
+	        is.close();
+	        return ks;
+	    }  
+	  
+	    /** 
+	     * 获得SSLSocketFactory 
+	     * @author chencong
+	     * 2018年4月17日 下午5:59:52
+	     * @throws NoSuchAlgorithmException 
+	     * @throws KeyStoreException 
+	     * @throws UnrecoverableKeyException 
+	     * @throws IOException 
+	     * @throws CertificateException 
+	     * @throws KeyManagementException 
+	     */
+	    private static SSLContext getSSLContext(String password,InputStream is) throws NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, CertificateException, IOException, KeyManagementException {  
+	        // 实例化密钥库   KeyManager选择证书证明自己的身份
+	        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());  
+	        // 获得密钥库  
+	        KeyStore keyStore = getKeyStore(password,is);
+	        // 初始化密钥工厂  
+	        keyManagerFactory.init(keyStore, password.toCharArray()); 
+	        // 实例化SSL上下文  
+	        SSLContext ctx = SSLContext.getInstance("TLS");
+	        // 初始化SSL上下文  
+	        ctx.init(keyManagerFactory.getKeyManagers(),null, null);  
+	        // 获得SSLSocketFactory  
+	        return ctx;  
+	    }  
+	  
+	    /** 
+	     * 初始化HttpsURLConnection  
+	     * @author chencong
+	     * 2018年4月17日 下午5:57:10
+	     * @throws IOException 
+	     * @throws CertificateException 
+	     * @throws KeyStoreException 
+	     * @throws NoSuchAlgorithmException 
+	     * @throws KeyManagementException 
+	     * @throws UnrecoverableKeyException 
+	     */
+	    private static void initHttpsURLConnection(String password, InputStream is) throws SystemException, UnrecoverableKeyException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {  
+	        // 声明SSL上下文  
+	        SSLContext sslContext = null;
+	        HostnameVerifier hnv = new MyHostnameVerifier();
+	        sslContext = getSSLContext(password, is);
+	        if (sslContext != null) {
+	            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+	        }  
+	        HttpsURLConnection.setDefaultHostnameVerifier(hnv);
+	    }  
 
 }
+
+

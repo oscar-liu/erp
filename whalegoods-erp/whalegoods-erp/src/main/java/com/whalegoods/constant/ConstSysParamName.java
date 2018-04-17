@@ -20,4 +20,10 @@ public class ConstSysParamName {
 	
 	public static String SUCCESS_TRADE_ALIPAY="TRADE_SUCCESS";
 	
+	public static String WX_NOTPAY="NOTPAY";
+	
+	public static String WX_REFUND="REFUND";
+	
+	public static String ALIPAY_WAIT_BUYER_PAY="WAIT_BUYER_PAY";
+	
 }

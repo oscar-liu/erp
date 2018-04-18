@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.SysRoleUser;
@@ -110,8 +111,10 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements
 	}
 
 	@Override
-	public Map<String,Object> getApk(Map<String, Object> condition) {
-		return deviceMapper.getApk(condition);
+	public ResBody getApk(Map<String, Object> condition) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		resBody.setData(deviceMapper.getApk(condition));
+		return resBody;
 	}
 
 }

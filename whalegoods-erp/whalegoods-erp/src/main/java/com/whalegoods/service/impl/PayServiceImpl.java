@@ -3,9 +3,7 @@ package com.whalegoods.service.impl;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +41,7 @@ import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.DeviceRoadMapper;
 import com.whalegoods.mapper.OrderListMapper;
 import com.whalegoods.service.PayService;
+import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.HttpUtils;
 import com.whalegoods.util.IpUtil;
 import com.whalegoods.util.Md5Util;
@@ -73,7 +72,7 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
 		mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
-		mapCdt.put("goodsOrPathCode",model.getPathCode());
+		mapCdt.put("pathCode",model.getPathCode());
 		mapCdt.put("type",2);
 		//根据设备编号和货道编号查询商品信息
 		ResDeviceGoodsInfo info=deviceRoadMapper.selectByPathOrGoodsCode(mapCdt);
@@ -86,10 +85,11 @@ public class PayServiceImpl implements PayService{
 		BeanUtils.copyProperties(info,orderPrepay);
 		orderPrepay.setId(StringUtil.getUUID());
 		orderPrepay.setOrderId(orderId);
-		orderPrepay.setOrderTime(new Date());
+		orderPrepay.setOrderTime(DateUtil.getCurrentTime());
 		orderPrepay.setOrderStatus((byte) 1);
 		orderPrepay.setDeviceIdJp(model.getDevice_code_wg());
 		orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
+		orderPrepay.setPrefix(DateUtil.getCurrentMonth());
 		try {
 			orderListMapper.insertOrderList(orderPrepay);
 		} catch (Exception e) {
@@ -112,7 +112,7 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",model.getOrder());
 		mapCdt.put("orderStatus",ConstOrderStatus.NOT_PAY);
-		OrderList orderList=orderListMapper.selectByOrderIdAndStatus(mapCdt);
+		OrderList orderList=orderListMapper.selectByCondition(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
@@ -178,7 +178,7 @@ public class PayServiceImpl implements PayService{
 		//根据订单号查找预支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
-		OrderList orderList=orderListMapper.selectByOrderIdAndStatus(mapCdt);
+		OrderList orderList=orderListMapper.selectByCondition(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
@@ -257,7 +257,7 @@ public class PayServiceImpl implements PayService{
 		//根据订单号查找预支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",model.getOrder());
-		OrderList orderList=orderListMapper.selectByOrderIdAndStatus(mapCdt);
+		OrderList orderList=orderListMapper.selectByCondition(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}

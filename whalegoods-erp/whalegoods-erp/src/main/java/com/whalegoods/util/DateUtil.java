@@ -1,6 +1,7 @@
 package com.whalegoods.util;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * 日期处理工具类
@@ -10,14 +11,18 @@ import java.util.Date;
 public class DateUtil {
 
 	/**
-	 * 返回两个时间相差的秒数
-	 * @param startTime
-	 * @param endTime
-	 * @return f
+	 * 返回当前“年月”字符串，例如“2018_04”
+	 * @author chencong
+	 * 2018年4月18日 下午4:30:57
 	 */
-	public static final int secsSub(Date startTime, Date endTime) {
-		int date = (int) (endTime.getTime() / 1000 - startTime.getTime()
-				/1000);
-		return date;
+	public static String getCurrentMonth() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM");
+		return dateFormat.format(Calendar.getInstance().getTime());
 	}
+	
+	public static String getCurrentTime() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(Calendar.getInstance().getTime());
+	}
+	
 }

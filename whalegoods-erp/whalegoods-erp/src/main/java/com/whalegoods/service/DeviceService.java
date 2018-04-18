@@ -1,6 +1,7 @@
 package com.whalegoods.service;
 
 
+import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
@@ -80,6 +81,6 @@ public interface DeviceService extends BaseService<Device,String> {
    * @author chencong
    * 2018年4月9日 下午3:16:05
    */
-  Map<String,Object> getApk(Map<String,Object> condition);
+  ResBody getApk(Map<String,Object> condition);
 
 }

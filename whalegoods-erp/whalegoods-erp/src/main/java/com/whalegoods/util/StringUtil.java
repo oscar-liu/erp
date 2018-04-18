@@ -55,4 +55,8 @@ public class StringUtil {
 	public static String getUUID(){
 		return UUID.randomUUID().toString().replace(ConstSysParamName.GANG,"");
 	}
+	
+	public static boolean isEmpty(Object str) {
+		return (str == null || "".equals(str));
+	}
 }

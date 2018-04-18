@@ -27,7 +27,7 @@ public class OrderList extends BaseEntity implements Serializable {
 	
     private String orderId;
     
-    private Date orderTime;
+    private String orderTime;
     
     private Byte orderStatus;
     
@@ -37,7 +37,7 @@ public class OrderList extends BaseEntity implements Serializable {
     
     private Byte ctn;
     
-    private String pathCode;
+    private Byte pathCode;
     
     private Byte floor;
     
@@ -50,5 +50,7 @@ public class OrderList extends BaseEntity implements Serializable {
     private String buyerLogonId;
     
     private String payTime;
+    
+    private String prefix;
 
 }

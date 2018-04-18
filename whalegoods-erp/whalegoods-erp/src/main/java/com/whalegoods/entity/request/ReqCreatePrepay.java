@@ -25,8 +25,8 @@ public class ReqCreatePrepay extends ReqBase{
 	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("path_code")
-	@NotEmpty(message="path_code必填")
-	private String pathCode;
+	@NotNull(message="path_code必填")
+	private Byte pathCode;
 	
 	@JsonProperty("goods_code")
 	@NotEmpty(message="goods_code必填")

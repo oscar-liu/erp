@@ -22,8 +22,10 @@ import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqGetInfoByPathOrGoodsCode;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceRoadService;
+import com.whalegoods.util.StringUtil;
 
 /**
  * 货道商品信息API
@@ -62,10 +64,21 @@ public class V1GoodsController  extends BaseController<Object>{
    */
   @GetMapping(value="/getInfoByCode")
   ResBody getInfoByCode(@Valid ReqGetInfoByPathOrGoodsCode model) {
+	  if(model.getType()==1){
+		  if(StringUtil.isEmpty(model.getGoods_code())){
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EMPTY);
+		  }
+	  }
+	  if(model.getType()==2){
+		  if(StringUtil.isEmpty(model.getPath_code())){
+			  throw new BizApiException(ConstApiResCode.PATH_CODE_NOT_EMPTY);
+		  }
+	  }
 	  Map<String,Object> condition=new HashMap<>();
 	  condition.put("deviceIdJp",model.getDevice_code_wg());
 	  condition.put("deviceIdSupp",model.getDevice_code_sup());
-	  condition.put("goodsOrPathCode",model.getGoods_or_path_code());
+	  condition.put("goodsCode",model.getGoods_code());
+	  condition.put("pathCode",model.getPath_code());
 	  condition.put("type",model.getType());
 	  ResDeviceGoodsInfo info=deviceRoadService.selectByPathOrGoodsCode(condition);
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
@@ -78,6 +91,7 @@ public class V1GoodsController  extends BaseController<Object>{
    * 2018年4月9日 下午5:08:14
  * @throws SystemException 
    */
+  @SuppressWarnings("rawtypes")
   @PostMapping(value="/upStock")
   ResBody upStock(@RequestBody String json) throws SystemException {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
@@ -88,7 +102,7 @@ public class V1GoodsController  extends BaseController<Object>{
 		  DeviceRoad deviceRoad=new DeviceRoad();
 		  deviceRoad.setDeviceIdJp(jsonObject.getString("device_code_wg"));
 		  deviceRoad.setDeviceIdSupp(jsonObject.getString("device_code_sup"));
-		  deviceRoad.setPathCode(map.get("path_code").toString());
+		  deviceRoad.setPathCode(Byte.valueOf( map.get("path_code").toString()));
 		  deviceRoad.setStock((Integer)map.get("stock"));
 		  deviceRoadService.updateDeviceRoad(deviceRoad);
 	}

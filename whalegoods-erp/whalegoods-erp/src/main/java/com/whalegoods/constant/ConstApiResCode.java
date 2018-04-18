@@ -17,14 +17,10 @@ public abstract class ConstApiResCode {
     public final static Integer SYSTEM_ERROR= 10001;
     
     /**
-     * 库存相关 6开头
+     * 商品库存相关 7开头
      */
-    public final static Integer 发是非得失= 6001;
-    
-    /**
-     * 库存相关 7开头
-     */
-    public final static Integer 发送到发送到= 7001;
+    public final static Integer GOODS_CODE_NOT_EMPTY= 7001;
+    public final static Integer PATH_CODE_NOT_EMPTY= 7002;
     
     /**
      * 设备和货道相关 8开头
@@ -53,6 +49,9 @@ public abstract class ConstApiResCode {
 		resMap.put(SUCCESS,"成功");
 		resMap.put(EXCEPTION_UNKNOWN,"未知异常");
 		resMap.put(SYSTEM_ERROR,"系统错误");
+		
+		resMap.put(GOODS_CODE_NOT_EMPTY,"商品编号不能为空");
+		resMap.put(PATH_CODE_NOT_EMPTY,"货道编号不能为空");
 		
 		resMap.put(PATH_NOT_EXIST,"该货道不存在");
 		

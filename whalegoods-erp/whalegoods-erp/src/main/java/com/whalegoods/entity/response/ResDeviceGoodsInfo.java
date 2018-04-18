@@ -44,7 +44,7 @@ public class ResDeviceGoodsInfo implements Serializable {
 	private Double salePrice;
 	
 	@JsonProperty("path_code")
-	private String pathCode;
+	private Byte pathCode;
 	
 	private Byte floor;
 	

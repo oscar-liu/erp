@@ -7,7 +7,7 @@
     <result column="device_id_jp" jdbcType="VARCHAR" property="deviceIdJp" />
     <result column="device_id_supp" jdbcType="VARCHAR" property="deviceIdSupp" />
     <result column="ctn" jdbcType="TINYINT" property="ctn" />
-    <result column="path_code" jdbcType="VARCHAR" property="pathCode" />
+    <result column="path_code" jdbcType="TINYINT" property="pathCode" />
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
     <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
@@ -33,7 +33,7 @@
     <result column="made_in" jdbcType="VARCHAR" property="madeIn" />
     <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
     <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
-    <result column="path_code" jdbcType="VARCHAR" property="pathCode" />
+    <result column="path_code" jdbcType="TINYINT" property="pathCode" />
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="stock" jdbcType="TINYINT" property="stock" />
@@ -111,10 +111,10 @@
     <where>
 			c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
 			<if test="type ==1">
-				AND b.goods_code=#{goodsOrPathCode}
+				AND b.goods_code=#{goodsCode}
 			</if>
 			<if test="type ==2">
-				AND a.path_code=#{goodsOrPathCode}
+				AND a.path_code=#{pathCode}
 			</if>
 		 </where>
   </select>

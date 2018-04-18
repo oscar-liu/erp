@@ -79,12 +79,7 @@ public class V1DeviceController  extends BaseController<Object>{
 	  Map<String,Object> condition=new HashMap<>();
 	  condition.put("deviceIdJp",model.getDevice_code_wg());
 	  condition.put("deviceIdSupp",model.getDevice_code_sup());
-	  Map<String,Object> dataMap=deviceService.getApk(condition);
-	  ResBody resBody=new ResBody();
-	  resBody.setResultCode(0);
-	  resBody.setResultMsg("成功");
-	  resBody.setData(dataMap);
-	  return resBody;
+	  return deviceService.getApk(condition);
 	}
   
 }

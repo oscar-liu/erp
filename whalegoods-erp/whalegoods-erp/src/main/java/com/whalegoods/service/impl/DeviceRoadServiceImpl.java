@@ -107,8 +107,8 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 	}
 
 	@Override
-	public ResDeviceGoodsInfo selectByPathOrGoodsCode(Map<String, Object> condition) {
-		ResDeviceGoodsInfo model=deviceRoadMapper.selectByPathOrGoodsCode(condition); 
+	public ResDeviceGoodsInfo selectByCondition(Map<String, Object> condition) {
+		ResDeviceGoodsInfo model=deviceRoadMapper.selectByCondition(condition); 
 		return model;
 	}
 

@@ -20,10 +20,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayOpenPublicTemplateMessageIndustryModifyRequest;
+import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
-import com.alipay.api.response.AlipayOpenPublicTemplateMessageIndustryModifyResponse;
+import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.whalegoods.common.ResBody;
@@ -72,10 +72,9 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
 		mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
-		mapCdt.put("pathCode",model.getPathCode());
-		mapCdt.put("type",2);
+		mapCdt.put("goodsCode",model.getGoodsCode());
 		//根据设备编号和货道编号查询商品信息
-		ResDeviceGoodsInfo info=deviceRoadMapper.selectByPathOrGoodsCode(mapCdt);
+		ResDeviceGoodsInfo info=deviceRoadMapper.selectByCondition(mapCdt);
 		if(info==null){
 			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
 		}
@@ -231,9 +230,10 @@ public class PayServiceImpl implements PayService{
 			mapQrRst=this.alipayOrderQuery(orderId);
 			//用于更新订单信息的新对象
 			orderList=new OrderList();
-			orderList.setBuyerLogonId(mapQrRst.get("buyerLogonId").toString());
+			orderList.setOrderId(orderId);
+			orderList.setBuyerUserId(mapQrRst.get("buyerUserId"));
 			orderList.setOrderStatus(Byte.valueOf(mapQrRst.get("orderStatus")));
-			orderList.setPayTime(mapQrRst.get("sendPayDate").toString());
+			orderList.setPayTime(mapQrRst.get("sendPayDate"));
 		}
 		else {
 			throw new BizServiceException(ConstApiResCode.PAY_TYPE_ERROR);
@@ -357,11 +357,11 @@ public class PayServiceImpl implements PayService{
 		} 
 		//调用成功
 		if(response.isSuccess()){
-			mapResult.put("buyerLogonId",response.getParams().get("buyer_logon_id"));
-			String tradeStatus=response.getParams().get("trade_status");
+			mapResult.put("buyerUserId",response.getBuyerUserId());
+			String tradeStatus=response.getTradeStatus();
 			if(tradeStatus.equals(ConstSysParamName.SUCCESS_TRADE_ALIPAY)){
 				mapResult.put("orderStatus",ConstOrderStatus.PAID.toString());
-				mapResult.put("sendPayDate",response.getParams().get("send_pay_date"));
+				mapResult.put("sendPayDate",DateUtil.formatDateTime(response.getSendPayDate()).toString());
 			}
 			else if (tradeStatus.equals(ConstSysParamName.ALIPAY_WAIT_BUYER_PAY)) {
 				mapResult.put("orderStatus",ConstOrderStatus.NOT_PAY.toString());
@@ -423,13 +423,13 @@ public class PayServiceImpl implements PayService{
 				ConstSysParamValue.ALIPAY_APPID,
 				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","utf-8", 
 				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
-		AlipayOpenPublicTemplateMessageIndustryModifyRequest request = new AlipayOpenPublicTemplateMessageIndustryModifyRequest();
+		AlipayTradePrecreateRequest  request = new AlipayTradePrecreateRequest();
 		JSONObject sonJson=new JSONObject();
 		sonJson.put("out_trade_no",orderId);
 		sonJson.put("total_amount",salePrice);
 		sonJson.put("subject",goodsName);
 		request.setBizContent(sonJson.toJSONString());
-		AlipayOpenPublicTemplateMessageIndustryModifyResponse response;
+		AlipayTradePrecreateResponse  response;
 		try {
 			response = alipayClient.execute(request);
 		} catch (AlipayApiException e) {
@@ -438,7 +438,7 @@ public class PayServiceImpl implements PayService{
 		} 
 		//调用成功
 		if(response.isSuccess()){
-			return URLEncoder.encode(Base64Utils.encodeToUrlSafeString(response.getParams().get("qr_code").getBytes()));
+			return URLEncoder.encode(Base64Utils.encodeToUrlSafeString(response.getQrCode().getBytes()));
 		}
 		else
 		{

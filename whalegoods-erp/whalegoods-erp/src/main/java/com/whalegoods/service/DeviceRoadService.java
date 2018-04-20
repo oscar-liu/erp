@@ -1,7 +1,6 @@
 package com.whalegoods.service;
 
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
@@ -66,7 +65,7 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
   List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
   
-  ResDeviceGoodsInfo selectByPathOrGoodsCode(Map<String,Object> condition);
+  ResDeviceGoodsInfo selectByCondition(Map<String,Object> condition);
 
   int deleteByPrimaryKey(String id);
   

@@ -103,18 +103,24 @@
   </select>
   
    <!--  根据当前设备商品编号或货道号获取商品信息 -->
-    <select id="selectByPathOrGoodsCode" parameterType="java.util.Map" resultMap="BaseResultMap2">
+    <select id="selectByCondition" parameterType="java.util.Map" resultMap="BaseResultMap2">
     SELECT 
     <include refid="Base_Column_List3" />
     FROM device_road a INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
     <where>
 			c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
-			<if test="type ==1">
+			<if test="goodsCode !=null and goodsCode !=''">
 				AND b.goods_code=#{goodsCode}
 			</if>
-			<if test="type ==2">
+			<if test="pathCode !=null and pathCode !=''">
 				AND a.path_code=#{pathCode}
+			</if>
+			<if test="floor !=null and floor !=''">
+				AND a.floor=#{floor}
+			</if>
+		    <if test="ctn !=null and ctn !=''">
+				AND a.ctn=#{ctn}
 			</if>
 		 </where>
   </select>
@@ -142,6 +148,12 @@
 			</if>
 		    <if test="pathCode !=null and pathCode !=''">
 				AND a.path_code=#{pathCode}
+			</if>
+			<if test="floor !=null and floor !=''">
+				AND a.floor=#{floor}
+			</if>
+			<if test="ctn !=null and ctn !=''">
+				AND a.ctn=#{ctn}
 			</if>
 		 </where>
 	</update>

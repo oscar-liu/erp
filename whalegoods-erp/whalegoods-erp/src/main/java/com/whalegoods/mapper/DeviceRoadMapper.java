@@ -46,7 +46,7 @@ public interface DeviceRoadMapper extends BaseMapper<SysUser,String> {
 
     List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
     
-    ResDeviceGoodsInfo selectByPathOrGoodsCode(Map<String,Object> condition);
+    ResDeviceGoodsInfo selectByCondition(Map<String,Object> condition);
     
     int updateDeviceRoad(DeviceRoad model);
 }

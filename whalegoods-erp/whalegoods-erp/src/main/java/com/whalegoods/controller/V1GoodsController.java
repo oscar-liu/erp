@@ -20,12 +20,11 @@ import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.request.ReqBase;
-import com.whalegoods.entity.request.ReqGetInfoByPathOrGoodsCode;
+import com.whalegoods.entity.request.ReqGetInfoByGoodsCode;
+import com.whalegoods.entity.request.ReqGetInfoByPathCode;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
-import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceRoadService;
-import com.whalegoods.util.StringUtil;
 
 /**
  * 货道商品信息API
@@ -58,29 +57,35 @@ public class V1GoodsController  extends BaseController<Object>{
 	}
   
   /**
-   * 根据当前设备商品编号或货道号获取商品信息接口
+   * 根据当前设备商品编号获取商品信息接口
    * @author chencong
    * 2018年4月9日 下午5:08:44
    */
-  @GetMapping(value="/getInfoByCode")
-  ResBody getInfoByCode(@Valid ReqGetInfoByPathOrGoodsCode model) {
-	  if(model.getType()==1){
-		  if(StringUtil.isEmpty(model.getGoods_code())){
-			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EMPTY);
-		  }
-	  }
-	  if(model.getType()==2){
-		  if(StringUtil.isEmpty(model.getPath_code())){
-			  throw new BizApiException(ConstApiResCode.PATH_CODE_NOT_EMPTY);
-		  }
-	  }
+  @GetMapping(value="/getInfoByGoodsCode")
+  ResBody getInfoByCode(@Valid ReqGetInfoByGoodsCode model) {
 	  Map<String,Object> condition=new HashMap<>();
 	  condition.put("deviceIdJp",model.getDevice_code_wg());
 	  condition.put("deviceIdSupp",model.getDevice_code_sup());
 	  condition.put("goodsCode",model.getGoods_code());
+	  ResDeviceGoodsInfo info=deviceRoadService.selectByCondition(condition);
+	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
+	  return resBody;
+	}
+  
+  /**
+   * 根据当前设备货道号获取商品信息接口
+   * @author chencong
+   * 2018年4月9日 下午5:08:44
+   */
+  @GetMapping(value="/getInfoByPathCode")
+  ResBody getInfoByPathCode(@Valid ReqGetInfoByPathCode model) {
+	  Map<String,Object> condition=new HashMap<>();
+	  condition.put("deviceIdJp",model.getDevice_code_wg());
+	  condition.put("deviceIdSupp",model.getDevice_code_sup());
 	  condition.put("pathCode",model.getPath_code());
-	  condition.put("type",model.getType());
-	  ResDeviceGoodsInfo info=deviceRoadService.selectByPathOrGoodsCode(condition);
+	  condition.put("floor",model.getFloor());
+	  condition.put("ctn",model.getCtn());
+	  ResDeviceGoodsInfo info=deviceRoadService.selectByCondition(condition);
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
 	  return resBody;
 	}
@@ -103,6 +108,8 @@ public class V1GoodsController  extends BaseController<Object>{
 		  deviceRoad.setDeviceIdJp(jsonObject.getString("device_code_wg"));
 		  deviceRoad.setDeviceIdSupp(jsonObject.getString("device_code_sup"));
 		  deviceRoad.setPathCode(Byte.valueOf( map.get("path_code").toString()));
+		  deviceRoad.setFloor(Byte.valueOf( map.get("floor").toString()));
+		  deviceRoad.setCtn(Byte.valueOf( map.get("ctn").toString()));
 		  deviceRoad.setStock((Integer)map.get("stock"));
 		  deviceRoadService.updateDeviceRoad(deviceRoad);
 	}

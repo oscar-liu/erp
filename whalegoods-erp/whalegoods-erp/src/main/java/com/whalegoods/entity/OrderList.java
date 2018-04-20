@@ -47,7 +47,7 @@ public class OrderList extends BaseEntity implements Serializable {
     
     private String wxOpenId;
     
-    private String buyerLogonId;
+    private String buyerUserId;
     
     private String payTime;
     

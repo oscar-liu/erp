@@ -23,10 +23,6 @@ import lombok.ToString;
 public class ReqCreatePrepay extends ReqBase{
 
 	private static final long serialVersionUID = 1L;
-
-	@JsonProperty("path_code")
-	@NotNull(message="path_code必填")
-	private Byte pathCode;
 	
 	@JsonProperty("goods_code")
 	@NotEmpty(message="goods_code必填")

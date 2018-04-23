@@ -1,6 +1,7 @@
 package com.whalegoods.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,17 +10,18 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.common.ResBody;
@@ -41,6 +43,12 @@ public class V1DeviceController  extends BaseController<Object>{
 
   @Autowired
   DeviceService deviceService;
+  
+  @Autowired
+  HttpServletRequest request;
+  
+  @Autowired
+  HttpSession session;
 
   /**
    * 设备状态上报接口（1服务中 2停用 3下线）
@@ -94,44 +102,33 @@ public class V1DeviceController  extends BaseController<Object>{
    * 上传异常文件
    * @author chencong
    * 2018年4月23日 上午10:44:47
+ * @throws SystemException 
    */
   @PostMapping(value="/uploadExLog")
-  public ResBody uploadFile(String orderid,HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	        throws Exception {
+  public ResBody uploadFile(@RequestParam(name="order") String orderId) throws SystemException {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-	    String type = request.getParameter("type");
-	    String ret_fileName = null;// 返回给前端已修改的图片名称
-
 	    // 临时文件路径
-	    String dirTemp = "/static/upload/temp";
+	    String dirTemp = "/upload/temp";
 	    
 	    //图片存储相对路径
-	    String suitelogo = "";
+	    String suitelogo =dirTemp;
+	    String fd=request.getContentType();
+	   String realPath=null;
+		try {
+			realPath = ResourceUtils.getFile("src/main/resources/static").getPath();
+			/*realPath=this.getClass().getResource("src/main/resources/static").getPath();*/
+		} catch (FileNotFoundException e1) {
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
 	    
-	    //设置图片存储相对路径
-	    //这里的type是前台传过来方便辨认是什么图片的参数，没有需要就不用判断
-	    if ("app".equals(type)) {
-	        suitelogo = "/static/upload/applogo";
-	    } else if ("suite".equals(type)) {
-	        suitelogo = "/static/upload/suitelogo";
-	    } else {
-	        suitelogo = dirTemp;
-	    }
-
-	    // 获取当前项目的根目录  tomcat的绝对路径/webapps/项目名
-	    String realPath = session.getServletContext().getRealPath("");
-	    
-	    
-	    //获取tomcat下的ROOT目录，通过root绝对路径和存储图片文件夹的相对路径创建目录 
-	    //mkdirs方法逐级创建目录。 mkdir只创建最后一级目录，前面目录不存在则不创建
 	    File realFile = new File(realPath);
 	    
-	    String rootPath = realFile.getParent() + "/ROOT";
+	    String rootPath = realFile.getPath();
 	    String normPath = rootPath + suitelogo;
 	    String tempPath = rootPath + dirTemp;
 
-	    File f = new File(normPath);
-	    File f1 = new File(tempPath);
+	    File f = new File(normPath);//存储路径
+	    File f1 = new File(tempPath);//临时路径
 	    if (!f.exists()) {
 	        f.mkdirs();
 	    }
@@ -154,7 +151,7 @@ public class V1DeviceController  extends BaseController<Object>{
 	    ServletFileUpload upload = new ServletFileUpload(factory);
 	    upload.setHeaderEncoding("UTF-8");
 	    try {
-            File uploadedFile = new File(normPath + "/" + getUUID());
+            File uploadedFile = new File(normPath + "/" + orderId);
             OutputStream os = new FileOutputStream(uploadedFile);
             InputStream is = request.getInputStream();
             byte buf[] = new byte[1024];// 可以修改 1024 以提高读取速度
@@ -170,10 +167,6 @@ public class V1DeviceController  extends BaseController<Object>{
             e.printStackTrace();
         }
 	    return resBody;
-	}
-  
-  private String getUUID() {
-	    return UUID.randomUUID().toString();
 	}
   
 }

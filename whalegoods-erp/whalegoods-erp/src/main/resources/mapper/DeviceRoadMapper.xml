@@ -27,6 +27,7 @@
   <resultMap id="BaseResultMap2" type="com.whalegoods.entity.response.ResDeviceGoodsInfo">
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_name_en" jdbcType="VARCHAR" property="goodsNameEn" />
     <result column="ctn" jdbcType="TINYINT" property="ctn" />
     <result column="spec" jdbcType="VARCHAR" property="spec" />
     <result column="goods_detail" jdbcType="VARCHAR" property="goodsDetail" />
@@ -70,6 +71,7 @@
     a.stock,
     b.goods_code, 
     b.goods_name, 
+    b.goods_name_en,
     b.spec, 
     b.goods_detail, 
     b.pic_url,
@@ -86,6 +88,7 @@
     a.stock,
     b.goods_code, 
     b.goods_name, 
+    b.goods_name_en,
     b.spec, 
     b.goods_detail, 
     b.pic_url,

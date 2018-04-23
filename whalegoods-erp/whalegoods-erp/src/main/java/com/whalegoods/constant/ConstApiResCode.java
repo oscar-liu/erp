@@ -45,6 +45,7 @@ public abstract class ConstApiResCode {
     public final static Integer WX_APPLY_REFUND_ONE_FAILED= 9011;
     public final static Integer WX_APPLY_REFUND_TWO_FAILED= 9012;
     public final static Integer ALIPAY_REFUND_FALID= 9013;
+    public final static Integer ORDERID_EMPTY= 9014;
     
     
 	static {
@@ -72,6 +73,7 @@ public abstract class ConstApiResCode {
 		resMap.put(WX_APPLY_REFUND_ONE_FAILED,"微信申请退款-一级失败");
 		resMap.put(WX_APPLY_REFUND_TWO_FAILED,"微信申请退款-二级失败");
 		resMap.put(ALIPAY_REFUND_FALID,"支付宝退款申请失败");
+		resMap.put(ORDERID_EMPTY,"订单号不能为空");
 		
 	}
 	

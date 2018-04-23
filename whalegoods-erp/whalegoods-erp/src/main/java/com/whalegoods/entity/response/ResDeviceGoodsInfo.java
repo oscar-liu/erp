@@ -27,6 +27,9 @@ public class ResDeviceGoodsInfo implements Serializable {
 	@JsonProperty("goods_name")
 	private String goodsName;
 	
+	@JsonProperty("goods_name_en")
+	private String goodsNameEn;
+	
 	private Byte ctn;
 	
 	private String spec;

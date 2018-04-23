@@ -21,7 +21,9 @@ public class GoodsSku extends BaseEntity implements Serializable {
 
     private String goodsCode;
     
-    private String goodsname;
+    private String goodsName;
+    
+    private String goodsNameEn;
     
     private String spec;
     

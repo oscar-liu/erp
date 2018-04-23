@@ -1,6 +1,7 @@
 package com.whalegoods;
 
 import java.util.Arrays;
+
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan(basePackages = {"com.whalegoods.mapper"})
+@MapperScan(basePackages = {"com.whalegoods.mapper"}) 
 public class Application {
 
   public static void main(String[] args) {
@@ -24,7 +25,5 @@ public class Application {
     String[] names = applicationContext.getBeanDefinitionNames();
     Arrays.asList(names).forEach(name -> System.out.println("初始化bean名称："+name));
   }
-
-
 
 }

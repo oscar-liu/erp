@@ -39,5 +39,4 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	        registry.addResourceHandler("/ftl/**").addResourceLocations("classpath:/ftl/");
 	    }
 	    
-	    
 }

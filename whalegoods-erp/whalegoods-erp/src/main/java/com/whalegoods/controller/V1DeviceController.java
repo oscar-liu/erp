@@ -3,11 +3,13 @@ package com.whalegoods.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
@@ -44,12 +48,6 @@ public class V1DeviceController  extends BaseController<Object>{
   @Autowired
   DeviceService deviceService;
   
-  @Autowired
-  HttpServletRequest request;
-  
-  @Autowired
-  HttpSession session;
-
   /**
    * 设备状态上报接口（1服务中 2停用 3下线）
    * @author chencong
@@ -105,18 +103,16 @@ public class V1DeviceController  extends BaseController<Object>{
  * @throws SystemException 
    */
   @PostMapping(value="/uploadExLog")
-  public ResBody uploadFile(@RequestParam(name="order") String orderId) throws SystemException {
+  public ResBody uploadFile(@RequestParam(name="order") String orderId,HttpServletRequest request,HttpSession session) throws SystemException {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	    // 临时文件路径
-	    String dirTemp = "/upload/temp";
-	    
+	   String dirTemp = "/ex_log";
 	    //图片存储相对路径
-	    String suitelogo =dirTemp;
-	    String fd=request.getContentType();
+	   String suitelogo =dirTemp;
 	   String realPath=null;
+	   
 		try {
-			realPath = ResourceUtils.getFile("src/main/resources/static").getPath();
-			/*realPath=this.getClass().getResource("src/main/resources/static").getPath();*/
+			realPath = ResourceUtils.getFile("classpath:static").getPath();
 		} catch (FileNotFoundException e1) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
@@ -145,13 +141,13 @@ public class V1DeviceController  extends BaseController<Object>{
 	    factory.setSizeThreshold(5 * 1024 * 1024); 
 	    
 	    // 设定存储临时文件的目录
-	    factory.setRepository(new File(tempPath)); 
+	    factory.setRepository(f1); 
 
 	    //创建上传文件实例
 	    ServletFileUpload upload = new ServletFileUpload(factory);
 	    upload.setHeaderEncoding("UTF-8");
 	    try {
-            File uploadedFile = new File(normPath + "/" + orderId);
+            File uploadedFile = new File(normPath + "/" + orderId+".png");
             OutputStream os = new FileOutputStream(uploadedFile);
             InputStream is = request.getInputStream();
             byte buf[] = new byte[1024];// 可以修改 1024 以提高读取速度

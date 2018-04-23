@@ -21,6 +21,8 @@ public abstract class ConstApiResCode {
      */
     public final static Integer GOODS_CODE_NOT_EMPTY= 7001;
     public final static Integer PATH_CODE_NOT_EMPTY= 7002;
+    public final static Integer VIEWTIME_NOT_EMPTY= 7003;
+    public final static Integer STOCK_NOT_ENOUGH= 7004;
     
     /**
      * 设备和货道相关 8开头
@@ -52,6 +54,8 @@ public abstract class ConstApiResCode {
 		
 		resMap.put(GOODS_CODE_NOT_EMPTY,"商品编号不能为空");
 		resMap.put(PATH_CODE_NOT_EMPTY,"货道编号不能为空");
+		resMap.put(VIEWTIME_NOT_EMPTY,"限时折扣商品时间戳不能为空");
+		resMap.put(STOCK_NOT_ENOUGH,"该商品所在货道库存不足");
 		
 		resMap.put(PATH_NOT_EXIST,"该货道不存在");
 		

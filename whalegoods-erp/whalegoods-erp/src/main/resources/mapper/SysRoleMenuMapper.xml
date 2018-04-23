@@ -9,7 +9,6 @@
   <sql id="Base_Column_List">
     role_id, menu_id
   </sql>
-
   <delete id="deleteByPrimaryKey" parameterType="com.whalegoods.entity.SysRoleMenu">
     delete from sys_role_menu
     where role_id = #{roleId,jdbcType=VARCHAR}

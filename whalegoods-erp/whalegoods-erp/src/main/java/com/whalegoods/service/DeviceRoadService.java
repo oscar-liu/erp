@@ -2,12 +2,7 @@ package com.whalegoods.service;
 
 
 import com.whalegoods.entity.DeviceRoad;
-import com.whalegoods.entity.SysRoleUser;
-import com.whalegoods.entity.SysUser;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
-import com.whalegoods.exception.SystemException;
-import com.whalegoods.util.Checkbox;
-import com.whalegoods.util.JsonUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -17,58 +12,14 @@ import java.util.Map;
  * @author henry-sun
  *
  */
-public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
-
-  SysUser login(String username);
-
-  @Override
-  DeviceRoad selectByPrimaryKey(String id);
-
-  /**
-   * 分页查询
-   * @param
-   * @return
-   */
-  List<DeviceRoad> selectListByPage(DeviceRoad sysUser);
-
-  int count();
-
-  /**
-   * 新增
-   * @param user
-   * @return
-   */
-  int add(DeviceRoad user);
-
-  /**
-   * 删除
-   * @param id
-   * @return
-   */
-  JsonUtil delById(String id,boolean flag);
-
-  int checkUser(String username);
-
-
-  int updateByPrimaryKey(DeviceRoad sysUser);
-
-  List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser);
-
-  public List<Checkbox> getUserRoleByJson(String id);
-
-  /**
-   * 更新密码
-   * @param user
-   * @return
-   */
-  int rePass(DeviceRoad user);
+public interface DeviceRoadService {
   
   List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
   
   ResDeviceGoodsInfo selectByCondition(Map<String,Object> condition);
-
-  int deleteByPrimaryKey(String id);
   
-  void updateDeviceRoad(DeviceRoad model) throws SystemException;
+  void updateDeviceRoad(DeviceRoad model);
+  
+  void updateStockNoRepeat(DeviceRoad model);
 
 }

@@ -4,9 +4,11 @@ package com.whalegoods.service.impl;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +33,7 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstOrderStatus;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.constant.ConstSysParamValue;
+import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.OrderList;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
@@ -38,8 +41,8 @@ import com.whalegoods.entity.request.ReqRefund;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.exception.BizServiceException;
 import com.whalegoods.exception.SystemException;
-import com.whalegoods.mapper.DeviceRoadMapper;
-import com.whalegoods.mapper.OrderListMapper;
+import com.whalegoods.service.DeviceRoadService;
+import com.whalegoods.service.OrderListService;
 import com.whalegoods.service.PayService;
 import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.HttpUtils;
@@ -60,10 +63,10 @@ public class PayServiceImpl implements PayService{
 	private static Logger logger = LoggerFactory.getLogger(PayServiceImpl.class);
 	
 	@Autowired
-	private DeviceRoadMapper deviceRoadMapper;
+	private DeviceRoadService deviceRoadService;
 	
 	@Autowired
-	private OrderListMapper orderListMapper;
+	private OrderListService orderListService;
 	
 	@Transactional
 	@Override
@@ -73,28 +76,25 @@ public class PayServiceImpl implements PayService{
 		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
 		mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
 		mapCdt.put("goodsCode",model.getGoodsCode());
-		//根据设备编号和货道编号查询商品信息
-		ResDeviceGoodsInfo info=deviceRoadMapper.selectByCondition(mapCdt);
-		if(info==null){
+		//根据设备编号和商品编号查询商品信息
+		ResDeviceGoodsInfo deviceGoodsInfo=deviceRoadService.selectByCondition(mapCdt);
+		if(deviceGoodsInfo==null){
 			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
 		}
+		if(deviceGoodsInfo.getStock()==0){
+			throw new BizServiceException(ConstApiResCode.STOCK_NOT_ENOUGH);
+		}
 		//生成预支付订单记录
-		String orderId=StringUtil.getOrderId();
 		OrderList orderPrepay=new OrderList();
-		BeanUtils.copyProperties(info,orderPrepay);
+		String orderId=StringUtil.getOrderId();
+		BeanUtils.copyProperties(deviceGoodsInfo,orderPrepay);
 		orderPrepay.setId(StringUtil.getUUID());
 		orderPrepay.setOrderId(orderId);
 		orderPrepay.setOrderTime(DateUtil.getCurrentTime());
 		orderPrepay.setOrderStatus((byte) 1);
 		orderPrepay.setDeviceIdJp(model.getDevice_code_wg());
 		orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
-		orderPrepay.setPrefix(DateUtil.getCurrentMonth());
-		try {
-			orderListMapper.insertOrderList(orderPrepay);
-		} catch (Exception e) {
-			logger.error("生成预支付记录失败，数据："+orderPrepay.toString()+" 原因："+e.getMessage());
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-		}
+		orderListService.insertOrderList(orderPrepay);
 		Map<String,Object> mapData=new HashMap<>();
 		mapData.put("order",orderId);
 		resBody.setData(mapData);
@@ -107,27 +107,22 @@ public class PayServiceImpl implements PayService{
 	public ResBody getQrCode(ReqCreateQrCode model) throws SystemException{
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		Map<String,Object> mapData=new HashMap<>();
-		//根据订单号查找未支付记录
+		//根据订单号查找未支付订单
+		String orderId=model.getOrder();
 		Map<String,Object> mapCdt=new HashMap<>();
-		mapCdt.put("order",model.getOrder());
+		mapCdt.put("order",orderId);
 		mapCdt.put("orderStatus",ConstOrderStatus.NOT_PAY);
-		OrderList orderList=orderListMapper.selectByCondition(mapCdt);
+		OrderList orderList=orderListService.selectByCondition(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
 		//请求第三方支付预支付API
 		String goodsName=orderList.getGoodsName();
 		Double salePrice=orderList.getSalePrice();
-		String orderId=model.getOrder();
 		//微信
 		if(model.getPayType()==1){
 			Map<String, String> mapPpRst;
-			try {
-				mapPpRst = this.wxPrepay(goodsName, salePrice, orderId);
-			} catch (Exception e) {
-				logger.error("执行wxPrepay()方法出错："+e.getMessage());
-				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			}	
+			mapPpRst = this.wxPrepay(goodsName, salePrice, orderId);
 			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
 			{
 				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){					
@@ -160,7 +155,7 @@ public class PayServiceImpl implements PayService{
 		//更新预支付订单信息
 		orderList.setPayType(model.getPayType());		
 		try {
-			orderListMapper.updateOrderList(orderList);
+			orderListService.updateOrderList(orderList);
 		} catch (Exception e) {
 			//更新预支付记录异常不影响生成二维码
 			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
@@ -169,7 +164,6 @@ public class PayServiceImpl implements PayService{
 	}
 	
 	
-	@Transactional
 	@Override
 	public ResBody getOrderStatus(String orderId) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
@@ -177,99 +171,61 @@ public class PayServiceImpl implements PayService{
 		//根据订单号查找预支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
-		OrderList orderList=orderListMapper.selectByCondition(mapCdt);
+		OrderList orderList=orderListService.selectByCondition(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
 		Map<String, String> mapQrRst;
 		//微信
 		if(orderList.getPayType()==1){
-			try {
-				mapQrRst = this.wxOrderQuery(orderId);
-			} catch (Exception e) {
-				logger.error("执行wxOrderQuery()方法出错："+e.getMessage());
-				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			}	
-			if(mapQrRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
-			{
-				if(mapQrRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
-					if(mapQrRst.get("trade_state").equals(ConstSysParamName.SUCCESS_WX)){
-						//用于更新订单信息的新对象
-						orderList=new OrderList();
-						orderList.setOrderId(orderId);
-						orderList.setWxOpenId(mapQrRst.get("openid"));
-						orderList.setPayTime(mapQrRst.get("time_end"));
-						orderList.setOrderStatus(ConstOrderStatus.PAID);
-					}
-					else{
-						logger.error("微信查询订单API结果：,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));			
-						if(mapQrRst.get("trade_state").equals(ConstSysParamName.WX_NOTPAY)){
-							orderList.setOrderStatus(ConstOrderStatus.NOT_PAY);
-						}
-						else if (mapQrRst.get("trade_state").equals(ConstSysParamName.WX_REFUND)) {
-							orderList.setOrderStatus(ConstOrderStatus.REFUND);
-						}
-						else {
-							orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
-						}
-					}
-				}
-				else {
-					logger.error("微信查询订单二级失败,错误代码："+mapQrRst.get("err_code")+" 描述："+mapQrRst.get("err_code_des"));
-					throw new BizServiceException(ConstApiResCode.WX_QUERY_TWO_FAILED);
-				}
-			}
-			else
-			{
-				logger.error("微信查询订单一级失败："+mapQrRst.get("return_msg"));
-				throw new BizServiceException(ConstApiResCode.WX_QUERY_ONE_FAILED);
-			}
+			this.wxOrderQueryDoor(orderList);
 		}
 		//支付宝
 		else if(orderList.getPayType()==2){
 			mapQrRst=this.alipayOrderQuery(orderId);
-			//用于更新订单信息的新对象
-			orderList=new OrderList();
-			orderList.setOrderId(orderId);
-			orderList.setBuyerUserId(mapQrRst.get("buyerUserId"));
-			orderList.setOrderStatus(Byte.valueOf(mapQrRst.get("orderStatus")));
-			orderList.setPayTime(mapQrRst.get("sendPayDate"));
+			if(mapQrRst.get("orderStatus").equals(ConstOrderStatus.PAID.toString())){
+				//用于更新订单信息的新对象
+				orderList.setBuyerUserId(mapQrRst.get("buyerUserId"));
+				orderList.setOrderStatus(Byte.valueOf(mapQrRst.get("orderStatus")));
+				orderList.setPayTime(mapQrRst.get("sendPayDate"));
+			}
+			else{
+				this.wxOrderQueryDoor(orderList);
+				if(orderList.getOrderStatus()==2){
+					orderList.setPayType((byte) 1);
+				}
+			}
+
 		}
 		else {
 			throw new BizServiceException(ConstApiResCode.PAY_TYPE_ERROR);
 		}
-		//更新订单信息
+		//更新订单信息和货道库存
 		try {
-			orderListMapper.updateOrderList(orderList);
+			this.updateStockAndOrderInfo(orderList);
 		} catch (Exception e) {
-			//更新订单记录异常不影响给前端返回结果
-			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
+			//上述操作不应影响客户端
+			logger.error("更新订单信息和货道库存异常："+e.getMessage());
 		}
 		mapData.put("order_status",orderList.getOrderStatus());
 		resBody.setData(mapData);
 		return resBody;
 	}
 	
-	@Transactional
 	@Override
 	public ResBody refund(ReqRefund model) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		//根据订单号查找预支付记录
+		//根据订单号查找已支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",model.getOrder());
-		OrderList orderList=orderListMapper.selectByCondition(mapCdt);
+		mapCdt.put("orderStatus",ConstOrderStatus.PAID);
+		OrderList orderList=orderListService.selectByCondition(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
-		Map<String, String> mapRfRst;
 		//微信
 		if(orderList.getPayType()==1){
-			try {
-				mapRfRst = this.wxApplyRefund(orderList);
-			} catch (SystemException e) {
-				logger.error("执行wxApplyRefund()方法出错："+e.getMessage());
-				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			}	
+			Map<String, String> mapRfRst = this.wxApplyRefund(orderList);	
 			if(mapRfRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
 			{
 				if(!mapRfRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
@@ -294,25 +250,59 @@ public class PayServiceImpl implements PayService{
 		}
 		try {
 			//更新预支付订单信息
-			orderList=new OrderList();
-			orderList.setOrderId(model.getOrder());
 			orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);
-			//生成退款信息
-			orderListMapper.updateOrderList(orderList);
-			//生成退款记录
+			this.updateStockAndOrderInfo(orderList);
 		} catch (Exception e) {
-			//上面两个操作异常不影响给前端返回结果
-			logger.error("更新预支付记录或生成退款记录失败："+orderList.toString()+" 原因："+e.getMessage());
+			//上述操作不应影响客户端
+			logger.error("更新订单信息和货道库存异常："+e.getMessage());
 		}
 		return resBody;
+	}
+	
+	private OrderList wxOrderQueryDoor(OrderList orderList) throws SystemException{
+		Map<String,String>	mapQrRst=this.wxOrderQuery(orderList.getOrderId());
+		if(mapQrRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
+		{
+			if(mapQrRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
+				if(mapQrRst.get("trade_state").equals(ConstSysParamName.SUCCESS_WX)){
+					//用于更新订单信息的新对象
+					orderList.setWxOpenId(mapQrRst.get("openid"));
+					orderList.setPayTime(mapQrRst.get("time_end"));
+					orderList.setOrderStatus(ConstOrderStatus.PAID);
+				}
+				else{
+					logger.error("微信查询订单API结果：,状态："+mapQrRst.get("trade_state")+" 描述："+mapQrRst.get("trade_state_desc"));			
+					if(mapQrRst.get("trade_state").equals(ConstSysParamName.WX_NOTPAY)){
+						orderList.setOrderStatus(ConstOrderStatus.NOT_PAY);
+					}
+					else if (mapQrRst.get("trade_state").equals(ConstSysParamName.WX_REFUND)) {
+						orderList.setOrderStatus(ConstOrderStatus.REFUND);
+					}
+					else {
+						orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
+					}
+				}
+			}
+			else {
+				logger.error("微信查询订单二级失败,错误代码："+mapQrRst.get("err_code")+" 描述："+mapQrRst.get("err_code_des"));
+				orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
+			}
+		}
+		else
+		{
+			logger.error("微信查询订单一级失败："+mapQrRst.get("return_msg"));
+			orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
+		}
+		return orderList;
 	}
 	
 	/**
 	 * 调用微信查询订单API
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
+	 * @throws SystemException 
 	 */
-	private  Map<String,String> wxOrderQuery(String orderId) throws Exception {
+	private  Map<String,String> wxOrderQuery(String orderId) throws SystemException{
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -375,7 +365,7 @@ public class PayServiceImpl implements PayService{
 		else
 		{
 			logger.error("调用支付宝订单查询API失败："+response.getMsg());
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			mapResult.put("orderStatus",ConstOrderStatus.PAY_FAILED.toString());
 		}
 		return mapResult;
 	}
@@ -385,8 +375,11 @@ public class PayServiceImpl implements PayService{
 	 * 调用微信预支付API
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
+	 * @throws UnknownHostException 
+	 * @throws DocumentException 
+	 * @throws SystemException 
 	 */
-	private  Map<String,String> wxPrepay(String goodsName,Double salePrice,String orderId) throws Exception {
+	private  Map<String,String> wxPrepay(String goodsName,Double salePrice,String orderId) throws  SystemException {
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -454,7 +447,7 @@ public class PayServiceImpl implements PayService{
 	 * @throws SystemException 
 	 * @throws Exception
 	 */
-	private  Map<String,String> wxApplyRefund(OrderList orderList) throws SystemException  {
+	private  Map<String,String> wxApplyRefund(OrderList orderList) throws SystemException {
 		//定义请求数据集合
 		Map<String,Object> map=new HashMap<>();
 		map.put("appid",ConstSysParamValue.WX_APPID);
@@ -511,6 +504,28 @@ public class PayServiceImpl implements PayService{
 			logger.error("调用支付宝退款申请API结果失败："+response.getMsg());
 			return false;
 		}
+	}
+	
+	/**
+	 * 更新订单信息和货道库存
+	 * @param orderList
+	 */
+	@Transactional
+	private void updateStockAndOrderInfo(OrderList orderList){
+		orderListService.updateOrderList(orderList);
+		int stock=0;
+		if(orderList.getOrderStatus()==ConstOrderStatus.PAID)
+		{
+			stock=-1;
+		}
+		if(orderList.getOrderStatus()==ConstOrderStatus.APPLY_REFUND_SUCCESS){
+			stock=1;
+		} 
+		DeviceRoad deviceRoad=new DeviceRoad();
+		BeanUtils.copyProperties(orderList,deviceRoad); 
+		deviceRoad.setStock(stock);
+		deviceRoad.setStockOrderId(orderList.getOrderId());
+		deviceRoadService.updateStockNoRepeat(deviceRoad);
 	}
 
 }

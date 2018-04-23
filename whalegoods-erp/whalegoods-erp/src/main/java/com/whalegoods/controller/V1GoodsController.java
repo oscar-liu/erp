@@ -105,7 +105,7 @@ public class V1GoodsController  extends BaseController<Object>{
 	  for (Map map : mapList) {
 		//生成要更新的对象
 		  DeviceRoad deviceRoad=new DeviceRoad();
-		  deviceRoad.setDeviceIdJp(jsonObject.getString("device_code_wg"));
+		  deviceRoad.setDeviceIdJp(jsonObject.getString("device_code_wg")); 
 		  deviceRoad.setDeviceIdSupp(jsonObject.getString("device_code_sup"));
 		  deviceRoad.setPathCode(Byte.valueOf( map.get("path_code").toString()));
 		  deviceRoad.setFloor(Byte.valueOf( map.get("floor").toString()));

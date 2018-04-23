@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.common.ResBody;
+import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.request.ReqRefund;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.PayService;
 
@@ -46,6 +48,11 @@ public class V1OrderController  extends BaseController<Object>{
   @PostMapping(value="/createPrepay")
   ResBody createPrepay(@RequestBody @Valid ReqCreatePrepay model) throws SystemException {
 	  logger.info("收到生成商品支付二维码API请求："+model.toString());
+	  if(model.getSaleType()==2){
+		  if(model.getViewTime()==null){
+			  throw new BizApiException(ConstApiResCode.VIEWTIME_NOT_EMPTY);
+		  }
+	  }
 	  return payService.createPrepay(model);
 	}
 

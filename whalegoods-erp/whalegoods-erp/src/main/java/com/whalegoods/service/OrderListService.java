@@ -15,21 +15,21 @@ import com.whalegoods.entity.OrderList;
 public interface OrderListService {
 	
     /**
-     * 根据条件查询预支付订单信息
+     * 根据条件查询订单信息
      * @param order
      * @return
      */
    public OrderList selectByCondition(Map<String,Object> mapCdt);
     
     /**
-     * 更新数据
+     * 根据条件更新订单信息
      * @author chencong
      * 2018年4月18日 下午4:36:11
      */
    public int updateOrderList(OrderList model);
     
     /**
-     * 添加数据
+     * 生成订单信息
      * @author chencong
      * 2018年4月18日 下午4:35:21
      */

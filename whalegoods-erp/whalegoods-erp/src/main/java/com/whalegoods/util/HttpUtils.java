@@ -1,14 +1,11 @@
 package com.whalegoods.util;
 
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -149,10 +146,11 @@ public class HttpUtils {
 	 * POST XML
 	 * @author chencong
 	 * 2018年4月10日 上午10:51:04
+	 * @throws SystemException 
 	 */
-	public static String sendPost(String url, String requestXml, Map<String, String> heads) {
-		logger.debug("sendPost Url:" + url);
-		logger.debug("sendPost xml:" + requestXml);
+	public static String sendPost(String url, String requestXml, Map<String, String> heads) throws SystemException {
+		logger.info("sendPost Url:" + url);
+		logger.info("sendPost xml:" + requestXml);
 		String result = "";
 		
 		try {	
@@ -188,8 +186,9 @@ public class HttpUtils {
 			}
 			in.close();
 			result = new String(buffer.toString().getBytes("iso-8859-1"),"UTF-8");
-		} catch (Exception e) {
-			logger.error("请求异常: " + e.getMessage(), e);
+		} catch (IOException e) {			
+			logger.error("执行sendPost()方法异常: "+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
 		return result;
 	}

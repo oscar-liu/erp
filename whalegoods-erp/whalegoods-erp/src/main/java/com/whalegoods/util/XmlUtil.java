@@ -31,7 +31,8 @@ public class XmlUtil{
 	
 	private static Logger logger = LoggerFactory.getLogger(XmlUtil.class);
 	
-	  public static String mapToXml(Map map) {    
+	  @SuppressWarnings("rawtypes")
+	public static String mapToXml(Map map) {    
 	        StringBuffer sb = new StringBuffer();  
 	        sb.append("<xml>");  
 	        mapToXml(map, sb);
@@ -72,17 +73,19 @@ public class XmlUtil{
 	     * xml 转 Map  
 	     * @param xml  
 	     * @return  
+	     * @throws DocumentException 
 	     * @throws SystemException 
 	     */  
-	    public static Map<String,String> xmlToMap(String xml) throws SystemException  
+	    public static Map<String,String> xmlToMap(String xml) throws SystemException 
 	    {  
 	        Map<String,String> map =new HashMap<>();
 	        Document doc = null;  
-	        try {  
-	            doc = DocumentHelper.parseText(xml);  
-	        } catch (DocumentException e) {  
-	          throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-	        }  
+	        try {
+				doc = DocumentHelper.parseText(xml);
+			} catch (DocumentException e) {
+				logger.error("执行xmlToMap()方法失败："+xml+"原因："+e.getMessage());
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}  
 	        if(doc ==null)  
 	            return map;  
 	        Element root = doc.getRootElement();  

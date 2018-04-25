@@ -1,9 +1,11 @@
 package com.whalegoods.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -19,6 +21,13 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
+	@Autowired
+	private Environment env;
+
+	public String getLocation() {
+		return env.getProperty("spring.http.multipart.location");
+	}
+	
 	/**
 	 * 使用fastjson注册bean
 	 * @return
@@ -34,9 +43,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	    @Override
 	    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	        registry.addResourceHandler("/plugin/**","/static/**")
-	            .addResourceLocations("classpath:/plugin/","classpath:/static/");
+	        registry.addResourceHandler("/plugin/**","/static/**").addResourceLocations("classpath:/plugin/","classpath:/static/");
 	        registry.addResourceHandler("/ftl/**").addResourceLocations("classpath:/ftl/");
+	        registry.addResourceHandler("/v1/ex_log/**").addResourceLocations("file:"+getLocation());
 	    }
 	    
 }

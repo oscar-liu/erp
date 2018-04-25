@@ -2,19 +2,20 @@ package com.whalegoods.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
@@ -101,68 +100,78 @@ public class V1DeviceController  extends BaseController<Object>{
    * @author chencong
    * 2018年4月23日 上午10:44:47
  * @throws SystemException 
+ * @throws FileNotFoundException 
    */
   @PostMapping(value="/uploadExLog")
-  public ResBody uploadFile(@RequestParam(name="order") String orderId,HttpServletRequest request,HttpSession session) throws SystemException {
+  public ResBody uploadFile(@RequestParam(name="order") String orderId,HttpServletRequest request,HttpSession session) throws SystemException, FileNotFoundException {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-	    // 临时文件路径
-	   String dirTemp = "/ex_log";
-	    //图片存储相对路径
-	   String suitelogo =dirTemp;
-	   String realPath=null;
-	   
-		try {
-			realPath = ResourceUtils.getFile("classpath:static").getPath();
-		} catch (FileNotFoundException e1) {
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+	  
+	  //不是multipart/form-data类型
+	  if(!ServletFileUpload.isMultipartContent(request)){  
+          throw new SystemException(ConstApiResCode.SYSTEM_ERROR,"表单的enctype属性不是multipart/form-data类型！！");
+      }
+	  
+      //创建上传所需要的两个对象
+      DiskFileItemFactory factory = new DiskFileItemFactory();
+      //解析器依赖于工厂
+      ServletFileUpload sfu = new ServletFileUpload(factory);
+      //创建容器来接受解析的内容
+      List<FileItem> items = new ArrayList<FileItem>();
+      //将上传的文件信息放入容器中
+      try {
+          items = sfu.parseRequest(request);
+      } catch (FileUploadException e) {
+          e.printStackTrace();
+      }
+      
+      for(FileItem item : items){
+    	  try {
+			handleUploadField(item);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	    
-	    File realFile = new File(realPath);
-	    
-	    String rootPath = realFile.getPath();
-	    String normPath = rootPath + suitelogo;
-	    String tempPath = rootPath + dirTemp;
-
-	    File f = new File(normPath);//存储路径
-	    File f1 = new File(tempPath);//临时路径
-	    if (!f.exists()) {
-	        f.mkdirs();
-	    }
-
-	    if (!f1.exists()) {
-	        f1.mkdirs();
-	    }
-
-	    
-	    //创建文件解析对象
-	    DiskFileItemFactory factory = new DiskFileItemFactory();
-	    
-	    //设定使用内存超过5M时，将产生临时文件并存储于临时目录中 
-	    factory.setSizeThreshold(5 * 1024 * 1024); 
-	    
-	    // 设定存储临时文件的目录
-	    factory.setRepository(f1); 
-
-	    //创建上传文件实例
-	    ServletFileUpload upload = new ServletFileUpload(factory);
-	    upload.setHeaderEncoding("UTF-8");
-	    try {
-            File uploadedFile = new File(normPath + "/" + orderId+".png");
-            OutputStream os = new FileOutputStream(uploadedFile);
-            InputStream is = request.getInputStream();
-            byte buf[] = new byte[1024];// 可以修改 1024 以提高读取速度
-            int length = 0;
-            while ((length = is.read(buf)) > 0) {
-                os.write(buf, 0, length);
-            }
-            // 关闭流
-            os.flush();
-            os.close();
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+      }
 	    return resBody;
 	}
+  
+  private void handleUploadField(FileItem item) throws FileNotFoundException {
+      String fileName = item.getName();  //得到上传文件的文件名
+      if(fileName!=null && !"".equals(fileName)){
+          //控制只能上传图片
+          if(!item.getContentType().startsWith("image")){
+              return;
+          }
+
+          //向控制台打印文件信息
+          System.out.println("fileName:"+fileName);
+          System.out.println("fileSize:"+item.getSize());
+      }
+
+      //上传文件存储路径
+      String path = ResourceUtils.getFile("D:/whalegoods-file/ex_log/").getPath();
+      //创建子目录
+      File childDirectory = getChildDirectory(path);
+
+      //写入服务器或者磁盘
+      try {
+          item.write(new File(childDirectory.toString(),UUID.randomUUID()+"_"+fileName));
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+
+  }
+  
+  private File getChildDirectory(String path) {
+      Date currTime = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String time = sdf.format(currTime);
+
+      File file = new File(path,time);
+      if(!file.exists()){
+          file.mkdirs();
+      }
+      return file;
+  }
   
 }

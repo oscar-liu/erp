@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-
     <#--<link rel="shortcut icon" href="<%=request.getContextPath()%>/plugin/x-admin/favicon.ico" type="image/x-icon" />-->
     <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="${re.contextPath}/plugin/x-admin/css/font.css">
@@ -85,12 +84,9 @@
         layer.tips('点击刷新验证码', this,{time:1000});
     });
   })
-
   if (window != top)
     top.location.href = location.href;
 </script>
-
-
 <!-- 底部结束 -->
 </body>
 </html>

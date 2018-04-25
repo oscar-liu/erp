@@ -21,8 +21,8 @@ import com.whalegoods.exception.SystemException;
 
 /**
  * 文件处理工具类
- * @author chencong
- * 2018年4月23日 上午11:28:56
+ * @author henrysun
+ * 2018年4月25日 下午7:56:25
  */
 @Component
 public class FileUtil {

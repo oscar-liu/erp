@@ -15,22 +15,25 @@ import java.util.Arrays;
 import java.util.Random;
 import javax.imageio.ImageIO;
 
+/**
+ * 验证码工具类
+ * @author henrysun
+ * 2018年4月25日 下午7:49:53
+ */
 public class VerifyCodeUtils{  
   
     //使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符  
     public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";  
-    private static Random random = new Random();  
-  
+    
+    private static Random random = new Random();
     
     /**
      * 验证码对象
-     * @author zhou-baicheng
-     *
+     * @author henrysun
+     * 2018年4月25日 下午7:50:02
      */
     public static class Verify{
-
         private String code;//如 1 + 2
-    	
     	private Integer value;//如  3
 		public String getCode() {
 			return code;
@@ -48,9 +51,9 @@ public class VerifyCodeUtils{
   
     /** 
      * 使用系统默认字符源生成验证码 
-     * @param
-     * @return 
-     */  
+     * @author henrysun
+     * 2018年4月25日 下午7:50:14
+     */
     public static Verify generateVerify(){  
     	int number1 = new Random().nextInt(10) + 1;;
     	int number2 = new Random().nextInt(10) + 1;;
@@ -62,9 +65,10 @@ public class VerifyCodeUtils{
     
     /** 
      * 使用系统默认字符源生成验证码 
-     * @param verifySize    验证码长度 
-     * @return 
-     */  
+     * @author henrysun
+     * @param verifySize 验证码长度
+     * 2018年4月25日 下午7:53:29
+     */
     public static String generateVerifyCode(int verifySize){  
         return generateVerifyCode(verifySize, VERIFY_CODES);  
     }  
@@ -169,14 +173,11 @@ public class VerifyCodeUtils{
             fractions[i] = rand.nextFloat();  
         }  
         Arrays.sort(fractions);  
-          
         g2.setColor(Color.GRAY);// 设置边框色  
-        g2.fillRect(0, 0, w, h);  
-          
+        g2.fillRect(0, 0, w, h);   
         Color c = getRandColor(200, 250);  
         g2.setColor(c);// 设置背景色  
-        g2.fillRect(0, 2, w, h-4);  
-          
+        g2.fillRect(0, 2, w, h-4);    
         //绘制干扰线  
         Random random = new Random();  
         g2.setColor(getRandColor(160, 200));// 设置线条的颜色  
@@ -187,7 +188,6 @@ public class VerifyCodeUtils{
             int yl = random.nextInt(12) + 1;  
             g2.drawLine(x, y, x + xl + 40, y + yl + 20);  
         }  
-          
         // 添加噪点  
         float yawpRate = 0.05f;// 噪声率  
         int area = (int) (yawpRate * w * h);  
@@ -196,10 +196,8 @@ public class VerifyCodeUtils{
             int y = random.nextInt(h);  
             int rgb = getRandomIntColor();  
             image.setRGB(x, y, rgb);  
-        }  
-          
+        }   
         shear(g2, w, h, c);// 使图片扭曲  
-  
         g2.setColor(getRandColor(100, 160));  
         int fontSize = h-4;  
         Font font = new Font("Algerian", Font.ITALIC, fontSize);  
@@ -211,7 +209,6 @@ public class VerifyCodeUtils{
             g2.setTransform(affine);  
             g2.drawChars(chars, i, 1, ((w-10) / verifySize) * i + 5, h/2 + fontSize/2 - 10);  
         }  
-          
         g2.dispose();  
         ImageIO.write(image, "jpg", os);  
     }  
@@ -251,13 +248,10 @@ public class VerifyCodeUtils{
     }  
       
     private static void shearX(Graphics g, int w1, int h1, Color color) {  
-  
         int period = random.nextInt(2);  
-  
         boolean borderGap = true;  
         int frames = 1;  
         int phase = random.nextInt(2);  
-  
         for (int i = 0; i < h1; i++) {  
             double d = (double) (period >> 1)  
                     * Math.sin((double) i / (double) period  
@@ -274,9 +268,7 @@ public class VerifyCodeUtils{
     }  
   
     private static void shearY(Graphics g, int w1, int h1, Color color) {  
-  
         int period = random.nextInt(40) + 10; // 50;  
-  
         boolean borderGap = true;  
         int frames = 20;  
         int phase = 7;  
@@ -295,15 +287,5 @@ public class VerifyCodeUtils{
         }  
   
     }  
-    public static void main(String[] args) throws IOException{  
-        File dir = new File("F:/verifies");  
-        int w = 200, h = 80;  
-        for(int i = 0; i < 50; i++){  
-            String verifyCode = generateVerifyCode(4);  
-            File file = new File(dir, verifyCode + ".jpg");  
-            outputImage(w, h, file, verifyCode);  
-        }  
-    }  
-    
    
 }

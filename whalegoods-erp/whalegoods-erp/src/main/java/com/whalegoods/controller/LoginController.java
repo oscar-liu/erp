@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.config.log.Log;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.SysUser;
@@ -36,9 +35,6 @@ public class LoginController {
 	
 	  @Autowired
 	  private HttpServletRequest request;
-	  
-	  @Autowired
-	  private HttpServletResponse response;
 
 	  @GetMapping(value = "")
 	  public String loginInit(){
@@ -124,7 +120,7 @@ public class LoginController {
 	   * 2018年4月25日 下午7:38:44
 	   */
 	  @GetMapping(value="/getCode")
-	  public void getYzm() throws SystemException{
+	  public void getYzm(HttpServletRequest request,HttpServletResponse response) throws SystemException{
 	    try {
 	      response.setHeader("Pragma", "No-cache");
 	      response.setHeader("Cache-Control", "no-cache");

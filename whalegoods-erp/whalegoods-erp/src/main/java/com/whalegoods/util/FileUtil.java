@@ -41,9 +41,9 @@ public class FileUtil {
 	 * @throws SystemException 
 	 */
 	public  void uploadFile(HttpServletRequest request,String sonFolder,String newFileName) throws SystemException{
-		//不是multipart/form-data类型
+		//如果不是multipart/form-data类型
 		 if(!ServletFileUpload.isMultipartContent(request)){  
-	        throw new SystemException(ConstApiResCode.SYSTEM_ERROR,"表单的enctype属性不是multipart/form-data类型！！");
+	        throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 	    }
 	    //创建上传所需要的两个对象
 	    DiskFileItemFactory factory = new DiskFileItemFactory();

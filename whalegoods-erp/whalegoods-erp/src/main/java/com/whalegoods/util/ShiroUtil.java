@@ -6,7 +6,11 @@ import org.apache.shiro.subject.Subject;
 
 import com.whalegoods.common.CurrentUser;
 
-
+/**
+ * shiro工具类
+ * @author chencong
+ *
+ */
 public class ShiroUtil {
 
     public static Subject getSubject(){

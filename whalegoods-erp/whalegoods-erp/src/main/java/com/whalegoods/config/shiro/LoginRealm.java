@@ -42,12 +42,6 @@ public class LoginRealm extends AuthorizingRealm{
   @Autowired
   private MenuService menuService;
 
-/*  @Autowired
-  private RoleUserService roleUserService;
-
-  @Autowired
-  private RoleMenuService roleMenuService;*/
-
   /**
    * 获取认证
    * @param principalCollection

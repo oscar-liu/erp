@@ -35,6 +35,9 @@ import com.whalegoods.util.VerifyCodeUtils;
  */
 @Controller
 public class LoginController {
+	
+  @Autowired
+  private HttpServletRequest request;
 
   @Autowired
   private MenuService menuService;
@@ -43,50 +46,43 @@ public class LoginController {
   public String loginInit(){
     return loginCheck();
   }
-  @GetMapping(value = "goLogin")
-  public String goLogin(Model model,ServletRequest request){
-    Subject sub=SecurityUtils.getSubject();
-    if(sub.isAuthenticated()){
-      return "/main/main";
-    }else{
-      model.addAttribute("message","请重新登录");
-      return "/login";
-    }
-  }
-
+  
+  /**
+   * 检查是否登录，未登录跳转到登录页
+   * @return
+   */
   @GetMapping(value = "/login")
   public String loginCheck(){
-   Subject sub=SecurityUtils.getSubject();
-    Boolean flag2=sub.isRemembered();
-    boolean flag=sub.isAuthenticated()||flag2;
-    Session session=sub.getSession();
+    Subject sub=SecurityUtils.getSubject();
+    Boolean flag=sub.isAuthenticated()||sub.isRemembered();
+    @SuppressWarnings("unused")
+	Session session=sub.getSession();
     if(flag){
         return "/main/main";
     }
     return "/login";
   }
-
+  
   /**
-   * 登录动作
+   * 登录表单提交接口
    * @param user
    * @param model
    * @param rememberMe
+   * @param request
    * @return
    */
   @PostMapping(value = "/login")
-  public String login(SysUser user,Model model,String rememberMe,HttpServletRequest request){
+  public String login(SysUser user,Model model){
     String codeMsg = (String)request.getAttribute("shiroLoginFailure");
     if("code.error".equals(codeMsg)){
       model.addAttribute("message","验证码错误");
       return "/login";
     }
-    UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername().trim(),
-       user.getPassword());
+    UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername().trim(),user.getPassword());
     Subject subject = ShiroUtil.getSubject();
     String msg=null;
     try{
       subject.login(token);
-     //subject.hasRole("admin");
       if(subject.isAuthenticated()){
         return "/main/main";
       }
@@ -101,6 +97,17 @@ public class LoginController {
       model.addAttribute("message",msg);
     }
     return "/login";
+  }
+  
+  @GetMapping(value = "goLogin")
+  public String goLogin(Model model,ServletRequest request){
+    Subject sub=SecurityUtils.getSubject();
+    if(sub.isAuthenticated()){
+      return "/main/main";
+    }else{
+      model.addAttribute("message","请重新登录");
+      return "/login";
+    }
   }
 
   @Log(desc = "用户退出平台")

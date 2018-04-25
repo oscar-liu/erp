@@ -10,11 +10,16 @@ import org.apache.shiro.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /** 
  * 验证器，增加了登录次数校验功能 
  * @author henry-sun
  *
  */
+@Getter
+@Setter
 public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher {  
 	
     private static final Logger log = LoggerFactory.getLogger(RetryLimitCredentialsMatcher.class);

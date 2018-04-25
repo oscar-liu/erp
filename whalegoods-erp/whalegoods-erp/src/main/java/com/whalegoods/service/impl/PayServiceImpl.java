@@ -75,7 +75,9 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
 		mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
-		mapCdt.put("goodsCode",model.getGoodsCode());
+		mapCdt.put("ctn",model.getCtn());
+		mapCdt.put("floor",model.getFloor());
+		mapCdt.put("pathCode",model.getPathCode());
 		//根据设备编号和商品编号查询商品信息
 		ResDeviceGoodsInfo deviceGoodsInfo=deviceRoadService.selectByCondition(mapCdt);
 		if(deviceGoodsInfo==null){

@@ -33,19 +33,20 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	 * @return
 	 */
 	@Bean
-	    public HttpMessageConverters fastJsonHttpMessageConverters() {
-	        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-	        FastJsonConfig config=new FastJsonConfig();
-	        config.setSerializerFeatures(SerializerFeature.PrettyFormat);
-	        converter.setFastJsonConfig(config);
-	        return new HttpMessageConverters(converter);
-	    }
-
-	    @Override
-	    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	        registry.addResourceHandler("/plugin/**","/static/**").addResourceLocations("classpath:/plugin/","classpath:/static/");
-	        registry.addResourceHandler("/ftl/**").addResourceLocations("classpath:/ftl/");
-	        registry.addResourceHandler("/v1/ex_log/**").addResourceLocations("file:"+getLocation());
-	    }
+    public HttpMessageConverters fastJsonHttpMessageConverters() {
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        FastJsonConfig config=new FastJsonConfig();
+        config.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        converter.setFastJsonConfig(config);
+        return new HttpMessageConverters(converter);
+    }
+	
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/plugin/**","/static/**").addResourceLocations("classpath:/plugin/","classpath:/static/");
+        registry.addResourceHandler("/ftl/**").addResourceLocations("classpath:/ftl/");
+        //上传的图片和日志文件虚拟路径映射
+        registry.addResourceHandler("/file/**").addResourceLocations("file:"+getLocation());
+    }
 	    
 }

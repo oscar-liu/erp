@@ -4,8 +4,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -24,9 +22,16 @@ public class ReqCreatePrepay extends ReqBase{
 
 	private static final long serialVersionUID = 1L;
 	
-	@JsonProperty("goods_code")
-	@NotEmpty(message="goods_code必填")
-	private String goodsCode;
+	@NotNull(message="ctn必填")
+	private Integer ctn;
+	
+	@NotNull(message="floor必填")
+	private Integer floor;
+	
+	
+	@JsonProperty("path_code")
+	@NotNull(message="goods_code必填")
+	private Integer pathCode;
 	
 	@JsonProperty("view_time")
 	private Long viewTime;

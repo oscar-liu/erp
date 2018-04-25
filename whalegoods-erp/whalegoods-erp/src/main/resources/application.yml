@@ -29,7 +29,7 @@ spring:
         maxOpenPreparedStatements: 20
   http:
       multipart: 
-        location: D:/whalegoods-file/ex_log/
+        location: D:/whalegoods-file/
         enabled: false
       encoding:
         force: true

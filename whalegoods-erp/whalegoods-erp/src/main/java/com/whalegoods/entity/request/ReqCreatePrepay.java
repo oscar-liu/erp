@@ -30,7 +30,7 @@ public class ReqCreatePrepay extends ReqBase{
 	
 	
 	@JsonProperty("path_code")
-	@NotNull(message="goods_code必填")
+	@NotNull(message="path_code必填")
 	private Integer pathCode;
 	
 	@JsonProperty("view_time")

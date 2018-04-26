@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title></title>
   <link rel="stylesheet" href="${re.contextPath}/plugin/layuitree/layui/css/layui.css">
-  <link rel="stylesheet" href="${re.contextPath}/plugin/lenos/main.css"/>
+  <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css"/>
 </head>
 <body>
 <div  class="layui-col-md13">

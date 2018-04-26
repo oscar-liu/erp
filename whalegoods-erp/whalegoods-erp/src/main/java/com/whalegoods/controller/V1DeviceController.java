@@ -96,7 +96,7 @@ public class V1DeviceController  extends BaseController<Object>{
  * @throws FileNotFoundException 
    */
   @PostMapping(value="/uploadExLog")
-  public ResBody uploadFile(@RequestParam(name="order") String orderId,@RequestParam(name="error_message") String errorMessage,HttpServletRequest request,HttpSession session) throws SystemException {
+  public ResBody uploadExLog(@RequestParam(name="order") String orderId,@RequestParam(name="error_message") String errorMessage,HttpServletRequest request,HttpSession session) throws SystemException {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	  String childFolder="ex_log";
 	  String newFileName=childFolder+"_"+orderId;

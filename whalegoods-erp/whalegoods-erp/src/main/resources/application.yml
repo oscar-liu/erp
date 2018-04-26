@@ -7,8 +7,13 @@ security:
 
 
 spring: 
+  freemarker: 
+    cache: false
+    settings: 
+      template_update_delay: 0
+  profiles: 
+    active: dev
   datasource:
-        url: jdbc:mysql://rm-wz9rh2817r2e5l9b1ko.mysql.rds.aliyuncs.com:3306/whalegoods_release?useUnicode=true&characterEncoding=UTF-8
         username: whalegoods_rds
         password: WhaleGoods2018
         # 使用druid数据源
@@ -29,7 +34,6 @@ spring:
         maxOpenPreparedStatements: 20
   http:
       multipart: 
-        location: D:/whalegoods-file/
         enabled: false
       encoding:
         force: true
@@ -52,7 +56,3 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
-
-logging:
-  level:
-      com.whalegoods.mapper: debug

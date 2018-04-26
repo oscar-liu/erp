@@ -23,7 +23,7 @@ public class DeviceRoadServiceImpl  implements DeviceRoadService {
 		List<ResDeviceGoodsInfo> list=deviceRoadMapper.selectByIdOfJpAndSupp(condition);
 		for (ResDeviceGoodsInfo resDeviceGoodsInfo : list) {
 			//右连接查询，如果为空，需要做此转换
-			resDeviceGoodsInfo.setType((byte) (resDeviceGoodsInfo.getType()!=null?1:2));
+			resDeviceGoodsInfo.setSaleType((byte) (resDeviceGoodsInfo.getSaleType()!=null?1:2));
 		}
 		return list;
 	}

@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * SpringBoot启动类
- * @author chencong
- *
+ * @author henrysun
+ * 2018年4月26日 下午12:01:44
  */
 @EnableWebMvc
 @SpringBootApplication

@@ -30,4 +30,10 @@ public class ResGoodsAdsMiddleData implements Serializable {
 	@JsonProperty("sale_price")
 	private Double salePrice;
 	
+	@JsonProperty("market_price")
+	private Double marketPrice;
+	
+	@JsonProperty("stock")
+	private Byte stock;
+	
 }

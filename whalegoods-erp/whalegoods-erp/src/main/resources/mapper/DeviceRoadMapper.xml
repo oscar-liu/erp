@@ -38,7 +38,7 @@
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="stock" jdbcType="TINYINT" property="stock" />
-    <result column="adsMiddleType" jdbcType="TINYINT" property="type" />
+    <result column="adsMiddleType" jdbcType="TINYINT" property="saleType" />
   </resultMap>
   
   <sql id="Base_Column_List">

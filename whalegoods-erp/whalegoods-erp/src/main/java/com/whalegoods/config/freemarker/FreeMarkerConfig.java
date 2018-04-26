@@ -12,8 +12,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 /**
  * freemarker配置
- * @author henry-sun
- *
+ * @author henrysun
+ * 2018年4月26日 下午3:36:14
  */
 @Configuration
 public class FreeMarkerConfig{

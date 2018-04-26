@@ -14,9 +14,9 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 /**
- * WebMvc配置
- * @author henry-sun
- *
+ * 注册bean相关配置
+ * @author henrysun
+ * 2018年4月26日 下午2:42:19
  */
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {

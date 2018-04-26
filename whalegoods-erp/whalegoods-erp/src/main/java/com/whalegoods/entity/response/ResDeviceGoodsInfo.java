@@ -56,5 +56,6 @@ public class ResDeviceGoodsInfo implements Serializable {
 	
 	private Integer stock;
 	
-	private Byte type;
+	@JsonProperty("sale_type")
+	private Byte saleType;
 }

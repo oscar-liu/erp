@@ -10,13 +10,17 @@
     <result column="start_time" jdbcType="VARCHAR" property="startTime" />
     <result column="end_time" jdbcType="VARCHAR" property="endTime" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="stock" jdbcType="TINYINT" property="stock" />
+    <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
   </resultMap>
   
     <select id="selectByDeviceId" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT 
     c.goods_code,
     c.pic_url,
+    c.market_price,
     b.sale_price,
+    b.stock,
     a.start_time,
     a.end_time,
     a.type

@@ -31,4 +31,8 @@ public class ResGoodsAdsMiddle implements Serializable {
 	private Byte type;
 	
 	private Double salePrice;
+	
+	private Byte stock;
+	
+	private Double marketPrice;
 }

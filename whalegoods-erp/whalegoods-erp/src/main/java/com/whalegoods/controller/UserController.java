@@ -45,18 +45,22 @@ public class UserController  extends BaseController<Object>{
 	  @Autowired
 	  RoleUserService roleUserService;
 
-	  @GetMapping(value = "mainTest")
-	  @RequiresPermissions("user:show")
-	  public String showTest() {
-	    return "system/user/mainTest";
-	  }
-
+	  /**
+	   * 跳转到系统用户列表页面
+	   * @author henrysun
+	   * 2018年4月26日 下午3:29:12
+	   */
 	  @GetMapping(value = "showUser")
 	  @RequiresPermissions("user:show")
 	  public String showUser(Model model) {
 	    return "/system/user/userList";
 	  }
 
+	  /**
+	   * 查询系统用户列表接口
+	   * @author henrysun
+	   * 2018年4月26日 下午3:29:23
+	   */
 	  @GetMapping(value = "showUserList")
 	  @ResponseBody
 	  @RequiresPermissions("user:show")
@@ -64,6 +68,11 @@ public class UserController  extends BaseController<Object>{
 	    return userService.show(user,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 
+	  /**
+	   * 跳转到添加系统用户页面
+	   * @author henrysun
+	   * 2018年4月26日 下午3:30:10
+	   */
 	  @GetMapping(value = "showAddUser")
 	  public String addUser(Model model) {
 	    List<Checkbox> checkboxList=userService.getUserRoleByJson(null);
@@ -71,6 +80,11 @@ public class UserController  extends BaseController<Object>{
 	    return "/system/user/add-user";
 	  }
 
+	  /**
+	   * 添加系统用户接口
+	   * @author henrysun
+	   * 2018年4月26日 下午3:30:25
+	   */
 	  @Log(desc = "添加用户")
 	  @PostMapping(value = "addUser")
 	  @ResponseBody
@@ -109,6 +123,11 @@ public class UserController  extends BaseController<Object>{
 	    return j;
 	  }
 
+	  /**
+	   * 跳转到更新系统用户页面
+	   * @author henrysun
+	   * 2018年4月26日 下午3:30:35
+	   */
 	  @GetMapping(value = "updateUser")
 	  public String updateUser(String id, Model model, boolean detail) {
 	    if (StringUtils.isNotEmpty(id)) {
@@ -123,6 +142,11 @@ public class UserController  extends BaseController<Object>{
 	  }
 
 
+	  /**
+	   * 更新系统用户接口
+	   * @author henrysun
+	   * 2018年4月26日 下午3:30:49
+	   */
 	  @Log(desc = "更新用户",type = LOG_TYPE.UPDATE)
 	  @PostMapping(value = "updateUser")
 	  @ResponseBody
@@ -158,6 +182,11 @@ public class UserController  extends BaseController<Object>{
 	    return jsonUtil;
 	  }
 
+	  /**
+	   * 删除系统用户接口
+	   * @author henrysun
+	   * 2018年4月26日 下午3:32:39
+	   */
 	  @Log(desc = "删除用户",type = LOG_TYPE.DEL)
 	  @PostMapping(value = "/del")
 	  @ResponseBody
@@ -166,6 +195,11 @@ public class UserController  extends BaseController<Object>{
 	   return userService.delById(id,flag);
 	  }
 
+	  /**
+	   * 跳转到修改系统用户密码页面
+	   * @author henrysun
+	   * 2018年4月26日 下午3:31:08
+	   */
 	  @GetMapping(value = "goRePass")
 	  public String goRePass(String id,Model model){
 	    if(StringUtils.isEmpty(id)){
@@ -177,11 +211,9 @@ public class UserController  extends BaseController<Object>{
 	  }
 
 	  /**
-	   * 修改密码
-	   * @param id
-	   * @param pass
-	   * @param newPwd
-	   * @return
+	   * 修改系统用户密码页面
+	   * @author henrysun
+	   * 2018年4月26日 下午3:31:48
 	   */
 	  @Log(desc = "修改密码",type = LOG_TYPE.UPDATE)
 	  @PostMapping(value = "rePass")
@@ -217,8 +249,11 @@ public class UserController  extends BaseController<Object>{
 	    }
 	    return j;
 	  }
+	  
 	  /**
-	   * 头像上传 目前首先相对路径
+	   * 上传头像接口
+	   * @author henrysun
+	   * 2018年4月26日 下午3:32:05
 	   */
 	  @PostMapping(value = "upload")
 	  @ResponseBody
@@ -254,6 +289,8 @@ public class UserController  extends BaseController<Object>{
 
 	  /**
 	   * 验证用户名是否存在
+	   * @author henrysun
+	   * 2018年4月26日 下午3:32:17
 	   */
 	  @GetMapping(value = "checkUser")
 	  @ResponseBody

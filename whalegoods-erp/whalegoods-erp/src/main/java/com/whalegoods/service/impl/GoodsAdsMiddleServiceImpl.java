@@ -10,21 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.whalegoods.constant.ConstApiResCode;
-import com.whalegoods.entity.GoodsAdsMiddle;
-import com.whalegoods.entity.SysRoleUser;
-import com.whalegoods.entity.SysUser;
 import com.whalegoods.entity.response.ResGoodsAdsMiddle;
 import com.whalegoods.entity.response.ResGoodsAdsMiddleData;
 import com.whalegoods.exception.SystemException;
-import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.GoodsAdsMiddleMapper;
 import com.whalegoods.service.GoodsAdsMiddleService;
-import com.whalegoods.util.Checkbox;
-import com.whalegoods.util.JsonUtil;
 
 
 @Service
-public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,String> implements GoodsAdsMiddleService {
+public class GoodsAdsMiddleServiceImpl  implements GoodsAdsMiddleService {
 	
 	@Autowired
 	GoodsAdsMiddleMapper GoodsAdsMiddleMapper;
@@ -58,71 +52,6 @@ public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,St
 			}
 		}
 		return map;
-	}
-
-	@Override
-	public int deleteByPrimaryKey(String id) {
-		return 0;
-	}
-
-	@Override
-	public SysUser login(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GoodsAdsMiddle selectByPrimaryKey(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int add(GoodsAdsMiddle user) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public JsonUtil delById(String id, boolean flag) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int checkUser(String username) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Checkbox> getUserRoleByJson(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int rePass(GoodsAdsMiddle user) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public BaseMapper<GoodsAdsMiddle,String> getMapper() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

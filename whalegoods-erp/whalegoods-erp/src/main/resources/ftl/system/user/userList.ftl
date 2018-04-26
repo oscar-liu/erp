@@ -2,61 +2,28 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>用户管理</title>
+  <title>系统用户管理</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport"
-        content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+  <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
-  <link rel="stylesheet" href="${re.contextPath}/plugin/lenos/main.css">
-  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js"
-          charset="utf-8"></script>
+  <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
+  <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
 
 </head>
 
 <body>
-<div class="lenos-search">
-  <div class="select">
-    用户名：
-    <div class="layui-inline">
-      <input class="layui-input" height="20px" id="uname" autocomplete="off">
-    </div>
-    邮箱：
-    <div class="layui-inline">
-      <input class="layui-input" height="20px" id="email" autocomplete="off">
-    </div>
-    <button class="select-on layui-btn layui-btn-sm" data-type="select"><i class="layui-icon"></i>
-    </button>
-    <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;"
-            data-type="reload">
-      <i class="layui-icon">ဂ</i>
-    </button>
-  </div>
-
-</div>
-<div class="layui-col-md12" style="height:40px;margin-top:3px;">
-  <div class="layui-btn-group">
-      <@shiro.hasPermission name="user:select">
-      <button class="layui-btn layui-btn-normal" data-type="add">
-      <i class="layui-icon">&#xe608;</i>新增
-    </button>
-      </@shiro.hasPermission>
-    <@shiro.hasPermission name="user:select">
-    <button class="layui-btn layui-btn-normal" data-type="update">
-      <i class="layui-icon">&#xe642;</i>编辑
-    </button>
-    </@shiro.hasPermission>
-<@shiro.hasPermission name="user:del">
-    <button class="layui-btn layui-btn-normal" data-type="detail">
-      <i class="layui-icon">&#xe605;</i>查看
-    </button>
-</@shiro.hasPermission>
-    <@shiro.hasPermission name="user:repass">
-    <button class="layui-btn layui-btn-normal" data-type="changePwd">
-      <i class="layui-icon">&#xe605;</i>修改密码
-    </button>
-    </@shiro.hasPermission>
+<div class="erp-search">
+  <div class="select">                             
+           用户名： <div class="layui-inline"><input class="layui-input" height="20px" id="uname" autocomplete="off"></div>
+            邮箱：<div class="layui-inline"><input class="layui-input" height="20px" id="email" autocomplete="off"></div>
+    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <@shiro.hasPermission name="user:select"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="user:select"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="user:del"><button class="layui-btn layui-btn-sm" data-type="detail"><i class="layui-icon">&#xe660;</i>查看详情</button> </@shiro.hasPermission>
+    <@shiro.hasPermission name="user:repass"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="changePwd"><i class="layui-icon">&#xe614;</i>修改密码</button></@shiro.hasPermission>
+    <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
 <table id="userList" class="layui-hide" lay-filter="user"></table>

@@ -10,17 +10,16 @@
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
-
 </head>
 
 <body>
 <div class="erp-search">
-  <div class="select">                             
+  <div class="select">
            用户名： <div class="layui-inline"><input class="layui-input" height="20px" id="uname" autocomplete="off"></div>
             邮箱：<div class="layui-inline"><input class="layui-input" height="20px" id="email" autocomplete="off"></div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
     <@shiro.hasPermission name="user:select"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
-    <@shiro.hasPermission name="user:select"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="user:update"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <@shiro.hasPermission name="user:del"><button class="layui-btn layui-btn-sm" data-type="detail"><i class="layui-icon">&#xe660;</i>查看详情</button> </@shiro.hasPermission>
     <@shiro.hasPermission name="user:repass"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="changePwd"><i class="layui-icon">&#xe614;</i>修改密码</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
@@ -28,50 +27,36 @@
 </div>
 <table id="userList" class="layui-hide" lay-filter="user"></table>
 <script type="text/html" id="barDemo">
-<@shiro.hasPermission name="user:select">
-  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-</@shiro.hasPermission>
-<@shiro.hasPermission name="user:update">
-  <a class="layui-btn layui-btn-xs  layui-btn-normal" lay-event="edit">编辑</a>
-</@shiro.hasPermission>
-<@shiro.hasPermission name="user:del">
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</@shiro.hasPermission>
-</script>
-<script type="text/html" id="switchTpl">
-  <input type="checkbox" name="sex" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo">
+<@shiro.hasPermission name="user:select"><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a></@shiro.hasPermission>
+<@shiro.hasPermission name="user:update"><a class="layui-btn layui-btn-xs  layui-btn-normal" lay-event="edit">编辑</a></@shiro.hasPermission>
+<@shiro.hasPermission name="user:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
 </script>
 <script>
-  document.onkeydown = function (e) { // 回车提交表单
+
+  document.onkeydown = function (e) {
     var theEvent = window.event || e;
     var code = theEvent.keyCode || theEvent.which;
     if (code == 13) {
       $(".select .select-on").click();
     }
   }
+  
   layui.use('table', function () {
     var table = layui.table;
-    //方法级渲染
     table.render({
       id: 'userList',
-      elem: '#userList'
-      , url: 'showUserList'
-      , cols: [[
-        {checkbox: true, fixed: true, width: '5%'}
-        , {
-          field: 'username',
-          title: '用户名',
-          width: '10%',
-          sort: true,
-          style: 'background-color: #009688; color: #fff;'
-        }
-        , {field: 'age', title: '年龄', width: '17%', sort: true}
-        , {field: 'realName', title: '真实姓名', width: '20%'}
-        , {field: 'email', title: '邮箱', width: '13%'}
-        , {field: 'photo', title: '头像', width: '13%', template: '#switchTpl'}
-        , {field: 'right', title: '操作', width: '20%', toolbar: "#barDemo"}
-      ]]
-      , page: true,
+      elem: '#userList', 
+      url: 'showUserList',
+      cols: [[
+        {checkbox: true, fixed: true, width: '5%'},
+        {field: 'username',title: '用户名', width: '10%',sort: true, style: 'background-color: #009688; color: #fff;' }, 
+        {field: 'age', title: '年龄', width: '17%', sort: true}, 
+        {field: 'realName', title: '真实姓名', width: '20%'},
+        {field: 'email', title: '邮箱', width: '13%'},
+        {field: 'photo', title: '头像', width: '13%', template: '#switchTpl'},
+        {field: 'right', title: '操作', width: '20%', toolbar: "#barDemo"}
+      ]], 
+      page: true,
       height: 'full-83'
     });
 
@@ -79,7 +64,6 @@
       select: function () {
         var uname = $('#uname').val();
         var email = $('#email').val();
-        console.info(uname);
         table.reload('userList', {
           where: {
             username: uname,
@@ -101,8 +85,7 @@
         add('添加用户', 'showAddUser', 700, 450);
       },
       update: function () {
-        var checkStatus = table.checkStatus('userList')
-            , data = checkStatus.data;
+        var checkStatus = table.checkStatus('userList'), data = checkStatus.data;
         if (data.length != 1) {
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
           return false;
@@ -110,8 +93,7 @@
         update('编辑用户', 'updateUser?id=' + data[0].id, 700, 450);
       },
       detail: function () {
-        var checkStatus = table.checkStatus('userList')
-            , data = checkStatus.data;
+        var checkStatus = table.checkStatus('userList'), data = checkStatus.data;
         if (data.length != 1) {
           layer.msg('请选择一行查看,已选['+data.length+']行', {icon: 5});
           return false;
@@ -130,9 +112,9 @@
     };
 
     //监听表格复选框选择
-    table.on('checkbox(user)', function (obj) {
+   /*  table.on('checkbox(user)', function (obj) {
       console.log(obj)
-    });
+    }); */
     //监听工具条
     table.on('tool(user)', function (obj) {
       var data = obj.data;

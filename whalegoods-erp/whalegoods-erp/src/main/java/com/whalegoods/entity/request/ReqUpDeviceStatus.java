@@ -27,8 +27,8 @@ public class ReqUpDeviceStatus extends ReqBase implements Serializable{
 	
 	@JsonProperty("device_status")
 	@NotEmpty(message="设备状态不能为空")
-	@Max(3)
-	@Min(1)
+	@Max(2)
+	@Min(2)
 	private Byte deviceStatus;
 
 }

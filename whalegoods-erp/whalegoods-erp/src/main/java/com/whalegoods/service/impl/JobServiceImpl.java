@@ -24,9 +24,5 @@ public class JobServiceImpl  extends BaseServiceImpl<SysJob,String> implements J
   public BaseMapper<SysJob, String> getMapper() {
     return jobMapper;	
   }
-@Override
-public String show(SysJob t, int page, int limit) {
-	// TODO Auto-generated method stub
-	return null;
-}
+
 }

@@ -1,4 +1,4 @@
-package com.whalegoods.controller;
+/*package com.whalegoods.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
+*//**
  * 系统日志API
  * @author chencong
  * 2018年4月11日 上午9:32:50
- */
+ *//*
 @Controller
 @RequestMapping(value = "/log")
 public class LogController  extends BaseController{
@@ -36,13 +36,13 @@ public class LogController  extends BaseController{
         return "/system/log/logList";
     }
 
-    /**
+    *//**
      * 日志监控
      * @param sysLog
      * @param page
      * @param limit
      * @return
-     */
+     *//*
     @GetMapping(value = "showLogList")
     @ResponseBody
     public String showLog(SysLog sysLog, String page, String limit){
@@ -58,11 +58,11 @@ public class LogController  extends BaseController{
         return JSON.toJSONString(reType);
     }
 
-    /**
+    *//**
      * 删除log
      * @param
      * @return
-     */
+     *//*
     @PostMapping(value = "del")
     @ResponseBody
     public JsonUtil del(String[] ids){
@@ -81,3 +81,4 @@ public class LogController  extends BaseController{
 
 
 }
+*/

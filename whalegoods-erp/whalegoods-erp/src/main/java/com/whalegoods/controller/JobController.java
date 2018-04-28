@@ -1,4 +1,4 @@
-package com.whalegoods.controller;
+/*package com.whalegoods.controller;
 
 import com.whalegoods.config.log.Log;
 import com.whalegoods.config.log.Log.LOG_TYPE;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
+*//**
  * 任务调度API
  * @author chencong
  * 2018年4月11日 上午9:29:35
- */
+ *//*
 @Controller
 @RequestMapping("/job")
 public class JobController extends BaseController<SysJob> {
@@ -193,3 +193,4 @@ public class JobController extends BaseController<SysJob> {
   }
 
 }
+*/

@@ -26,10 +26,11 @@
   </div>
 </div>
 <table id="userList" class="layui-hide" lay-filter="user"></table>
-<script type="text/html" id="barDemo">
+<script type="text/html" id="rightToolBar">
 <@shiro.hasPermission name="user:select"><a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a></@shiro.hasPermission>
 <@shiro.hasPermission name="user:update"><a class="layui-btn layui-btn-xs  layui-btn-normal" lay-event="edit">编辑</a></@shiro.hasPermission>
 <@shiro.hasPermission name="user:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
+<@shiro.hasPermission name="user:updateAccountStatus"><input type="checkbox" name="account-status" value="{{d.id}}" lay-skin="switch" lay-text="可用|禁用"  lay-filter="account-status" {{ d.accountStatus == 0 ? 'checked' : '' }}></@shiro.hasPermission>
 </script>
 <script>
 
@@ -48,16 +49,15 @@
       elem: '#userList', 
       url: 'showUserList',
       cols: [[
-        {checkbox: true, fixed: true, width: '5%'},
-        {field: 'username',title: '用户名', width: '10%',sort: true, style: 'background-color: #009688; color: #fff;' }, 
-        {field: 'age', title: '年龄', width: '17%', sort: true}, 
-        {field: 'realName', title: '真实姓名', width: '20%'},
-        {field: 'email', title: '邮箱', width: '13%'},
-        {field: 'photo', title: '头像', width: '13%', template: '#switchTpl'},
-        {field: 'right', title: '操作', width: '20%', toolbar: "#barDemo"}
+        {checkbox: true, fixed: true},
+        {field: 'username',title: '用户名',align:'center', style: 'background-color: #009688; color: #fff;' }, 
+        {field: 'phone', title: '手机号',align:'center'},
+        {field: 'headPicUrl', title: '头像', align:'center',template: '#rightToolBar'},
+        {field: 'accountStatus', title: '账号状态',align:'center'},
+        {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]], 
       page: true,
-      height: 'full-83'
+      height: 'full-200'
     });
 
     var $ = layui.$, active = {
@@ -133,10 +133,10 @@
       }
     });
 
-    $('.layui-col-md12 .layui-btn').on('click', function () {
+  /*   $('.layui-col-md12 .layui-btn').on('click', function () {
       var type = $(this).data('type');
       active[type] ? active[type].call(this) : '';
-    });
+    }); */
     $('.select .layui-btn').on('click', function () {
       var type = $(this).data('type');
       active[type] ? active[type].call(this) : '';
@@ -173,7 +173,8 @@
     $.ajax({
       url:"del",
       type:"post",
-      data:{id:id,flag:flag},async:false,
+      data:{id:id,flag:flag},
+      async:false,
       success:function(d){
         if(d.flag){
           window.top.layer.msg(d.msg,{icon:6,offset: 'rb',area:['120px','80px'],anim:2});

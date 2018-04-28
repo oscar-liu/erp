@@ -29,13 +29,9 @@ public class CurrentUser implements Serializable {
 
     private String password;
 
-    private Integer age;
-
-    private String email; 
-
     private String photo;
 
-    private String realName;
+    private Byte accountStatus;
 
     private String createBy;
 
@@ -45,20 +41,16 @@ public class CurrentUser implements Serializable {
 
     private Date updateDate;
 
-    private Byte delFlag;
-
    private List<CurrentMenu> currentMenuList;
    
    private List<CurrentRole> currentRoleList;
 
-    public CurrentUser(String id, String username, Integer age, String email, String photo,
-        String realName) {
+    public CurrentUser(String id, String username, String photo,
+        Byte accountStatus) {
         this.id = id;
         this.username = username;
-        this.age = age;
-        this.email = email;
         this.photo = photo;
-        this.realName = realName;
+        this.accountStatus = accountStatus;
     }
 
     public CurrentUser() {

@@ -1,7 +1,6 @@
 package com.whalegoods.service;
 
 
-/*import com.whalegoods.base.BaseService;*/
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.util.Checkbox;
@@ -10,16 +9,14 @@ import com.whalegoods.util.JsonUtil;
 import java.util.List;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/4.
- * @email 154040976@qq.com
+ * 系统用户相关业务逻辑接口
+ * @author henrysun
+ * 2018年4月28日 下午4:41:45
  */
 public interface SysUserService extends BaseService<SysUser,String> {
 
   SysUser login(String username);
 
-  @Override
-  SysUser selectByPrimaryKey(String id);
 
   /**
    * 分页查询

@@ -21,11 +21,7 @@ import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
 
-/**
- * @author zhuxiaomeng
- * @date 2017/12/4.
- * @email 154040976@qq.com
- */
+
 @Service
 public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implements SysUserService {
 
@@ -40,48 +36,39 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 
   @Autowired
   RoleUserService roleUserService;
+  
   @Override
   public BaseMapper<SysUser, String> getMapper() {
     return sysUserMapper;
   }
 
   @Override
-  public SysUser login(String username) {
-    return sysUserMapper.login(username);
+  public SysUser login(String userName) {
+    return sysUserMapper.login(userName);
   }
 
 
   @Override
-  public int deleteByPrimaryKey(String id) {
-    return sysUserMapper.deleteByPrimaryKey(id);
+  public int deleteById(String id) {
+    return sysUserMapper.deleteById(id);
   }
-
+  
   @Override
   public int insert(SysUser record) {
-    return sysUserMapper.insert(record);
-  }
 
-  @Override
-  public int insertSelective(SysUser record) {
-
-    String pwd= Md5Util.getMd5(record.getPassword().trim(),record.getUsername().trim());
+    String pwd= Md5Util.getMd5(record.getPassword().trim(),record.getUserName().trim());
     record.setPassword(pwd);
-    return super.insertSelective(record);
+    return super.insert(record);
   }
 
   @Override
-  public SysUser selectByPrimaryKey(String id) {
-    return sysUserMapper.selectByPrimaryKey(id);
+  public SysUser selectById(String id) {
+    return sysUserMapper.selectById(id);
   }
 
   @Override
-  public int updateByPrimaryKeySelective(SysUser record) {
-    return super.updateByPrimaryKeySelective(record);
-  }
-
-  @Override
-  public int updateByPrimaryKey(SysUser record) {
-    return sysUserMapper.updateByPrimaryKey(record);
+  public int updateByCondition(SysUser record) {
+    return super.updateByCondition(record);
   }
 
   @Override
@@ -96,7 +83,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
    */
   @Override
   public List<SysUser> selectListByPage(SysUser sysUser) {
-    return sysUserMapper.selectListByPage(sysUser);
+    return sysUserMapper.selectListByCondition(sysUser);
   }
 
   @Override
@@ -107,7 +94,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   @Override
   public int add(SysUser user) {
     //密码加密
-  String pwd= Md5Util.getMd5(user.getPassword().trim(),user.getUsername().trim());
+  String pwd= Md5Util.getMd5(user.getPassword().trim(),user.getUserName().trim());
   user.setPassword(pwd);
     return sysUserMapper.add(user);
   }
@@ -119,8 +106,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
     }
     JsonUtil j=null;
     try {
-      SysUser sysUser = selectByPrimaryKey(id);
-      if("admin".equals(sysUser.getUsername())){
+      SysUser sysUser = selectById(id);
+      if("admin".equals(sysUser.getUserName())){
         return JsonUtil.error("超管无法删除");
       }
       SysRoleUser roleUser=new SysRoleUser();
@@ -132,8 +119,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
       j=new JsonUtil();
       if (flag) {
         //逻辑
-        sysUser.setDelFlag(Byte.parseByte("1"));
-        updateByPrimaryKeySelective(sysUser);
+        sysUser.setAccountStatus(Byte.parseByte("1"));
+        updateByCondition(sysUser);
       } else {
         //物理
         sysUserMapper.delById(id);
@@ -180,5 +167,11 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   public int rePass(SysUser user) {
     return sysUserMapper.rePass(user);
   }
+
+@Override
+public int updateByPrimaryKey(SysUser sysUser) {
+	// TODO Auto-generated method stub
+	return 0;
+}
 
 }

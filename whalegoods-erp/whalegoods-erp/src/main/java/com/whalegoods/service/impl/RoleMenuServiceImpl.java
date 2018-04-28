@@ -42,9 +42,4 @@ public class RoleMenuServiceImpl extends BaseServiceImpl<SysRoleMenu,String> imp
         return roleMenuMapper.deleteByPrimaryKey(sysRoleMenu);
     }
 
-	@Override
-	public String show(SysRoleMenu t, int page, int limit) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

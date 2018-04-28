@@ -1,4 +1,4 @@
-package com.whalegoods.controller;
+/*package com.whalegoods.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.whalegoods.config.log.Log;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
+*//**
  * 菜单API
  * @author chencong
  * 2018年4月11日 上午9:34:02
- */
+ *//*
 @Controller
 @RequestMapping(value = "/menu")
 public class MenuController extends BaseController<Object>{
@@ -29,11 +29,11 @@ public class MenuController extends BaseController<Object>{
   @Autowired
   private MenuService menuService;
 
-  /**
+  *//**
    * 展示tree
    * @param model
    * @return
-   */
+   *//*
   @Log(desc = "展示菜单",type = Log.LOG_TYPE.SELECT)
   @GetMapping(value = "showMenu")
   @RequiresPermissions("menu:show")
@@ -88,3 +88,4 @@ public class MenuController extends BaseController<Object>{
   }
 
 }
+*/

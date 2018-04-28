@@ -22,15 +22,68 @@ import com.whalegoods.util.JsonUtil;
 
 
 @Service
-public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements DeviceService {
+public class DeviceServiceImpl  implements DeviceService {
 	
 	private static Logger logger = LoggerFactory.getLogger(PayServiceImpl.class);
 	
 	@Autowired
 	DeviceMapper deviceMapper;
 
+
 	@Override
-	public int deleteByPrimaryKey(String id) {
+	public void updateDevice(Device model) throws SystemException {
+		try {
+			deviceMapper.updateByCondition(model);
+		} catch (Exception e) {
+			logger.error("更新设备信息失败："+model.toString()+" 原因："+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		} 
+	}
+
+	@Override
+	public int getOperateStatus(Map<String, Object> condition) {
+		return deviceMapper.getOperateStatus(condition);
+	}
+
+	@Override
+	public ResBody getApk(Map<String, Object> condition) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		resBody.setData(deviceMapper.getApk(condition));
+		return resBody;
+	}
+
+	@Override
+	public Device selectById(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Device> selectListByCondition(Device cdt) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String selectByPage(Device t, int page, int limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int updateByCondition(Device cdt) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int insert(Device record) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int deleteById(String id) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -42,7 +95,7 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements
 	}
 
 	@Override
-	public Device selectByPrimaryKey(String id) {
+	public List<Device> selectListByPage(Device sysUser) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -72,6 +125,12 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements
 	}
 
 	@Override
+	public int updateByPrimaryKey(Device sysUser) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
 	public List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser) {
 		// TODO Auto-generated method stub
 		return null;
@@ -90,31 +149,9 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String> implements
 	}
 
 	@Override
-	public BaseMapper<Device,String> getMapper() {
+	public int deleteByPrimaryKey(String id) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateDevice(Device model) throws SystemException {
-		try {
-			deviceMapper.updateDevice(model);
-		} catch (Exception e) {
-			logger.error("更新设备信息失败："+model.toString()+" 原因："+e.getMessage());
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-		} 
-	}
-
-	@Override
-	public int getOperateStatus(Map<String, Object> condition) {
-		return deviceMapper.getOperateStatus(condition);
-	}
-
-	@Override
-	public ResBody getApk(Map<String, Object> condition) {
-		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		resBody.setData(deviceMapper.getApk(condition));
-		return resBody;
+		return 0;
 	}
 
 }

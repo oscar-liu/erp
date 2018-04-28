@@ -2,32 +2,20 @@ package com.whalegoods.mapper;
 
 import com.whalegoods.entity.SysUser;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+/**
+ * 系统用户相关业务逻辑接口
+ * @author henrysun
+ * 2018年4月28日 上午3:18:08
+ */
+public interface SysUserMapper extends BaseMapper<SysUser, String>{
 
-public interface SysUserMapper extends BaseMapper<SysUser,String> {
-
-    @Override
-    int deleteByPrimaryKey(String id);
-
-    int insert(SysUser record);
-
-    @Override
-    int insertSelective(SysUser record);
-
-    @Override
-    SysUser selectByPrimaryKey(String id);
-
-    @Override
-    int updateByPrimaryKeySelective(SysUser record);
-
-    @Override
-    int updateByPrimaryKey(SysUser record);
-
-    SysUser login(@Param("username") String username);
-
-    @Override
-    List<SysUser> selectListByPage(SysUser sysUser);
+	/**
+	 * 登录
+	 * @param userName 用户名
+	 * @author henrysun
+	 * 2018年4月28日 上午3:18:34
+	 */
+    SysUser login(String userName);
 
     int count();
 

@@ -38,7 +38,7 @@ public class JobDemo1 implements Job{
     //可以 获取
     //SysUserService sys=SpringUtil.getBean(SysUserServiceImpl.class);
     List<SysUser> userList=sys.selectListByPage(new SysUser());
-    System.out.println(userList.get(0).getUsername());;
+    System.out.println(userList.get(0).getUserName());;
     System.out.println("JobDemo1：执行完毕=======================");
 
   }

@@ -29,39 +29,28 @@ public class RoleServiceImpl extends BaseServiceImpl<SysRole,String> implements 
   }
 
   @Override
-  public int deleteByPrimaryKey(String id) {
-    return roleMapper.deleteByPrimaryKey(id);
+  public int deleteById(String id) {
+    return roleMapper.deleteById(id);
   }
 
   @Override
   public int insert(SysRole record) {
-    record=super.addValue(record,true);
     return roleMapper.insert(record);
   }
 
- /* @Override
-  public int insertSelective(SysRole record) {
-    return roleMapper.insertSelective(record);
-  }*/
-
   @Override
-  public SysRole selectByPrimaryKey(String id) {
-    return roleMapper.selectByPrimaryKey(id);
+  public SysRole selectById(String id) {
+    return roleMapper.selectById(id);
   }
 
   @Override
-  public int updateByPrimaryKeySelective(SysRole record) {
-    return roleMapper.updateByPrimaryKeySelective(record);
-  }
-
-  @Override
-  public int updateByPrimaryKey(SysRole record) {
-    return roleMapper.updateByPrimaryKey(record);
+  public int updateByCondition(SysRole record) {
+    return roleMapper.updateByCondition(record);
   }
 
   @Override
   public List<SysRole> selectListByPage(SysRole sysRole) {
-    return roleMapper.selectListByPage(sysRole);
+    return roleMapper.selectListByCondition(sysRole);
   }
 
 }

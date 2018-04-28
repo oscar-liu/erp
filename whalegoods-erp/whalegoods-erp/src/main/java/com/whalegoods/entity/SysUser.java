@@ -1,38 +1,28 @@
 package com.whalegoods.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 系统用户实体类
+ * @author henrysun
+ * 2018年4月28日 上午3:13:27
+ */
 @Getter
 @Setter
 @ToString
-public class SysUser implements Serializable {
-    private String id;
+public class SysUser extends BaseEntity implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
-    private String username;
+	private String userName;
 
     private String password;
 
-    private Integer age;
+    private String headPicUrl;
 
-    private String email;
-
-    private String photo;
-
-    private String realName;
-
-    private String createBy;
-
-    private String updateBy;
-
-    private Date createDate;
-
-    private Date updateDate;
-
-    private Byte delFlag;
-
-    private static final long serialVersionUID = 1L;
+    private Byte accountStatus;
+    
 }

@@ -12,55 +12,47 @@ import java.util.List;
  */
 public interface BaseService <T,E extends Serializable>{
 
-	  /**
-	   * 根据id查询
-	   * @param id
-	   * @return 实体类
-	   */
-	  T selectByPrimaryKey(E id);
+	/**
+	 * 根据主键查找一条记录
+	 * @author henrysun
+	 * 2018年4月28日 上午3:23:00
+	 */
+    T selectById(E id);
+	  
+    /**
+     * 根据对象条件查找对象列表
+     * @author henrysun
+     * 2018年4月28日 上午3:23:15
+     */
+    List<T> selectListByCondition(T cdt);
+	  
+    /**
+     * 分页查询
+     * @author henrysun
+     * 2018年4月28日 上午3:26:55
+     */
+	String selectByPage(T t, int page, int limit);
 	  
 	  /**
-	   * 分页查询
-	   * @param record
-	   * @return 数据集合
-	   */
-	  List<T> selectListByPage(T record);
-	  
-	  public String show(T t, int page, int limit);
-	  
-	  /**
-	   * 更新非空数据
-	   * @param record
-	   * @return
-	   */
-	  int updateByPrimaryKeySelective(T record);
+    /**
+     * 根据对象条件更新
+     * @author henrysun
+     * 2018年4月28日 上午3:24:28
+     */
+    int updateByCondition(T cdt);
+    
+    /**
+     * 插入新记录
+     * @author henrysun
+     * 2018年4月28日 上午3:24:47
+     */
+    int insert(T record);
 
-	  /**
-	   * 更新
-	   * @param record
-	   * @return
-	   */
-	  int updateByPrimaryKey(T record);
-	  
-	  /**
-	   * 插入
-	   * @param record 实体类
-	   * @return
-	   */
-	  int insert(T record);
-
-	  /**
-	   *插入非空字段
-	   * @param record
-	   * @return
-	   */
-	  int insertSelective(T record);
-	  
-	  /**
-	   * 根据id删除
-	   * @param id
-	   * @return
-	   */
-	  int deleteByPrimaryKey(E id);
+    /**
+     * 根据主键删除记录
+     * @author henrysun
+     * 2018年4月28日 上午3:25:10
+     */
+    int deleteById(E id);
 
 }

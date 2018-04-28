@@ -19,7 +19,7 @@ public interface MenuService extends BaseService<SysMenu,String> {
   int insert(SysMenu menu);
 
   @Override
-  SysMenu selectByPrimaryKey(String id);
+  SysMenu selectById(String id);
 
   List<SysMenu> getMenuChildren(String id);
 

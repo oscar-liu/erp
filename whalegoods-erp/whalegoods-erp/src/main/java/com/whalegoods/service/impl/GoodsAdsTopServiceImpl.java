@@ -28,65 +28,7 @@ public class GoodsAdsTopServiceImpl extends BaseServiceImpl<GoodsAdsTop,String> 
 		return GoodsAdsTopMapper.selectByIdOfJpAndSupp(condition);
 	}
 
-	@Override
-	public int deleteByPrimaryKey(String id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public SysUser login(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public GoodsAdsTop selectByPrimaryKey(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int add(GoodsAdsTop user) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public JsonUtil delById(String id, boolean flag) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int checkUser(String username) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Checkbox> getUserRoleByJson(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int rePass(GoodsAdsTop user) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	@Override
 	public BaseMapper<GoodsAdsTop,String> getMapper() {

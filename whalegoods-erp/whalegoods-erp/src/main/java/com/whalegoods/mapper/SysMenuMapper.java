@@ -1,6 +1,5 @@
 package com.whalegoods.mapper;
 
-/*import com.whalegoods.base.BaseMapper;*/
 import com.whalegoods.entity.SysMenu;
 
 import java.util.List;
@@ -8,23 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface SysMenuMapper extends BaseMapper<SysMenu,String> {
 
-    @Override
-    int deleteByPrimaryKey(String id);
-
-    @Override
-    int insert(SysMenu record);
-
-    @Override
-    int insertSelective(SysMenu record);
-
-    @Override
-    SysMenu selectByPrimaryKey(String id);
-
-    @Override
-    int updateByPrimaryKeySelective(SysMenu record);
-
-    @Override
-    int updateByPrimaryKey(SysMenu record);
         /**获取元节点*/
     List<SysMenu> getMenuNotSuper();
 

@@ -1,4 +1,4 @@
-package com.whalegoods.controller;
+/*package com.whalegoods.controller;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -25,11 +25,11 @@ import com.whalegoods.exception.SystemException;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.VerifyCodeUtils;
 
-/**
+*//**
  * 登录退出接口
  * @author henrysun
  * 2018年4月25日 下午7:35:28
- */
+ *//*
 @Controller
 public class LoginController {
 	
@@ -41,10 +41,10 @@ public class LoginController {
 	    return loginCheck();
 	  }
 	  
-	  /**
+	  *//**
 	   * 检查是否登录，未登录跳转到登录页
 	   * @return
-	   */
+	   *//*
 	  @GetMapping(value = "/login")
 	  public String loginCheck(){
 	    Subject sub=SecurityUtils.getSubject();
@@ -57,11 +57,11 @@ public class LoginController {
 	    return "/login";
 	  }
 	  
-	  /**
+	  *//**
 	   * 登录表单提交接口
 	   * @author henrysun
 	   * 2018年4月25日 下午7:35:39
-	   */
+	   *//*
 	  @PostMapping(value = "/login")
 	  public String login(SysUser user,Model model){
 	    String codeMsg = (String)request.getAttribute("shiroLoginFailure");
@@ -101,11 +101,11 @@ public class LoginController {
 	    }
 	  }
 
-	  /**
+	  *//**
 	   * 用户退出登录接口
 	   * @author henrysun
 	   * 2018年4月25日 下午7:38:55
-	   */
+	   *//*
 	  @Log(desc = "用户退出平台")
 	  @GetMapping(value = "/logout")
 	  public String logout(){
@@ -114,11 +114,11 @@ public class LoginController {
 	    return "/login";
 	  }
 
-	  /**
+	  *//**
 	   * 生成验证码接口
 	   * @author henrysun
 	   * 2018年4月25日 下午7:38:44
-	   */
+	   *//*
 	  @GetMapping(value="/getCode")
 	  public void getYzm(HttpServletRequest request,HttpServletResponse response) throws SystemException{
 	    try {
@@ -139,3 +139,4 @@ public class LoginController {
 	    }
 	  }
 }
+*/

@@ -13,22 +13,16 @@ import java.util.List;
 public interface RoleService extends BaseService<SysRole,String> {
 
   @Override
-  int deleteByPrimaryKey(String id);
+  int deleteById(String id);
 
   @Override
   int insert(SysRole record);
 
   @Override
-  int insertSelective(SysRole record);
+  SysRole selectById(String id);
 
   @Override
-  SysRole selectByPrimaryKey(String id);
-
-  @Override
-  int updateByPrimaryKeySelective(SysRole record);
-
-  @Override
-  int updateByPrimaryKey(SysRole record);
+  int updateByCondition(SysRole record);
 
   List<SysRole> selectListByPage(SysRole sysRole);
 }

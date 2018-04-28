@@ -44,9 +44,4 @@ public class RoleUserServiceImpl extends BaseServiceImpl<SysRoleUser,String> imp
     return sysRoleUserMapper.selectByCondition(sysRoleUser);
   }
 
-@Override
-public String show(SysRoleUser t, int page, int limit) {
-	// TODO Auto-generated method stub
-	return null;
-}
 }

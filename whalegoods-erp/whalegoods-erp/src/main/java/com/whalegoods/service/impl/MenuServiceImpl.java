@@ -53,8 +53,8 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
   }
 
   @Override
-  public SysMenu selectByPrimaryKey(String id) {
-    return menuDao.selectByPrimaryKey(id);
+  public SysMenu selectById(String id) {
+    return menuDao.selectById(id);
   }
 
   @Override
@@ -144,7 +144,7 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
    * @return
    */
   public SysMenu getChild(String id,boolean flag,int pNum,int num){
-    SysMenu sysMenu=menuDao.selectByPrimaryKey(id);
+    SysMenu sysMenu=menuDao.selectById(id);
     List<SysMenu> mList=null;
     if(flag){
       mList= menuDao.getMenuChildren(id);
@@ -182,7 +182,7 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
 
   public TreeUtil getChildByTree(String id,boolean flag,int layer,String pId,String roleId){
     layer++;
-    SysMenu sysMenu=menuDao.selectByPrimaryKey(id);
+    SysMenu sysMenu=menuDao.selectById(id);
     List<SysMenu> mList=null;
     if(flag){
       mList= menuDao.getMenuChildren(id);
@@ -210,9 +210,4 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
     return treeUtil;
   }
 
-@Override
-public String show(SysMenu t, int page, int limit) {
-	// TODO Auto-generated method stub
-	return null;
-}
 }

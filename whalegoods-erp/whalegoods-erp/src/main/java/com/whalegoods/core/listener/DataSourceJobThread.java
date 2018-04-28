@@ -36,7 +36,7 @@ public class DataSourceJobThread extends Thread {
       JobTask jobTask = SpringUtil.getBean("jobTask");
       SysJob job = new SysJob();
       job.setStatus(true);
-      List<SysJob> jobList = jobService.selectListByPage(job);
+      List<SysJob> jobList = jobService.selectListByCondition(job);
       //开启任务
       jobList.forEach(jobs -> {
         log.info("---任务["+jobs.getId()+"]系统 init--开始启动---------");

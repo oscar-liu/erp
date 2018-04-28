@@ -10,7 +10,7 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+/*import org.apache.shiro.authc.UsernamePasswordToken;*/
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -50,9 +50,9 @@ public class LoginRealm extends AuthorizingRealm{
   @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-    String name= (String) principalCollection.getPrimaryPrincipal();
+    /*String name= (String) principalCollection.getPrimaryPrincipal();*/
     //根据用户获取角色 根据角色获取所有按钮权限
-   CurrentUser cUser= (CurrentUser) ShiroUtil.getSession().getAttribute("curentUser");
+   CurrentUser cUser= (CurrentUser) ShiroUtil.getSession().getAttribute("currentUser");
    for(CurrentRole cRole:cUser.getCurrentRoleList()){
      info.addRole(cRole.getId());
    }
@@ -72,23 +72,23 @@ public class LoginRealm extends AuthorizingRealm{
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
       throws AuthenticationException {
-    UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;
-    String name=upToken.getUsername();
+    /*UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;*/
+    /*String name=upToken.getUsername();*/
     String username=(String)authenticationToken.getPrincipal();
-    SysUser s=null;
+    SysUser sysUser=null;
     try {
-      s = userService.login(username);
+    	sysUser = userService.login(username);
     }catch (Exception e){
       e.printStackTrace();
     }
-    if(s==null){
+    if(sysUser==null){
       throw new UnknownAccountException("账户密码不正确");
     }else{
-      CurrentUser currentUser=new CurrentUser(s.getId(),s.getUsername(),s.getAge(),s.getEmail(),s.getPhoto(),s.getRealName());
+      CurrentUser currentUser=new CurrentUser(sysUser.getId(),sysUser.getUserName(),sysUser.getHeadPicUrl(),sysUser.getAccountStatus());
       Subject subject = ShiroUtil.getSubject();
       /**角色权限封装进去*/
       //根据用户获取菜单
-      List<SysMenu> menuList=new ArrayList<>(new HashSet<>(menuService.getUserMenu(s.getId())));
+      List<SysMenu> menuList=new ArrayList<>(new HashSet<>(menuService.getUserMenu(sysUser.getId())));
       JSONArray json=menuService.getMenuJsonByUser(menuList);
       Session session= subject.getSession();
       session.setAttribute("menu",json);
@@ -109,9 +109,9 @@ public class LoginRealm extends AuthorizingRealm{
       }
       currentUser.setCurrentRoleList(currentRoleList);
       currentUser.setCurrentMenuList(currentMenuList);
-      session.setAttribute("curentUser",currentUser);
+      session.setAttribute("currentUser",currentUser);
     }
     ByteSource byteSource=ByteSource.Util.bytes(username);
-    return new SimpleAuthenticationInfo(username,s.getPassword(), byteSource, getName());
+    return new SimpleAuthenticationInfo(username,sysUser.getPassword(), byteSource, getName());
   }
 }

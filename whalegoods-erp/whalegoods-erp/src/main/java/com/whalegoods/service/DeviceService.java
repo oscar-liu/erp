@@ -17,9 +17,6 @@ public interface DeviceService extends BaseService<Device,String> {
 
   SysUser login(String username);
 
-  @Override
-  Device selectByPrimaryKey(String id);
-
   /**
    * 分页查询
    * @param

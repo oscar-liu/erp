@@ -1,4 +1,4 @@
-package com.whalegoods.controller;
+/*package com.whalegoods.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.whalegoods.config.log.Log;
@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/**
+*//**
  * 角色处理API
  * @author chencong
  * 2018年4月11日 上午9:34:26
- */
+ *//*
 @Controller
 @RequestMapping(value = "/role")
 public class RoleController extends BaseController<Object> {
@@ -171,3 +171,4 @@ public class RoleController extends BaseController<Object> {
   }
 
 }
+*/

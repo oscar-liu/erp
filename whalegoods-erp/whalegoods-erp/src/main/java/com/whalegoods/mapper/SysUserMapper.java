@@ -17,12 +17,6 @@ public interface SysUserMapper extends BaseMapper<SysUser, String>{
 	 */
     SysUser login(String userName);
 
-    int count();
-
-    int add(SysUser user);
-
-    int delById(String id);
-
     int checkUser(String username);
 
     /**

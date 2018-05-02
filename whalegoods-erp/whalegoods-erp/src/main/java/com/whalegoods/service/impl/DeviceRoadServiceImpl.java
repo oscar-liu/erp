@@ -8,15 +8,25 @@ import org.springframework.stereotype.Service;
 
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.DeviceRoadMapper;
 import com.whalegoods.service.DeviceRoadService;
 
-
+/**
+ * 货道商品信息业务逻辑实现类
+ * @author henrysun
+ * 2018年5月2日 下午2:33:07
+ */
 @Service
-public class DeviceRoadServiceImpl  implements DeviceRoadService {
+public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> implements DeviceRoadService {
 	
 	@Autowired
 	DeviceRoadMapper deviceRoadMapper;
+	
+	@Override
+	public BaseMapper<DeviceRoad, String> getMapper() {
+		return deviceRoadMapper;
+	}
 	
 	@Override
 	public List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String, Object> condition) {
@@ -31,16 +41,6 @@ public class DeviceRoadServiceImpl  implements DeviceRoadService {
 	@Override
 	public ResDeviceGoodsInfo selectByCondition(Map<String, Object> condition) {
 		return deviceRoadMapper.selectByCondition(condition);
-	}
-
-	@Override
-	public void updateDeviceRoad(DeviceRoad model){
-		deviceRoadMapper.updateDeviceRoad(model);
-	}
-
-	@Override
-	public void updateStockNoRepeat(DeviceRoad model) {
-		deviceRoadMapper.updateStockNoRepeat(model);
 	}
 
 }

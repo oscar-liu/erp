@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqGetInfoByGoodsCode;
 import com.whalegoods.entity.request.ReqGetInfoByPathCode;
+import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceRoadService;
@@ -111,7 +111,7 @@ public class V1GoodsController  extends BaseController<Object>{
 		  deviceRoad.setFloor(Byte.valueOf( map.get("floor").toString()));
 		  deviceRoad.setCtn(Byte.valueOf( map.get("ctn").toString()));
 		  deviceRoad.setStock((Integer)map.get("stock"));
-		  deviceRoadService.updateDeviceRoad(deviceRoad);
+		  deviceRoadService.updateByObjCdt(deviceRoad);
 	}
 	  return resBody;
 	}

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.response.ResGoodsAdsTop;

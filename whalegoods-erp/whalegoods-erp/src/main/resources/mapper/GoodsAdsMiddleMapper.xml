@@ -14,7 +14,7 @@
     <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
   </resultMap>
   
-    <select id="selectByDeviceId" parameterType="java.util.Map" resultMap="BaseResultMap">
+    <select id="selectAdsMiddleList" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT 
     c.goods_code,
     c.pic_url,

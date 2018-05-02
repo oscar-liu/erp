@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.DeviceMapper">
-<!-- 根据条件更新 -->
-	<update id="updateDevice" parameterType="com.whalegoods.entity.Device">
+<!-- 根据对象条件更新 -->
+	<update id="updateByObjCdt" parameterType="com.whalegoods.entity.Device">
 		UPDATE device a 
 	   <set>
       <if test="deviceStatus != null and deviceStatus != ''">a.device_status=#{deviceStatus},</if>

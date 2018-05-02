@@ -10,8 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizException;
 import com.whalegoods.exception.SystemException;
 

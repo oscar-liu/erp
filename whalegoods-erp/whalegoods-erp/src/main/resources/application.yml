@@ -12,7 +12,7 @@ spring:
     settings: 
       template_update_delay: 0
   profiles: 
-    active: pro
+    active: dev
   datasource:
         username: whalegoods_rds
         password: WhaleGoods2018

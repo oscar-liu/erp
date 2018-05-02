@@ -7,8 +7,8 @@ import lombok.ToString;
 
 /**
  * 当前菜单实体类
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月2日 上午11:21:51
  */
 @Getter
 @Setter

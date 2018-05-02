@@ -1,7 +1,5 @@
 package com.whalegoods.service;
 
-
-import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
 import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
@@ -16,16 +14,6 @@ import java.util.List;
 public interface SysUserService extends BaseService<SysUser,String> {
 
   SysUser login(String username);
-
-
-  /**
-   * 分页查询
-   * @param
-   * @return
-   */
-  List<SysUser> selectListByPage(SysUser sysUser);
-
-  int count();
 
   /**
    * 新增
@@ -42,11 +30,6 @@ public interface SysUserService extends BaseService<SysUser,String> {
   JsonUtil delById(String id,boolean flag);
 
   int checkUser(String username);
-
-
-  int updateByPrimaryKey(SysUser sysUser);
-
-  List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser);
 
   public List<Checkbox> getUserRoleByJson(String id);
 

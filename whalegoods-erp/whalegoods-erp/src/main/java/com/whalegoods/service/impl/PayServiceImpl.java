@@ -28,7 +28,6 @@ import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
-import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstOrderStatus;
 import com.whalegoods.constant.ConstSysParamName;
@@ -38,6 +37,7 @@ import com.whalegoods.entity.OrderList;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.request.ReqRefund;
+import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.exception.BizServiceException;
 import com.whalegoods.exception.SystemException;
@@ -96,7 +96,8 @@ public class PayServiceImpl implements PayService{
 		orderPrepay.setOrderStatus((byte) 1);
 		orderPrepay.setDeviceIdJp(model.getDevice_code_wg());
 		orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
-		orderListService.insertOrderList(orderPrepay);
+		orderPrepay.setPrefix(DateUtil.getCurrentMonth());
+		orderListService.insert(orderPrepay);
 		Map<String,Object> mapData=new HashMap<>();
 		mapData.put("order",orderId);
 		resBody.setData(mapData);
@@ -114,7 +115,8 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
 		mapCdt.put("orderStatus",ConstOrderStatus.NOT_PAY);
-		OrderList orderList=orderListService.selectByCondition(mapCdt);
+		mapCdt.put("prefix", DateUtil.getCurrentMonth());
+		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
@@ -157,7 +159,8 @@ public class PayServiceImpl implements PayService{
 		//更新预支付订单信息
 		orderList.setPayType(model.getPayType());		
 		try {
-			orderListService.updateOrderList(orderList);
+			orderList.setPrefix(DateUtil.getCurrentMonth());
+			orderListService.updateByObjCdt(orderList);
 		} catch (Exception e) {
 			//更新预支付记录异常不影响生成二维码
 			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
@@ -173,7 +176,8 @@ public class PayServiceImpl implements PayService{
 		//根据订单号查找预支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
-		OrderList orderList=orderListService.selectByCondition(mapCdt);
+		mapCdt.put("prefix", DateUtil.getCurrentMonth());
+		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
@@ -221,7 +225,8 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",model.getOrder());
 		mapCdt.put("orderStatus",ConstOrderStatus.PAID);
-		OrderList orderList=orderListService.selectByCondition(mapCdt);
+		mapCdt.put("prefix", DateUtil.getCurrentMonth());
+		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
@@ -514,7 +519,8 @@ public class PayServiceImpl implements PayService{
 	 */
 	@Transactional
 	private void updateStockAndOrderInfo(OrderList orderList){
-		orderListService.updateOrderList(orderList);
+		orderList.setPrefix(DateUtil.getCurrentMonth());
+		orderListService.updateByObjCdt(orderList);
 		int stock=0;
 		if(orderList.getOrderStatus()==ConstOrderStatus.PAID)
 		{
@@ -527,7 +533,7 @@ public class PayServiceImpl implements PayService{
 		BeanUtils.copyProperties(orderList,deviceRoad); 
 		deviceRoad.setStock(stock);
 		deviceRoad.setStockOrderId(orderList.getOrderId());
-		deviceRoadService.updateStockNoRepeat(deviceRoad);
+		deviceRoadService.updateByObjCdt(deviceRoad);
 	}
 
 }

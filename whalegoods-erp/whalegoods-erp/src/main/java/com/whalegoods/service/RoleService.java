@@ -1,28 +1,12 @@
 package com.whalegoods.service;
 
-/*import com.whalegoods.base.BaseService;*/
 import com.whalegoods.entity.SysRole;
 
-import java.util.List;
-
 /**
- * @author zhuxiaomeng
- * @date 2017/12/19.
- * @email 154040976@qq.com
+ * 系统角色业务逻辑接口层
+ * @author henrysun
+ * 2018年4月29日 下午11:09:12
  */
 public interface RoleService extends BaseService<SysRole,String> {
 
-  @Override
-  int deleteById(String id);
-
-  @Override
-  int insert(SysRole record);
-
-  @Override
-  SysRole selectById(String id);
-
-  @Override
-  int updateByCondition(SysRole record);
-
-  List<SysRole> selectListByPage(SysRole sysRole);
 }

@@ -7,31 +7,25 @@ import com.whalegoods.entity.SysMenu;
 import java.util.List;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/12.
- * @email 154040976@qq.com
+ * 系统菜单相关业务逻辑接口层
+ * @author henrysun
+ * 2018年5月2日 下午3:51:18
  */
 public interface MenuService extends BaseService<SysMenu,String> {
+	
+	  List<SysMenu> getMenuNotSuper();
 
-  List<SysMenu> getMenuNotSuper();
+	  List<SysMenu> getMenuChildren(String id);
 
-  @Override
-  int insert(SysMenu menu);
+	  public JSONArray getMenuJson(String roleId);
 
-  @Override
-  SysMenu selectById(String id);
+	  public JSONArray getMenuJsonList();
 
-  List<SysMenu> getMenuChildren(String id);
+	  List<SysMenu> getMenuChildrenAll(String id);
 
-  public JSONArray getMenuJson(String roleId);
+	  public JSONArray getTreeUtil(String roleId);
 
-  public JSONArray getMenuJsonList();
+	  List<SysMenu> getUserMenu(String id);
 
-  List<SysMenu> getMenuChildrenAll(String id);
-
-  public JSONArray getTreeUtil(String roleId);
-
-  List<SysMenu> getUserMenu(String id);
-
-  public JSONArray getMenuJsonByUser(List<SysMenu> menuList);
+	  public JSONArray getMenuJsonByUser(List<SysMenu> menuList);
 }

@@ -9,15 +9,16 @@ import java.util.Map;
 public interface DeviceMapper extends BaseMapper<Device,String> {
 
 	/**
-	 * 获取最新客户端APK
 	 * @author henrysun
 	 * 2018年4月28日 下午2:46:35
 	 */
-    Map<String,Object> getApk(Map<String, Object> condition);
+    Map<String,Object> getApk(Map<String, Object> mapCdt);
 
-	int getOperateStatus(Map<String, Object> condition);
-	
-	int updateClient(Map<String,Object> condition);
-	
-	int updateDeviceStatus(Map<String,Object> condition);
+    /**
+     * 查询设备开启/启用状态
+     * @author henrysun
+     * 2018年5月2日 上午11:28:12
+     */
+	int getOperateStatus(Map<String, Object> mapCdt);
+
 }

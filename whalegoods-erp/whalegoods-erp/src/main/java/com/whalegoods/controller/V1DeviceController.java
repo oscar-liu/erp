@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqUpDeviceStatus;
+import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.util.FileUtil;
@@ -53,7 +53,7 @@ public class V1DeviceController  extends BaseController<Object>{
 	  device.setDeviceIdJp(model.getDevice_code_wg());
 	  device.setDeviceIdSupp(model.getDevice_code_sup());
 	  device.setDeviceStatus(model.getDeviceStatus());
-	  deviceService.updateDevice(device);	  
+	  deviceService.updateByObjCdt(device);	  
 	  return resBody;
 	}
   

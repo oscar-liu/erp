@@ -10,22 +10,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.response.ResGoodsAdsMiddle;
 import com.whalegoods.entity.response.ResGoodsAdsMiddleData;
 import com.whalegoods.exception.SystemException;
+import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.GoodsAdsMiddleMapper;
 import com.whalegoods.service.GoodsAdsMiddleService;
 
 
 @Service
-public class GoodsAdsMiddleServiceImpl  implements GoodsAdsMiddleService {
+public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,String> implements GoodsAdsMiddleService {
 	
 	@Autowired
 	GoodsAdsMiddleMapper GoodsAdsMiddleMapper;
 	
 	@Override
-	public Map<String,Object> selectByDeviceId(Map<String, Object> condition) throws SystemException {
-		List<ResGoodsAdsMiddle> list=GoodsAdsMiddleMapper.selectByDeviceId(condition);
+	public BaseMapper<GoodsAdsMiddle,String> getMapper() {
+		return GoodsAdsMiddleMapper;
+	}
+	
+	@Override
+	public Map<String,Object> selectAdsMiddleList(Map<String, Object> mapCdt) throws SystemException {
+		List<ResGoodsAdsMiddle> list=GoodsAdsMiddleMapper.selectAdsMiddleList(mapCdt);
 		List<ResGoodsAdsMiddleData> list1=new ArrayList<>();
 		List<ResGoodsAdsMiddleData> list2=new ArrayList<>();
 		Map<String,Object> map=new HashMap<>();

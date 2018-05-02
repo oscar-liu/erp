@@ -9,5 +9,10 @@ import java.util.Map;
 
 public interface GoodsAdsMiddleMapper extends BaseMapper<GoodsAdsMiddle,String> {
 
-    List<ResGoodsAdsMiddle> selectByDeviceId(Map<String,Object> condition);
+	/**
+	 * 获取柜机展示的中部促销商品列表
+	 * @author henrysun
+	 * 2018年5月2日 下午3:20:16
+	 */
+    List<ResGoodsAdsMiddle> selectAdsMiddleList(Map<String,Object> condition);
 }

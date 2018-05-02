@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whalegoods.common.ResBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.request.ReqRefund;
+import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.PayService;

@@ -1,22 +1,12 @@
 package com.whalegoods.service;
 
-/*import com.whalegoods.base.BaseService;*/
 import com.whalegoods.entity.SysRoleUser;
 
-import java.util.List;
-
 /**
- * @author zhuxiaomeng
- * @date 2017/12/21.
- * @email 154040976@qq.com
+ * 系统角色用户关系业务逻辑层接口
+ * @author henrysun
+ * 2018年4月29日 下午11:09:53
  */
 public interface RoleUserService  extends BaseService<SysRoleUser,String>{
 
-  int deleteByPrimaryKey(SysRoleUser sysRoleUser);
-
-  int insert(SysRoleUser sysRoleUser);
-
-  int selectCountByCondition(SysRoleUser sysRoleUser);
-
-  List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser);
 }

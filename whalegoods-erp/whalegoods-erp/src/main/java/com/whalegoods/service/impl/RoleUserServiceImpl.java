@@ -1,21 +1,17 @@
 package com.whalegoods.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/*import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.impl.BaseServiceImpl;*/
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.SysRoleUserMapper;
 import com.whalegoods.service.RoleUserService;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/21.
- * @email 154040976@qq.com
+ * 系统用户角色关系业务逻辑实现类
+ * @author henrysun
+ * 2018年5月2日 下午1:29:23
  */
 @Service
 public class RoleUserServiceImpl extends BaseServiceImpl<SysRoleUser,String> implements
@@ -27,21 +23,6 @@ public class RoleUserServiceImpl extends BaseServiceImpl<SysRoleUser,String> imp
   @Override
   public BaseMapper<SysRoleUser, String> getMapper() {
     return sysRoleUserMapper;
-  }
-
-  @Override
-  public int deleteByPrimaryKey(SysRoleUser sysRoleUser) {
-    return sysRoleUserMapper.deleteByPrimaryKey(sysRoleUser);
-  }
-
-  @Override
-  public int selectCountByCondition(SysRoleUser sysRoleUser) {
-    return sysRoleUserMapper.selectCountByCondition(sysRoleUser);
-  }
-
-  @Override
-  public List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser) {
-    return sysRoleUserMapper.selectByCondition(sysRoleUser);
   }
 
 }

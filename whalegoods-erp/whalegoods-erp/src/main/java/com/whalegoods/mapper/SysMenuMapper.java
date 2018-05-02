@@ -3,6 +3,7 @@ package com.whalegoods.mapper;
 import com.whalegoods.entity.SysMenu;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface SysMenuMapper extends BaseMapper<SysMenu,String> {
@@ -24,5 +25,6 @@ public interface SysMenuMapper extends BaseMapper<SysMenu,String> {
      * @return
      */
     List<SysMenu> getUserMenu(@Param("id") String id);
+    
 
 }

@@ -46,49 +46,12 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   public SysUser login(String userName) {
     return sysUserMapper.login(userName);
   }
-
-
-  @Override
-  public int deleteById(String id) {
-    return sysUserMapper.deleteById(id);
-  }
   
   @Override
   public int insert(SysUser record) {
-
     String pwd= Md5Util.getMd5(record.getPassword().trim(),record.getUserName().trim());
     record.setPassword(pwd);
     return super.insert(record);
-  }
-
-  @Override
-  public SysUser selectById(String id) {
-    return sysUserMapper.selectById(id);
-  }
-
-  @Override
-  public int updateByCondition(SysUser record) {
-    return super.updateByCondition(record);
-  }
-
-  @Override
-  public List<SysRoleUser> selectByCondition(SysRoleUser sysRoleUser) {
-    return sysRoleUserMapper.selectByCondition(sysRoleUser);
-  }
-
-  /**
-   * 分页查询
-   * @param
-   * @return
-   */
-  @Override
-  public List<SysUser> selectListByPage(SysUser sysUser) {
-    return sysUserMapper.selectListByCondition(sysUser);
-  }
-
-  @Override
-  public int count() {
-    return sysUserMapper.count();
   }
 
   @Override
@@ -96,7 +59,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
     //密码加密
   String pwd= Md5Util.getMd5(user.getPassword().trim(),user.getUserName().trim());
   user.setPassword(pwd);
-    return sysUserMapper.add(user);
+    return sysUserMapper.insert(user);
   }
 
   @Override
@@ -112,7 +75,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
       }
       SysRoleUser roleUser=new SysRoleUser();
       roleUser.setUserId(id);
-      int count=roleUserService.selectCountByCondition(roleUser);
+      int count=roleUserService.selectCountByObjCdt(roleUser);
       if(count>0){
         return JsonUtil.error("账户已经绑定角色，无法删除");
       }
@@ -120,10 +83,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
       if (flag) {
         //逻辑
         sysUser.setAccountStatus(Byte.parseByte("1"));
-        updateByCondition(sysUser);
+        updateByObjCdt(sysUser);
       } else {
         //物理
-        sysUserMapper.delById(id);
+        sysUserMapper.deleteById(id);
       }
       j.setMsg("删除成功");
     } catch (BizServiceException e) {
@@ -142,10 +105,10 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 
   @Override
   public List<Checkbox> getUserRoleByJson(String id){
-    List<SysRole> roleList=roleService.selectListByPage(new SysRole());
+    List<SysRole> roleList=roleService.selectListByObjCdt(new SysRole());
     SysRoleUser sysRoleUser =new SysRoleUser();
     sysRoleUser.setUserId(id);
-    List<SysRoleUser>  kList= selectByCondition(sysRoleUser);
+    List<SysRoleUser>  kList= roleUserService.selectListByObjCdt(sysRoleUser);
     System.out.println(kList.size());
     List<Checkbox> checkboxList=new ArrayList<>();
     Checkbox checkbox=null;
@@ -167,11 +130,5 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
   public int rePass(SysUser user) {
     return sysUserMapper.rePass(user);
   }
-
-@Override
-public int updateByPrimaryKey(SysUser sysUser) {
-	// TODO Auto-generated method stub
-	return 0;
-}
 
 }

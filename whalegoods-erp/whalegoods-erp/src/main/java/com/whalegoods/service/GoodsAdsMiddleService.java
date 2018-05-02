@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public interface GoodsAdsMiddleService  {
   
-  Map<String, Object> selectByDeviceId(Map<String,Object> condition) throws SystemException;
+  Map<String, Object> selectAdsMiddleList(Map<String,Object> condition) throws SystemException;
 
 
 }

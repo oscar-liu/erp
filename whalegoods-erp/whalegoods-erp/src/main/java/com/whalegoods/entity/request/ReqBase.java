@@ -31,5 +31,11 @@ public class ReqBase implements Serializable{
 	@JsonProperty("device_code_wg")
 	@NotEmpty(message="系统设备号不能为空")
 	private String device_code_wg;
+	
+	private String appid;
+	
+	private Long timestamp;
+	
+	private String sign;
 
 }

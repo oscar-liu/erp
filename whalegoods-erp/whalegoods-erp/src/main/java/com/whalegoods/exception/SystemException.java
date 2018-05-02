@@ -7,9 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 系统异常
- * @author chencong
- * 2018年4月10日 下午6:32:27
+ * 系统异常，非运行时
+ * @author henrysun
+ * 2018年5月2日 上午11:39:40
  */
 @Getter
 @Setter

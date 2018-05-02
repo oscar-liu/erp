@@ -1,4 +1,4 @@
-package com.whalegoods.common;
+package com.whalegoods.entity.response;
 
 import java.io.Serializable;
 
@@ -10,8 +10,8 @@ import lombok.ToString;
 
 /**
  * API返回结果封装实体类
- * @author henry-sun
- *
+ * @author henrysun
+ * 2018年5月2日 上午11:22:23
  */
 @Getter
 @Setter
@@ -28,9 +28,7 @@ public class ResBody  implements Serializable {
     
     private Object data;
     
-    public ResBody(){
-    	
-    }
+    public ResBody(){}
     
     public ResBody(Integer resultCode,String resultMsg){
     	this.resultCode=resultCode;

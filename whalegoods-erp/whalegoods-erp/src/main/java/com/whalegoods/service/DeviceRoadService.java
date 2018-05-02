@@ -1,6 +1,5 @@
 package com.whalegoods.service;
 
-
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 
@@ -12,14 +11,10 @@ import java.util.Map;
  * @author henry-sun
  *
  */
-public interface DeviceRoadService {
+public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
   List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
   
   ResDeviceGoodsInfo selectByCondition(Map<String,Object> condition);
-  
-  void updateDeviceRoad(DeviceRoad model);
-  
-  void updateStockNoRepeat(DeviceRoad model);
 
 }

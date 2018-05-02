@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public interface GoodsAdsTopService extends BaseService<GoodsAdsTop,String> {
   
-  List<ResGoodsAdsTop> selectByIdOfJpAndSupp(Map<String,Object> condition);
-
+  List<ResGoodsAdsTop> selectAdsTopList(Map<String,Object> mapCdt);
 
 }

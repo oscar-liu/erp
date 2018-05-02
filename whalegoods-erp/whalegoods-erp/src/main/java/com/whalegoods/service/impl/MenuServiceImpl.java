@@ -9,30 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
-/*import com.whalegoods.base.BaseMapper;
-import com.whalegoods.base.impl.BaseServiceImpl;*/
 import com.whalegoods.entity.SysMenu;
 import com.whalegoods.entity.SysRoleMenu;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.SysMenuMapper;
 import com.whalegoods.mapper.SysRoleMenuMapper;
 import com.whalegoods.service.MenuService;
-import com.whalegoods.service.SysUserService;
 import com.whalegoods.util.TreeUtil;
 
 /**
- * @author zhuxiaomeng
- * @date 2017/12/12.
- * @email 154040976@qq.com
+ * 菜单业务逻辑实现层
+ * @author henrysun
+ * 2018年5月2日 上午11:41:38
  */
 @Service
 public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements MenuService {
 
   @Autowired
   private SysMenuMapper menuDao;
-
-  @Autowired
-  private SysUserService userService;
 
   @Autowired
   private SysRoleMenuMapper roleMenuMapper;
@@ -84,7 +78,6 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
       SysMenu menu=getChild(sysMenu.getId(),false,0,0);
       jsonArr.add(menu);
     }
-    System.out.println(jsonArr);
     return jsonArr;
   }
 
@@ -199,7 +192,7 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
       SysRoleMenu sysRoleMenu = new SysRoleMenu();
       sysRoleMenu.setMenuId(sysMenu.getId());
       sysRoleMenu.setRoleId(roleId);
-      int count = roleMenuMapper.selectCountByCondition(sysRoleMenu);
+      int count = roleMenuMapper.selectCountByObjCdt(sysRoleMenu);
       if (count > 0)
         treeUtil.setChecked(true);
     }

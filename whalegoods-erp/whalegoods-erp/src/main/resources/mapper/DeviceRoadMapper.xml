@@ -127,43 +127,9 @@
 			</if>
 		 </where>
   </select>
-
-
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sys_user
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  
-  	<!-- 根据条件更新货道信息 -->
-		<update id="updateDeviceRoad" parameterType="com.whalegoods.entity.DeviceRoad">
-		UPDATE device_road a INNER JOIN device b ON a.device_id=b.id
-	   <set>
-      <if test="stock != null and stock != ''">a.stock=a.stock+#{stock},</if>
-      a.update_date=now(),
-      </set>
-    		<where>
-    		<if test="deviceIdJp !=null and deviceIdJp !=''">
-				AND b.device_id_jp=#{deviceIdJp}
-			</if>
-			<if test="deviceIdSupp !=null and deviceIdSupp !=''">
-				AND b.device_id_supp=#{deviceIdSupp}
-			</if>
-		    <if test="pathCode !=null and pathCode !=''">
-				AND a.path_code=#{pathCode}
-			</if>
-			<if test="floor !=null and floor !=''">
-				AND a.floor=#{floor}
-			</if>
-			<if test="ctn !=null and ctn !=''">
-				AND a.ctn=#{ctn}
-			</if>
-		 </where>
-	</update>
 	
 	  	<!-- 根据条件更新货道信息 -->
-		<update id="updateStockNoRepeat" parameterType="com.whalegoods.entity.DeviceRoad">
+		<update id="updateByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad">
 		UPDATE device_road a INNER JOIN device b ON a.device_id=b.id
 	   <set>
       <if test="stock != null and stock != ''">a.stock=a.stock+#{stock},</if>

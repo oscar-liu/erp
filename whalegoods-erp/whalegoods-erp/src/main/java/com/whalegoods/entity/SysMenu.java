@@ -9,18 +9,24 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 系统菜单表实体类
+ * @author henrysun
+ * 2018年5月3日 下午5:59:36
+ */
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 public class SysMenu implements Serializable {
+	
     private String id;
 
-    private String name;
+    private String menuName;
 
     private String pId;
 
-    private String url;
+    private String menuUrl;
 
     private Integer orderNum;
 
@@ -37,6 +43,7 @@ public class SysMenu implements Serializable {
     private String permission;
 
     private Byte menuType;
+    
     /**菜单排序id 填充菜单展示id*/
     private int num;
 

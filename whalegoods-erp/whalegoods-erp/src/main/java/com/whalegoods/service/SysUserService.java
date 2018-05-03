@@ -12,32 +12,30 @@ import java.util.List;
  * 2018年4月28日 下午4:41:45
  */
 public interface SysUserService extends BaseService<SysUser,String> {
+	
+	/**
+	 * 登录
+	 * @author henrysun
+	 * 2018年5月3日 下午5:47:26
+	 */
+	SysUser login(String userName,String password);
+	
+	  /**
+	   * 根据主键删除系统用户
+	   * @author henrysun
+	   * 2018年5月3日 下午5:20:49
+	   */
+	  JsonUtil delById(String id,boolean flag);
 
-  SysUser login(String username);
+	  int checkUser(String username);
 
-  /**
-   * 新增
-   * @param user
-   * @return
-   */
-  int add(SysUser user);
+	  public List<Checkbox> getUserRoleByJson(String id);
 
-  /**
-   * 删除
-   * @param id
-   * @return
-   */
-  JsonUtil delById(String id,boolean flag);
-
-  int checkUser(String username);
-
-  public List<Checkbox> getUserRoleByJson(String id);
-
-  /**
-   * 更新密码
-   * @param user
-   * @return
-   */
-  int rePass(SysUser user);
+	  /**
+	   * 更新密码
+	   * @author henrysun
+	   * 2018年5月3日 下午5:21:08
+	   */
+	  int rePass(SysUser user);
 
 }

@@ -6,8 +6,8 @@ import com.whalegoods.constant.ConstSysParamName;
 
 /**
  * 字符串工具类
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月3日 下午3:55:18
  */
 public class StringUtil {
 

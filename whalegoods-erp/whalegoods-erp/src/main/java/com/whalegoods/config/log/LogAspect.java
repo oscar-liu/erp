@@ -72,7 +72,7 @@ public class LogAspect {
         }
         log.setParam(buffer.toString());
         try {
-            CurrentUser currentUser = ShiroUtil.getCurrentUse();
+            CurrentUser currentUser = ShiroUtil.getCurrentUser();
             log.setUserName(currentUser.getUsername());
         }catch (UnavailableSecurityManagerException e){
         }

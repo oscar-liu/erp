@@ -4,8 +4,6 @@ import com.whalegoods.entity.SysMenu;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 public interface SysMenuMapper extends BaseMapper<SysMenu,String> {
 
         /**获取元节点*/
@@ -20,11 +18,11 @@ public interface SysMenuMapper extends BaseMapper<SysMenu,String> {
     List<SysMenu> getMenuChildrenAll(String id);
 
     /**
-     * 根据用户获取所有菜单
-     * @param id
-     * @return
+     * 根据用户ID获取所有菜单
+     * @author henrysun
+     * 2018年5月3日 下午5:56:20
      */
-    List<SysMenu> getUserMenu(@Param("id") String id);
+    List<SysMenu> getUserMenu(String userId);
     
 
 }

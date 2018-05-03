@@ -1,8 +1,10 @@
 package com.whalegoods.config.shiro;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -50,7 +52,6 @@ public class LoginRealm extends AuthorizingRealm{
   @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-    /*String name= (String) principalCollection.getPrimaryPrincipal();*/
     //根据用户获取角色 根据角色获取所有按钮权限
    CurrentUser cUser= (CurrentUser) ShiroUtil.getSession().getAttribute("currentUser");
    for(CurrentRole cRole:cUser.getCurrentRoleList()){
@@ -65,22 +66,15 @@ public class LoginRealm extends AuthorizingRealm{
 
   /**
    * 获取授权
-   * @param authenticationToken
-   * @return
-   * @throws AuthenticationException
+   * @author henrysun
+   * 2018年5月3日 下午5:25:14
    */
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
       throws AuthenticationException {
-    /*UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;*/
-    /*String name=upToken.getUsername();*/
     String username=(String)authenticationToken.getPrincipal();
-    SysUser sysUser=null;
-    try {
-    	sysUser = userService.login(username);
-    }catch (Exception e){
-      e.printStackTrace();
-    }
+    String password=(String) authenticationToken.getCredentials();
+    SysUser sysUser= userService.login(username,password);
     if(sysUser==null){
       throw new UnknownAccountException("账户密码不正确");
     }else{
@@ -96,7 +90,7 @@ public class LoginRealm extends AuthorizingRealm{
       List<CurrentMenu> currentMenuList=new ArrayList<>();
       List<SysRole> roleList=new ArrayList<>();
       for(SysMenu m:menuList){
-       currentMenu=new CurrentMenu(m.getId(),m.getName(),m.getPId(),m.getUrl(),m.getOrderNum(),m.getIcon(),m.getPermission(),m.getMenuType(),m.getNum());
+       currentMenu=new CurrentMenu(m.getId(),m.getMenuName(),m.getPId(),m.getMenuUrl(),m.getOrderNum(),m.getIcon(),m.getPermission(),m.getMenuType(),m.getNum());
         currentMenuList.add(currentMenu);
           roleList.addAll(m.getRoleList());
       }

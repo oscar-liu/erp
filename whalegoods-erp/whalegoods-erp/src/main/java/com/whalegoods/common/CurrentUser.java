@@ -12,9 +12,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 当前用户实体类
- * @author chencong
- *
+ * 当前系统用户实体类
+ * @author henrysun
+ * 2018年5月3日 下午5:25:45
  */
 @Getter
 @Setter
@@ -29,7 +29,7 @@ public class CurrentUser implements Serializable {
 
     private String password;
 
-    private String photo;
+    private String headPicUrl;
 
     private Byte accountStatus;
 
@@ -45,14 +45,12 @@ public class CurrentUser implements Serializable {
    
    private List<CurrentRole> currentRoleList;
 
-    public CurrentUser(String id, String username, String photo,
-        Byte accountStatus) {
+   public CurrentUser(String id, String username, String headPicUrl,Byte accountStatus) {
         this.id = id;
         this.username = username;
-        this.photo = photo;
+        this.headPicUrl = headPicUrl;
         this.accountStatus = accountStatus;
     }
 
-    public CurrentUser() {
-    }
+    public CurrentUser() {}
 }

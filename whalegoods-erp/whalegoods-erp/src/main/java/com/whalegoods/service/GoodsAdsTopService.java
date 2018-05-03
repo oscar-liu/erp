@@ -2,8 +2,6 @@ package com.whalegoods.service;
 
 
 import com.whalegoods.entity.GoodsAdsTop;
-import com.whalegoods.entity.response.ResGoodsAdsTop;
-
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +13,6 @@ import java.util.Map;
  */
 public interface GoodsAdsTopService extends BaseService<GoodsAdsTop,String> {
   
-  List<ResGoodsAdsTop> selectAdsTopList(Map<String,Object> mapCdt);
+  List<Map<String, Object>> selectAdsTopList(Map<String,Object> mapCdt);
 
 }

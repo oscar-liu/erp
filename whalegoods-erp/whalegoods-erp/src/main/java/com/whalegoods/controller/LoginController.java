@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.whalegoods.config.log.Log;
 import com.whalegoods.constant.ConstApiResCode;
-import com.whalegoods.entity.SysUser;
+import com.whalegoods.entity.request.ReqLogin;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.VerifyCodeUtils;
@@ -63,13 +63,13 @@ public class LoginController {
 	   * 2018年4月25日 下午7:35:39
 	   */
 	  @PostMapping(value = "/login")
-	  public String login(SysUser user,Model model){
+	  public String login(ReqLogin user,Model model){
 	    String codeMsg = (String)request.getAttribute("shiroLoginFailure");
 	    if("code.error".equals(codeMsg)){
 	      model.addAttribute("message","验证码错误");
 	      return "/login";
 	    }
-	    UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName().trim(),user.getPassword());
+	    UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername().trim(),user.getPassword());
 	    Subject subject = ShiroUtil.getSubject();
 	    String msg=null;
 	    try{

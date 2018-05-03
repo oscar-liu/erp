@@ -11,8 +11,8 @@ import lombok.ToString;
 
 /**
  * 顶部广告栏商品信息获取接口API  返回结果data字段集合  实体类
- * @author chencong
- * 2018年4月9日 下午3:06:54
+ * @author henrysun
+ * 2018年5月3日 上午11:24:15
  */
 @Getter
 @Setter
@@ -29,5 +29,8 @@ public class ResGoodsAdsTop implements Serializable {
     
 	@JsonProperty("tiny_pic_url")
     private String tinyPicUrl;
+	
+	@JsonProperty("action_type")
+	private Byte actionType;
 
 }

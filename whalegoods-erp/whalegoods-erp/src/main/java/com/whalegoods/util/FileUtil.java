@@ -11,6 +11,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,8 @@ import com.whalegoods.exception.SystemException;
 @Component
 public class FileUtil {
 
+	private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+	
 	@Autowired
 	private  Environment env;
 
@@ -43,6 +47,7 @@ public class FileUtil {
 	public  void uploadFile(HttpServletRequest request,String sonFolder,String newFileName) throws SystemException{
 		//如果不是multipart/form-data类型
 		 if(!ServletFileUpload.isMultipartContent(request)){  
+			logger.error("请求类型不是multipart/form-data");
 	        throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 	    }
 	    //创建上传所需要的两个对象
@@ -55,12 +60,14 @@ public class FileUtil {
 	    try {
 	        items = sfu.parseRequest(request);
 	    } catch (FileUploadException e) {
+	    	logger.error("ServletFileUpload解析request异常："+e.getMessage());
 	    	throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 	    }
 	    for(FileItem item : items){
 	    	try {
 				handleUploadField(item,sonFolder,newFileName);
 			} catch (FileNotFoundException e) {
+				logger.error("执行handleUploadField()方法异常："+e.getMessage());
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}
 	    }

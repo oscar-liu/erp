@@ -5,8 +5,8 @@ import java.util.Map;
 
 /**
  * API返回状态编码和编码语义
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月3日 下午3:56:01
  */
 public abstract class ConstApiResCode {
 	

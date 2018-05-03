@@ -14,13 +14,13 @@ public interface DeviceService extends BaseService<Device,String> {
    * @author chencong
    * 2018年4月9日 上午10:59:49
    */
-  int getOperateStatus(Map<String,Object> condition);
+  Integer getDeviceStatus(Map<String,Object> mapCdt);
   
   /**
    * 查询最新柜机APK包版本号和下载链接
    * @author chencong
    * 2018年4月9日 下午3:16:05
    */
-  ResBody getApk(Map<String,Object> condition);
+  ResBody getApk(Map<String,Object> mapCdt);
 
 }

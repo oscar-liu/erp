@@ -17,7 +17,7 @@
 		</where>
 	</update>
 	
-  <select id="getOperateStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+  <select id="getDeviceStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
   SELECT a.device_status 
   FROM device a 
   WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}

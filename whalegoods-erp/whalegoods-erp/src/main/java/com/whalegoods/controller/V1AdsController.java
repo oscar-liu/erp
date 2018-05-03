@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.response.ResBody;
-import com.whalegoods.entity.response.ResGoodsAdsTop;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
@@ -39,8 +38,8 @@ public class V1AdsController  extends BaseController<Object>{
 	  Map<String,Object> mapCdt=new HashMap<>();
 	  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
 	  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
-	  List<ResGoodsAdsTop> listGoodsAdsTop=goodsAdsTopService.selectAdsTopList(mapCdt);
-	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),listGoodsAdsTop);
+	  List<Map<String, Object>> listMapData=goodsAdsTopService.selectAdsTopList(mapCdt);
+	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),listMapData);
 	  return resBody;
 	}
   

@@ -2,8 +2,8 @@ package com.whalegoods.util;
 
 /**
  * base64工具类
- * @author chencong
- * 2018年4月11日 下午3:56:02
+ * @author henrysun
+ * 2018年5月3日 下午3:37:33
  */
 public final class Base64Util {
 

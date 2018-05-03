@@ -19,6 +19,6 @@ public interface DeviceMapper extends BaseMapper<Device,String> {
      * @author henrysun
      * 2018年5月2日 上午11:28:12
      */
-	int getOperateStatus(Map<String, Object> mapCdt);
+    Integer getDeviceStatus(Map<String, Object> mapCdt);
 
 }

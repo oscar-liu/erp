@@ -101,7 +101,6 @@ public class ShiroConfig {
     filterMap.put("/v3/**","anon");
     filterMap.put("/v4/**","anon");
     filterMap.put("/v5/**","anon");
-    /*filterMap.put("/**","authc");*/
     sfb.setFilterChainDefinitionMap(filterMap);
     return sfb;
   }

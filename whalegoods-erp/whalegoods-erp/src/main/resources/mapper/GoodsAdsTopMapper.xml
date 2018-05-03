@@ -6,17 +6,18 @@
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="big_pic_url" jdbcType="VARCHAR" property="bigPicUrl" />
     <result column="tiny_pic_url" jdbcType="VARCHAR" property="tinyPicUrl" />
+    <result column="action_type" jdbcType="TINYINT" property="actionType" />
   </resultMap>
   
     <select id="selectAdsTopList" parameterType="java.util.Map" resultMap="BaseResultMap">
-    SELECT 
-    c.goods_code,
-    a.big_pic_url,
-    a.tiny_pic_url 
-    FROM goods_ads_top a INNER JOIN  device_road b ON a.device_road_id=b.id 
-    INNER JOIN goods_sku c ON b.goods_sku_id=c.id
-    INNER JOIN device d ON  d.id=b.device_id
-    WHERE d.device_id_jp=#{deviceIdJp} AND d.device_id_supp=#{deviceIdSupp}
+  SELECT 
+  c.goods_code,
+  a.big_pic_url,
+  a.tiny_pic_url,
+  a.action_type
+  FROM goods_ads_top a LEFT JOIN device_road b ON a.device_road_id =b.id 
+  LEFT JOIN goods_sku c ON c.id=b.goods_sku_id
+    WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
   </select>
 
 </mapper>

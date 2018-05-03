@@ -25,14 +25,14 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String>  implement
 	}
 
 	@Override
-	public int getOperateStatus(Map<String, Object> condition) {
-		return deviceMapper.getOperateStatus(condition);
+	public Integer getDeviceStatus(Map<String, Object> mapCdt) {
+		return deviceMapper.getDeviceStatus(mapCdt);
 	}
 
 	@Override
-	public ResBody getApk(Map<String, Object> condition) {
+	public ResBody getApk(Map<String, Object> mapCdt) {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		resBody.setData(deviceMapper.getApk(condition));
+		resBody.setData(deviceMapper.getApk(mapCdt));
 		return resBody;
 	}
 

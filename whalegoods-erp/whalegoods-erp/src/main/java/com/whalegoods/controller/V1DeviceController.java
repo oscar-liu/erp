@@ -20,6 +20,7 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqUpDeviceStatus;
+import com.whalegoods.entity.request.ReqUploadLog;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
@@ -65,10 +66,10 @@ public class V1DeviceController  extends BaseController<Object>{
   @GetMapping(value="/getOperateStatus")
   ResBody getOperateStatus(@Valid ReqBase model) {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",model.getDevice_code_wg());
-	  condition.put("deviceIdSupp",model.getDevice_code_sup());
-	  int status=deviceService.getOperateStatus(condition);
+	  Map<String,Object> mapCdt=new HashMap<>();
+	  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
+	  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
+	  int status=deviceService.getDeviceStatus(mapCdt);
 	  Map<String,Object> mapData=new HashMap<>();
 	  mapData.put("operate_status",status);
 	  resBody.setData(mapData);
@@ -96,10 +97,10 @@ public class V1DeviceController  extends BaseController<Object>{
  * @throws FileNotFoundException 
    */
   @PostMapping(value="/uploadExLog")
-  public ResBody uploadExLog(@RequestParam(name="order") String orderId,@RequestParam(name="error_message") String errorMessage,HttpServletRequest request,HttpSession session) throws SystemException {
+  public ResBody uploadExLog(@Valid ReqUploadLog model,HttpServletRequest request,HttpSession session) throws SystemException {
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	  String childFolder="ex_log";
-	  String newFileName=childFolder+"_"+orderId;
+	  String newFileName=childFolder+"_"+model.getOrder();
 	  fileUtil.uploadFile(request,childFolder,newFileName);
 	  return resBody;
 	}

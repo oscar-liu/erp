@@ -1,4 +1,4 @@
-/*package com.whalegoods.controller;
+package com.whalegoods.controller;
 
 import com.whalegoods.config.log.Log;
 import com.whalegoods.config.log.Log.LOG_TYPE;
@@ -7,7 +7,6 @@ import com.whalegoods.entity.SysUser;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.RoleUserService;
 import com.whalegoods.service.SysUserService;
-import com.whalegoods.util.BeanUtil;
 import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
@@ -19,6 +18,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +30,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-*//**
- * 系统用户操作相关接口
+/**
+ * 系统用户相关API接口
  * @author henrysun
  * 2018年4月25日 下午7:59:49
- *//*
+ */
 @Controller
 @RequestMapping(value = "/user")
-public class UserController  extends BaseController<Object>{
+public class UserController {
 	
 	  @Autowired
 	  SysUserService userService;
@@ -45,34 +45,34 @@ public class UserController  extends BaseController<Object>{
 	  @Autowired
 	  RoleUserService roleUserService;
 
-	  *//**
+	  /**
 	   * 跳转到系统用户列表页面
 	   * @author henrysun
 	   * 2018年4月26日 下午3:29:12
-	   *//*
+	   */
 	  @GetMapping(value = "showUser")
 	  @RequiresPermissions("user:show")
 	  public String showUser(Model model) {
 	    return "/system/user/userList";
 	  }
 
-	  *//**
+	  /**
 	   * 查询系统用户列表接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:29:23
-	   *//*
+	   */
 	  @GetMapping(value = "showUserList")
 	  @ResponseBody
 	  @RequiresPermissions("user:show")
 	  public String showUser(Model model, SysUser user, String page, String limit) {
-	    return userService.show(user,Integer.valueOf(page),Integer.valueOf(limit));
+	    return userService.selectByPage(user,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 
-	  *//**
+	  /**
 	   * 跳转到添加系统用户页面
 	   * @author henrysun
 	   * 2018年4月26日 下午3:30:10
-	   *//*
+	   */
 	  @GetMapping(value = "showAddUser")
 	  public String addUser(Model model) {
 	    List<Checkbox> checkboxList=userService.getUserRoleByJson(null);
@@ -80,11 +80,11 @@ public class UserController  extends BaseController<Object>{
 	    return "/system/user/add-user";
 	  }
 
-	  *//**
+	  /**
 	   * 添加系统用户接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:30:25
-	   *//*
+	   */
 	  @Log(desc = "添加用户")
 	  @PostMapping(value = "addUser")
 	  @ResponseBody
@@ -92,7 +92,7 @@ public class UserController  extends BaseController<Object>{
 	    if (user == null) {
 	      return JsonUtil.error("获取数据失败");
 	    }
-	    if (StringUtils.isBlank(user.getUsername())) {
+	    if (StringUtils.isBlank(user.getUserName())) {
 	      return JsonUtil.error("用户名不能为空");
 	    }
 	    if (StringUtils.isBlank(user.getPassword())) {
@@ -101,18 +101,18 @@ public class UserController  extends BaseController<Object>{
 	    if(role==null){
 	      return JsonUtil.error("请选择角色");
 	    }
-	    int result = userService.checkUser(user.getUsername());
+	    int result = userService.checkUser(user.getUserName());
 	    if (result > 0) {
 	      return JsonUtil.error("用户名已存在");
 	    }
 	    JsonUtil j=new JsonUtil();
 	    try {
-	      userService.insertSelective(user);
+	      userService.insert(user);
 	      SysRoleUser sysRoleUser=new SysRoleUser();
 	      sysRoleUser.setUserId(user.getId());
 	      for(String r:role){
 	        sysRoleUser.setRoleId(r);
-	        roleUserService.insertSelective(sysRoleUser);
+	        roleUserService.insert(sysRoleUser);
 	      }
 	      j.setMsg("保存成功");
 	    } catch (BizApiException e) {
@@ -123,17 +123,17 @@ public class UserController  extends BaseController<Object>{
 	    return j;
 	  }
 
-	  *//**
+	  /**
 	   * 跳转到更新系统用户页面
 	   * @author henrysun
 	   * 2018年4月26日 下午3:30:35
-	   *//*
+	   */
 	  @GetMapping(value = "updateUser")
 	  public String updateUser(String id, Model model, boolean detail) {
 	    if (StringUtils.isNotEmpty(id)) {
 	      //用户-角色
 	     List<Checkbox> checkboxList=userService.getUserRoleByJson(id);
-	      SysUser user = userService.selectByPrimaryKey(id);
+	      SysUser user = userService.selectById(id);
 	      model.addAttribute("user", user);
 	      model.addAttribute("boxJson", checkboxList);
 	    }
@@ -142,11 +142,11 @@ public class UserController  extends BaseController<Object>{
 	  }
 
 
-	  *//**
+	  /**
 	   * 更新系统用户接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:30:49
-	   *//*
+	   */
 	  @Log(desc = "更新用户",type = LOG_TYPE.UPDATE)
 	  @PostMapping(value = "updateUser")
 	  @ResponseBody
@@ -158,15 +158,14 @@ public class UserController  extends BaseController<Object>{
 	      return jsonUtil;
 	    }
 	    try {
-	      SysUser oldUser = userService.selectByPrimaryKey(user.getId());
-	      BeanUtil.copyNotNullBean(user, oldUser);
-	      userService.updateByPrimaryKeySelective(oldUser);
-
+	      SysUser oldUser = userService.selectById(user.getId());
+	      BeanUtils.copyProperties(user, oldUser);
+	      userService.updateByObjCdt(oldUser);
 	      SysRoleUser sysRoleUser =new SysRoleUser();
 	      sysRoleUser.setUserId(oldUser.getId());
-	      List<SysRoleUser> keyList=userService.selectByCondition(sysRoleUser);
+	      List<SysRoleUser> keyList=roleUserService.selectListByObjCdt(sysRoleUser);
 	      for(SysRoleUser sysRoleUser1 :keyList){
-	        roleUserService.deleteByPrimaryKey(sysRoleUser1);
+	        roleUserService.deleteById(sysRoleUser1.getId());
 	      }
 	      if(role!=null){
 	        for(String r:role){
@@ -177,16 +176,16 @@ public class UserController  extends BaseController<Object>{
 	      jsonUtil.setFlag(true);
 	      jsonUtil.setMsg("修改成功");
 	    } catch (BizApiException e) {
-	      e.printStackTrace();
+	      
 	    }
 	    return jsonUtil;
 	  }
 
-	  *//**
+	  /**
 	   * 删除系统用户接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:32:39
-	   *//*
+	   */
 	  @Log(desc = "删除用户",type = LOG_TYPE.DEL)
 	  @PostMapping(value = "/del")
 	  @ResponseBody
@@ -195,26 +194,26 @@ public class UserController  extends BaseController<Object>{
 	   return userService.delById(id,flag);
 	  }
 
-	  *//**
+	  /**
 	   * 跳转到修改系统用户密码页面
 	   * @author henrysun
 	   * 2018年4月26日 下午3:31:08
-	   *//*
+	   */
 	  @GetMapping(value = "goRePass")
 	  public String goRePass(String id,Model model){
 	    if(StringUtils.isEmpty(id)){
 	      return "获取账户信息失败";
 	    }
-	    SysUser user=userService.selectByPrimaryKey(id);
+	    SysUser user=userService.selectById(id);
 	    model.addAttribute("user",user);
 	    return "/system/user/re-pass";
 	  }
 
-	  *//**
+	  /**
 	   * 修改系统用户密码页面
 	   * @author henrysun
 	   * 2018年4月26日 下午3:31:48
-	   *//*
+	   */
 	  @Log(desc = "修改密码",type = LOG_TYPE.UPDATE)
 	  @PostMapping(value = "rePass")
 	  @ResponseBody
@@ -227,9 +226,9 @@ public class UserController  extends BaseController<Object>{
 	      j.setMsg("获取数据失败，修改失败");
 	      return j;
 	    }
-	    SysUser user=userService.selectByPrimaryKey(id);
-	    newPwd=Md5Util.getMd5(newPwd,user.getUsername());
-	    pass=Md5Util.getMd5(pass,user.getUsername());
+	    SysUser user=userService.selectById(id);
+	    newPwd=Md5Util.getMd5(newPwd,user.getUserName());
+	    pass=Md5Util.getMd5(pass,user.getUserName());
 	    if(!pass.equals(user.getPassword())){
 	        j.setMsg("密码不正确");
 	        return j;
@@ -250,11 +249,11 @@ public class UserController  extends BaseController<Object>{
 	    return j;
 	  }
 	  
-	  *//**
+	  /**
 	   * 上传头像接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:32:05
-	   *//*
+	   */
 	  @PostMapping(value = "upload")
 	  @ResponseBody
 	  public JsonUtil imgUpload(HttpServletRequest req, @RequestParam("file") MultipartFile file,
@@ -287,11 +286,11 @@ public class UserController  extends BaseController<Object>{
 	    return j;
 	  }
 
-	  *//**
+	  /**
 	   * 验证用户名是否存在
 	   * @author henrysun
 	   * 2018年4月26日 下午3:32:17
-	   *//*
+	   */
 	  @GetMapping(value = "checkUser")
 	  @ResponseBody
 	  public JsonUtil checkUser(String uname, HttpServletRequest req) {
@@ -311,4 +310,3 @@ public class UserController  extends BaseController<Object>{
 	  }
 
 }
-*/

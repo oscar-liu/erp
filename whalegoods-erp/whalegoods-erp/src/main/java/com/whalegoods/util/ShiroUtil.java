@@ -8,8 +8,8 @@ import com.whalegoods.common.CurrentUser;
 
 /**
  * shiro工具类
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月5日 上午10:12:43
  */
 public class ShiroUtil {
 

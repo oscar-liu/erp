@@ -2,9 +2,7 @@ package com.whalegoods.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,12 +15,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
-public class SysMenu implements Serializable {
-	
-    private String id;
+public class SysMenu extends BaseEntity  implements Serializable {
 
-    private String menuName;
+    private String name;
 
     private String pId;
 
@@ -31,14 +26,6 @@ public class SysMenu implements Serializable {
     private Integer orderNum;
 
     private String icon;
-
-    private String createBy;
-
-    private Date createDate;
-
-    private String updateBy;
-
-    private Date updateDate;
 
     private String permission;
 

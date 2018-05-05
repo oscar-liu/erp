@@ -10,7 +10,7 @@
 <body>
 <div  class="layui-col-md13">
     <div class="layui-btn-group">
-      <@shiro.hasPermission name="nemu:add">
+      <@shiro.hasPermission name="menu:add">
         <button class="layui-btn layui-btn-normal" data-type="add">
             <i class="layui-icon">&#xe608;</i>新增
         </button>
@@ -19,7 +19,7 @@
     <button class="layui-btn layui-btn-sm icon-position-no-button" id="refresh" style="float: right;" onclick="javascript:location.replace(location.href);">
       <i class="layui-icon i-icon" style="font-size: 21px">ဂ</i>
     </button>
-  </div>
+</div>
 <div id="menuTree"></div>
 </body>
 <script type="text/javascript" src="${re.contextPath}/plugin/layuitree/layui/layui.js" charset="utf-8"></script>
@@ -64,10 +64,14 @@
   
   //定义列表界面模版对象
   var layout = [
-    { name: '菜单名称', treeNodes: true, headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%'},
+    { name: '菜单名称', treeNodes: true, headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
+        render: function(row) { 
+      	  return '<div class="layui-table-cell laytable-cell-1-username">'+(typeof(row.menuName)=="undefined"?'未显示成功':row.menuName)+'</div>'; //列渲染
+        }
+    },
     { name: 'url',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
       render: function(row) { 
-    	  return '<div class="layui-table-cell laytable-cell-1-username">'+(typeof(row.url)=="undefined"?'':row.url)+'</div>'; //列渲染
+    	  return '<div class="layui-table-cell laytable-cell-1-username">'+(typeof(row.menuUrl)=="undefined"?'':row.menuUrl)+'</div>'; //列渲染
       }
     }, 
     { name: '类型',headerClass: 'value_col', colClass: 'value_col', style: 'width: 10%',
@@ -89,7 +93,7 @@
           render: function(row) {
               return '<div class="layui-table-cell laytable-cell-1-username"><i class="layui-icon">'+(typeof(row.orderNum)=="undefined"?'':row.orderNum)+'</i></div>'; //列渲染
           }
-     },
+    },
     {
       name: '操作',
       headerClass: 'value_col',

@@ -29,7 +29,7 @@ import com.whalegoods.service.PayService;
  */
 @RestController
 @RequestMapping(value = "/v1/pay")
-public class V1OrderController  extends BaseController<Object>{
+public class V1OrderController {
 	
 	private static Logger logger = LoggerFactory.getLogger(V1OrderController.class);
 	

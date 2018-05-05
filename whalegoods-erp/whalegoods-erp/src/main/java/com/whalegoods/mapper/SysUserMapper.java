@@ -14,7 +14,7 @@ public interface SysUserMapper extends BaseMapper<SysUser, String>{
 	 * @author henrysun
 	 * 2018年5月3日 下午5:50:10
 	 */
-    SysUser login(String userName,String password);
+    SysUser login(String userName);
 
     int checkUser(String username);
 

@@ -38,11 +38,11 @@ public class CurrentMenu {
     private String permission;
 
     private Byte menuType;
-    
+ 
     /**菜单排序id 填充菜单展示id*/
     private int num;
 
-    public CurrentMenu(String id, String name, String pId, String url, Integer orderNum, String icon, String permission, Byte menuType, int num) {
+    public CurrentMenu(String id, String name, String pId, String url, Integer orderNum, String icon, String permission, Byte menuType,Integer num) {
         this.id = id;
         this.name = name;
         this.pId = pId;
@@ -51,6 +51,6 @@ public class CurrentMenu {
         this.icon = icon;
         this.permission = permission;
         this.menuType = menuType;
-        this.num = num;
+        this.num=num;
     }
 }

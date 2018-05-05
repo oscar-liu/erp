@@ -18,7 +18,7 @@ public interface SysUserService extends BaseService<SysUser,String> {
 	 * @author henrysun
 	 * 2018年5月3日 下午5:47:26
 	 */
-	SysUser login(String userName,String password);
+	SysUser login(String userName);
 	
 	  /**
 	   * 根据主键删除系统用户

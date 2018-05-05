@@ -24,6 +24,7 @@ import com.whalegoods.entity.SysLog;
 import com.whalegoods.mapper.SysLogMapper;
 import com.whalegoods.util.IpUtil;
 import com.whalegoods.util.ShiroUtil;
+import com.whalegoods.util.StringUtil;
 
 /**
  * 为增删改添加监控
@@ -57,6 +58,7 @@ public class LogAspect {
             String ip= IpUtil.getIp(request);
             log.setIp(ip);
         }
+        log.setId(StringUtil.getUUID());
         log.setCreateTime(new Date());
         log.setType(type.toString());
         log.setText(text);

@@ -18,20 +18,11 @@ import com.whalegoods.common.CurrentUser;
  */
 public class PermissionFilter extends AuthorizationFilter {
 
-/*  @Autowired
-  private SysUserService userService;
-
-  @Autowired
-  private MenuService menuService;*/
-
   @Override
-  protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse,
-      Object o) throws Exception {
-    String[] roles=(String[])o;
-
+  protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse,Object o) throws Exception {
     Subject sub = getSubject(servletRequest, servletResponse);
     Session session= sub.getSession();
-    CurrentUser user= (CurrentUser) session.getAttribute("curentUser");
+    CurrentUser user= (CurrentUser) session.getAttribute("currentUser");
     if(user==null) {
       return false;
     }

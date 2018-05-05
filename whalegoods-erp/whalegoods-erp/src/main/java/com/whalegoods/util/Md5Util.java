@@ -12,10 +12,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.exception.SystemException;
+
 /**
  * MD5工具类
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月4日 下午1:10:36
  */
 public class Md5Util {
 	
@@ -23,8 +24,8 @@ public class Md5Util {
 	
 	/**
 	 * 生成签名
-	 * @author chencong
-	 * 2018年4月10日 下午4:13:55
+	 * @author henrysun
+	 * 2018年5月4日 下午1:09:52
 	 */
 	public static String getSign(JSONObject json,String secretkey){
 		String serverSign=null;
@@ -52,36 +53,34 @@ public class Md5Util {
 		return serverSign;
 	}
 	
-	/**
-	 * 生成MD5值
-	 * @author chencong
-	 * 2018年4月10日 下午4:14:09
-	 * @throws SystemException 
-	 */
-	private static String getMd532(String values) throws SystemException {
-		StringBuffer buf = new StringBuffer("");
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(values.getBytes());
-			byte b[] = md.digest();
-			int i;
-			for (int offset = 0; offset < b.length; offset++) {
-				i = b[offset];
-				if (i < 0)
-					i += 256;
-				if (i < 16)
-					buf.append("0");
-				buf.append(Integer.toHexString(i));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			logger.error("exec MD5EncryptBy32() error:{}",e.getMessage());
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-		}
-		return buf.toString();
-	}
-	
 	  public static String getMd5(String msg,String salt){
 		    return new Md5Hash(msg,salt,4).toString();
 	  }
 	
+		/**
+		 * 生成MD5值
+		 * @author henrysun
+		 * 2018年5月4日 下午1:09:57
+		 */
+	  private static String getMd532(String values) throws SystemException {
+			StringBuffer buf = new StringBuffer("");
+			try {
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				md.update(values.getBytes());
+				byte b[] = md.digest();
+				int i;
+				for (int offset = 0; offset < b.length; offset++) {
+					i = b[offset];
+					if (i < 0)
+						i += 256;
+					if (i < 16)
+						buf.append("0");
+					buf.append(Integer.toHexString(i));
+				}
+			} catch (NoSuchAlgorithmException e) {
+				logger.error("exec MD5EncryptBy32() error:{}",e.getMessage());
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}
+			return buf.toString();
+		}
 }

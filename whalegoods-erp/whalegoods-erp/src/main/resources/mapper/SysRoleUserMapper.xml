@@ -5,57 +5,41 @@
     <id column="user_id" jdbcType="VARCHAR" property="userId" />
     <id column="role_id" jdbcType="VARCHAR" property="roleId" />
   </resultMap>
+  
   <sql id="Base_Column_List">
-    user_id, role_id
+    id,user_id,role_id
   </sql>
 
-  <delete id="deleteByPrimaryKey" parameterType="com.whalegoods.entity.SysRoleUser">
-    delete from sys_role_user
-    where user_id = #{userId,jdbcType=VARCHAR}
-      and role_id = #{roleId,jdbcType=VARCHAR}
+  <delete id="deleteById" parameterType="com.whalegoods.entity.SysRoleUser">
+    DELETE FROM sys_role_user
+    WHERE id = #{id}
   </delete>
 
   <insert id="insert" parameterType="com.whalegoods.entity.SysRoleUser">
-    insert into sys_role_user (user_id, role_id)
-    values (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR})
+    INSERT INTO sys_role_user (
+    id,
+    user_id, 
+    role_id)
+    VALUES (
+    #{id},
+    #{userId},
+    #{roleId})
   </insert>
 
-  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysRoleUser">
-    insert into sys_role_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="roleId != null">
-        role_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        #{userId,jdbcType=VARCHAR},
-      </if>
-      <if test="roleId != null">
-        #{roleId,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-
-  <select id="selectByCondition" parameterType="com.whalegoods.entity.SysRoleUser" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from sys_role_user
+  <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.SysRoleUser" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM sys_role_user
     <where>
-      <if test="userId!=null and userId!=''">and user_id =#{userId,jdbcType=VARCHAR}</if>
-      <if test="roleId!=null and roleId!=''">and role_id =#{roleId,jdbcType=VARCHAR}</if>
+      <if test="userId!=null and userId!=''">and user_id =#{userId}</if>
+      <if test="roleId!=null and roleId!=''">and role_id =#{roleId}</if>
     </where>
   </select>
-  <select id="selectCountByCondition" parameterType="com.whalegoods.entity.SysRoleUser" resultType="java.lang.Integer">
-    select
-    count(*)
-    from sys_role_user
+  
+  <select id="selectCountByObjCdt" parameterType="com.whalegoods.entity.SysRoleUser" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM sys_role_user
     <where>
-      <if test="userId!=null and userId!=''">and user_id =#{userId,jdbcType=VARCHAR}</if>
-      <if test="roleId!=null and roleId!=''">and role_id =#{roleId,jdbcType=VARCHAR}</if>
+      <if test="userId!=null and userId!=''">and user_id =#{userId}</if>
+      <if test="roleId!=null and roleId!=''">and role_id =#{roleId}</if>
     </where>
   </select>
 </mapper>

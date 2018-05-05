@@ -24,7 +24,7 @@ import com.whalegoods.exception.SystemException;
 
 /**
  * XML处理工具类
- * @author chencong
+ * @author henrysun
  * 2018年4月10日 上午10:03:11
  */
 public class XmlUtil{

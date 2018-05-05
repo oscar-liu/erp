@@ -25,7 +25,7 @@ import com.whalegoods.service.GoodsAdsTopService;
  */
 @RestController
 @RequestMapping(value = "/v1/ads")
-public class V1AdsController  extends BaseController<Object>{
+public class V1AdsController {
 
   @Autowired
   GoodsAdsTopService goodsAdsTopService;

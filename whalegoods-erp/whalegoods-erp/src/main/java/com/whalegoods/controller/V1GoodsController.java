@@ -33,7 +33,7 @@ import com.whalegoods.service.DeviceRoadService;
  */
 @RestController
 @RequestMapping(value = "/v1/goods")
-public class V1GoodsController  extends BaseController<Object>{
+public class V1GoodsController {
 
   @Autowired
   DeviceRoadService deviceRoadService;
@@ -63,11 +63,11 @@ public class V1GoodsController  extends BaseController<Object>{
    */
   @GetMapping(value="/getInfoByGoodsCode")
   ResBody getInfoByCode(@Valid ReqGetInfoByGoodsCode model) {
-	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",model.getDevice_code_wg());
-	  condition.put("deviceIdSupp",model.getDevice_code_sup());
-	  condition.put("goodsCode",model.getGoods_code());
-	  ResDeviceGoodsInfo info=deviceRoadService.selectByCondition(condition);
+	  Map<String,Object> mapCdt=new HashMap<>();
+	  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
+	  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
+	  mapCdt.put("goodsCode",model.getGoods_code());
+	  ResDeviceGoodsInfo info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
 	  return resBody;
 	}
@@ -79,13 +79,13 @@ public class V1GoodsController  extends BaseController<Object>{
    */
   @GetMapping(value="/getInfoByPathCode")
   ResBody getInfoByPathCode(@Valid ReqGetInfoByPathCode model) {
-	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",model.getDevice_code_wg());
-	  condition.put("deviceIdSupp",model.getDevice_code_sup());
-	  condition.put("pathCode",model.getPath_code());
-	  condition.put("floor",model.getFloor());
-	  condition.put("ctn",model.getCtn());
-	  ResDeviceGoodsInfo info=deviceRoadService.selectByCondition(condition);
+	  Map<String,Object> mapCdt=new HashMap<>();
+	  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
+	  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
+	  mapCdt.put("pathCode",model.getPath_code());
+	  mapCdt.put("floor",model.getFloor());
+	  mapCdt.put("ctn",model.getCtn());
+	  ResDeviceGoodsInfo info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
 	  return resBody;
 	}

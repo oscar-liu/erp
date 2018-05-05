@@ -6,11 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 系统日志表实体类
+ * @author henrysun
+ * 2018年5月4日 下午4:11:34
+ */
 @Getter
 @Setter
 @ToString
 public class SysLog implements Serializable {
-    private Integer id;
+	
+	private static final long serialVersionUID = 1L;
+	
+    private String id;
 
     private String userName;
 
@@ -23,6 +31,4 @@ public class SysLog implements Serializable {
     private String param;
 
     private Date createTime;
-
-    private static final long serialVersionUID = 1L;
 }

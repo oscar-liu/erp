@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.SysUserMapper">
-
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysUser">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="userName" />
@@ -9,9 +8,9 @@
     <result column="head_pic_url" jdbcType="VARCHAR" property="headPicUrl" />
     <result column="account_status" jdbcType="VARCHAR" property="accountStatus" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
-    <result column="create_date" jdbcType="DATETIME" property="createDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="update_date" jdbcType="DATETIME" property="updateDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   
@@ -28,341 +27,87 @@
     remark
   </sql>
   
-  <select id="selectByMapCdt" resultMap="BaseResultMap">
+  <!-- 登录 -->
+  <select id="login" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List"/>
     FROM sys_user a
     <where>
-		<if test="userName !=null and userName !=''">
-			AND a.username=#{userName}
-		</if>
-		<if test="password !=null and password !=''">
-			AND a.password=#{password}
-		</if>
-		<if test="accountStatus !=null and accountStatus !=''">
-			AND a.account_status=#{accountStatus}
-		</if>
-	</where>
-  </select>
-  
-  <!-- 登录 -->
-  <select id="login" resultMap="BaseResultMap">
-    SELECT  COUNT(a.id)
-    FROM sys_user a
-    <where>
      a.account_status=1
-		<if test="userName !=null and userName !=''">
-			AND a.username=#{userName}
-		</if>
-		<if test="password !=null and password !=''">
-			AND a.password=#{password}
+		<if test="_parameter !=null and _parameter !=''">
+			AND a.username=#{_parameter}
 		</if>
 	</where>
   </select>
 
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sys_user
-    where id = #{id,jdbcType=VARCHAR}
+    SELECT  <include refid="Base_Column_List" />  FROM sys_user WHERE id = #{_parameter}
   </select>
 
   <delete id="deleteById" parameterType="java.lang.String">
-    delete from sys_user
-    where id = #{id,jdbcType=VARCHAR}
+    DELETE FROM sys_user  WHERE id = #{_parameter}
   </delete>
 
   <insert id="insert" parameterType="com.whalegoods.entity.SysUser">
-    insert into sys_user (id, username, password, 
-      age, email, photo, 
-      real_name, create_by, update_by, 
-      create_date, update_date, del_flag
-      )
-    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{age,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, 
-      #{realName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=TINYINT}
-      )
-  </insert>
-  
-  <sql id="userColumn">
-    <trim suffix="" suffixOverrides=",">
-      <if test="id!=null">
-        id,
-      </if>
-      <if test="username!=null">
-        username,
-      </if>
-      <if test="password!=null">
-        password,
-      </if>
-      <if test="age!=null">
-        age,
-      </if>
-      <if test="email!=null">
-        email,
-      </if>
-      <if test="photo != null">
-        photo,
-      </if>
-      <if test="realName != null">
-        real_name,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="createDate != null">
-        create_date,
-      </if>
-      <if test="updateDate != null">
-        update_date,
-      </if>
-      <if test="delFlag != null">
-        del_flag,
-      </if>
-    </trim>
-  </sql>
-  
-  <sql id="userValue">
-    <trim suffix="" suffixOverrides=",">
-      <if test="id!=null">
-        #{id},
-      </if>
-      <if test="username!=null">
-        #{username},
-      </if>
-      <if test="password!=null">
-        #{password},
-      </if>
-      <if test="age!=null">
-        #{age},
-      </if>
-      <if test="email!=null">
-        #{email},
-      </if>
-      <if test="photo != null">
-        #{photo,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null">
-        #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateDate != null">
-        #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null">
-        #{delFlag,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </sql>
-  
-  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysUser">
-    <selectKey resultType="String" keyProperty="id" order="BEFORE">
-      select replace(uuid(),"-","") from dual
-    </selectKey>
-    insert into sys_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="username != null">
-        username,
-      </if>
-      <if test="password != null">
-        password,
-      </if>
-      <if test="age != null">
-        age,
-      </if>
-      <if test="email != null">
-        email,
-      </if>
-      <if test="photo != null">
-        photo,
-      </if>
-      <if test="realName != null">
-        real_name,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="createDate != null">
-        create_date,
-      </if>
-      <if test="updateDate != null">
-        update_date,
-      </if>
-      <if test="delFlag != null">
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="username != null">
-        #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null">
-        #{age,jdbcType=INTEGER},
-      </if>
-      <if test="email != null">
-        #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="photo != null">
-        #{photo,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null">
-        #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateDate != null">
-        #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null">
-        #{delFlag,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateByPrimaryKeySelective" parameterType="com.whalegoods.entity.SysUser">
-    update sys_user
-    <set>
-      <if test="username != null">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null">
-        age = #{age,jdbcType=INTEGER},
-      </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="photo != null">
-        photo = #{photo,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null">
-        real_name = #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateDate != null">
-        update_date = #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="delFlag != null">
-        del_flag = #{delFlag,jdbcType=TINYINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.whalegoods.entity.SysUser">
-    update sys_user
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      age = #{age,jdbcType=INTEGER},
-      email = #{email,jdbcType=VARCHAR},
-      photo = #{photo,jdbcType=VARCHAR},
-      real_name = #{realName,jdbcType=VARCHAR},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      update_by = #{updateBy,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=TINYINT}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-
-  <sql id="condition">
-    del_flag=0
-    <if test="username != null">
-      and = #{username,jdbcType=VARCHAR}
-    </if>
-    <if test="age != null">
-      age = #{age,jdbcType=INTEGER}
-    </if>
-    <if test="email != null">
-      email = #{email,jdbcType=VARCHAR}
-    </if>
-    <if test="realName != null">
-      real_name = #{realName,jdbcType=VARCHAR}
-    </if>
-    <if test="createBy != null">
-      create_by = #{createBy,jdbcType=VARCHAR}
-    </if>
-    <if test="updateBy != null">
-      update_by = #{updateBy,jdbcType=VARCHAR}
-    </if>
-    <if test="createDate != null">
-      create_date = #{createDate,jdbcType=TIMESTAMP}
-    </if>
-    <if test="updateDate != null">
-      update_date = #{updateDate,jdbcType=TIMESTAMP}
-    </if>
-  </sql>
-  
-  <select id="selectListByPage" parameterType="com.whalegoods.entity.SysUser" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/>
-    from sys_user
-    <where>
-      del_flag=0
-     <if test="username!=null and username!=''"> and username like "%" #{username} "%"</if>
-     <if test="email!=null and email!=''"> and email like "%" #{email} "%"</if>
-    </where>
-  </select>
-  <select id="count" resultType="java.lang.Integer">
-    select count(*) from sys_user
-  </select>
-  <insert id="add" parameterType="com.whalegoods.entity.SysUser" >
-    <selectKey resultType="String" keyProperty="id" order="BEFORE">
-      select replace(uuid(),"-","") from dual
-    </selectKey>
-    insert into sys_user(
-    <include refid="userColumn"/>
-    ) values (
-    <include refid="userValue"/>
+    INSERT INTO sys_user (
+    id,
+    username, 
+    password, 
+    head_pic_url, 
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{userName}, 
+    #{password}, 
+    #{headPicUrl}, 
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
     )
   </insert>
 
-  <delete id="delById" parameterType="java.lang.String">
-    delete from sys_user where id=#{id}
-  </delete>
+  <update id="updateByObjCdt" parameterType="com.whalegoods.entity.SysUser">
+    UPDATE sys_user
+    <set>
+      <if test="username != null and username!='' ">
+        username = #{username},
+      </if>
+      <if test="password != null and password !='' ">
+        password = #{password},
+      </if>
+      <if test="headPicUrl != null and headPicUrl != '' ">
+        head_pic_url = #{headPicUrl},
+      </if>
+      <if test="accountStatus != null and accountStatus != '' ">
+        account_status = #{accountStatus},
+      </if>
+      <if test="updateBy != null and updateBy != '' ">
+        update_by = #{updateBy},
+      </if>
+      update_date = now()
+    </set>
+    WHERE id = #{id}
+  </update>
+  
+  <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.SysUser" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM sys_user
+    <where>
+     <if test="username!=null and username!=''"> AND username LIKE "%" #{username} "%"</if>
+    </where>
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer">
+    SELECT COUNT(a.id) FROM sys_user a
+  </select>
 
   <select id="checkUser" parameterType="java.lang.String" resultType="java.lang.Integer">
-    select count(1) from sys_user where username=#{username}
+    SELECT COUNT(1) FROM sys_user WHERE username=#{_parameter}
   </select>
+  
   <update id="rePass" parameterType="com.whalegoods.entity.SysUser">
-    update sys_user set password=#{password,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR}
+    UPDATE sys_user set password=#{password} WHERE id = #{_parameter}
   </update>
 </mapper>

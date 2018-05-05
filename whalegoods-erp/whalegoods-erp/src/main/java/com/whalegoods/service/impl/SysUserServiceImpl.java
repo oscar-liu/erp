@@ -43,8 +43,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	  }
 	  
 	  @Override
-	  public SysUser login(String userName, String password) {
-		  return sysUserMapper.login(userName, password);
+	  public SysUser login(String userName) {
+		  return sysUserMapper.login(userName);
 	  }
 	  
 	  @Override

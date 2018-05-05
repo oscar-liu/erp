@@ -8,10 +8,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SysRoleMenu implements Serializable {
+public class SysRoleMenu extends BaseEntity implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
     private String roleId;
 
     private String menuId;
 
-    private static final long serialVersionUID = 1L;
 }

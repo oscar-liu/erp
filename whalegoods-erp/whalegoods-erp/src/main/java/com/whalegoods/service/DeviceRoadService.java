@@ -13,8 +13,8 @@ import java.util.Map;
  */
 public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
-  List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
+  List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt);
   
-  ResDeviceGoodsInfo selectByCondition(Map<String,Object> condition);
+  ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
 
 }

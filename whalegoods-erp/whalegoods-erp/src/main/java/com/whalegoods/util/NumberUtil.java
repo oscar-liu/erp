@@ -1,12 +1,16 @@
 package com.whalegoods.util;
 
-
+/**
+ * 数值相关工具类
+ * @author henrysun
+ * 2018年5月5日 上午10:12:12
+ */
 public class NumberUtil {
 
 	/**
 	 * 元转分
-	 * @author chencong
-	 * 2018年4月10日 下午4:08:04
+	 * @author henrysun
+	 * 2018年5月5日 上午10:12:24
 	 */
     public static String changeY2F(Double amount){    
         String currency =  String.valueOf(amount).replaceAll("\\$|\\￥|\\,", "");  //处理包含, ￥ 或者$的金额    

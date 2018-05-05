@@ -3,32 +3,32 @@
 <mapper namespace="com.whalegoods.mapper.SysMenuMapper">
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysMenu">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_name" jdbcType="VARCHAR" property="name" />
     <result column="p_id" jdbcType="VARCHAR" property="pId" />
-    <result column="menuUrl" jdbcType="VARCHAR" property="menuUrl" />
+    <result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
     <result column="order_num" jdbcType="INTEGER" property="orderNum" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="permission" jdbcType="VARCHAR" property="permission" />
+    <result column="menu_type" jdbcType="TINYINT" property="menuType" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-    <result column="permission" jdbcType="VARCHAR" property="permission" />
-    <result column="menu_type" jdbcType="TINYINT" property="menuType" />
   </resultMap>
   
-  <resultMap id="menuAndRoleMap" type="com.whalegoods.entity.SysMenu">
+  <resultMap id="UserMenuResultMap" type="com.whalegoods.entity.SysMenu">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_name" jdbcType="VARCHAR" property="name" />
     <result column="p_id" jdbcType="VARCHAR" property="pId" />
-    <result column="menuUrl" jdbcType="VARCHAR" property="menuUrl" />
+    <result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
     <result column="order_num" jdbcType="INTEGER" property="orderNum" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="menu_type" jdbcType="TINYINT" property="menuType" />
     <result column="permission" jdbcType="VARCHAR" property="permission" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
-    <result column="create_date" jdbcType="DATETIME" property="createDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="update_date" jdbcType="DATETIME" property="updateDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <collection property="roleList" ofType="com.whalegoods.entity.SysRole">
       <id column="rid" jdbcType="VARCHAR" property="id" />
       <result column="role_name" jdbcType="VARCHAR" property="roleName" />
@@ -37,200 +37,115 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    id, name, p_id, url, order_num, icon, create_by, create_date, update_by, update_date, 
-    permission, menu_type
+    id,menu_name as name,p_id,menu_url,order_num,icon,create_by,create_date,update_by,update_date,permission,menu_type 
   </sql>
   
   <!-- 根据系统用户ID获取分配的菜单列表 -->
-  <select id="getUserMenu" parameterType="java.lang.String" resultMap="menuAndRoleMap">
-    select m.*,r.id as rid,r.role_name as role_name,r.remark as remark from sys_menu m left join sys_role_menu rm
-    on m.id=rm.menu_id left join sys_role r
-    on rm.role_id=r.id left join sys_role_user ru
-    on r.id=ru.role_id where ru.user_id =#{id,jdbcType=VARCHAR} order by m.order_num asc
+  <select id="getUserMenu" parameterType="java.lang.String" resultMap="UserMenuResultMap">
+    SELECT 
+  m.*,
+  r.id AS rid,
+  r.role_name AS role_name,
+  r.remark AS remark 
+  FROM sys_menu m 
+  INNER JOIN sys_role_menu rm 
+    ON m.id = rm.menu_id 
+  INNER JOIN sys_role r 
+    ON rm.role_id = r.id 
+  INNER JOIN sys_role_user ru 
+    ON r.id = ru.role_id 
+  INNER JOIN sys_user u 
+    ON u.id = ru.user_id
+WHERE ru.user_id = #{id} 
+ORDER BY m.order_num ASC  
   </select>
   
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sys_menu
-    where id = #{id,jdbcType=VARCHAR}
+  <!-- 根据ID查找一条记录 -->
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM sys_menu  WHERE id = #{_parameter}
   </select>
   
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from sys_menu
-    where id = #{id,jdbcType=VARCHAR}
+  <!-- 根据ID删除一条记录 -->
+  <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM sys_menu WHERE id = #{_parameter}
   </delete>
   
+  <!-- 插入一条记录 -->
   <insert id="insert" parameterType="com.whalegoods.entity.SysMenu">
-    <selectKey  order="BEFORE" keyProperty="id" resultType="java.lang.String">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    insert into sys_menu (id, name, p_id, 
-      url, order_num, icon, 
-      create_by, create_date, update_by, 
-      update_date, permission, menu_type
-      )
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{pId,jdbcType=VARCHAR}, 
-      #{url,jdbcType=VARCHAR}, #{orderNum,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}, 
-      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
-      #{updateDate,jdbcType=TIMESTAMP}, #{permission,jdbcType=VARCHAR}, #{menuType,jdbcType=TINYINT}
+    INSERT INTO sys_menu (
+    id, 
+    menu_name, 
+    p_id, 
+    menu_url, 
+    order_num, 
+    menu_type,
+    icon, 
+    permission,
+    create_by, 
+    create_date,
+    update_by, 
+    update_date )
+    VALUES (
+    #{id}, 
+    #{menuName}, 
+    #{pId}, 
+    #{menuUrl},
+    #{orderNum},
+    #{menuType},
+    #{icon}, 
+    #{permission}
+    #{createBy}, 
+    now(),
+    #{updateBy}, 
+    now()
       )
   </insert>
   
-  <insert id="insertSelective" parameterType="com.whalegoods.entity.SysMenu">
-    <selectKey  order="BEFORE" keyProperty="id" resultType="java.lang.String">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    insert into sys_menu
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="name != null">
-        name,
-      </if>
-      <if test="pId != null">
-        p_id,
-      </if>
-      <if test="url != null">
-        url,
-      </if>
-      <if test="orderNum != null">
-        order_num,
-      </if>
-      <if test="icon != null">
-        icon,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="createDate != null">
-        create_date,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="updateDate != null">
-        update_date,
-      </if>
-      <if test="permission != null">
-        permission,
-      </if>
-      <if test="menuType != null">
-        menu_type,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="pId != null">
-        #{pId,jdbcType=VARCHAR},
-      </if>
-      <if test="url != null">
-        #{url,jdbcType=VARCHAR},
-      </if>
-      <if test="orderNum != null">
-        #{orderNum,jdbcType=INTEGER},
-      </if>
-      <if test="icon != null">
-        #{icon,jdbcType=VARCHAR},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="updateDate != null">
-        #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="permission != null">
-        #{permission,jdbcType=VARCHAR},
-      </if>
-      <if test="menuType != null">
-        #{menuType,jdbcType=TINYINT},
-      </if>
-    </trim>
-  </insert>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="com.whalegoods.entity.SysMenu">
-    update sys_menu
+  <update id="updateByObjCdt" parameterType="com.whalegoods.entity.SysMenu">
+    UPDATE sys_menu
     <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="menuName != null and menuName !='' ">
+        menuName = #{menu_name},
       </if>
-      <if test="pId != null">
-        p_id = #{pId,jdbcType=VARCHAR},
+      <if test="pId != null and pId !='' ">
+        p_id = #{pId},
       </if>
-      <if test="url != null">
-        url = #{url,jdbcType=VARCHAR},
+      <if test="menuUrl != null and menuUrl !='' ">
+        menu_url = #{menuUrl},
       </if>
-      <if test="orderNum != null">
-        order_num = #{orderNum,jdbcType=INTEGER},
+      <if test="orderNum != null and orderNum !='' ">
+        order_num = #{orderNum},
       </if>
-      <if test="icon != null">
-        icon = #{icon,jdbcType=VARCHAR},
+      <if test="permission != null and permission !='' ">
+        permission = #{permission},
       </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=VARCHAR},
+      <if test="menuType != null and menuType !='' ">
+        menu_type = #{menuType},
       </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
+      <if test="icon != null and icon !='' ">
+        icon = #{icon},
       </if>
-      <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=VARCHAR},
+      <if test="updateBy != null and updateBy !='' ">
+        update_by = #{updateBy},
       </if>
-      <if test="updateDate != null">
-        update_date = #{updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="permission != null">
-        permission = #{permission,jdbcType=VARCHAR},
-      </if>
-      <if test="menuType != null">
-        menu_type = #{menuType,jdbcType=TINYINT},
-      </if>
+      update_date = now(),
     </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  
-  <update id="updateByPrimaryKey" parameterType="com.whalegoods.entity.SysMenu">
-    update sys_menu
-    set name = #{name,jdbcType=VARCHAR},
-      p_id = #{pId,jdbcType=VARCHAR},
-      url = #{url,jdbcType=VARCHAR},
-      order_num = #{orderNum,jdbcType=INTEGER},
-      icon = #{icon,jdbcType=VARCHAR},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=VARCHAR},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
-      permission = #{permission,jdbcType=VARCHAR},
-      menu_type = #{menuType,jdbcType=TINYINT}
-    where id = #{id,jdbcType=VARCHAR}
+    WHERE id = #{id}
   </update>
 
   <select id="getMenuNotSuper" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from sys_menu where p_id is null and  menu_type=0 order by order_num asc
+    SELECT <include refid="Base_Column_List"/>
+    FROM sys_menu WHERE p_id is null and  menu_type=0 ORDER BY order_num ASC
   </select>
+  
   <select id="getMenuChildren" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from sys_menu where p_id=#{id,jdbcType=VARCHAR} and  menu_type=0 order by order_num asc
+    SELECT <include refid="Base_Column_List"/>
+    FROM sys_menu WHERE p_id=#{_parameter} and  menu_type=0 ORDER BY order_num ASC
   </select>
 
   <select id="getMenuChildrenAll" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List"/>
-    from sys_menu where p_id=#{id,jdbcType=VARCHAR} order by order_num asc
+    SELECT <include refid="Base_Column_List"/>
+    FROM sys_menu WHERE p_id=#{_parameter} ORDER BY order_num ASC
   </select>
   
 </mapper>

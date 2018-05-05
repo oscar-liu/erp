@@ -9,8 +9,8 @@ import java.util.Map;
 
 public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
 
-    List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> condition);
+    List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt);
     
-    ResDeviceGoodsInfo selectByCondition(Map<String,Object> condition);
+    ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
     
 }

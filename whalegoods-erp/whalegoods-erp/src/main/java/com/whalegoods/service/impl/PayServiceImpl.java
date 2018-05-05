@@ -79,7 +79,7 @@ public class PayServiceImpl implements PayService{
 		mapCdt.put("floor",model.getFloor());
 		mapCdt.put("pathCode",model.getPathCode());
 		//根据设备编号和商品编号查询商品信息
-		ResDeviceGoodsInfo deviceGoodsInfo=deviceRoadService.selectByCondition(mapCdt);
+		ResDeviceGoodsInfo deviceGoodsInfo=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
 		if(deviceGoodsInfo==null){
 			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
 		}
@@ -347,7 +347,7 @@ public class PayServiceImpl implements PayService{
 		request.setBizContent(sonJson.toJSONString());
 		AlipayTradeQueryResponse  response;
 		try {
-			response = alipayClient.execute(request);
+			response = alipayClient.execute(request); 
 		} catch (AlipayApiException e) { 
 			logger.error("发送支付宝订单查询API请求失败："+e.getMessage());
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);

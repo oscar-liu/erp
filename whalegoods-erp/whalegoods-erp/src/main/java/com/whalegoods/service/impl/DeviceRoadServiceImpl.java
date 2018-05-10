@@ -43,4 +43,5 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		return deviceRoadMapper.selectByGoodsOrPathCode(condition);
 	}
 
+
 }

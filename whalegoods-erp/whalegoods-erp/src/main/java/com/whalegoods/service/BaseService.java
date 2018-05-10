@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.whalegoods.util.ReType;
+
 /**
  * 通用业务逻辑层接口
  * @author henrysun
@@ -51,7 +53,7 @@ public interface BaseService <T,E extends Serializable>{
      * @author henrysun
      * 2018年4月28日 上午3:26:55
      */
-	String selectByPage(T t, int page, int limit);
+	ReType selectByPage(T t, int page, int limit);
     
     /**
      * 根据对象条件更新

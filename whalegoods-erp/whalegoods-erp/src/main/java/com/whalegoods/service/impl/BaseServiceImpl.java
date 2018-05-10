@@ -5,12 +5,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.whalegoods.entity.response.ResPageList;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.service.BaseService;
+import com.whalegoods.util.ReType;
 
 /**
  * 通用service层{@link=BaseService}实现类
@@ -47,11 +46,11 @@ public abstract class BaseServiceImpl <T,E extends Serializable> implements Base
 	  }
 	  
 	  @Override
-	  public String  selectByPage(T t,int page,int limit){
-	    List<T> tList=this.selectListByObjCdt(t);
-	    Page<T> tPage= PageHelper.startPage(page,limit);
-	    ResPageList reType=new ResPageList(tPage.getTotal(),tList);
-	    return JSON.toJSONString(reType);
+	  public ReType  selectByPage(T t,int page,int limit){
+		Page<T> tPage= PageHelper.startPage(page,limit);
+	    List<T> tList=this.selectListByObjCdt(t);	    
+	    ReType reType=new ReType(tPage.getTotal(),tList);
+	    return reType;
 	  }
 	  
 	  @Override

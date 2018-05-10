@@ -19,13 +19,13 @@
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" />
     FROM sys_log
-    WHERE id = #{id}
+    WHERE id = #{_parameter}
   </select>
   
   <!-- 根据ID删除一条记录 -->
   <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM sys_log
-    WHERE id = #{id}
+    WHERE id = #{_parameter}
   </delete>
   
   <!-- 插入一条记录 -->

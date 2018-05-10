@@ -22,19 +22,17 @@ public class Device extends BaseEntity implements Serializable {
     
     private String deviceIdSupp;
     
+    private String shortName;
+    
     private String location;
     
     private Byte deviceStatus;
-    
-    private Byte runStatus;
     
     private Integer upTime;
     
     private String signCode;
     
     private String deviceSuppId;
-    
-    private String appVersionId;
     
     private Byte lockStatus;
 

@@ -1,20 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.DeviceMapper">
-<!-- 根据对象条件更新 -->
+
+ <resultMap id="BaseResultMap" type="com.whalegoods.entity.Device">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="device_id_jp" jdbcType="VARCHAR" property="deviceIdJp" /> 	
+    <result column="device_id_supp" jdbcType="VARCHAR" property="deviceIdSupp" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="device_status" jdbcType="VARCHAR" property="deviceStatus" />
+    <result column="sign_code" jdbcType="VARCHAR" property="signCode" />
+    <result column="lock_status" jdbcType="VARCHAR" property="lockStatus" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+    a.device_id_jp,
+    a.device_id_supp,
+    a.short_name,
+    a.location, 
+    a.device_status,
+    a.sign_code,
+    a.lock_status
+  </sql>
+  
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />  FROM device WHERE id = #{_parameter}
+  </select>
+  
+   <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM device  WHERE id = #{_parameter}
+  </delete>
+  
+  <select id="selectCountByObjCdt" parameterType="com.whalegoods.entity.Device" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM device 
+    <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> AND device_id_jp=#{deviceIdJp}</if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND device_id_supp=#{deviceIdSupp}</if>
+    </where>
+  </select>
+
+  <insert id="insert" parameterType="com.whalegoods.entity.Device">
+    INSERT INTO sys_user (
+    id,
+    device_id_jp, 
+    device_id_supp, 
+    short_name, 
+    location, 
+    device_status, 
+    up_time, 
+    sign_code,
+    device_supp_id,
+    lock_status,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{deviceIdJp}, 
+    #{deviceIdSupp}, 
+    #{shortName}, 
+    #{location},
+    #{deviceStatus},
+    #{upTime},
+    #{signCode},
+    #{deviceSuppId},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+  
+  <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.Device" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM device
+   <where>
+     <if test="shortName !=null and shortName !=''"> AND short_name LIKE "%" #{shortName} "%"</if>
+    </where>
+  </select>
+
+<!-- 根据对象条件更新 -->  
 	<update id="updateByObjCdt" parameterType="com.whalegoods.entity.Device">
 		UPDATE device a 
 	   <set>
+      <if test="shortName != null and shortName != ''">a.short_name=#{shortName},</if>
+      <if test="location != null and location != ''">a.location=#{shortName},</if>
       <if test="deviceStatus != null and deviceStatus != ''">a.device_status=#{deviceStatus},</if>
+      <if test="upTime != null and upTime != ''">a.up_time=#{upTime},</if>
+      <if test="signCode != null and signCode != ''">a.sign_code=#{signCode},</if>
+      <if test="deviceSuppId != null and deviceSuppId != ''">a.device_supp_id=#{deviceSuppId},</if>
+      <if test="lockStatus != null and lockStatus != ''">a.lock_status=#{lockStatus},</if>
+      <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
+      update_date = now(),
       </set>
         <where>
-	  <if test="deviceIdJp !=null and deviceIdJp !=''">
-		    AND a.device_id_jp = #{deviceIdJp}
-	  </if>
-	  <if test="deviceIdSupp !=null and deviceIdSupp !=''">
-		    AND a.device_id_supp = #{deviceIdSupp}
-	  </if>
-		</where>
+        <if test="id !=null and id !=''"> AND id =#{id}</if>
+       <if test="deviceIdJp !=null and deviceIdJp !=''"> AND device_id_jp =#{deviceIdJp}</if>
+       <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND device_id_supp =#{deviceIdSupp}</if>
+    </where>
 	</update>
 	
   <select id="getDeviceStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -23,10 +106,4 @@
   WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
   </select>
   
-    <select id="getApk" parameterType="java.util.Map" resultType="java.util.Map">
-   SELECT b.apk_version,b.apk_url
-    FROM device a INNER JOIN  apk_version b ON a.apk_version_id=b.id
-  WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
-  </select>
-
 </mapper>

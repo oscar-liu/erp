@@ -3,6 +3,8 @@ package com.whalegoods.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,6 +45,7 @@ public class GoodsSku extends BaseEntity implements Serializable {
     
     private String className;
     
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date productDate;
     
     private Integer shelfLife;

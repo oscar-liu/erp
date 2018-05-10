@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
@@ -17,7 +18,6 @@ import com.whalegoods.mapper.SysUserMapper;
 import com.whalegoods.service.RoleService;
 import com.whalegoods.service.RoleUserService;
 import com.whalegoods.service.SysUserService;
-import com.whalegoods.util.Checkbox;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
 
@@ -44,7 +44,8 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	  
 	  @Override
 	  public SysUser login(String userName) {
-		  return sysUserMapper.login(userName);
+		  SysUser sysUser=sysUserMapper.login(userName);
+		  return sysUser;
 	  }
 	  
 	  @Override
@@ -55,7 +56,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	  }
 
 	  @Override
-	  public JsonUtil delById(String id,boolean flag) {
+	  public JsonUtil delById(String id) {
 	    if (StringUtils.isEmpty(id)) {
 	      return JsonUtil.error("获取数据失败");
 	    }
@@ -72,14 +73,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	        return JsonUtil.error("账户已经绑定角色，无法删除");
 	      }
 	      j=new JsonUtil();
-	      if (flag) {
-	        //逻辑
-	        sysUser.setAccountStatus(Byte.parseByte("1"));
-	        updateByObjCdt(sysUser);
-	      } else {
-	        //物理
-	        sysUserMapper.deleteById(id);
-	      }
+	      sysUserMapper.deleteById(id);
 	      j.setMsg("删除成功");
 	    } catch (BizServiceException e) {
 	      j.setMsg("删除失败");
@@ -100,7 +94,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	    SysRoleUser sysRoleUser =new SysRoleUser();
 	    sysRoleUser.setUserId(id);
 	    List<SysRoleUser>  kList= roleUserService.selectListByObjCdt(sysRoleUser);
-	    System.out.println(kList.size());
 	    List<Checkbox> checkboxList=new ArrayList<>();
 	    Checkbox checkbox=null;
 	    for(SysRole sysRole:roleList){

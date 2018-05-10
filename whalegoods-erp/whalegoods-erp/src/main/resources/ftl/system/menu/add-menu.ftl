@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
-  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
 </head>
 
@@ -49,8 +49,7 @@
         <span class="x-red">*</span>名称
       </label>
       <div class="layui-input-inline">
-        <input type="text"  id="name" name="name"  lay-verify="name"
-               autocomplete="off" class="layui-input">
+        <input type="text"  id="name" name="name"  lay-verify="name" autocomplete="off" class="layui-input">
       </div>
       <div id="ms" class="layui-form-mid layui-word-aux">
         <span class="x-red">*</span><span id="ums">必须填写</span>
@@ -195,14 +194,14 @@
         dataType: "json",
         traditional: true,
         success:function(data){
-          console.info(data.msg);
           var index = parent.layer.getFrameIndex(window.name);
-          window.top.layer.msg(data.msg,{icon:6,offset: 'rb',area:['120px','80px'],anim:2});
           parent.layer.close(index);
+          window.parent.layui.table.reload('menuList'); 
+          window.top.layer.msg(data.msg,{icon:6});           
         },
         error:function(){
           var index = parent.layer.getFrameIndex(window.name);
-          window.top.layer.msg('请求失败',{icon:5,offset: 'rb',area:['120px','80px'],anim:2});
+          window.top.layer.msg('请求失败',{icon:5});
           parent.layer.close(index);
         }
       });

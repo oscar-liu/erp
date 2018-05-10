@@ -14,6 +14,8 @@ public class ConstSysParamName {
 	
 	public static String ORDER_ID_PREFIX="wg";
 	
+	public static String DEVICE_PREFIX="wgd";
+	
 	public static String SUCCESS_WX="SUCCESS";
 	
 	public static String SUCCESS_PREPAY_ALIPAY="10000";

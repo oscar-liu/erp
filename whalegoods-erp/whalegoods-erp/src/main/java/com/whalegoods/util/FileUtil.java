@@ -38,13 +38,17 @@ public class FileUtil {
 		return env.getProperty("spring.http.multipart.location");
 	}
 	
+	public String getAddr() {
+		return env.getProperty("spring.http.multipart.addr");
+	}
+	
 	/**
-	 * 上传文件
+	 * 上传文件，并得到文件的访问
 	 * @author chencong
 	 * 2018年4月25日 上午10:34:34
 	 * @throws SystemException 
 	 */
-	public  void uploadFile(HttpServletRequest request,String sonFolder,String newFileName) throws SystemException{
+	public  String uploadFile(HttpServletRequest request,String sonFolder,String newFileName) throws SystemException{
 		//如果不是multipart/form-data类型
 		 if(!ServletFileUpload.isMultipartContent(request)){  
 			logger.error("请求类型不是multipart/form-data");
@@ -63,29 +67,36 @@ public class FileUtil {
 	    	logger.error("ServletFileUpload解析request异常："+e.getMessage());
 	    	throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 	    }
+	    //新的带后缀名的文件名
+	    String newWholeFileName=null;
 	    for(FileItem item : items){
 	    	try {
-				handleUploadField(item,sonFolder,newFileName);
+	    		newWholeFileName=this.handleUploadField(item,sonFolder,newFileName);
 			} catch (FileNotFoundException e) {
 				logger.error("执行handleUploadField()方法异常："+e.getMessage());
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}
 	    }
+	    return getAddr()+sonFolder+"/"+newWholeFileName;
 	}
     
-    private  void handleUploadField(FileItem item,String sonFolder,String newFileName) throws FileNotFoundException, SystemException {
+    private  String handleUploadField(FileItem item,String sonFolder,String newFileName) throws FileNotFoundException, SystemException {
     	//得到上传文件的文件名
         String fileName = item.getName();  
         //上传文件存储路径
         String path = ResourceUtils.getFile(getLocation()).getPath();
         //创建子目录
-        File childDirectory =getChildDirectory(path,sonFolder);
+        File childDirectory =this.getChildDirectory(path,sonFolder);
+        //新的带后缀名的文件名
+        String newWholeFileName=null;
         //写入服务器或者磁盘
         try {
-			item.write(new File(childDirectory.toString(),newFileName+fileName.substring(fileName.lastIndexOf("."))));
+        	newWholeFileName=newFileName+fileName.substring(fileName.lastIndexOf("."));
+			item.write(new File(childDirectory.toString(),newWholeFileName));
 		} catch (Exception e) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
+        return newWholeFileName;
     }
     
     /**

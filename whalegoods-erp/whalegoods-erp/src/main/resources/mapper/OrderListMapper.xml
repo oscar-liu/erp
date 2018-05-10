@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.OrderListMapper">
+
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.ErpOrderList">
+    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
+    <result column="pay_type" jdbcType="TINYINT" property="payType" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    a.orderTime,
+    b.shortName,
+    a.orderId,
+    a.orderStatus,
+    a.goodsName,
+    a.salePrice,
+    a.payType
+  </sql>
+  
+    <select id="selectListByObjCdt" statementType="STATEMENT"  resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/>  FROM ${prefix}_order_list a 
+    INNER JOIN device b ON a.device_id_jp= b.device_id_jp
+   <where>
+     <if test="shortName !=null and shortName !=''"> AND short_name LIKE "'%" ${shortName} "%'"</if>
+     <if test="startOrderTime !=null "> AND order_time >='${startOrderTime}'</if>
+     <if test="endOrderTime !=null "> AND order_time >='${endOrderTime}'</if>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> AND a.device_id_jp ='${deviceIdJp}'</if>
+    </where>
+  </select>
+
    <!--  根据条件查询订单信息 -->
     <select id="selectByMapCdt" statementType="STATEMENT" resultType="com.whalegoods.entity.OrderList">
     SELECT 

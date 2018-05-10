@@ -2,8 +2,8 @@ package com.whalegoods.constant;
 
 /**
  * 订单状态常量
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月10日 上午11:17:12
  */
 public abstract class ConstOrderStatus {
 

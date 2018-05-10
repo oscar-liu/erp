@@ -18,9 +18,17 @@ public class JsonUtil {
   
   private String msg;
   
- private JSONObject josnObj;
+ private JSONObject data;
  
- public boolean isFlag() {
+ public JSONObject getData() {
+	return data;
+}
+
+public void setData(JSONObject data) {
+	this.data = data;
+}
+
+public boolean isFlag() {
 	return flag;
 }
 
@@ -36,13 +44,6 @@ public void setMsg(String msg) {
 	this.msg = msg;
 }
 
-public JSONObject getJosnObj() {
-	return josnObj;
-}
-
-public void setJosnObj(JSONObject josnObj) {
-	this.josnObj = josnObj;
-}
 
 public JsonUtil() {
   }

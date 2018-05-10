@@ -22,28 +22,30 @@ public class DeviceRoad extends BaseEntity implements Serializable {
     
     private String deviceIdSupp;
     
-    private Byte ctn;
+    private String shortName;
     
-    private Byte pathCode;
-    
-    private Byte floor;
-    
-    private String goodsSkuId;
-    
-    private Double salePrice;
-    
-    private Byte capacity;
-    
-    private Integer stock;
-    
-    private String stockOrderId;
-    
-    private Byte warningNum;
-    
-    private Byte warningSwitch;
-    
-    private Byte lackLevel;
-    
-    private String monitorThemeId;
+    private String goodsCode;
+	
+	private String goodsName;
+	
+	private Byte ctn;
+	
+	private String StockOrderId;
+	
+	private Byte pathCode;
+	
+	private Byte floor;
+	
+	private Double salePrice;
+	
+	private Byte capacity;
+	
+	private Byte stock;
+	
+	private Byte warningNum;
+	
+	private Byte lackLevel;
+	
+	private Byte lockStatus;
 
 }

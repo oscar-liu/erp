@@ -6,15 +6,15 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import com.whalegoods.util.SpringUtil;
+
 /**
- * @author zhuxiaomeng
- * @date 2018/1/5.
- * @email 154040976@qq.com
  * 参照一些案例在此对 在此对网上分享者说声感谢 by：zxm
  * 通过封装applicationContext上线文
  * 获取 spring bean对象 bean启动时候 已经被打印出，可直接根据name、class、name class获取
  *
  * 很多地方能用得到
+ * @author henrysun
+ * 2018年5月6日 下午5:51:24
  */
 @Component
 public class SpringUtil implements ApplicationContextAware {

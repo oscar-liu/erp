@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.ApkVersionMapper">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.ApkVersion">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="apk_url" jdbcType="VARCHAR" property="apkUrl" />
+    <result column="apk_version" jdbcType="VARCHAR" property="apkVersion" />
+    <result column="apk_status" jdbcType="TINYINT" property="apkStatus" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id,
+    apk_url,
+    apk_version,
+    apk_status,
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remark
+  </sql>
+  
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />  FROM apk_version WHERE id = #{_parameter}
+  </select>
+  
+   <select id="getApk"  resultType="java.util.Map">
+   SELECT apk_version,apk_url
+    FROM apk_version
+    WHERE apk_status=2
+    ORDER BY create_date DESC LIMIT 1
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM apk_version  WHERE id = #{_parameter}
+  </delete>
+
+  <insert id="insert" parameterType="com.whalegoods.entity.ApkVersion">
+    INSERT INTO apk_version (
+    id,
+    apk_url, 
+    apk_version, 
+    apk_status, 
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{apkUrl}, 
+    #{apkVersion}, 
+    #{apk_status}, 
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+
+  <update id="updateByObjCdt" parameterType="com.whalegoods.entity.ApkVersion">
+    UPDATE apk_version
+    <set>
+      <if test="apkUrl != null and apkUrl !='' ">
+        apk_url = #{apkUrl},
+      </if>
+      <if test="apkVersion != null and apkVersion !='' ">
+        apk_version = #{apkVersion},
+      </if>
+      <if test="apkStatus != null and apkStatus != '' ">
+        apk_status = #{apkStatus},
+      </if>
+      <if test="updateBy != null and updateBy != '' ">
+        update_by = #{updateBy},
+      </if>
+      update_date = now(),
+    </set>
+    WHERE id = #{id}
+  </update>
+  
+  <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.ApkVersion" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM apk_version
+   <where>
+     <if test="apkVersion !=null and apkVersion !=''"> AND apk_version LIKE "%" #{apkVersion} "%"</if>
+   </where>
+   ORDER BY create_date DESC
+  </select>
+
+  <select id="checkApkVersion" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM apk_version WHERE apk_version=#{_parameter}
+  </select>
+
+</mapper>

@@ -24,5 +24,14 @@ public class ShiroUtil {
     public static CurrentUser getCurrentUser(){
         return (CurrentUser) getSession().getAttribute("currentUser");
     }
+    
+    /**
+     * 获取当前登陆用户的用户ID
+     * @author henrysun
+     * 2018年5月7日 上午11:53:27
+     */
+    public static String getCurrentUserId(){
+        return getCurrentUser().getId();
+    }
 
 }

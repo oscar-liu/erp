@@ -6,6 +6,8 @@ import com.whalegoods.entity.SysMenu;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.util.JsonUtil;
+import com.whalegoods.util.ShiroUtil;
+import com.whalegoods.util.StringUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -66,7 +68,11 @@ public class MenuController {
 	    try{
 	      if(sysMenu.getMenuType()==2){
 	        sysMenu.setMenuType((byte)0);
-	      }
+	      }	    	
+	      String currentUserId=ShiroUtil.getCurrentUser().getId();
+	      sysMenu.setCreateBy(currentUserId);
+	      sysMenu.setUpdateBy(currentUserId);
+	      sysMenu.setId(StringUtil.getUUID());
 	      if(menuService.insert(sysMenu)!=0){
 	          jsonUtil.setFlag(true);
 	          jsonUtil.setMsg("添加成功");

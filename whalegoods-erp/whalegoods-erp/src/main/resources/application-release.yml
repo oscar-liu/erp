@@ -6,6 +6,7 @@ spring:
   http:
       multipart: 
         location: /usr/local/erp/whalegoods-file/
+        addr: http://erpt.whalegoods.com/file/
 
 logging:
   level:

@@ -7,8 +7,6 @@
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="sale_price" jdbcType="VARCHAR" property="salePrice" />
-    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
-    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="stock" jdbcType="TINYINT" property="stock" />
     <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
@@ -21,14 +19,40 @@
     c.market_price,
     b.sale_price,
     b.stock,
-    a.start_time,
-    a.end_time,
     a.type
     FROM goods_ads_middle a INNER JOIN  device_road b ON a.device_road_id=b.id 
     INNER JOIN goods_sku c ON b.goods_sku_id=c.id
     INNER JOIN device d ON  d.id=b.device_id
-    WHERE d.device_id_jp=#{deviceIdJp} AND d.device_id_supp=#{deviceIdSupp}
+    <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> AND device_id_jp=#{deviceIdJp}</if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND device_id_supp=#{deviceIdSupp}</if>
+     <if test="type !=null and type !=''"> AND type=#{type}</if>
+    </where>
     ORDER BY a.type
   </select>
+  
+  <delete id="deleteByDeviceRoadId" parameterType="java.lang.String">
+    DELETE FROM goods_ads_middle  WHERE device_road_id = #{_parameter}
+  </delete>
+  
+    <insert id="insert" parameterType="com.whalegoods.entity.GoodsAdsMiddle">
+    INSERT INTO goods_ads_middle (
+    id,
+    device_road_id, 
+    type, 
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{deviceRoadId}, 
+    #{type}, 
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
 
 </mapper>

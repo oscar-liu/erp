@@ -20,4 +20,32 @@
     WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
   </select>
 
+   <insert id="insert" parameterType="com.whalegoods.entity.GoodsAdsTop">
+    INSERT INTO goods_ads_top (
+    id,
+    device_road_id, 
+    device_id_jp,
+    device_id_supp,
+    action_type,
+    big_pic_url,
+    tiny_pic_url, 
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{deviceRoadId}, 
+    #{deviceIdJp}, 
+    #{deviceIdSupp},
+    #{actionType},
+    #{bigPicUrl},
+    #{tinyPicUrl},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+
 </mapper>

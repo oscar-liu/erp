@@ -22,6 +22,7 @@ import com.whalegoods.entity.request.ReqUpDeviceStatus;
 import com.whalegoods.entity.request.ReqUploadLog;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.SystemException;
+import com.whalegoods.service.ApkVersionService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.util.FileUtil;
 
@@ -36,6 +37,9 @@ public class V1DeviceController {
 
   @Autowired
   DeviceService deviceService;
+  
+  @Autowired
+  ApkVersionService apkVersionService;
   
   @Autowired
   FileUtil fileUtil;
@@ -82,10 +86,7 @@ public class V1DeviceController {
    */
   @GetMapping(value="/updateClient")
   ResBody updateClient(@Valid ReqBase model) {
-	  Map<String,Object> condition=new HashMap<>();
-	  condition.put("deviceIdJp",model.getDevice_code_wg());
-	  condition.put("deviceIdSupp",model.getDevice_code_sup());
-	  return deviceService.getApk(condition);
+	  return apkVersionService.getApk();
 	}
   
   /**

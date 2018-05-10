@@ -1,7 +1,6 @@
 package com.whalegoods.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +19,6 @@ public class GoodsAdsMiddle extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
     
     private String deviceRoadId;
-    
-    private Date startTime;
-    
-    private Date endTime;
     
     private Byte type;
 

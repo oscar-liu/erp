@@ -46,7 +46,7 @@
     UPDATE sys_role
     SET role_name = #{roleName},
       update_by = #{updateBy},
-      now()
+      update_date=now()
     WHERE id = #{id}
   </update>
   

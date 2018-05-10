@@ -87,13 +87,13 @@ ORDER BY m.order_num ASC
     update_date )
     VALUES (
     #{id}, 
-    #{menuName}, 
+    #{name}, 
     #{pId}, 
     #{menuUrl},
     #{orderNum},
     #{menuType},
     #{icon}, 
-    #{permission}
+    #{permission},
     #{createBy}, 
     now(),
     #{updateBy}, 
@@ -104,8 +104,8 @@ ORDER BY m.order_num ASC
   <update id="updateByObjCdt" parameterType="com.whalegoods.entity.SysMenu">
     UPDATE sys_menu
     <set>
-      <if test="menuName != null and menuName !='' ">
-        menuName = #{menu_name},
+      <if test="name != null and name !='' ">
+        name = #{menu_name},
       </if>
       <if test="pId != null and pId !='' ">
         p_id = #{pId},

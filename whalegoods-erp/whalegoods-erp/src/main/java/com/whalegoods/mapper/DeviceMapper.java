@@ -8,12 +8,6 @@ import java.util.Map;
 
 public interface DeviceMapper extends BaseMapper<Device,String> {
 
-	/**
-	 * @author henrysun
-	 * 2018年4月28日 下午2:46:35
-	 */
-    Map<String,Object> getApk(Map<String, Object> mapCdt);
-
     /**
      * 查询设备开启/启用状态
      * @author henrysun

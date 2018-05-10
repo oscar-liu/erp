@@ -531,7 +531,7 @@ public class PayServiceImpl implements PayService{
 		} 
 		DeviceRoad deviceRoad=new DeviceRoad();
 		BeanUtils.copyProperties(orderList,deviceRoad); 
-		deviceRoad.setStock(stock);
+		deviceRoad.setStock((byte)stock);
 		deviceRoad.setStockOrderId(orderList.getOrderId());
 		deviceRoadService.updateByObjCdt(deviceRoad);
 	}

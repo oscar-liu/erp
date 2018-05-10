@@ -12,6 +12,8 @@ import com.whalegoods.service.RoleMenuService;
 import com.whalegoods.service.RoleService;
 import com.whalegoods.service.RoleUserService;
 import com.whalegoods.util.JsonUtil;
+import com.whalegoods.util.ReType;
+import com.whalegoods.util.StringUtil;
 
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +57,7 @@ public class RoleController {
 	  @GetMapping(value = "showRoleList")
 	  @ResponseBody
 	  @RequiresPermissions("role:show")
-	  public String showRoleList(SysRole role,Model model,String page,String limit){
+	  public ReType showRoleList(SysRole role,Model model,String page,String limit){
 	   return roleService.selectByPage(role,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 
@@ -67,7 +69,7 @@ public class RoleController {
 	  }
 
 	 
-	  @Log(desc = "添加角色")
+	  /*@Log(desc = "添加角色")*/
 	  @PostMapping(value = "addRole")
 	  @ResponseBody
 	  public JsonUtil addRole(SysRole sysRole,String[] menus){
@@ -108,7 +110,7 @@ public class RoleController {
 	  }
 
 
-	  @Log(desc = "更新角色")
+	  /*@Log(desc = "更新角色")*/
 	  @PostMapping(value = "updateRole")
 	  @ResponseBody
 	  public JsonUtil updateUser(SysRole role,String[] menus) {
@@ -131,6 +133,7 @@ public class RoleController {
 	      }
 	      if(menus!=null)
 	      for(String menu:menus){
+	    	sysRoleMenu.setId(StringUtil.getUUID());
 	        sysRoleMenu.setMenuId(menu);
 	        roleMenuService.insert(sysRoleMenu);
 	      }
@@ -138,7 +141,6 @@ public class RoleController {
 	      jsonUtil.setMsg("修改成功");
 	    } catch (BizApiException e) {
 	      jsonUtil.setMsg("修改失败");
-	      e.printStackTrace();
 	    }
 	    return jsonUtil;
 	  }

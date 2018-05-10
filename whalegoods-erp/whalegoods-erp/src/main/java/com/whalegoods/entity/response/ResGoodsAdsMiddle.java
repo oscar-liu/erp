@@ -1,7 +1,6 @@
 package com.whalegoods.entity.response;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +20,6 @@ public class ResGoodsAdsMiddle implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String goodsCode;
-	    
-	private Date startTime;
-	    
-    private Date endTime;
 	    
 	private String picUrl;
 	

@@ -1,4 +1,4 @@
-package com.whalegoods.util;
+package com.whalegoods.entity;
 
 import lombok.Getter;
 import lombok.Setter;

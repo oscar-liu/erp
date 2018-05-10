@@ -8,6 +8,7 @@ security:
 
 spring: 
   freemarker: 
+    charset: UTF-8
     cache: false
     settings: 
       template_update_delay: 0

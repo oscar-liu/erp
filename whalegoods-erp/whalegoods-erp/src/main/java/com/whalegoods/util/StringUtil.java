@@ -1,5 +1,6 @@
 package com.whalegoods.util;
 
+import java.util.Random;
 import java.util.UUID;
 
 import com.whalegoods.constant.ConstSysParamName;
@@ -58,5 +59,10 @@ public class StringUtil {
 	
 	public static boolean isEmpty(Object str) {
 		return (str == null || "".equals(str));
+	}
+	
+	public static int getNumberRadom(){
+		Random random=new Random();
+		return random.nextInt();
 	}
 }

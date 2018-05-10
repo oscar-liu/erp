@@ -1,8 +1,10 @@
 package com.whalegoods.service;
 
 
+import com.whalegoods.entity.response.ResGoodsAdsMiddle;
 import com.whalegoods.exception.SystemException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,7 +14,6 @@ import java.util.Map;
  */
 public interface GoodsAdsMiddleService  {
   
-  Map<String, Object> selectAdsMiddleList(Map<String,Object> condition) throws SystemException;
-
+	List<ResGoodsAdsMiddle> selectAdsMiddleList(Map<String,Object> mapCdt,Map<String, Object> mapData) throws SystemException;
 
 }

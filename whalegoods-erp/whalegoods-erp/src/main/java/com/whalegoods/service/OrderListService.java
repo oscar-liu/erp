@@ -1,6 +1,10 @@
 package com.whalegoods.service;
 
+import java.util.List;
+
+import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.OrderList;
+import com.whalegoods.util.ReType;
 
 
 /**
@@ -10,4 +14,7 @@ import com.whalegoods.entity.OrderList;
  */
 public interface OrderListService extends BaseService<OrderList,String>{
 
+	List<ErpOrderList> selectListByObjCdt(ErpOrderList objCdt);
+	
+	ReType selectByPage(ErpOrderList objCdt, int page, int limit);
 }

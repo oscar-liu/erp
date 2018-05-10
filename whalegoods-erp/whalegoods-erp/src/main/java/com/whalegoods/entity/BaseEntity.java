@@ -2,6 +2,8 @@ package com.whalegoods.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,10 +22,12 @@ public class BaseEntity {
 
     private  String createBy;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private  Date createDate;
     
     private  String updateBy;
     
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private  Date updateDate;
     
     private  String remark;

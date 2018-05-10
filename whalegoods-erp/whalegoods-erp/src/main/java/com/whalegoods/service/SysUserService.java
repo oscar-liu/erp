@@ -1,10 +1,10 @@
 package com.whalegoods.service;
 
-import com.whalegoods.entity.SysUser;
-import com.whalegoods.util.Checkbox;
-import com.whalegoods.util.JsonUtil;
-
 import java.util.List;
+
+import com.whalegoods.entity.Checkbox;
+import com.whalegoods.entity.SysUser;
+import com.whalegoods.util.JsonUtil;
 
 /**
  * 系统用户相关业务逻辑接口
@@ -25,7 +25,7 @@ public interface SysUserService extends BaseService<SysUser,String> {
 	   * @author henrysun
 	   * 2018年5月3日 下午5:20:49
 	   */
-	  JsonUtil delById(String id,boolean flag);
+	  JsonUtil delById(String id);
 
 	  int checkUser(String username);
 

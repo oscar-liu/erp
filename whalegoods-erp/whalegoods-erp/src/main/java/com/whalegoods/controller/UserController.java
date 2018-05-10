@@ -1,34 +1,39 @@
 package com.whalegoods.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.config.log.Log;
 import com.whalegoods.config.log.Log.LOG_TYPE;
+import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
+import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.RoleUserService;
 import com.whalegoods.service.SysUserService;
-import com.whalegoods.util.Checkbox;
+import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.Md5Util;
+import com.whalegoods.util.ReType;
+import com.whalegoods.util.ShiroUtil;
+import com.whalegoods.util.StringUtil;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 系统用户相关API接口
@@ -44,6 +49,9 @@ public class UserController {
 
 	  @Autowired
 	  RoleUserService roleUserService;
+	  
+	  @Autowired
+	  FileUtil fileUtil;
 
 	  /**
 	   * 跳转到系统用户列表页面
@@ -64,7 +72,7 @@ public class UserController {
 	  @GetMapping(value = "showUserList")
 	  @ResponseBody
 	  @RequiresPermissions("user:show")
-	  public String showUser(Model model, SysUser user, String page, String limit) {
+	  public ReType showUser(Model model, SysUser user, String page, String limit) {
 	    return userService.selectByPage(user,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 
@@ -107,10 +115,15 @@ public class UserController {
 	    }
 	    JsonUtil j=new JsonUtil();
 	    try {
+	    	user.setId(StringUtil.getUUID());
+	    	String currentUserId=ShiroUtil.getCurrentUser().getId();
+	    	user.setCreateBy(currentUserId);
+	    	user.setUpdateBy(currentUserId);
 	      userService.insert(user);
 	      SysRoleUser sysRoleUser=new SysRoleUser();
 	      sysRoleUser.setUserId(user.getId());
 	      for(String r:role){
+	    	sysRoleUser.setId(StringUtil.getUUID());
 	        sysRoleUser.setRoleId(r);
 	        roleUserService.insert(sysRoleUser);
 	      }
@@ -118,7 +131,6 @@ public class UserController {
 	    } catch (BizApiException e) {
 	      j.setMsg("保存失败");
 	      j.setFlag(false);
-	      e.printStackTrace();
 	    }
 	    return j;
 	  }
@@ -128,8 +140,8 @@ public class UserController {
 	   * @author henrysun
 	   * 2018年4月26日 下午3:30:35
 	   */
-	  @GetMapping(value = "updateUser")
-	  public String updateUser(String id, Model model, boolean detail) {
+	  @GetMapping(value = "showUpdateUser")
+	  public String showUpdateUser(String id, Model model, boolean detail) {
 	    if (StringUtils.isNotEmpty(id)) {
 	      //用户-角色
 	     List<Checkbox> checkboxList=userService.getUserRoleByJson(id);
@@ -169,6 +181,7 @@ public class UserController {
 	      }
 	      if(role!=null){
 	        for(String r:role){
+	          sysRoleUser.setId(StringUtil.getUUID());
 	          sysRoleUser.setRoleId(r);
 	          roleUserService.insert(sysRoleUser);
 	        }
@@ -190,8 +203,8 @@ public class UserController {
 	  @PostMapping(value = "/del")
 	  @ResponseBody
 	  @RequiresPermissions("user:del")
-	  public JsonUtil del(String id, boolean flag) {
-	   return userService.delById(id,flag);
+	  public JsonUtil del(String id) {
+	   return userService.delById(id);
 	  }
 
 	  /**
@@ -253,37 +266,25 @@ public class UserController {
 	   * 上传头像接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:32:05
+	 * @throws SystemException 
 	   */
-	  @PostMapping(value = "upload")
+	  @PostMapping(value = "uploadHeadPic")
 	  @ResponseBody
-	  public JsonUtil imgUpload(HttpServletRequest req, @RequestParam("file") MultipartFile file,
-	      ModelMap model) {
-	    JsonUtil j = new JsonUtil();
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	    SimpleDateFormat sdf1 = new SimpleDateFormat("hhmmss");
-
-	    String fileName = sdf1.format(new Date()) + file.getOriginalFilename();
-	    String objPath =
-	        req.getSession().getServletContext().getRealPath("image/") + sdf.format(new Date())
-	            .toString();
-	    File targetFile1 = new File(objPath, fileName);
-	    File file2 = new File(objPath);
-	    if (!file2.exists()) {
-	      file2.mkdirs();
-	    }
-	    if (!targetFile1.exists()) {
-	      targetFile1.mkdirs();
-	    }
-
-	    try {
-	      file.transferTo(targetFile1);
-	    } catch (Exception e) {
-	      j.setFlag(false);
-	      j.setMsg("上传失败");
-	      e.printStackTrace();
-	    }
-	    j.setMsg("image/" + sdf.format(new Date()).toString() + "/" + req.getContextPath() + fileName);
-	    return j;
+	  public JsonUtil uploadHeadPic(HttpServletRequest request,HttpSession session) {
+		  JsonUtil jsonUtil=JsonUtil.sucess(null);
+		  String childFolder="head_pic";
+		  String newFileName=childFolder+"_"+System.currentTimeMillis()+StringUtil.randomString(3);
+		  String fileUrl=null;
+		  try {
+			  fileUrl= fileUtil.uploadFile(request,childFolder,newFileName);
+			  JSONObject json=new JSONObject();
+			  json.put("file_url",fileUrl);
+			  jsonUtil.setData(json);
+		} catch (SystemException e) {
+			jsonUtil.setFlag(false);
+			jsonUtil.setMsg("上传失败，请联系管理员");
+		}
+		  return jsonUtil;
 	  }
 
 	  /**
@@ -293,20 +294,36 @@ public class UserController {
 	   */
 	  @GetMapping(value = "checkUser")
 	  @ResponseBody
-	  public JsonUtil checkUser(String uname, HttpServletRequest req) {
+	  public JsonUtil checkUser(@RequestParam String uname) {
 	    JsonUtil j = new JsonUtil();
-	    j.setFlag(Boolean.FALSE);
-	    if (StringUtils.isEmpty(uname)) {
-	      j.setMsg("获取数据失败");
-	      return j;
-	    }
-	    int result = userService.checkUser(uname);
-	    if (result > 0) {
+	    if (userService.checkUser(uname) > 0){
+	      j.setFlag(false);
 	      j.setMsg("用户名已存在");
 	      return j;
 	    }
 	    j.setFlag(true);
 	    return j;
+	  }
+	  
+	  /**
+	   * 更新账号状态
+	   * @author henrysun
+	   * 2018年5月6日 上午10:30:07
+	   */
+	  @PostMapping(value = "updateAccountStatus")
+	  @ResponseBody
+	  public ResBody updateAccountStatus(@RequestParam String id,@RequestParam(name="account_status") Boolean isCheck) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		SysUser sysUser=new SysUser();
+		sysUser.setId(id);
+		if(isCheck){
+			sysUser.setAccountStatus((byte) 1);
+		}
+		else{
+			sysUser.setAccountStatus((byte) 2);
+		}
+		userService.updateByObjCdt(sysUser);
+	    return resBody;
 	  }
 
 }

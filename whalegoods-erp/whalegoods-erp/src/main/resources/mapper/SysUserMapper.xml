@@ -6,7 +6,7 @@
     <result column="username" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="head_pic_url" jdbcType="VARCHAR" property="headPicUrl" />
-    <result column="account_status" jdbcType="VARCHAR" property="accountStatus" />
+    <result column="account_status" jdbcType="TINYINT" property="accountStatus" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
@@ -31,11 +31,11 @@
   <select id="login" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List"/>
     FROM sys_user a
-    <where>
-     a.account_status=1
+    <where>     
 		<if test="_parameter !=null and _parameter !=''">
 			AND a.username=#{_parameter}
 		</if>
+		AND a.account_status=1
 	</where>
   </select>
 
@@ -72,8 +72,8 @@
   <update id="updateByObjCdt" parameterType="com.whalegoods.entity.SysUser">
     UPDATE sys_user
     <set>
-      <if test="username != null and username!='' ">
-        username = #{username},
+      <if test="userName != null and userName!='' ">
+        username = #{userName},
       </if>
       <if test="password != null and password !='' ">
         password = #{password},
@@ -87,24 +87,20 @@
       <if test="updateBy != null and updateBy != '' ">
         update_by = #{updateBy},
       </if>
-      update_date = now()
+      update_date = now(),
     </set>
     WHERE id = #{id}
   </update>
   
   <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.SysUser" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM sys_user
-    <where>
-     <if test="username!=null and username!=''"> AND username LIKE "%" #{username} "%"</if>
+   <where>
+     <if test="userName!=null and userName!=''"> AND username LIKE "%" #{userName} "%"</if>
     </where>
-  </select>
-  
-  <select id="selectCount" resultType="java.lang.Integer">
-    SELECT COUNT(a.id) FROM sys_user a
   </select>
 
   <select id="checkUser" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(1) FROM sys_user WHERE username=#{_parameter}
+    SELECT COUNT(id) FROM sys_user WHERE username=#{_parameter}
   </select>
   
   <update id="rePass" parameterType="com.whalegoods.entity.SysUser">

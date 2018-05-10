@@ -2,29 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.whalegoods.mapper.DeviceRoadMapper">
-  <resultMap id="BaseResultMap" type="com.whalegoods.entity.DeviceRoad">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="device_id_jp" jdbcType="VARCHAR" property="deviceIdJp" />
-    <result column="device_id_supp" jdbcType="VARCHAR" property="deviceIdSupp" />
-    <result column="ctn" jdbcType="TINYINT" property="ctn" />
-    <result column="path_code" jdbcType="TINYINT" property="pathCode" />
-    <result column="floor" jdbcType="TINYINT" property="floor" />
-    <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
-    <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
-    <result column="capacity" jdbcType="TINYINT" property="capacity" />
-    <result column="stock" jdbcType="TINYINT" property="stock" />
-    <result column="warning_num" jdbcType="TINYINT" property="warningNum" />
-    <result column="warning_switch" jdbcType="TINYINT" property="warningSwitch" />
-    <result column="lack_level" jdbcType="TINYINT" property="lackLevel" />
-    <result column="monitor_theme_id" jdbcType="VARCHAR" property="monitorThemeId" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
-    <result column="create_date" jdbcType="DATE" property="createDate" />
-    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="update_date" jdbcType="DATE" property="updateDate" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
-  </resultMap>
-  
-  <resultMap id="BaseResultMap2" type="com.whalegoods.entity.response.ResDeviceGoodsInfo">
+  <resultMap id="BaseResultMap1" type="com.whalegoods.entity.response.ResDeviceGoodsInfo">
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
     <result column="goods_name_en" jdbcType="VARCHAR" property="goodsNameEn" />
@@ -41,29 +19,7 @@
     <result column="adsMiddleType" jdbcType="TINYINT" property="saleType" />
   </resultMap>
   
-  <sql id="Base_Column_List">
-    id, 
-    device_id_jp, 
-    device_id_supp, 
-    tab_code, 
-    road_code, 
-    level, 
-    goods_sku_id, 
-    current_price,
-    capacity,
-    stock,
-    warning_num,
-    warning_switch,
-    lack_level,
-    monitor_theme_id,
-    create_by, 
-    create_date, 
-    update_by, 
-    update_date, 
-    remark
-  </sql>
-  
-   <sql id="Base_Column_List2">
+   <sql id="Base_Column_List1">
     a.sale_price,
     a.path_code,
     a.floor,
@@ -80,7 +36,7 @@
     d.type adsMiddleType
   </sql>
   
-     <sql id="Base_Column_List3">
+   <sql id="Base_Column_List2">
     a.sale_price,
     a.path_code,
     a.floor,
@@ -88,7 +44,6 @@
     a.stock,
     b.goods_code, 
     b.goods_name, 
-    b.goods_name_en,
     b.spec, 
     b.goods_detail, 
     b.pic_url,
@@ -96,19 +51,81 @@
     b.market_price
   </sql>
   
- <!--  根据设备编号查询所有商品 -->
-    <select id="selectByIdOfJpAndSupp" parameterType="java.util.Map" resultMap="BaseResultMap2">
-    SELECT 
-    <include refid="Base_Column_List2" />
-    FROM device_road a INNER JOIN goods_sku b ON a.goods_sku_id=b.id
-    INNER JOIN device c  ON c.id=a.device_id LEFT JOIN goods_ads_middle d ON d.device_road_id=a.id
+  <resultMap id="BaseResultMap2" type="com.whalegoods.entity.DeviceRoad">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="device_id_jp" jdbcType="VARCHAR" property="deviceIdJp" /> 	
+    <result column="device_id_supp" jdbcType="VARCHAR" property="deviceIdSupp" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="ctn" jdbcType="TINYINT" property="ctn" />
+    <result column="floor" jdbcType="TINYINT" property="floor" />
+    <result column="path_code" jdbcType="TINYINT" property="pathCode" />
+    <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
+    <result column="capacity" jdbcType="TINYINT" property="capacity" />
+    <result column="stock" jdbcType="TINYINT" property="stock" />
+    <result column="warning_num" jdbcType="TINYINT" property="warningNum" />
+    <result column="lack_level" jdbcType="TINYINT" property="lackLevel" />
+    <result column="lock_status" jdbcType="TINYINT" property="lockStatus" />
+  </resultMap>
+  
+  <sql id="Base_Column_List3">
+    c.device_id_jp,
+    c.device_id_supp,
+    c.short_name,
+    b.goods_code,
+    b.goods_name,
+    a.id,
+    a.ctn,
+    a.floor,
+    a.path_code,
+    a.sale_price,
+    a.capacity,
+    a,stock,
+    a.warning_num,
+    a.lack_level,
+    c.lock_status,
+  </sql>
+  
+      <select id="selectById" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
+    SELECT <include refid="Base_Column_List3" />
+    FROM device_road a 
+    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
+    WHERE a.id=#{id}
+  </select>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
+    SELECT <include refid="Base_Column_List3" />
+    FROM device_road a 
+    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
+   <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> 
+     AND c.device_id_jp=#{deviceIdJp}
+     </if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> 
+     AND c.device_id_supp=#{deviceIdSupp}
+     </if>
+     <if test="shortName !=null and shortName !=''"> 
+     AND c.short_name LIKE  "%" #{shortName} "%"
+     </if>
+    </where>
+  </select>
+  
+ <!--  根据设备编号查询所有商品，给柜机API使用 -->
+    <select id="selectByIdOfJpAndSupp" parameterType="java.util.Map" resultMap="BaseResultMap1">
+    SELECT <include refid="Base_Column_List1" />
+    FROM device_road a 
+    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
+    LEFT JOIN goods_ads_middle d ON d.device_road_id=a.id
     WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
   </select>
   
    <!--  根据当前设备商品编号或货道号获取商品信息 -->
-    <select id="selectByGoodsOrPathCode" parameterType="java.util.Map" resultMap="BaseResultMap2">
-    SELECT 
-    <include refid="Base_Column_List3" />
+    <select id="selectByGoodsOrPathCode" parameterType="java.util.Map" resultMap="BaseResultMap1">
+    SELECT  <include refid="Base_Column_List2" />
     FROM device_road a INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
     <where>
@@ -162,5 +179,23 @@
 			</if>
 		 </where>
 	</update>
+	
+	<select id="selectCountByMapCdt" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM device_road c
+   <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> 
+     AND c.device_id_jp=#{deviceIdJp}
+     </if>
+     <if test="ctn !=null and ctn !=''"> 
+     AND c.ctn=#{ctn}
+     </if>
+     <if test="floor !=null and floor !=''"> 
+     AND c.floor = #{floor} 
+     </if>
+     <if test="pathCode !=null and pathCode !=''"> 
+     AND c.path_code = #{pathCode} 
+     </if>
+    </where>
+  </select>
 
 </mapper>

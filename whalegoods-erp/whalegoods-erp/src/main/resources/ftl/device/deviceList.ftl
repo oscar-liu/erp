@@ -27,13 +27,13 @@
 <@shiro.hasPermission name="device:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
 </script>
 <script type="text/html" id="tplLockStatus">
-<input type="checkbox" name="lockStatus" value="{{d.id}}" lay-skin="switch" lay-text="开启|锁定" lay-filter="radioLockStatus" {{ d.lockStatus == 1 ? 'checked' : '' }}>
+<input type="checkbox" name="lockStatus" value="{{d.id}}" lay-skin="switch" lay-text="开启|锁定" lay-filter="radioLockStatus" {{ d.lockStatus == 2 ? 'checked' : '' }}>
 </script>
 <script type="text/html" id="tplDeviceStatus">
   {{#  if(d.deviceStatus==1||d.deviceStatus==2){ }}
-    <span style="color: #F581B1;">已下线</span>
-  {{#  } else { }}
 <input type="checkbox" name="deviceStatus" value="{{d.id}}" lay-skin="switch" lay-text="运行|停止" lay-filter="radioDeviceStatus" {{ d.deviceStatus == 1 ? 'checked' : '' }}>
+  {{#  } else { }}
+<span style="color: #F581B1;">已下线</span>
   {{#  } }}
 </script>
 <script>
@@ -57,7 +57,6 @@
         {field: 'shortName',title: '点位短名',align:'center' }, 
         {field: 'location', title: '点位地址', align:'center'},
         {field: 'deviceStatus',title: '设备运行状态',align:'center',templet: '#tplDeviceStatus', unresize: true},
-        {field: 'location', title: '点位地址', align:'center'},
         {field: 'signCode', title: '签到码', align:'center'},
         {field: 'deviceIdJp', title: '设备编号（鲸品）', align:'center'},
         {field: 'deviceIdSupp', title: '设备编号（供应商）', align:'center'},
@@ -76,13 +75,13 @@
             async:false,
             success:function(r){
               if(r.result_code==0){
-                window.top.layer.msg(r.result_msg,{icon:6});
+                window.top.layer.msg(r.result_msg,{icon:6,time:1000});
               }else{
-                window.top.layer.msg(r.result_msg,{icon:5});
+                window.top.layer.msg(r.result_msg,{icon:5,time:1000});
               }
             },
             error:function(){
-            	window.top.layer.msg("设置失败,请联系管理员",{icon:5});
+            	window.top.layer.msg("设置失败,请联系管理员",{icon:5,time:1000});
             }
           });
     });
@@ -95,13 +94,13 @@
             async:false,
             success:function(r){
               if(r.result_code==0){
-                window.top.layer.msg(r.result_msg,{icon:6});
+                window.top.layer.msg(r.result_msg,{icon:6,time:1000});
               }else{
-                window.top.layer.msg(r.result_msg,{icon:5});
+                window.top.layer.msg(r.result_msg,{icon:5,time:1000});
               }
             },
             error:function(){
-            	window.top.layer.msg("设置失败,请联系管理员",{icon:5});
+            	window.top.layer.msg("设置失败,请联系管理员",{icon:5,time:1000});
             }
           });
     });
@@ -124,15 +123,15 @@
         });
       },
       add: function () {
-        add('添加设备', 'showAddDevice', 700, 450);
+        add('添加设备', 'showAddDevice', 400, 350);
       },
       update: function () {
         var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
         if (data.length != 1) {
-          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
+          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('更新设备', 'updateDevice?id=' + data[0].id, 700, 450);
+        update('更新设备', 'showUpdateDevice?id=' + data[0].id, 400, 350);
       }
     };
     //监听工具条
@@ -140,8 +139,9 @@
       var data = obj.data;
       if (obj.event === 'del') {
         layer.confirm('确定删除：[<label style="color: #00AA91;">' + data.shortName + '</label>]的设备?',{ title:'提示'},
-        function () {
-          del(data.id);
+         function (index) {
+            del(data.id);
+            layer.close(index);
         });
       } 
     });

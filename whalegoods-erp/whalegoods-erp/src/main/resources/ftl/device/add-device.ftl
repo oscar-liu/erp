@@ -14,11 +14,11 @@
 
 <body>
 <div class="x-body">
-  <form class="layui-form layui-form-pane" style="margin-left: 20px;">
-    <div style="width:100%;height:400px;overflow: auto;">
+  <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
-      <label for="deviceIdSupp" class="layui-form-label"><span class="x-red">*</span>设备编号（供应商）</label>
-      <div class="layui-input-inline"><input type="text"  id="deviceIdSupp" name="deviceIdSupp"   lay-verify="required" autocomplete="off" class="layui-input"></div>
+    <input  type="hidden" name="id">
+      <label for="deviceIdSupp" class="layui-form-label"><span class="x-red">*</span>设备编号</label>
+      <div class="layui-input-inline"><input type="text"  id="deviceIdSupp" name="deviceIdSupp" lay-verify="required" autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-form-item">
       <label for="shortName" class="layui-form-label"><span class="x-red">*</span>点位短名</label>
@@ -31,9 +31,6 @@
     <div class="layui-form-item">
       <label for="signCode" class="layui-form-label"><span class="x-red">*</span>签到码</label>
       <div class="layui-input-inline"><input type="text"  id="signCode" name="signCode"  lay-verify="required" autocomplete="off" class="layui-input"></div>
-    </div>
-    <div class="layui-form-item">
-      <div style="height: 60px"></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -65,14 +62,14 @@
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
             window.parent.layui.table.reload('deviceList');
-            window.top.layer.msg(d.result_msg,{icon:6});
+            window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});
           }},
           error:function(){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.top.layer.msg('请求失败',{icon:5});
+            window.top.layer.msg('请求失败',{icon:5,time:1000});
         }
       });
       return false;

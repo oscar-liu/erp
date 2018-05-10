@@ -76,7 +76,7 @@
     <div class="layui-form-item">
       <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
       <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">临界值不能大于货道容量</span></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">临界值不能大于或等于货道容量值</span></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -89,16 +89,16 @@
 <script>
   var flag,msg;
   $(function(){
-      $('#warningNum').on("blur",function(){
+      $('#warningNum').on("change",function(){
         var capacity=$('#capacity').val();
         var warningNum=$('#warningNum').val();
+        $('#ms').find('span').text();
         if(warningNum>=capacity)
-        	{
-        	$('#ms').find('span').remove();
-        	$('#ms').append("<span style='color: red;'>"+临界值不能大于货道容量+"</span>");
+        	{        	
+        	$('#ms').find('span').css('color','red').text('临界值不能大于或等于货道容量值');
         	}
         else{
-        	$('#ms').append("<span style='color: green;'>临界值可用</span>");
+        	$('#ms').find('span').css('color','green').text('临界值可用');
         }
       });
   });

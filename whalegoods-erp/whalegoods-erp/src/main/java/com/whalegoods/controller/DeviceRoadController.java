@@ -44,7 +44,7 @@ import com.whalegoods.util.StringUtil;
  * 2018年5月8日 上午9:53:55
  */
 @Controller
-@RequestMapping(value = "/device")
+@RequestMapping(value = "/road")
 public class DeviceRoadController  {
 	
 	  @Autowired
@@ -69,7 +69,7 @@ public class DeviceRoadController  {
 	   */
 	  @GetMapping(value = "showRoad")
 	  @RequiresPermissions("device:road:list")
-	  public String showGoodsSku(Model model) {
+	  public String showRoad(Model model) {
 	    return "/device/road/roadList";
 	  }
 
@@ -81,7 +81,7 @@ public class DeviceRoadController  {
 	  @GetMapping(value = "showRoadList")
 	  @ResponseBody
 	  @RequiresPermissions("device:road:list")
-	  public ReType showUser(Model model, DeviceRoad deviceRoad , String page, String limit) {
+	  public ReType showRoadList(Model model, DeviceRoad deviceRoad , String page, String limit) {
 		  return deviceRoadService.selectByPage(deviceRoad,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
@@ -91,7 +91,7 @@ public class DeviceRoadController  {
 	   * 2018年5月8日 上午10:09:50
 	   */
 	  @GetMapping(value = "showAddRoad")
-	  public String showAddGoods(Model model) {
+	  public String showAddRoad(Model model) {
 	    return "/device/road/add-road";
 	  }
 
@@ -136,7 +136,7 @@ public class DeviceRoadController  {
 	  @GetMapping(value = "showUpdateRoad")
 	  public String showUpdateRoad(@RequestParam String id, Model model) {
 		DeviceRoad deviceRoad= deviceRoadService.selectById(id);
-		model.addAttribute("device",deviceRoad);
+		model.addAttribute("road",deviceRoad);
 	    return "/device/road/update-road";
 	  }
 
@@ -175,8 +175,8 @@ public class DeviceRoadController  {
 	   * 2018年5月8日 上午10:09:50
 	   */
 	  @GetMapping(value = "showAddAdsMiddle")
-	  public String showAddAdsMiddle(Model model,DeviceRoad[] deviceRoads) {
-		  model.addAttribute("deviceRoads", deviceRoads);
+	  public String showAddAdsMiddle(Model model,@RequestParam String middleData) {
+		  model.addAttribute("deviceRoads", middleData);
 	    return "/device/road/add-adsmiddle";
 	  }
 

@@ -62,7 +62,7 @@ public class DeviceController {
 	   */
 	  @GetMapping(value = "showAddDevice")
 	  public String showAddDevice(Model model) {
-	    return "/system/add-device";
+	    return "/device/add-device";
 	  }
 
 	  /**
@@ -92,7 +92,7 @@ public class DeviceController {
 	  public String showUpdateDevice(String id, Model model){
 		Device device=deviceService.selectById(id);
 		model.addAttribute("device", device);
-	    return "device/update-device";
+	    return "/device/update-device";
 	  }
 
 
@@ -105,6 +105,7 @@ public class DeviceController {
 	  @ResponseBody
 	  public ResBody updateDevice(@RequestBody Device device) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  deviceService.updateByObjCdt(device);
 		  return resBody;
 	  }
 
@@ -158,10 +159,10 @@ public class DeviceController {
 		device.setId(id);
 		//1已锁定 2未锁定
 		if(isCheck){
-			device.setDeviceStatus((byte) 1);
+			device.setLockStatus((byte) 2);
 		}
 		else{
-			device.setDeviceStatus((byte) 2);
+			device.setLockStatus((byte) 1);
 		}
 		deviceService.updateByObjCdt(device);
 	    return resBody;

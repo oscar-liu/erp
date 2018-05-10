@@ -22,8 +22,9 @@
     <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     &nbsp;&nbsp;&nbsp;
-    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="middle"><i class="layui-icon">&#xe642;</i>设置中部栏促销</button></@shiro.hasPermission>
-    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="top"><i class="layui-icon">&#xe642;</i>设置顶部栏广告</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adsmiddle"><i class="layui-icon">&#xe642;</i>设置中部栏促销</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:road:adstop">
+     <button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adstop"><i class="layui-icon">&#xe642;</i>设置顶部栏广告</button>
       <div class="layui-inline">  
       <label class="layui-form-label">广告类型</label>
     <div class="layui-input-block">
@@ -31,18 +32,19 @@
       <input type="radio" id="radioGoods" name="radioTop" value="2" title="可购买商品">
     </div>
     </div> 
+    </@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
 <table id="roadList" class="layui-hide" lay-filter="road"></table>
 <script type="text/html" id="rightToolBar">
-<@shiro.hasPermission name="goods:road:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
+<@shiro.hasPermission name="device:road:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
 </script>
 <script type="text/html" id="tpllackLevel">
   {{#  if(d.stock<=d.warningNum){ }}
     <span style="color:red;">缺货</span>
   {{#  } else { }}
-<span style="color:green;">充足</span>
+<span style="color:#76EE00;">充足</span>
   {{#  } }}
   
 </script>
@@ -64,19 +66,19 @@
       url: 'showRoadList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'deviceIdJp',title: '设备编号(鲸品)',align:'center'}, 
-        {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center'},
-        {field: 'shortName', title: '点位', align:'center'},
-        {field: 'goodsCode',title: '商品编号',align:'center'},
-        {field: 'goodsName', title: '商品名称', align:'center'},
-        {field: 'salePrice', title: '售价', align:'center'},
-        {field: 'stock', title: '库存', align:'center'},
-        {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel'},
+        {field: 'shortName', title: '点位短名', align:'center'},
         {field: 'ctn', title: '柜号', align:'center'},
         {field: 'floor', title: '层级', align:'center'},
-        {field: 'pathCode', title: '货道号', align:'center'},
-        {field: 'capacity', title: '最大容量', align:'center'},
-        {field: 'warningNum', title: '报警临界值', align:'center'},
+        {field: 'pathCode', title: '货道号', align:'center'},        
+        {field: 'goodsName', title: '商品名称', align:'center'},
+        {field: 'salePrice', title: '售价', align:'center'},
+        {field: 'goodsCode',title: '商品编号',align:'center'},
+        {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel'},
+        {field: 'stock', title: '库存', align:'center',sort: true},        
+        {field: 'deviceIdJp',title: '设备编号(鲸品)',align:'center'}, 
+        {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center'},
+        {field: 'capacity', title: '最大容量', align:'center',sort: true},
+        {field: 'warningNum', title: '报警临界值', align:'center',sort: true},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
@@ -97,10 +99,12 @@
         });
       },
       reload:function(){
-        $('#goodsCode').val('');
+    	$('#deviceIdJp').val('');
+        $('#deviceIdSupp').val('');
+        $('#shortName').val('');
         table.reload('roadList', {
           where: {
-        	  goodsCode: null,
+        	  deviceIdJp: null,
         	  deviceIdSupp: null,
         	  shortName: null,
           }
@@ -112,35 +116,35 @@
       update: function () {
         var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
         if (data.length != 1) {
-          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
+          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
         update('编辑货道', 'showUpdateRoad?id=' + data[0].id, 800, 500);
       },
-      middle: function () {
+      adsmiddle: function () {
           var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
           if (data.length != 9) {
-            layer.msg('请选择9个货道,已选['+data.length+']个', {icon: 5});
+            layer.msg('请选择9个货道,已选['+data.length+']个', {icon: 5,time:1000});
             return false;
           }
           var f=data[0].deviceIdJp;
           for(var i  in data)
         	  {
-        	  if(f!=i){
-        		  layer.msg('所选货道必须属于同一个设备', {icon: 5});
+        	  if(f!=data[i].deviceIdJp){
+        		  layer.msg('所选货道必须属于同一个设备', {icon: 5,time:1000});
         		  return false;
         	  }
         	  }
-          middle('设置中部促销活动', 'showAddAdsMiddle?middleData=' + data, 800, 500);
+          adsmiddle('设置中部促销活动', 'showAddAdsMiddle?middleData=' + JSON.stringify(data), 800, 500);
         },
-        top: function () {
+        adstop: function () {
         	var actionType = $("input[name='radioTop']:checked").val();
         	var deviceIdJp,deviceIdSupp,deviceRoadId;
         	if(actionType==2)
         		{
         		 var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
                  if (data.length != 1) {
-                   layer.msg('请选择1一个货道,已选['+data.length+']个', {icon: 5});
+                   layer.msg('请选择1一个货道,已选['+data.length+']个', {icon: 5,time:1000});
                    return false;
                  }
                  else{
@@ -149,7 +153,7 @@
                 	 deviceRoadId=data[0].deviceRoadId;
                  }
         		}
-            top('设置顶部广告', 'showAddAdsTop?actionType=' + actionType+'&deviceIdJp='+deviceIdJp+'&deviceIdSupp='+deviceIdSupp+'&deviceRoadId='=deviceRoadId, 800, 500);
+        	adstop('设置顶部广告', 'showAddAdsTop?actionType=' + actionType+'&deviceIdJp='+deviceIdJp+'&deviceIdSupp='+deviceIdSupp+'&deviceRoadId='+deviceRoadId, 800, 500);
           }
     };
     //监听工具条
@@ -185,7 +189,7 @@
           window.top.layer.msg(d.result_msg);
         }},
         error:function(){ 
-          window.top.layer.msg("删除失败,请联系管理员",{icon:5});
+          window.top.layer.msg("删除失败,请联系管理员",{icon:5,time:1000});
       }
     });
   }
@@ -255,7 +259,7 @@
     });
   }
   
-  function middle(title, url, w, h) {
+  function adsmiddle(title, url, w, h) {
 	    if (title == null || title == '') {
 	      title = false;
 	    }
@@ -285,7 +289,7 @@
 	    });
 	  }
   
-  function top(title, url, w, h) {
+  function adstop(title, url, w, h) {
 	    if (title == null || title == '') {
 	      title = false;
 	    }

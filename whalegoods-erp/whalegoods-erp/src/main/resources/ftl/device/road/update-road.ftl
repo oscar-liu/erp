@@ -65,8 +65,8 @@
     <!-- 报警临界值-->
     <div class="layui-form-item">
       <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
-      <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" value="${road.id}" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">临界值不能大于货道容量</span></div>
+      <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" value="${road.warningNum}" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">临界值不能大于或等于货道容量值</span></div>
     </div>
       <!-- 库存-->
     <div class="layui-form-item">
@@ -83,7 +83,6 @@
   </form>
 </div>
 <script>
-<script>
 var flag,msg;
 $(function(){
 	var lockStatus=$('#lockStatus').val();
@@ -91,18 +90,18 @@ $(function(){
 		{
 		$('#lockStatus').attr('disabled','disabled');
 		}
-    $('#warningNum').on("blur",function(){
-      var capacity=$('#capacity').val();
-      var warningNum=$('#warningNum').val();
-      if(warningNum>=capacity)
-      	{
-      	$('#ms').find('span').remove();
-      	$('#ms').append("<span style='color: red;'>"+临界值不能大于货道容量+"</span>");
-      	}
-      else{
-      	$('#ms').append("<span style='color: green;'>临界值可用</span>");
-      }
-    });
+    $('#warningNum').on("change",function(){
+        var capacity=$('#capacity').val();
+        var warningNum=$('#warningNum').val();
+        $('#ms').find('span').text();
+        if(warningNum>=capacity)
+        	{        	
+        	$('#ms').find('span').css('color','red').text('临界值不能大于或等于货道容量值');
+        	}
+        else{
+        	$('#ms').find('span').css('color','green').text('临界值可用');
+        }
+      });
 });
 
 layui.use(['form','layer'], function(){
@@ -136,14 +135,14 @@ layui.use(['form','layer'], function(){
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           window.parent.layui.table.reload('roadList');
-          window.top.layer.msg(d.result_msg,{icon:6});
+          window.top.layer.msg(d.result_msg,{icon:6,time:1000});
         }else{
-          layer.msg(d.result_msg,{icon:5});
+          layer.msg(d.result_msg,{icon:5,time:1000});
         }},
         error:function(){
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
-          window.top.layer.msg('请求失败',{icon:5});
+          window.top.layer.msg('请求失败',{icon:5,time:1000});
       }
     });
     return false;

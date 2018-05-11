@@ -143,8 +143,10 @@
             return false;
           }
           var f=data[0].deviceIdJp;
+          var arr =[];
           for(var i  in data)
         	  {
+        	  data[i].id
         	  if(f!=data[i].deviceIdJp){
         		  layer.msg('所选货道必须属于同一个设备', {icon: 5,time:1000});
         		  return false;

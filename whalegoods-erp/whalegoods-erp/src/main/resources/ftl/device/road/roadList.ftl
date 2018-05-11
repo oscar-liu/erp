@@ -10,6 +10,20 @@
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
+    <style>
+	select{
+                //清除select的边框样式
+                border: none;
+                //清除select聚焦时候的边框颜色
+                outline: none;
+                //将select的宽高等于div的宽高
+                width: 100px;
+                height: 24px;
+                line-height: 40px;
+                //通过padding-left的值让文字居中
+                padding-left: 60px;
+            }
+</style>
 </head>
 
 <body>
@@ -22,16 +36,17 @@
     <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     &nbsp;&nbsp;&nbsp;
-    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adsmiddle"><i class="layui-icon">&#xe642;</i>设置中部栏促销</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adsmiddle"><i class="layui-icon">&#xe664;</i>设置中部栏促销</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:adstop">
-     <button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adstop"><i class="layui-icon">&#xe642;</i>设置顶部栏广告</button>
-      <div class="layui-inline">  
-      <label class="layui-form-label">广告类型</label>
-    <div class="layui-input-block">
-      <input type="radio" id="radioAds" name="radioTop" value="1" title="纯广告展示" checked="">
-      <input type="radio" id="radioGoods" name="radioTop" value="2" title="可购买商品">
-    </div>
-    </div> 
+     <button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adstop"><i class="layui-icon">&#xe6af;</i>设置顶部栏广告</button>&nbsp;
+      广告类型：<!-- <div class="layui-inline"><input type="radio" class="layui-input" id="radioGoods" height="20px" name="radioTop" value="2" title="可购买商品"></div>      
+      <div class="layui-inline"><input type="radio" class="layui-input" id="radioAds" height="20px" name="radioTop"  value="1" title="纯广告展示" checked=""></div> -->
+       <div class="layui-inline">
+     <select id="sltTop">
+        <option value="1" selected="">纯广告展示</option>
+        <option value="2" >可购买商品</option>
+      </select>
+  </div>
     </@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
@@ -44,7 +59,7 @@
   {{#  if(d.stock<=d.warningNum){ }}
     <span style="color:red;">缺货</span>
   {{#  } else { }}
-<span style="color:#76EE00;">充足</span>
+<span style="color:#76EE00;font-weight:bold;">充足</span>
   {{#  } }}
   
 </script>
@@ -59,7 +74,7 @@
   }
   
   layui.use('table', function () {
-    var table = layui.table,form = layui.form;
+    var table = layui.table;
     table.render({
       id: 'roadList',
       elem: '#roadList', 
@@ -135,10 +150,12 @@
         		  return false;
         	  }
         	  }
-          adsmiddle('设置中部促销活动', 'showAddAdsMiddle?middleData=' + JSON.stringify(data), 800, 500);
+          var middleData=JSON.stringify(data);
+          newMiddleData=encodeURIComponent(middleData);
+          adsmiddle('设置中部促销活动', 'showAddAdsMiddle',newMiddleData , 800, 500);
         },
         adstop: function () {
-        	var actionType = $("input[name='radioTop']:checked").val();
+        	var actionType = $("#sltTop").val();
         	var deviceIdJp,deviceIdSupp,deviceRoadId;
         	if(actionType==2)
         		{
@@ -150,7 +167,7 @@
                  else{
                 	 deviceIdJp=data[0].deviceIdJp;
                 	 deviceIdSupp=data[0].deviceIdSupp;
-                	 deviceRoadId=data[0].deviceRoadId;
+                	 deviceRoadId=data[0].id;
                  }
         		}
         	adstop('设置顶部广告', 'showAddAdsTop?actionType=' + actionType+'&deviceIdJp='+deviceIdJp+'&deviceIdSupp='+deviceIdSupp+'&deviceRoadId='+deviceRoadId, 800, 500);
@@ -259,7 +276,7 @@
     });
   }
   
-  function adsmiddle(title, url, w, h) {
+  function adsmiddle(title, url,d, w, h) {
 	    if (title == null || title == '') {
 	      title = false;
 	    }
@@ -276,17 +293,29 @@
 	      h = ($(window).height() - 50);
 	    }
 	    ;
-	    layer.open({
-	      id: 'road-adsmiddle',
-	      type: 2,
-	      area: [w + 'px', h + 'px'],
-	      fix: false,
-	      maxmin: true,
-	      shadeClose: false,
-	      shade: 0.4,
-	      title: title,
-	      content: url
-	    });
+	    $.ajax({  
+            type: 'POST',  
+            url:url,//发送请求  
+            data: d,  
+            dataType : "html",  
+            success: function(result) {  
+                var htmlCont = result;//返回的结果页面  
+                layer.open({  
+                	id: 'road-adsmiddle',
+                	type: 2,//弹出框类型  
+                    title: title,  
+                    fix: false,
+                    maxmin: true,
+                    shade: 0.4,
+                    shadeClose: false, //点击遮罩关闭层  
+                    area : [w + 'px', h + 'px'],
+                    content: htmlCont,//将结果页面放入layer弹出层中  
+                    success: function(layero, index){  
+                          
+                    }  
+                });  
+            }  
+          });  
 	  }
   
   function adstop(title, url, w, h) {

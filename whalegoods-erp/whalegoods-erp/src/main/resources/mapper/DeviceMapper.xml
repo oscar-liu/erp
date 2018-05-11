@@ -28,6 +28,14 @@
     SELECT  <include refid="Base_Column_List" />  FROM device a WHERE id = #{_parameter}
   </select>
   
+    <select id="selectByObjCdt" parameterType="com.whalegoods.entity.Device" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />  FROM device a 
+    <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> AND device_id_jp=#{deviceIdJp}</if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND device_id_supp=#{deviceIdSupp}</if>
+    </where>
+  </select>
+  
    <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM device  WHERE id = #{_parameter}
   </delete>

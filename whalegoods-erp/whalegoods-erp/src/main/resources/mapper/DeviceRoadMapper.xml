@@ -15,7 +15,7 @@
     <result column="path_code" jdbcType="TINYINT" property="pathCode" />
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="stock" jdbcType="TINYINT" property="stock" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
     <result column="adsMiddleType" jdbcType="TINYINT" property="saleType" />
   </resultMap>
   
@@ -95,6 +95,21 @@
     WHERE a.id=#{id}
   </select>
   
+  <select id="selectByMapCdt" parameterType="java.util.Map" resultMap="BaseResultMap2">
+    SELECT <include refid="Base_Column_List3" />
+    FROM device_road a 
+    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
+     <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> 
+     AND c.device_id_jp=#{deviceIdJp}
+     </if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> 
+     AND c.device_id_supp=#{deviceIdSupp}
+     </if>
+    </where>
+  </select>
+  
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
     SELECT <include refid="Base_Column_List3" />
     FROM device_road a 
@@ -144,6 +159,38 @@
 			</if>
 		 </where>
   </select>
+  
+  <insert id="insert" parameterType="com.whalegoods.entity.DeviceRoad">
+    INSERT INTO device_road (
+    id,
+    device_id, 
+    ctn, 
+    path_code, 
+    floor, 
+    goods_sku_id, 
+    sale_price,
+    capacity,
+    warning_num,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{deviceId}, 
+    #{ctn}, 
+    #{pathCode},
+    #{floor}, 
+    #{goodsSkuId},
+    #{salePrice},
+    #{capacity},
+    #{warningNum},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
 	
 	  	<!-- 根据条件更新货道信息 -->
 		<update id="updateByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad">

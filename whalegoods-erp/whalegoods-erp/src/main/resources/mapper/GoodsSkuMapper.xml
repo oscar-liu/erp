@@ -68,6 +68,13 @@
     </where>
   </select>
   
+  <select id="selectByMapCdt" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM goods_sku
+   <where>
+     <if test="goodsCode !=null and goodsCode!=''"> AND goods_code LIKE  #{goodsCode} "%"</if>
+    </where>
+  </select>
+  
     <insert id="insert" parameterType="com.whalegoods.entity.GoodsSku">
     INSERT INTO goods_sku (
     id,

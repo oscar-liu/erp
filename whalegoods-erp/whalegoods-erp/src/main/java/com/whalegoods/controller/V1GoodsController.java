@@ -110,7 +110,7 @@ public class V1GoodsController {
 		  deviceRoad.setPathCode(Byte.valueOf( map.get("path_code").toString()));
 		  deviceRoad.setFloor(Byte.valueOf( map.get("floor").toString()));
 		  deviceRoad.setCtn(Byte.valueOf( map.get("ctn").toString()));
-		  deviceRoad.setStock((byte)map.get("stock"));
+		  deviceRoad.setStock((Integer) map.get("stock"));
 		  deviceRoadService.updateByObjCdt(deviceRoad);
 	}
 	  return resBody;

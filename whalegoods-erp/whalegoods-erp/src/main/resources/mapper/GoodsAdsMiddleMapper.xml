@@ -8,7 +8,7 @@
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="sale_price" jdbcType="VARCHAR" property="salePrice" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="stock" jdbcType="TINYINT" property="stock" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
     <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
   </resultMap>
   

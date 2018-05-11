@@ -1,5 +1,6 @@
 package com.whalegoods.controller;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.GoodsAdsTop;
+import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
@@ -31,6 +33,7 @@ import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
+import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.ReType;
@@ -57,7 +60,10 @@ public class DeviceRoadController  {
 	  GoodsAdsTopService goodsAdsTopService; 
 	  
 	  @Autowired
-	  GoodsAdsMiddleService goodsAdsMiddleService; 
+	  GoodsAdsMiddleService goodsAdsMiddleService;
+	  
+	  @Autowired
+	  GoodsSkuService goodsSkuService; 
 	  
 	  @Autowired
 	  FileUtil fileUtil;
@@ -104,24 +110,39 @@ public class DeviceRoadController  {
 	  @ResponseBody
 	  public ResBody addRoad(@RequestBody DeviceRoad deviceRoad) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity())
+		  {
+			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+		  }
 		  //查询设备是否存在
 		  Device objCdt=new Device();
 		  objCdt.setDeviceIdJp(deviceRoad.getDeviceIdJp());
 		  objCdt.setDeviceIdSupp(deviceRoad.getDeviceIdSupp());
-		  if(!(deviceService.selectCountByObjCdt(objCdt)>0))
+		  Device newObjCdt=deviceService.selectByObjCdt(objCdt);
+		  if(newObjCdt==null)
 		  {
 			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
 		  }
-		  //查询货道是否已存在
+		  //查询商品是否存在
 		  Map<String,Object> mapCdt=new HashMap<>();
-		  mapCdt.put("deviceIdJp",deviceRoad.getDeviceIdJp());
-		  mapCdt.put("ctn",deviceRoad.getCtn());
-		  mapCdt.put("floor",deviceRoad.getFloor());
-		  mapCdt.put("pathCode",deviceRoad.getPathCode());
-		  if(!(deviceRoadService.selectCountByMapCdt(mapCdt)>0)){
+		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
+		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
+		  if(goodsSku==null)
+		  {
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+		  }
+		  //查询货道是否已存在
+		  Map<String,Object> mapCdt2=new HashMap<>();
+		  mapCdt2.put("deviceIdJp",deviceRoad.getDeviceIdJp());
+		  mapCdt2.put("ctn",deviceRoad.getCtn());
+		  mapCdt2.put("floor",deviceRoad.getFloor());
+		  mapCdt2.put("pathCode",deviceRoad.getPathCode());
+		  if(deviceRoadService.selectCountByMapCdt(mapCdt2)>0){
 			  throw new BizApiException(ConstApiResCode.PATH_EXIST);
 		  }
 		  deviceRoad.setId(StringUtil.getUUID());
+		  deviceRoad.setGoodsSkuId(goodsSku.getId());
+		  deviceRoad.setDeviceId(newObjCdt.getId());
 		  deviceRoad.setCreateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoadService.insert(deviceRoad);
@@ -150,6 +171,33 @@ public class DeviceRoadController  {
 	  @ResponseBody
 	  public ResBody updateRoad(@RequestBody DeviceRoad deviceRoad) {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity())
+		  {
+			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+		  }
+		//查询商品是否存在
+		  Map<String,Object> mapCdt=new HashMap<>();
+		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
+		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
+		  if(goodsSku==null)
+		  {
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+		  }
+		  //查询货道是否已存在
+		  Map<String,Object> mapCdt2=new HashMap<>();
+		  mapCdt2.put("deviceIdJp",deviceRoad.getDeviceIdJp());
+		  mapCdt2.put("ctn",deviceRoad.getCtn());
+		  mapCdt2.put("floor",deviceRoad.getFloor());
+		  mapCdt2.put("pathCode",deviceRoad.getPathCode());
+		  if(deviceRoadService.selectCountByMapCdt(mapCdt2)>0){
+			  deviceRoad.setCtn(null);
+			  deviceRoad.setFloor(null);
+			  deviceRoad.setPathCode(null);
+		  }
+		  if(deviceRoad.getLockStatus()==1)
+		  {
+			  deviceRoad.setStock(0);
+		  }
 		deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		deviceRoadService.updateByObjCdt(deviceRoad);
 		return resBody;
@@ -174,10 +222,12 @@ public class DeviceRoadController  {
 	   * @author henrysun
 	   * 2018年5月8日 上午10:09:50
 	   */
-	  @GetMapping(value = "showAddAdsMiddle")
-	  public String showAddAdsMiddle(Model model,@RequestParam String middleData) {
-		  model.addAttribute("deviceRoads", middleData);
-	    return "/device/road/add-adsmiddle";
+	  @PostMapping(value = "showAddAdsMiddle")
+	  public String showAddAdsMiddle(Model model,@RequestBody String middleData) {
+			@SuppressWarnings("deprecation")
+			String newMiddleData= URLDecoder.decode(middleData);
+			model.addAttribute("deviceRoads", newMiddleData);
+		    return "/device/road/add-adsmiddle";
 	  }
 
 	  /**
@@ -203,7 +253,7 @@ public class DeviceRoadController  {
 	   * 2018年5月8日 上午10:09:50
 	   */
 	  @GetMapping(value = "showAddAdsTop")
-	  public String showAddAdsTop(Model model,@RequestBody GoodsAdsTop adsTop ) {
+	  public String showAddAdsTop(Model model,GoodsAdsTop adsTop ) {
 		  model.addAttribute("topData", adsTop);
 	    return "/device/road/add-adstop";
 	  }

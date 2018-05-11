@@ -24,7 +24,7 @@
      <div class="layui-inline">
      <!--货道柜号-->
      <input value="${road.id}" type="hidden" name="id" >
-     <input value="${road.lockStatus}" type="hidden" id="lockStatus" name="lockStatus">
+     <input value="${road.lockStatus}" type="hidden" id="hidLockStatus" name="hidLockStatus">
      <label for="ctn" class="layui-form-label"><span class="x-red">*</span>货道柜号</label>
       <div class="layui-input-inline"><input type="text"  id="ctn" name="ctn" value="${road.ctn}" lay-verify="required|number|ZZS" autocomplete="off" class="layui-input"></div>
      </div>
@@ -66,12 +66,12 @@
     <div class="layui-form-item">
       <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
       <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" value="${road.warningNum}" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">临界值不能大于或等于货道容量值</span></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span id="ums">临界值不能大于或等于货道容量值</span></div>
     </div>
       <!-- 库存-->
     <div class="layui-form-item">
       <label for="stock" class="layui-form-label">库存</label>
-      <div class="layui-input-inline"><input type="text"  id="stock" name="stock" value="${road.stock}" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="iptStock" name="stock" value="${road.stock}" lay-verify="required|number"  autocomplete="off" class="layui-input"></div>
       <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">如果需要修改，请联系管理员解锁</span></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
@@ -84,16 +84,17 @@
 </div>
 <script>
 var flag,msg;
-$(function(){
-	var lockStatus=$('#lockStatus').val();
+var lockStatus=$('#hidLockStatus').val();
+$(function(){	
 	if(lockStatus==1)
 		{
-		$('#lockStatus').attr('disabled','disabled');
+		$('#iptStock').attr('disabled','true');
+		$('#iptStock').css('background','#CCCCC');
 		}
     $('#warningNum').on("change",function(){
         var capacity=$('#capacity').val();
         var warningNum=$('#warningNum').val();
-        $('#ms').find('span').text();
+        $('#ms').find('span').text('');
         if(warningNum>=capacity)
         	{        	
         	$('#ms').find('span').css('color','red').text('临界值不能大于或等于货道容量值');
@@ -123,6 +124,7 @@ layui.use(['form','layer'], function(){
  });
   //监听提交
   form.on('submit(confirm)', function(data){
+	  data.field.lockStatus=lockStatus;
     $.ajax({
       url:'updateRoad',
       type:'post',

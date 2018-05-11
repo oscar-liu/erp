@@ -76,7 +76,7 @@
     <div class="layui-form-item">
       <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
       <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">临界值不能大于或等于货道容量值</span></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span id="ums">临界值不能大于或等于货道容量值</span></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -92,7 +92,7 @@
       $('#warningNum').on("change",function(){
         var capacity=$('#capacity').val();
         var warningNum=$('#warningNum').val();
-        $('#ms').find('span').text();
+        $('#ms').find('span').text('');
         if(warningNum>=capacity)
         	{        	
         	$('#ms').find('span').css('color','red').text('临界值不能大于或等于货道容量值');
@@ -134,14 +134,14 @@
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
             window.parent.layui.table.reload('roadList');
-            window.top.layer.msg(d.result_msg,{icon:6});
+            window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});
           }},
           error:function(){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.top.layer.msg('请求失败',{icon:5});
+            window.top.layer.msg('请求失败',{icon:5,time:1000});
         }
       });
       return false;

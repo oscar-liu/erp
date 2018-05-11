@@ -18,11 +18,15 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+    private String deviceId;
+	
     private String deviceIdJp;
     
     private String deviceIdSupp;
     
     private String shortName;
+    
+    private String goodsSkuId;
     
     private String goodsCode;
 	
@@ -40,7 +44,7 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	
 	private Byte capacity;
 	
-	private Byte stock;
+	private Integer stock;
 	
 	private Byte warningNum;
 	

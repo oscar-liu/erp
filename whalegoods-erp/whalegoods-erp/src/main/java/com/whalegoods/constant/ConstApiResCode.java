@@ -26,6 +26,7 @@ public abstract class ConstApiResCode {
     public final static Integer VIEWTIME_NOT_EMPTY= 7003;
     public final static Integer STOCK_NOT_ENOUGH= 7004;
     public final static Integer GOODS_CODE_EXIST= 7005;
+    public final static Integer GOODS_CODE_NOT_EXIST= 7006;
     
     /**
      * 设备和货道相关 8开头
@@ -33,6 +34,7 @@ public abstract class ConstApiResCode {
     public final static Integer PATH_NOT_EXIST= 8001;
     public final static Integer DEVICE_NOT_EXIST= 8002;
     public final static Integer PATH_EXIST= 8003;
+    public final static Integer CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM= 8004;
     
     /**
      * 订单相关 9开头
@@ -64,10 +66,12 @@ public abstract class ConstApiResCode {
 		resMap.put(VIEWTIME_NOT_EMPTY,"限时折扣商品时间戳不能为空");
 		resMap.put(STOCK_NOT_ENOUGH,"该商品所在货道库存不足");
 		resMap.put(GOODS_CODE_EXIST,"商品编号已存在");
+		resMap.put(GOODS_CODE_NOT_EXIST,"商品编号不存在");
 		
 		resMap.put(PATH_NOT_EXIST,"该货道不存在");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");
 		resMap.put(PATH_EXIST,"货道已存在");
+		resMap.put(CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM,"临界值不能大于或等于货道容量值");
 		
 		resMap.put(WX_PREPAY_ONE_FAILED,"微信预支付-一级失败");
 		resMap.put(WX_PREPAY_TWO_FAILED,"微信预支付-二级失败");

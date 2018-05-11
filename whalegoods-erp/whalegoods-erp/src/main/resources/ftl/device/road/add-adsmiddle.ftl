@@ -32,14 +32,14 @@
 	<td>
 		<table border = "1">
 		<#list deviceRoad as deviceRoads>
-                <tr height="40"><td id="draggable1" width = "200" bgcolor="lightgreen"><span id="${deviceRoad.id}">${deviceRoad.goodsName}</span></td></tr>
+                <tr height="40"><td id="draggable" width = "200" bgcolor="lightgreen"><span id="${deviceRoad.id}">${deviceRoad.goodsName}</span></td></tr>
          </#list>
 		</table>
 	</td>
 	<td>
 		<table border = "1" >
 		<tr height="40">
-			<td width = "250">早上7点-9点</td>
+			<td width = "250">早上07:00-09:00</td>
 			<td width = "250">中午12:00-14:00</td>
 			<td width = "250">下午18:00-20:00</td>
 		</tr>
@@ -74,7 +74,7 @@
 <script>
   var flag,msg;
   $(function(){
-      $('td[id^="draggable"]').draggable({
+      $('td[class^="draggable"]').draggable({
 		   helper:"clone",
 		   cursor: "move"
 		 });
@@ -146,14 +146,14 @@
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
             window.parent.layui.table.reload('roadList');
-            window.top.layer.msg(d.result_msg,{icon:6});
+            window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
-            layer.msg(d.result_msg,{icon:5});
+            layer.msg(d.result_msg,{icon:5,time:1000});
           }},
           error:function(){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.top.layer.msg('请求失败',{icon:5});
+            window.top.layer.msg('请求失败',{icon:5,time:1000});
         }
       });
       return false;

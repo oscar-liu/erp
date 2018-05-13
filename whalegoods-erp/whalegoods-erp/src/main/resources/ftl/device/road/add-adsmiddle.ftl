@@ -31,8 +31,8 @@
 <tr>
 	<td>
 		<table border = "1">
-		<#list deviceRoad as deviceRoads>
-                <tr height="40"><td id="draggable" width = "200" bgcolor="lightgreen"><span id="${deviceRoad.id}">${deviceRoad.goodsName}</span></td></tr>
+		<#list goodsList as goods>
+                <tr height="40"><td id="draggable" width = "200" bgcolor="lightgreen"><span id="${goods.id}">${goods.goodsName}</span></td></tr>
          </#list>
 		</table>
 	</td>

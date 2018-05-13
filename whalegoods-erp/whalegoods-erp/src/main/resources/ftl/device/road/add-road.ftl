@@ -7,8 +7,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
+  <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
 </head>
 
 <body>
@@ -19,16 +22,23 @@
       <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">货道信息</legend></fieldset>
     </div>
     <div class="layui-form-item">
-    <div class="layui-inline">
-    <!-- 鲸品设备编号-->
-    <label for="deviceIdJp" class="layui-form-label"><span class="x-red">*</span>鲸品设备编号</label>
-      <div class="layui-input-inline"><input type="text"  id="deviceIdJp" name="deviceIdJp"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <div class="layui-inline">
+     <!--设备-->
+     <label for="deviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
+      <div class="layui-input-inline">
+       <select id="deviceId" name="deviceId" lay-verify="required">
+     <option value="">直接选择或搜索选择</option>
+  	<#list deviceList as device>
+          <option value="${device.id}">${device.shortName}</option>
+    </#list>
+    </select>
+      </div>
     </div>
-    <div class="layui-inline">
-    <!--供应商设备编号-->
-      <label for="deviceIdSupp" class="layui-form-label"><span class="x-red">*</span>供应商设备编号</label>
-      <div class="layui-input-inline"><input type="text"  id="deviceIdSupp" name="deviceIdSupp" lay-verify="required"  autocomplete="off" class="layui-input"></div>
-       </div>
+     <div class="layui-inline">
+     <!--货道容量-->
+     <label for="capacity" class="layui-form-label"><span class="x-red">*</span>货道容量</label>
+      <div class="layui-input-inline"><input type="text"  id="capacity" name="capacity" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+    </div>
     </div>
          
     <div class="layui-form-item">
@@ -51,11 +61,23 @@
       <div class="layui-input-inline"><input type="text"  id="pathCode" name="pathCode" lay-verify="required|number|ZZS"   autocomplete="off" class="layui-input"></div>
      </div>
      <div class="layui-inline">
-     <!--商品编号-->
+        <!--商品编号-->
      <label for="goodsCode" class="layui-form-label"><span class="x-red">*</span>商品编号</label>
-      <div class="layui-input-inline"><input type="text"  id="goodsCode" name="goodsCode" lay-verify="required"  autocomplete="off" class="layui-input"></div>
-     </div>
-      
+      <div class="layui-input-inline">
+       <select id="goodsCode" name="goodsCode" lay-verify="required">
+     <option value="">直接选择或搜索选择</option>
+  	<#list goods as goodsList>
+          <option value="${goods.goodsCode}">${goods.goodsName}</option>
+    </#list>
+    </select>
+      </div>
+    </div>
+    
+     <!-- 报警临界值-->
+    <div class="layui-form-item">
+      <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
+      <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span id="ums">临界值不能大于或等于货道容量值</span></div>
     </div>
  
     <div class="layui-form-item">
@@ -64,20 +86,9 @@
      <label for="salePrice" class="layui-form-label"><span class="x-red">*</span>售价</label>
       <div class="layui-input-inline"><input type="text"  id="salePrice" name="salePrice"  lay-verify="required|number"  autocomplete="off" class="layui-input"></div>
     </div>
-    <div class="layui-inline">
-     <!--货道容量-->
-     <label for="capacity" class="layui-form-label"><span class="x-red">*</span>货道容量</label>
-      <div class="layui-input-inline"><input type="text"  id="capacity" name="capacity" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
-    </div>
      
     </div>
-    
-    <!-- 报警临界值-->
-    <div class="layui-form-item">
-      <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
-      <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span id="ums">临界值不能大于或等于货道容量值</span></div>
-    </div>
+   
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 增加</button>
@@ -89,9 +100,11 @@
 <script>
   var flag,msg;
   $(function(){
+	  $('#deviceId').select2();
+	  $('#goodsCode').select2();
       $('#warningNum').on("change",function(){
-        var capacity=$('#capacity').val();
-        var warningNum=$('#warningNum').val();
+        var capacity=parseInt($('#capacity').val());
+        var warningNum=parseInt($('#warningNum').val());
         $('#ms').find('span').text('');
         if(warningNum>=capacity)
         	{        	

@@ -1,6 +1,7 @@
 package com.whalegoods.controller;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,8 @@ import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.GoodsAdsTop;
 import com.whalegoods.entity.GoodsSku;
+import com.whalegoods.entity.request.ReqCreatePrepay;
+import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
@@ -34,6 +38,7 @@ import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
 import com.whalegoods.service.GoodsSkuService;
+import com.whalegoods.service.PayService;
 import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.ReType;
@@ -63,10 +68,13 @@ public class DeviceRoadController  {
 	  GoodsAdsMiddleService goodsAdsMiddleService;
 	  
 	  @Autowired
-	  GoodsSkuService goodsSkuService; 
+	  GoodsSkuService goodsSkuService;
 	  
 	  @Autowired
 	  FileUtil fileUtil;
+	  
+	  @Autowired
+	  PayService payService;
 
 	  /**
 	   * 跳转到货道列表页面
@@ -76,6 +84,7 @@ public class DeviceRoadController  {
 	  @GetMapping(value = "showRoad")
 	  @RequiresPermissions("device:road:list")
 	  public String showRoad(Model model) {
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
 	    return "/device/road/roadList";
 	  }
 
@@ -98,6 +107,7 @@ public class DeviceRoadController  {
 	   */
 	  @GetMapping(value = "showAddRoad")
 	  public String showAddRoad(Model model) {
+	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	    return "/device/road/add-road";
 	  }
 
@@ -115,11 +125,8 @@ public class DeviceRoadController  {
 			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
 		  }
 		  //查询设备是否存在
-		  Device objCdt=new Device();
-		  objCdt.setDeviceIdJp(deviceRoad.getDeviceIdJp());
-		  objCdt.setDeviceIdSupp(deviceRoad.getDeviceIdSupp());
-		  Device newObjCdt=deviceService.selectByObjCdt(objCdt);
-		  if(newObjCdt==null)
+		  Device device=deviceService.selectById(deviceRoad.getDeviceId());
+		  if(device==null)
 		  {
 			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
 		  }
@@ -142,7 +149,7 @@ public class DeviceRoadController  {
 		  }
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
-		  deviceRoad.setDeviceId(newObjCdt.getId());
+		  deviceRoad.setDeviceId(device.getId());
 		  deviceRoad.setCreateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoadService.insert(deviceRoad);
@@ -158,6 +165,7 @@ public class DeviceRoadController  {
 	  public String showUpdateRoad(@RequestParam String id, Model model) {
 		DeviceRoad deviceRoad= deviceRoadService.selectById(id);
 		model.addAttribute("road",deviceRoad);
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	    return "/device/road/update-road";
 	  }
 
@@ -222,11 +230,11 @@ public class DeviceRoadController  {
 	   * @author henrysun
 	   * 2018年5月8日 上午10:09:50
 	   */
-	  @PostMapping(value = "showAddAdsMiddle")
-	  public String showAddAdsMiddle(Model model,@RequestBody String middleData) {
+	  @GetMapping(value = "showAddAdsMiddle")
+	  public String showAddAdsMiddle(Model model,@RequestParam String middleData) {
 			@SuppressWarnings("deprecation")
 			String newMiddleData= URLDecoder.decode(middleData);
-			model.addAttribute("deviceRoads", newMiddleData);
+			model.addAttribute("goodsList", newMiddleData);
 		    return "/device/road/add-adsmiddle";
 	  }
 
@@ -254,7 +262,10 @@ public class DeviceRoadController  {
 	   */
 	  @GetMapping(value = "showAddAdsTop")
 	  public String showAddAdsTop(Model model,GoodsAdsTop adsTop ) {
-		  model.addAttribute("topData", adsTop);
+		if(adsTop.getActionType()==1){
+			model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+		}
+		model.addAttribute("topData", adsTop);
 	    return "/device/road/add-adstop";
 	  }
 
@@ -321,5 +332,24 @@ public class DeviceRoadController  {
 		}
 		  return jsonUtil;
 	  }
+	  
+		/**
+		 * 生成预支付订单（ERP）
+		 * @author henrysun
+		 * 2018年5月13日 下午4:17:03
+		 */
+	  @SuppressWarnings("deprecation")
+	  @GetMapping(value="/createPrepayBack")
+	  @RequiresPermissions("device:road:prepay")
+	  String createPrepay(ReqCreatePrepay reqCreatePrepay,Model model) throws SystemException {
+		  String order=JSONObject.parseObject(payService.createPrepay(reqCreatePrepay).getData().toString()).getString("order");
+		  ReqCreateQrCode reqObj=new ReqCreateQrCode();
+		  reqObj.setOrder(order);
+		  reqObj.setPayType(reqCreatePrepay.getSaleType());
+		  String qrcodeUrl=JSONObject.parseObject(payService.getQrCode(reqObj).getData().toString()).getString("qrcode_url");
+		  String newQrCodeUrl=Base64Utils.decodeFromString( URLDecoder.decode(qrcodeUrl)).toString();
+	      model.addAttribute("qrCodeUrl",URLEncoder.encode(newQrCodeUrl));
+		  return "/device/road/qrcode";
+		}
 	
 }

@@ -8,7 +8,11 @@
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
+  <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/qrcode/jquery.qrcode.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
     <style>
 	select{
@@ -18,7 +22,7 @@
                 outline: none;
                 //将select的宽高等于div的宽高
                 width: 100px;
-                height: 24px;
+                height: 30px;
                 line-height: 40px;
                 //通过padding-left的值让文字居中
                 padding-left: 60px;
@@ -29,22 +33,39 @@
 <body>
 <div class="erp-search">
   <div class="select">
-           设备编号（鲸品）： <div class="layui-inline"><input class="layui-input" height="20px" id="deviceIdJp" autocomplete="off"></div>
-           设备编号（供应商）： <div class="layui-inline"><input class="layui-input" height="20px" id="deviceIdSupp" autocomplete="off"></div>
-           点位短名： <div class="layui-inline"><input class="layui-input" height="20px" id="shortName" autocomplete="off"></div>
+    设备：
+   <div class="layui-inline">
+       <div class="layui-input-inline">
+     <select id="sltDeviceList" name="sltDeviceList" >
+     <option value="">直接选择或搜索选择</option>
+  	<#list deviceList as device>
+          <option value="${device.id}">${device.shortName}</option>
+    </#list>
+    </select>
+   </div>
+   </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
     <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     &nbsp;&nbsp;&nbsp;
-    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adsmiddle"><i class="layui-icon">&#xe664;</i>设置中部栏促销</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:road:adsmiddle"><button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adsmiddle"><i class="layui-icon">&#xe664;</i>设置促销</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:adstop">
-     <button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adstop"><i class="layui-icon">&#xe6af;</i>设置顶部栏广告</button>&nbsp;
-      广告类型：<!-- <div class="layui-inline"><input type="radio" class="layui-input" id="radioGoods" height="20px" name="radioTop" value="2" title="可购买商品"></div>      
-      <div class="layui-inline"><input type="radio" class="layui-input" id="radioAds" height="20px" name="radioTop"  value="1" title="纯广告展示" checked=""></div> -->
+     <button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adstop"><i class="layui-icon">&#xe6af;</i>设置广告</button>&nbsp;
+      广告类型：
        <div class="layui-inline">
      <select id="sltTop">
         <option value="1" selected="">纯广告展示</option>
         <option value="2" >可购买商品</option>
+      </select>
+  </div>
+    </@shiro.hasPermission>
+     &nbsp;&nbsp;&nbsp;
+    <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe664;</i>生成支付二维码</button>&nbsp;
+          支付类型：
+       <div class="layui-inline">
+     <select id="sltPayType">
+        <option value="1" selected="">微信</option>
+        <option value="2" >支付宝</option>
       </select>
   </div>
     </@shiro.hasPermission>
@@ -72,6 +93,15 @@
       $(".select .select-on").click();
     }
   }
+  $(function(){
+	  $('#sltDeviceList').select2();
+	  $('#sltTop').select2({
+		  minimumResultsForSearch: -1
+	  });
+	  $('#sltPayWay').select2({
+		  minimumResultsForSearch: -1
+	  });
+  });
   
   layui.use('table', function () {
     var table = layui.table;
@@ -94,34 +124,30 @@
         {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center'},
         {field: 'capacity', title: '最大容量', align:'center',sort: true},
         {field: 'warningNum', title: '报警临界值', align:'center',sort: true},
+        {field: 'deviceId', title: ''},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
+      done: function(res, curr, count){
+    	  $("[data-field='deviceId']").css('display','none');
+    	  }
       page: true,
       height: 'full-83'
     });
 
     var $ = layui.$, active = {
       select: function () {
-        var deviceIdJp = $('#deviceIdJp').val();
-        var deviceIdSupp = $('#deviceIdSupp').val();
-        var shortName = $('#shortName').val();
+        var deviceId = $('#sltDeviceList').val();
         table.reload('roadList', {
           where: {
-        	  deviceIdJp: deviceIdJp,
-        	  deviceIdSupp: deviceIdSupp,
-        	  shortName: shortName,
+        	  deviceId: deviceId
           }
         });
       },
       reload:function(){
-    	$('#deviceIdJp').val('');
-        $('#deviceIdSupp').val('');
-        $('#shortName').val('');
-        table.reload('roadList', {
+       $("#sltDeviceList").find("option[value = '']").attr("selected","selected");
+       table.reload('roadList', {
           where: {
-        	  deviceIdJp: null,
-        	  deviceIdSupp: null,
-        	  shortName: null,
+        	  deviceId: null
           }
         });
       },
@@ -144,21 +170,25 @@
           }
           var f=data[0].deviceIdJp;
           var arr =[];
-          for(var i  in data)
-        	  {
-        	  data[i].id
+          for(var i  in data){
         	  if(f!=data[i].deviceIdJp){
         		  layer.msg('所选货道必须属于同一个设备', {icon: 5,time:1000});
         		  return false;
         	  }
-        	  }
-          var middleData=JSON.stringify(data);
-          newMiddleData=encodeURIComponent(middleData);
-          adsmiddle('设置中部促销活动', 'showAddAdsMiddle',newMiddleData , 800, 500);
+          }
+          var dataObjArr=[];
+          var dataObj=new Object();
+          for(var j in data){
+        	  dataObj.id=data[j].id;
+        	  dataObj.goodsName=data[j].goodsName;
+        	  dataObjArr.push(dataObj);
+          }
+          var middleData=encodeURIComponent(JSON.stringify(dataObjArr));
+          adsmiddle('设置中部促销活动', 'showAddAdsMiddle?middleData='+middleData , 800, 500);
         },
         adstop: function () {
         	var actionType = $("#sltTop").val();
-        	var deviceIdJp,deviceIdSupp,deviceRoadId;
+        	var deviceId;
         	if(actionType==2)
         		{
         		 var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
@@ -167,13 +197,28 @@
                    return false;
                  }
                  else{
-                	 deviceIdJp=data[0].deviceIdJp;
-                	 deviceIdSupp=data[0].deviceIdSupp;
-                	 deviceRoadId=data[0].id;
+                	 deviceId=data[0].id;
+                	 deviceRoadId=data[0].deviceRoadId;
                  }
         		}
-        	adstop('设置顶部广告', 'showAddAdsTop?actionType=' + actionType+'&deviceIdJp='+deviceIdJp+'&deviceIdSupp='+deviceIdSupp+'&deviceRoadId='+deviceRoadId, 800, 500);
-          }
+        	adstop('设置顶部广告', 'showAddAdsTop?actionType=' + actionType+'&deviceId='+deviceId+'&deviceRoadId='+deviceRoadId, 800, 500);
+          },
+          prepay: function () {
+          	var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
+            if (data.length != 1) {
+              layer.msg('请选择1一个货道,已选['+data.length+']个', {icon: 5,time:1000});
+              return false;
+            }
+            else{
+             var device_code_sup=data[0].deviceIdSupp;
+             var device_code_wg=data[0].deviceIdJp;
+             var ctn=data[0].ctn;
+             var floor=data[0].floor;
+             var path_code=data[0].path_code;
+             var sale_type=$("#sltPayType").val();
+            }
+            prepay('生成支付二维码', 'createPrepayBack?sale_type=' + sale_type+'&path_code='+path_code+'&floor='+floor+'&ctn='+ctn+'&device_code_wg='+device_code_wg+'&device_code_sup='+device_code_sup, 300, 300);
+            }
     };
     //监听工具条
     table.on('tool(road)', function (obj) {
@@ -278,7 +323,7 @@
     });
   }
   
-  function adsmiddle(title, url,d, w, h) {
+  function adsmiddle(title, url, w, h) {
 	    if (title == null || title == '') {
 	      title = false;
 	    }
@@ -295,29 +340,17 @@
 	      h = ($(window).height() - 50);
 	    }
 	    ;
-	    $.ajax({  
-            type: 'POST',  
-            url:url,//发送请求  
-            data: d,  
-            dataType : "html",  
-            success: function(result) {  
-                var htmlCont = result;//返回的结果页面  
-                layer.open({  
-                	id: 'road-adsmiddle',
-                	type: 2,//弹出框类型  
-                    title: title,  
-                    fix: false,
-                    maxmin: true,
-                    shade: 0.4,
-                    shadeClose: false, //点击遮罩关闭层  
-                    area : [w + 'px', h + 'px'],
-                    content: htmlCont,//将结果页面放入layer弹出层中  
-                    success: function(layero, index){  
-                          
-                    }  
-                });  
-            }  
-          });  
+	    layer.open({
+		      id: 'road-adsmiddle',
+		      type: 2,
+		      area: [w + 'px', h + 'px'],
+		      fix: false,
+		      maxmin: true,
+		      shadeClose: false,
+		      shade: 0.4,
+		      title: title,
+		      content: url
+		    });
 	  }
   
   function adstop(title, url, w, h) {
@@ -339,6 +372,36 @@
 	    ;
 	    layer.open({
 	      id: 'road-adstop',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
+  
+  function prepay(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    ;
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    ;
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    ;
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    ;
+	    layer.open({
+	      id: 'road-prepay',
 	      type: 2,
 	      area: [w + 'px', h + 'px'],
 	      fix: false,

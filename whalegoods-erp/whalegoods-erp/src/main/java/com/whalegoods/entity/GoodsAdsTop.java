@@ -20,9 +20,7 @@ public class GoodsAdsTop extends BaseEntity implements Serializable {
     
     private String deviceRoadId;
     
-    private String deviceIdJp;
-    
-    private String deviceIdSupp;
+    private String deviceId;
     
     private Byte actionType;
     

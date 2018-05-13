@@ -42,11 +42,17 @@
       <div class="layui-input-inline"><input type="text"  id="pathCode" name="pathCode" value="${road.pathCode}" lay-verify="required|number|ZZS"   autocomplete="off" class="layui-input"></div>
      </div>
      <div class="layui-inline">
-     <!--商品编号-->
+        <!--商品编号-->
      <label for="goodsCode" class="layui-form-label"><span class="x-red">*</span>商品编号</label>
-      <div class="layui-input-inline"><input type="text"  id="goodsCode" name="goodsCode" value="${road.goodsCode}" lay-verify="required"  autocomplete="off" class="layui-input"></div>
-     </div>
-      
+      <div class="layui-input-inline">
+       <select id="goodsCode" name="goodsCode" lay-verify="required">
+     <option value="">直接选择或搜索选择</option>
+  	<#list goods as goodsList>
+          <option value="${goods.goodsCode}">${goods.goodsName}</option>
+    </#list>
+    </select>
+      </div>
+    </div>
     </div>
  
     <div class="layui-form-item">
@@ -85,7 +91,9 @@
 <script>
 var flag,msg;
 var lockStatus=$('#hidLockStatus').val();
-$(function(){	
+$(function(){
+	$('#goodsCode').select2();
+	$("#goodsCode").find("option[value = '"+${goods.goodsCode}+"']").attr("selected","selected");
 	if(lockStatus==1)
 		{
 		$('#iptStock').attr('disabled','true');

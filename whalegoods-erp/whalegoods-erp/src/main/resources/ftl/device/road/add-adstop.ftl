@@ -50,27 +50,25 @@
 
       </div>
     </div>
-    <div class="layui-form-item">
-      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
-        <legend style="font-size:16px;">基础信息</legend>
-      </fieldset>
-    </div>
     <input type="hidden" id="hidBigPicUrl" name="bigPicUrl" value="" />
     <input type="hidden" id="hidTinyPicUrl" name="tinyPicUrl" value="" />
     <input type="hidden" id="hidDeviceRoadId" name="deviceRoadId" value="${topData.deviceRoadId}" />
+    <input type="hidden" id="hidDeviceId" name="deviceRoadId" value="${topData.deviceId}" />
     <input type="hidden" id="hidActionType" name="actionType" value="${topData.actionType}" />
     
     <div class="layui-form-item">
-    <div id="divDeviceCode" class="layui-form-item">
-      <div class="layui-inline">
-      <label for="password" class="layui-form-label"><span class="x-red">*</span>设备编号（鲸品）</label>
-      <div class="layui-input-inline"><input type="text" id="inpDeviceJp" name="deviceIdJp" value="${topData.deviceIdJp}"  autocomplete="off" class="layui-input"> </div>
+    <div class="layui-inline" id="divDevice">
+     <!--设备-->
+     <label for="deviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
+      <div class="layui-input-inline">
+       <select id="deviceId" name="deviceId" lay-verify="required">
+     <option value="">直接选择或搜索选择</option>
+  	<#list deviceList as device>
+          <option value="${device.id}">${device.shortName}</option>
+    </#list>
+    </select>
       </div>
-      <div class="layui-inline">
-        <label for="L_repass" class="layui-form-label"><span class="x-red">*</span>设备编号（供应商）</label>
-        <div class="layui-input-inline"><input type="text" id="inpDeviceIdSupp" name="deviceIdSupp" value="${topData.deviceIdSupp}"  autocomplete="off" class="layui-input"></div>
-      </div>
-    </div> 
+    </div>
       <div style="height: 60px"></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
@@ -85,9 +83,9 @@
   var flag,msg;
   $(function(){
      var actionType=$('#hidActionType').val();
-     if(actionType==1)
+     if(actionType==2)
     	 {
-    	 $('#inpDeviceJp,#inpDeviceIdSupp').attr("disabled","disabled");
+    	 $('#divDevice').attr("disabled","disabled");
     	 }
   });
   

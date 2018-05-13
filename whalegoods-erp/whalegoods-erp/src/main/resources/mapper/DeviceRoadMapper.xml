@@ -54,6 +54,7 @@
   <resultMap id="BaseResultMap2" type="com.whalegoods.entity.DeviceRoad">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="device_id_jp" jdbcType="VARCHAR" property="deviceIdJp" /> 	
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
     <result column="device_id_supp" jdbcType="VARCHAR" property="deviceIdSupp" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
@@ -76,6 +77,7 @@
     b.goods_code,
     b.goods_name,
     a.id,
+    a.device_id,
     a.ctn,
     a.floor,
     a.path_code,
@@ -121,6 +123,9 @@
      </if>
      <if test="deviceIdSupp !=null and deviceIdSupp !=''"> 
      AND c.device_id_supp=#{deviceIdSupp}
+     </if>
+     <if test="deviceId !=null and deviceId !='' "> 
+     AND c.id=#{deviceId}
      </if>
      <if test="shortName !=null and shortName !=''"> 
      AND c.short_name LIKE  "%" #{shortName} "%"

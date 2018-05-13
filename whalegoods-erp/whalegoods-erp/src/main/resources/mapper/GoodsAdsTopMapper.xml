@@ -16,16 +16,15 @@
   a.tiny_pic_url,
   a.action_type
   FROM goods_ads_top a LEFT JOIN device_road b ON a.device_road_id =b.id 
-  LEFT JOIN goods_sku c ON c.id=b.goods_sku_id
-    WHERE a.device_id_jp=#{deviceIdJp} AND a.device_id_supp=#{deviceIdSupp}
+  INNER JOIN device c ON  c.id=a.device_id
+    WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
   </select>
 
    <insert id="insert" parameterType="com.whalegoods.entity.GoodsAdsTop">
     INSERT INTO goods_ads_top (
     id,
     device_road_id, 
-    device_id_jp,
-    device_id_supp,
+    device_id,
     action_type,
     big_pic_url,
     tiny_pic_url, 
@@ -36,8 +35,7 @@
     VALUES (
     #{id},
     #{deviceRoadId}, 
-    #{deviceIdJp}, 
-    #{deviceIdSupp},
+    #{deviceId}, 
     #{actionType},
     #{bigPicUrl},
     #{tinyPicUrl},

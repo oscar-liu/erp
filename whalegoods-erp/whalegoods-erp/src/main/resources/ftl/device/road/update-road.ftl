@@ -7,9 +7,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
+  <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
-
+    <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
+  <style type="text/css">
+    .select2-container .select2-selection--single{  
+      height:37px;  
+      line-height: 37px; 
+    }  
+</style>
 </head>
 
 <body>
@@ -43,11 +51,11 @@
      </div>
      <div class="layui-inline">
         <!--商品编号-->
-     <label for="goodsCode" class="layui-form-label"><span class="x-red">*</span>商品编号</label>
+     <label for="sltGoodsCode" class="layui-form-label"><span class="x-red">*</span>商品</label>
       <div class="layui-input-inline">
-       <select id="goodsCode" name="goodsCode" lay-verify="required">
+       <select id="sltGoodsCode" name="sltGoodsCode" lay-verify="required" lay-ignore>
      <option value="">直接选择或搜索选择</option>
-  	<#list goods as goodsList>
+  	<#list goodsList as goods>
           <option value="${goods.goodsCode}">${goods.goodsName}</option>
     </#list>
     </select>
@@ -92,16 +100,16 @@
 var flag,msg;
 var lockStatus=$('#hidLockStatus').val();
 $(function(){
-	$('#goodsCode').select2();
-	$("#goodsCode").find("option[value = '"+${goods.goodsCode}+"']").attr("selected","selected");
+	$('#sltGoodsCode').select2();
+	$("#sltGoodsCode").find("option[value = '"+${road.goodsCode}+"']").attr("selected","selected");
 	if(lockStatus==1)
 		{
 		$('#iptStock').attr('disabled','true');
 		$('#iptStock').css('background','#CCCCC');
 		}
     $('#warningNum').on("change",function(){
-        var capacity=$('#capacity').val();
-        var warningNum=$('#warningNum').val();
+        var capacity=parseInt($('#capacity').val());
+        var warningNum=parseInt($('#warningNum').val());
         $('#ms').find('span').text('');
         if(warningNum>=capacity)
         	{        	
@@ -133,6 +141,7 @@ layui.use(['form','layer'], function(){
   //监听提交
   form.on('submit(confirm)', function(data){
 	  data.field.lockStatus=lockStatus;
+	  data.field.goodsCode=$("#sltGoodsCode").val();
     $.ajax({
       url:'updateRoad',
       type:'post',

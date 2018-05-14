@@ -11,12 +11,12 @@
 </head>
 
 <body>
-<div class="divQrCode">
+<div id="divQrCode">
   
 </div>
 <script>
   $(function(){
-	  var qrCodeUrl=decodeURIComponent(${qrCodeUrl});
+	  var qrCodeUrl=decodeURIComponent("${qrCodeUrl}");
 	  $('#divQrCode').qrcode(qrCodeUrl);
   });
 </script>

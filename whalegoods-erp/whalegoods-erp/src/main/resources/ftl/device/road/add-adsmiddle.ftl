@@ -25,14 +25,13 @@
 
 <body>
 <div class="x-body">
- <form class="layui-form layui-form-pane" style="margin-left: 20px;">
-    <div style="width:100%;height:400px;overflow: auto;"></div>
+ <form class="layui-form layui-form-pane" style="margin: 10px;">
     <table>
 <tr>
 	<td>
 		<table border = "1">
 		<#list goodsList as goods>
-                <tr height="40"><td id="draggable" width = "200" bgcolor="lightgreen"><span id="${goods.id}">${goods.goodsName}</span></td></tr>
+                <tr height="40"><td class="draggable" width = "200" bgcolor="lightgreen"><span id="${goods.id}">${goods.goodsName}</span></td></tr>
          </#list>
 		</table>
 	</td>
@@ -74,7 +73,7 @@
 <script>
   var flag,msg;
   $(function(){
-      $('td[class^="draggable"]').draggable({
+      $('td[class="draggable"]').draggable({
 		   helper:"clone",
 		   cursor: "move"
 		 });
@@ -83,7 +82,7 @@
 				$(this).children().remove();
 				var source = ui.draggable.clone();
 				$('<img/>', {
-					src: 'btn_delete.png',
+					src: "${re.contextPath}/plugin/img/btn_delete.png",
 					style:'display:none',
 					click: function() {
 					  source.remove();
@@ -110,35 +109,48 @@
    });
     //监听提交
     form.on('submit(confirm)', function(data){
-      var oneM= $('.oneM > span');
-      var twoM= $('.twoM > span');
-      var threeM= $('.threeM > span');
-      console.log(oneM);
-      console.log(twoM);
-      console.log(threeM);
-      var oneData=[];
-      var twoData=[];
-      var threeData=[];
+      var oneM= $(".oneM span:first-child");
+      var twoM= $(".twoM span:first-child");
+      var threeM= $(".threeM span:first-child");
+      if(oneM.length!=3){
+    	  layer.msg('早上促销商品必须选择三个',{icon:5,time:1000});
+    	  return false
+      }
+      if(twoM.length!=3){
+    	  layer.msg('中午促销商品必须选择三个',{icon:5,time:1000});
+    	  return false
+      }
+      if(threeM.length!=3){
+    	  layer.msg('晚上促销商品必须选择三个',{icon:5,time:1000});
+    	  return false
+      }
+      var allData=[];
       for(var i in oneM){
-    	  var newI={'deviceRoadId':i.attr('id')}; 
-    	  oneData.push(newI);
+    	  var newI={'deviceRoadId':oneM[i].id,'type':1}; 
+    	  allData.push(newI);
+    	  if(i==2){
+    		  break;
+    	  }
       }
       for(var i in twoM){
-    	  var newI={'deviceRoadId':i.attr('id')}; 
-    	  twoData.push(newI);
+    	  var newI={'deviceRoadId':twoM[i].id,'type':2}; 
+    	  allData.push(newI);
+    	  if(i==2){
+    		  break;
+    	  }
       }
       for(var i in threeM){
-    	  var newI={'deviceRoadId':i.attr('id')}; 
-    	  threeData.push(newI);
+    	  var newI={'deviceRoadId':threeM[i].id,'type':3}; 
+    	  allData.push(newI);
+    	  if(i==2){
+    		  break;
+    	  }
       }
-      data.field.one=oneData;
-      data.field.two=twoData;
-      data.field.three=threeData;
       $.ajax({
         url:'addAdsMiddle',
         type:'post',
-       contentType : 'application/json',  
-        data:,data.field
+        contentType : 'application/json',  
+        data:JSON.stringify(allData),
         async:false,
         traditional: true,
         success:function(d){

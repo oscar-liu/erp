@@ -8,8 +8,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
+  <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
+    <style type="text/css">
+    .select2-container .select2-selection--single{  
+      height:37px;  
+      line-height: 37px; 
+    }  
+</style>
 </head>
 
 <body>
@@ -53,15 +62,18 @@
     <input type="hidden" id="hidBigPicUrl" name="bigPicUrl" value="" />
     <input type="hidden" id="hidTinyPicUrl" name="tinyPicUrl" value="" />
     <input type="hidden" id="hidDeviceRoadId" name="deviceRoadId" value="${topData.deviceRoadId}" />
-    <input type="hidden" id="hidDeviceId" name="deviceRoadId" value="${topData.deviceId}" />
+    <input type="hidden" id="hidDeviceId" name="deviceId" value="${topData.deviceId}" />
     <input type="hidden" id="hidActionType" name="actionType" value="${topData.actionType}" />
     
     <div class="layui-form-item">
+     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+      <legend style="font-size:16px;">选择设备</legend>
+    </fieldset>
     <div class="layui-inline" id="divDevice">
      <!--设备-->
-     <label for="deviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
+     <label for="sltDeviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
       <div class="layui-input-inline">
-       <select id="deviceId" name="deviceId" lay-verify="required">
+       <select id="sltDeviceId" name="sltDeviceId" lay-verify="required" lay-ignore>
      <option value="">直接选择或搜索选择</option>
   	<#list deviceList as device>
           <option value="${device.id}">${device.shortName}</option>
@@ -82,10 +94,11 @@
 <script>
   var flag,msg;
   $(function(){
+	  $('#sltDeviceId').select2();
      var actionType=$('#hidActionType').val();
      if(actionType==2)
     	 {
-    	 $('#divDevice').attr("disabled","disabled");
+    	 $('#divDevice').hide();
     	 }
   });
   
@@ -138,10 +151,12 @@
    });
     //监听提交
     form.on('submit(add)', function(data){
+      data.field.deviceId=$("#sltDeviceId").val();
       $.ajax({
         url:'addAdsTop',
         type:'post',
-        data:data.field,
+        contentType : 'application/json',  
+        data:JSON.stringify(data.field),
         async:false,
         traditional: true,
         success:function(d){

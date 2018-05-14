@@ -14,20 +14,6 @@
   <script type="text/javascript" src="${re.contextPath}/plugin/qrcode/jquery.qrcode.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
-    <style>
-	select{
-                //清除select的边框样式
-                border: none;
-                //清除select聚焦时候的边框颜色
-                outline: none;
-                //将select的宽高等于div的宽高
-                width: 100px;
-                height: 30px;
-                line-height: 40px;
-                //通过padding-left的值让文字居中
-                padding-left: 60px;
-            }
-</style>
 </head>
 
 <body>
@@ -52,8 +38,8 @@
     <@shiro.hasPermission name="device:road:adstop">
      <button class="layui-btn layui-btn-warm layui-btn-sm" data-type="adstop"><i class="layui-icon">&#xe6af;</i>设置广告</button>&nbsp;
       广告类型：
-       <div class="layui-inline">
-     <select id="sltTop">
+       <div class="layui-input-inline">
+     <select id="sltTop" name="sltTop" lay-ignore>
         <option value="1" selected="">纯广告展示</option>
         <option value="2" >可购买商品</option>
       </select>
@@ -62,8 +48,8 @@
      &nbsp;&nbsp;&nbsp;
     <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe664;</i>生成支付二维码</button>&nbsp;
           支付类型：
-       <div class="layui-inline">
-     <select id="sltPayType">
+       <div class="layui-input-inline">
+     <select id="sltPayType" name="sltPayType" lay-ignore>
         <option value="1" selected="">微信</option>
         <option value="2" >支付宝</option>
       </select>
@@ -124,12 +110,9 @@
         {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center'},
         {field: 'capacity', title: '最大容量', align:'center',sort: true},
         {field: 'warningNum', title: '报警临界值', align:'center',sort: true},
-        {field: 'deviceId', title: ''},
+        {field: 'deviceId',minWidth:0,width:0,type:'space',style:'display:none'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
-      done: function(res, curr, count){
-    	  $("[data-field='deviceId']").css('display','none');
-    	  }
       page: true,
       height: 'full-83'
     });
@@ -143,13 +126,14 @@
           }
         });
       },
-      reload:function(){
-       $("#sltDeviceList").find("option[value = '']").attr("selected","selected");
+      reload:function(){       
        table.reload('roadList', {
           where: {
         	  deviceId: null
           }
         });
+       $("#sltDeviceList").find("option[value = '']").attr("selected","selected");
+       $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
       },
       add: function () {
         add('添加货道', 'showAddRoad', 800, 500);
@@ -160,7 +144,7 @@
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('编辑货道', 'showUpdateRoad?id=' + data[0].id, 800, 500);
+        update('编辑货道', 'showUpdateRoad?id=' + data[0].id, 900, 500);
       },
       adsmiddle: function () {
           var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
@@ -177,18 +161,19 @@
         	  }
           }
           var dataObjArr=[];
-          var dataObj=new Object();
+          var dataObj=null;
           for(var j in data){
+        	  dataObj=new Object();
         	  dataObj.id=data[j].id;
         	  dataObj.goodsName=data[j].goodsName;
         	  dataObjArr.push(dataObj);
           }
           var middleData=encodeURIComponent(JSON.stringify(dataObjArr));
-          adsmiddle('设置中部促销活动', 'showAddAdsMiddle?middleData='+middleData , 800, 500);
+          adsmiddle('设置促销', 'showAddAdsMiddle?middleData='+middleData , 800, 500);
         },
         adstop: function () {
         	var actionType = $("#sltTop").val();
-        	var deviceId;
+        	var deviceId,deviceRoadId='';
         	if(actionType==2)
         		{
         		 var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
@@ -197,11 +182,11 @@
                    return false;
                  }
                  else{
-                	 deviceId=data[0].id;
-                	 deviceRoadId=data[0].deviceRoadId;
+                	 deviceRoadId=data[0].id;
+                	 deviceId=data[0].deviceId;
                  }
         		}
-        	adstop('设置顶部广告', 'showAddAdsTop?actionType=' + actionType+'&deviceId='+deviceId+'&deviceRoadId='+deviceRoadId, 800, 500);
+        	adstop('设置广告', 'showAddAdsTop?actionType=' + actionType+'&deviceId='+deviceId+'&deviceRoadId='+deviceRoadId, 800, 500);
           },
           prepay: function () {
           	var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
@@ -214,10 +199,10 @@
              var device_code_wg=data[0].deviceIdJp;
              var ctn=data[0].ctn;
              var floor=data[0].floor;
-             var path_code=data[0].path_code;
+             var path_code=data[0].pathCode;
              var sale_type=$("#sltPayType").val();
             }
-            prepay('生成支付二维码', 'createPrepayBack?sale_type=' + sale_type+'&path_code='+path_code+'&floor='+floor+'&ctn='+ctn+'&device_code_wg='+device_code_wg+'&device_code_sup='+device_code_sup, 300, 300);
+            prepay('生成支付二维码', 'createPrepayBack?saleType=' + sale_type+'&pathCode='+path_code+'&floor='+floor+'&ctn='+ctn+'&device_code_wg='+device_code_wg+'&device_code_sup='+device_code_sup, 400, 280);
             }
     };
     //监听工具条

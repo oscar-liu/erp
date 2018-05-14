@@ -3,7 +3,6 @@ package com.whalegoods.controller;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,11 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.GoodsAdsTop;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqCreatePrepay;
@@ -107,6 +107,7 @@ public class DeviceRoadController  {
 	   */
 	  @GetMapping(value = "showAddRoad")
 	  public String showAddRoad(Model model) {
+	   model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
 	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	    return "/device/road/add-road";
 	  }
@@ -181,9 +182,9 @@ public class DeviceRoadController  {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity())
 		  {
-			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+			  throw new BizApiException(ConstApiResCode.CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM);
 		  }
-		//查询商品是否存在
+		  //查询商品是否存在
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
 		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
@@ -204,11 +205,12 @@ public class DeviceRoadController  {
 		  }
 		  if(deviceRoad.getLockStatus()==1)
 		  {
-			  deviceRoad.setStock(0);
+			  deviceRoad.setStock(null);
 		  }
-		deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
-		deviceRoadService.updateByObjCdt(deviceRoad);
-		return resBody;
+		  deviceRoad.setGoodsSkuId(goodsSku.getId());
+		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
+		  deviceRoadService.updateByObjCdt(deviceRoad);
+		  return resBody;
 	  }
 
 	  /**
@@ -234,7 +236,7 @@ public class DeviceRoadController  {
 	  public String showAddAdsMiddle(Model model,@RequestParam String middleData) {
 			@SuppressWarnings("deprecation")
 			String newMiddleData= URLDecoder.decode(middleData);
-			model.addAttribute("goodsList", newMiddleData);
+			model.addAttribute("goodsList", JSONArray.parseArray(newMiddleData,DeviceRoad.class));
 		    return "/device/road/add-adsmiddle";
 	  }
 
@@ -243,14 +245,15 @@ public class DeviceRoadController  {
 	   * @author henrysun
 	   * 2018年5月7日 上午11:44:51
 	   */
-	  @SuppressWarnings("rawtypes")
 	  @PostMapping(value = "addAdsMiddle")
 	  @ResponseBody
-	  public ResBody addAdsMiddle(@RequestBody String json) {
+	  public ResBody addAdsMiddle(@RequestBody GoodsAdsMiddle data[]) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));	  
-		  List<Map> mapList=JSON.parseArray(json,Map.class);
-		  for (Map map : mapList) {
-			//添加操作
+		  for (GoodsAdsMiddle goodsAdsMiddle : data) {
+			  goodsAdsMiddle.setId(StringUtil.getUUID());
+			  goodsAdsMiddle.setCreateBy(ShiroUtil.getCurrentUserId());
+			  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
+			  goodsAdsMiddleService.insert(goodsAdsMiddle);
 		}
 		  return resBody;
 	  }
@@ -338,16 +341,16 @@ public class DeviceRoadController  {
 		 * @author henrysun
 		 * 2018年5月13日 下午4:17:03
 		 */
-	  @SuppressWarnings("deprecation")
+	  @SuppressWarnings({ "deprecation", "rawtypes" })
 	  @GetMapping(value="/createPrepayBack")
 	  @RequiresPermissions("device:road:prepay")
 	  String createPrepay(ReqCreatePrepay reqCreatePrepay,Model model) throws SystemException {
-		  String order=JSONObject.parseObject(payService.createPrepay(reqCreatePrepay).getData().toString()).getString("order");
+		  String order=((Map)payService.createPrepay(reqCreatePrepay).getData()).get("order").toString();
 		  ReqCreateQrCode reqObj=new ReqCreateQrCode();
 		  reqObj.setOrder(order);
 		  reqObj.setPayType(reqCreatePrepay.getSaleType());
-		  String qrcodeUrl=JSONObject.parseObject(payService.getQrCode(reqObj).getData().toString()).getString("qrcode_url");
-		  String newQrCodeUrl=Base64Utils.decodeFromString( URLDecoder.decode(qrcodeUrl)).toString();
+		  String qrcodeUrl=((Map)payService.getQrCode(reqObj).getData()).get("qrcode_url").toString();
+		  String newQrCodeUrl=new String(Base64Utils.decodeFromString( URLDecoder.decode(qrcodeUrl)));
 	      model.addAttribute("qrCodeUrl",URLEncoder.encode(newQrCodeUrl));
 		  return "/device/road/qrcode";
 		}

@@ -1,6 +1,7 @@
 package com.whalegoods.service;
 
 
+import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.response.ResGoodsAdsMiddle;
 import com.whalegoods.exception.SystemException;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author henry-sun
  *
  */
-public interface GoodsAdsMiddleService  {
+public interface GoodsAdsMiddleService  extends BaseService<GoodsAdsMiddle,String>{
   
 	List<ResGoodsAdsMiddle> selectAdsMiddleList(Map<String,Object> mapCdt,Map<String, Object> mapData) throws SystemException;
 

@@ -12,6 +12,12 @@
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
+  <style type="text/css">
+    .select2-container .select2-selection--single{  
+      height:37px;  
+      line-height: 37px;
+    }  
+</style>
 </head>
 
 <body>
@@ -24,9 +30,9 @@
     <div class="layui-form-item">
       <div class="layui-inline">
      <!--设备-->
-     <label for="deviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
+     <label for="sltDeviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
       <div class="layui-input-inline">
-       <select id="deviceId" name="deviceId" lay-verify="required">
+       <select id="sltDeviceId" name="sltDeviceId" lay-verify="required"  lay-ignore>
      <option value="">直接选择或搜索选择</option>
   	<#list deviceList as device>
           <option value="${device.id}">${device.shortName}</option>
@@ -62,11 +68,11 @@
      </div>
      <div class="layui-inline">
         <!--商品编号-->
-     <label for="goodsCode" class="layui-form-label"><span class="x-red">*</span>商品编号</label>
+     <label for="sltGoodsCode" class="layui-form-label"><span class="x-red">*</span>商品</label>
       <div class="layui-input-inline">
-       <select id="goodsCode" name="goodsCode" lay-verify="required">
+       <select id="sltGoodsCode" name="sltGoodsCode" lay-verify="required"  lay-ignore>
      <option value="">直接选择或搜索选择</option>
-  	<#list goods as goodsList>
+  	<#list goodsList as goods>
           <option value="${goods.goodsCode}">${goods.goodsName}</option>
     </#list>
     </select>
@@ -100,8 +106,8 @@
 <script>
   var flag,msg;
   $(function(){
-	  $('#deviceId').select2();
-	  $('#goodsCode').select2();
+	 $('#sltDeviceId').select2();
+	  $('#sltGoodsCode').select2();
       $('#warningNum').on("change",function(){
         var capacity=parseInt($('#capacity').val());
         var warningNum=parseInt($('#warningNum').val());
@@ -135,6 +141,8 @@
    });
     //监听提交
     form.on('submit(add)', function(data){
+     data.field.deviceId=$("#sltDeviceId").val();
+     data.field.goodsCode=$("#sltGoodsCode").val();
       $.ajax({
         url:'addRoad',
         type:'post',

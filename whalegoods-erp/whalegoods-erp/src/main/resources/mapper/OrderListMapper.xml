@@ -13,13 +13,13 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    a.orderTime,
-    b.shortName,
-    a.orderId,
-    a.orderStatus,
-    a.goodsName,
-    a.salePrice,
-    a.payType
+    a.order_time,
+    b.short_name,
+    a.order_id,
+    a.order_status,
+    a.goods_name,
+    a.sale_price,
+    a.pay_type
   </sql>
   
     <select id="selectListByObjCdt" statementType="STATEMENT"  resultMap="BaseResultMap">
@@ -29,6 +29,7 @@
      <if test="shortName !=null and shortName !=''"> AND short_name LIKE "'%" ${shortName} "%'"</if>
      <if test="startOrderTime !=null "> AND order_time >='${startOrderTime}'</if>
      <if test="endOrderTime !=null "> AND order_time >='${endOrderTime}'</if>
+     <if test="deviceId !=null and deviceId !='' "> AND b.id >='${deviceId}'</if>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> AND a.device_id_jp ='${deviceIdJp}'</if>
     </where>
   </select>

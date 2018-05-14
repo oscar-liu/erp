@@ -117,8 +117,9 @@
       var data = obj.data;
       if (obj.event === 'del') {
         layer.confirm('确定删除版本：[<label style="color: #00AA91;">' + data.apkVersion + '</label>]的APK包?',{ title:'提示'},
-        function () {
-          del(data.id);
+       function (index) {
+            del(data.id);
+            layer.close(index);
         });
       } 
     });

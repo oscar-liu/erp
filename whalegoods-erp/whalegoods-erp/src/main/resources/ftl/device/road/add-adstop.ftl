@@ -65,11 +65,11 @@
     <input type="hidden" id="hidDeviceId" name="deviceId" value="${topData.deviceId}" />
     <input type="hidden" id="hidActionType" name="actionType" value="${topData.actionType}" />
     
-    <div class="layui-form-item">
+    <div class="layui-form-item" id="divDevice">
      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
       <legend style="font-size:16px;">选择设备</legend>
     </fieldset>
-    <div class="layui-inline" id="divDevice">
+    <div class="layui-inline" >
      <!--设备-->
      <label for="sltDeviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
       <div class="layui-input-inline">
@@ -92,12 +92,13 @@
   </form>
 </div>
 <script>
-  var flag,msg;
+  var flag,msg,actionType;
   $(function(){
 	  $('#sltDeviceId').select2();
-     var actionType=$('#hidActionType').val();
+     actionType=$('#hidActionType').val();
      if(actionType==2)
     	 {
+    	 $('#sltDeviceId').val($('#hidDeviceId').val());
     	 $('#divDevice').hide();
     	 }
   });
@@ -151,7 +152,9 @@
    });
     //监听提交
     form.on('submit(add)', function(data){
-      data.field.deviceId=$("#sltDeviceId").val();
+      if(actionType==1){
+    	  data.field.deviceId=$('#hidDeviceId').val();
+      }
       $.ajax({
         url:'addAdsTop',
         type:'post',

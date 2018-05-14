@@ -1,7 +1,10 @@
 package com.whalegoods.controller;
 
+import com.whalegoods.entity.Device;
 import com.whalegoods.entity.ErpOrderList;
+import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.OrderListService;
+import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.ReType;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -23,6 +26,9 @@ public class OrderListController {
 	
 	  @Autowired
 	  OrderListService orderListService;
+	  
+	  @Autowired
+	  DeviceService deviceService;
 
 	  /**
 	   * 跳转到订单列表页面
@@ -32,7 +38,8 @@ public class OrderListController {
 	  @GetMapping(value = "showOrder")
 	  @RequiresPermissions("order:show")
 	  public String showUser(Model model) {
-	    return "/order/ ";
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	    return "/order/orderList";
 	  }
 
 	  /**
@@ -43,8 +50,15 @@ public class OrderListController {
 	  @GetMapping(value = "showOrderList")
 	  @ResponseBody
 	  @RequiresPermissions("order:show") 
-	  public ReType showUser(Model model, ErpOrderList orderList, String page, String limit) {
-		orderList.setPrefix(orderList.getStartOrderTime().substring(0,7));
+	  public ReType showOrderList(Model model, ErpOrderList orderList, String page, String limit) {
+		if(orderList.getStartOrderTime()!=null){
+			orderList.setPrefix(orderList.getStartOrderTime().substring(0,7));
+		}
+		else
+		{
+			orderList.setPrefix(DateUtil.getCurrentMonth());
+		}
+		
 	    return orderListService.selectByPage(orderList,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 

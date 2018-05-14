@@ -46,7 +46,7 @@
   </div>
     </@shiro.hasPermission>
      &nbsp;&nbsp;&nbsp;
-    <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe664;</i>生成支付二维码</button>&nbsp;
+    <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe65e;</i>生成支付二维码</button>&nbsp;
           支付类型：
        <div class="layui-input-inline">
      <select id="sltPayType" name="sltPayType" lay-ignore>

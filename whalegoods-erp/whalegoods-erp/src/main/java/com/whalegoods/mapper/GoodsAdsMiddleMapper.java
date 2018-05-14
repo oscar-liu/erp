@@ -14,5 +14,6 @@ public interface GoodsAdsMiddleMapper extends BaseMapper<GoodsAdsMiddle,String> 
 	 * @author henrysun
 	 * 2018年5月2日 下午3:20:16
 	 */
-    List<ResGoodsAdsMiddle> selectAdsMiddleList(Map<String,Object> condition);
+    List<ResGoodsAdsMiddle> selectAdsMiddleList(Map<String,Object> mapCdt);
+    
 }

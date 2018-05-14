@@ -89,6 +89,7 @@ public class ApkVersionController {
     	String currentUserId=ShiroUtil.getCurrentUser().getId();
     	apkVersion.setCreateBy(currentUserId);
     	apkVersion.setUpdateBy(currentUserId);
+    	apkVersionService.insert(apkVersion);
 	    return resBody;
 	  }
 
@@ -122,7 +123,7 @@ public class ApkVersionController {
 	  }
 
 	  /**
-	   * 删除系统用户接口
+	   * 删除APK接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:32:39
 	   */

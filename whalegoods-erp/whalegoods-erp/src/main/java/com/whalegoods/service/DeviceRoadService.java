@@ -16,5 +16,6 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt);
   
   ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
+
   
 }

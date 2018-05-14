@@ -12,5 +12,6 @@ public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
     List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt);
     
     ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
+   
     
 }

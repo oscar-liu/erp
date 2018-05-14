@@ -266,5 +266,6 @@
      <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM device_road  WHERE id = #{_parameter}
   </delete>
+ 
 
 </mapper>

@@ -18,6 +18,15 @@
     <div style="width:100%;height:400px;overflow: auto;">
     <div class="layui-form-item">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+      <legend style="font-size:16px;">版本号</legend>
+    </fieldset>
+    <input type="hidden" id="hidApkUrl" name="apkUrl" value="" />
+      <label for="uname" class="layui-form-label"><span class="x-red">*</span>版本号</label>
+      <div class="layui-input-inline"><input type="text"  id="apkVersion" name="apkVersion"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">将会成为唯一的版本号</span></div>
+    </div>
+    <div class="layui-form-item">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
       <legend style="font-size:16px;">APK上传</legend>
     </fieldset>
       <div class="layui-input-inline">
@@ -30,15 +39,6 @@
           <div  id="upApkNow" style="margin-top: 20px;margin-left: 50px">           
           </div>
       </div>
-    </div>
-    <div class="layui-form-item">
-    <input type="hidden" id="hidApkUrl" name="apkUrl" value="" />
-      <label for="uname" class="layui-form-label"><span class="x-red">*</span>版本号</label>
-      <div class="layui-input-inline"><input type="text"  id="apkVersion" name="apkVersion"  lay-verify="required" autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">将会成为唯一的版本号</span></div>
-    </div>
-    <div class="layui-form-item">
-      <div style="height: 60px"></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -82,6 +82,8 @@
     upload.render({
       elem: '#upApk',
       url: 'uploadApk',
+      accept:'file',
+      exts: 'apk',
       before: function(obj){
         //预读，不支持ie8
         obj.preview(function(index, file, result){
@@ -107,7 +109,8 @@
       $.ajax({
         url:'addApk',
         type:'post',
-        data:data.field,
+        contentType : 'application/json',  
+        data:JSON.stringify(data.field),
         async:false,
         traditional: true,
         success:function(d){

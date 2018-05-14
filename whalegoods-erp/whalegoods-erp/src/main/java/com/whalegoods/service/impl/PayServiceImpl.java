@@ -129,7 +129,7 @@ public class PayServiceImpl implements PayService{
 			mapPpRst = this.wxPrepay(goodsName, salePrice, orderId);
 			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
 			{
-				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){					
+				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){			
 					try {
 						mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToUrlSafeString(mapPpRst.get("code_url").getBytes()),"utf-8"));
 					} catch (UnsupportedEncodingException e) {

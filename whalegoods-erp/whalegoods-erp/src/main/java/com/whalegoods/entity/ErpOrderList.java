@@ -29,6 +29,8 @@ public class ErpOrderList implements Serializable {
 	
 	private String orderId;
 	
+	private String deviceId;
+	
 	private Byte orderStatus;
 	
 	private String goodsName;

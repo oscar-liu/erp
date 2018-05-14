@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 中部广告Service接口层
+ * 促销活动Service接口层
  * @author henry-sun
  *
  */
 public interface GoodsAdsMiddleService  extends BaseService<GoodsAdsMiddle,String>{
   
 	List<ResGoodsAdsMiddle> selectAdsMiddleList(Map<String,Object> mapCdt,Map<String, Object> mapData) throws SystemException;
-
+	
 }

@@ -8,15 +8,27 @@
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
+  <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
 </head>
 
 <body>
 <div class="erp-search">
   <div class="select">
-           点位短名： <div class="layui-inline"><input class="layui-input" height="20px" id="shortName" autocomplete="off"></div>
-           设备编号（鲸品）： <div class="layui-inline"><input class="layui-input" height="20px" id="shortName" autocomplete="off"></div>
+               设备：
+   <div class="layui-inline">
+       <div class="layui-input-inline">
+     <select id="sltDeviceList" name="sltDeviceList" >
+     <option value="">直接选择或搜索选择</option>
+  	<#list deviceList as device>
+          <option value="${device.id}">${device.shortName}</option>
+    </#list>
+    </select>
+   </div>
+   </div>
            开始日期： <div class="layui-inline"><input type="text"  id="startOrderTime" name="startOrderTime" placeholder="开始时间"  autocomplete="off" class="layui-input"></div>
            结束日期： <div class="layui-inline"><input type="text"  id="endOrderTime" name="endOrderTime" placeholder="结束时间"  autocomplete="off" class="layui-input"></div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
@@ -56,6 +68,10 @@
     }
   }
   
+  $(function(){
+	  $('#sltDeviceList').select2();
+  });
+  
   layui.use(['table','layer','laydate'], function () {
     var table = layui.table,layer = layui.layer,laydate = layui.laydate;
     laydate.render({
@@ -91,28 +107,31 @@
 
     var $ = layui.$, active = {
       select: function () {
-        var shortName = $('#shortName').val();
-        var startOrderTime = $('#startOrderTime').val();
-        var endOrderTime = $('#endOrderTime').val();
+    	var deviceId = $('#sltDeviceList').val();
+    	var startOrderTime = $('#startOrderTime').val();
+    	var endOrderTime = $('#endOrderTime').val();
         table.reload('orderList', {
           where: {
-        	  shortName: shortName,
+        	  deviceId: deviceId,
         	  startOrderTime: startOrderTime,
-        	  endOrderTime: endOrderTime,
+        	  endOrderTime: endOrderTime
           }
         });
       },
       reload:function(){
-        $('#shortName').val('');
-        $('#startOrderTime').val('');
-        $('#endOrderTime').val('');
         table.reload('orderList', {
           where: {
-        	  shortName: null,
+        	  deviceId: null,
         	  startOrderTime: null,
-        	  endOrderTime: null,
+        	  endOrderTime: null
           }
         });
+        $("#startOrderTime").attr("placeholder","开始时间");
+        $("#endOrderTime").attr("placeholder","结束时间");
+        $("#startOrderTime").val('');
+        $("#endOrderTime").val('');
+        $("#sltDeviceList").find("option[value = '']").attr("selected","selected");
+        $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
       }
     };
 

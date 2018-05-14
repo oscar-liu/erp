@@ -228,37 +228,6 @@ public class DeviceRoadController  {
 	  }
 	  
 	  /**
-	   * 跳转到设置中部促销活动页面
-	   * @author henrysun
-	   * 2018年5月8日 上午10:09:50
-	   */
-	  @GetMapping(value = "showAddAdsMiddle")
-	  public String showAddAdsMiddle(Model model,@RequestParam String middleData) {
-			@SuppressWarnings("deprecation")
-			String newMiddleData= URLDecoder.decode(middleData);
-			model.addAttribute("goodsList", JSONArray.parseArray(newMiddleData,DeviceRoad.class));
-		    return "/device/road/add-adsmiddle";
-	  }
-
-	  /**
-	   * 添加中部促销活动接口
-	   * @author henrysun
-	   * 2018年5月7日 上午11:44:51
-	   */
-	  @PostMapping(value = "addAdsMiddle")
-	  @ResponseBody
-	  public ResBody addAdsMiddle(@RequestBody GoodsAdsMiddle data[]) {
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));	  
-		  for (GoodsAdsMiddle goodsAdsMiddle : data) {
-			  goodsAdsMiddle.setId(StringUtil.getUUID());
-			  goodsAdsMiddle.setCreateBy(ShiroUtil.getCurrentUserId());
-			  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
-			  goodsAdsMiddleService.insert(goodsAdsMiddle);
-		}
-		  return resBody;
-	  }
-	  
-	  /**
 	   * 跳转到设置顶部广告页面
 	   * @author henrysun
 	   * 2018年5月8日 上午10:09:50

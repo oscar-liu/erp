@@ -54,7 +54,7 @@
     #{id},
     #{apkUrl}, 
     #{apkVersion}, 
-    #{apk_status}, 
+    #{apkStatus}, 
     #{createBy}, 
     now(),
     #{updateBy},

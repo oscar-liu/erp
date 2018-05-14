@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.response.ResGoodsAdsMiddle;
@@ -12,6 +13,8 @@ import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.GoodsAdsMiddleMapper;
 import com.whalegoods.service.GoodsAdsMiddleService;
+import com.whalegoods.util.ShiroUtil;
+import com.whalegoods.util.StringUtil;
 
 
 @Service

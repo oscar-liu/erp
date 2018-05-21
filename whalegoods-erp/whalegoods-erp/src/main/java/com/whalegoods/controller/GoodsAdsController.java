@@ -209,7 +209,7 @@ public class GoodsAdsController  {
 		  mapCdt.put("goodsCode", goodsAdsMiddle.getGoodsCode());
 		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>=1)
 		  {
-			  throw new BizApiException(ConstApiResCode.GOODS_CODE_FOR_SALE_EXIST);
+			  goodsAdsMiddle.setGoodsCode(null);
 		  }
 		  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  adsMiddleService.updateByObjCdt(goodsAdsMiddle);
@@ -276,7 +276,7 @@ public class GoodsAdsController  {
 	  public ResBody addAdsTop(@RequestBody GoodsAdsTop goodsAdsTop) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  if(goodsAdsTop.getActionType()==1){
-			  goodsAdsTop.setGoodsCode(null);
+			  goodsAdsTop.setGoodsCode(StringUtil.randomString(3));
 		  }
 		  if(goodsAdsTop.getActionType()==2&&StringUtil.isEmpty(goodsAdsTop.getGoodsCode())){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EMPTY);
@@ -288,6 +288,7 @@ public class GoodsAdsController  {
 			  throw new BizApiException(ConstApiResCode.ADS_TOP_ALREADY_THREE);
 		  }
 		  mapCdt.put("goodsCode", goodsAdsTop.getGoodsCode());
+		  mapCdt.put("actionType",2);
 		  if(adsTopService.selectCountByMapCdt(mapCdt)>=1)
 		  {
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_FOR_ADS_TOP_EXIST);

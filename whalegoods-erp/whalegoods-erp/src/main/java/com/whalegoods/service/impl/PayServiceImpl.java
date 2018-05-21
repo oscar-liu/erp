@@ -532,9 +532,6 @@ public class PayServiceImpl implements PayService{
 		{
 			stock=-1;
 		}
-		if(orderList.getOrderStatus()==ConstOrderStatus.APPLY_REFUND_SUCCESS){
-			stock=1;
-		} 
 		DeviceRoad deviceRoad=new DeviceRoad();
 		BeanUtils.copyProperties(orderList,deviceRoad); 
 		deviceRoad.setStock((Integer)stock);

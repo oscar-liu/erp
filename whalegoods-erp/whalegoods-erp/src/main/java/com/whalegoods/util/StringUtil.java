@@ -63,6 +63,6 @@ public class StringUtil {
 	
 	public static int getNumberRadom(){
 		Random random=new Random();
-		return random.nextInt();
+		return random.nextInt(1000000);
 	}
 }

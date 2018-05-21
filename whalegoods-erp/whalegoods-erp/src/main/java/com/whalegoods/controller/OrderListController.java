@@ -97,7 +97,7 @@ public class OrderListController {
 		  orderList.setOrderType((byte) 2);
 		  List<ErpOrderList> resultList=orderListService.getListByObjCdt(orderList);
 		  if(resultList.size()==0){
-			  throw new BizApiException(ConstApiResCode.ADS_TOP_ALREADY_THREE);
+			  throw new BizApiException(ConstApiResCode.SDLIST_EMPTY);
 		  }
 		  FileUtil.exportExcel(resultList,"刷单记录","刷单记录",ErpOrderList.class,"刷单记录.xls",response);
 		}

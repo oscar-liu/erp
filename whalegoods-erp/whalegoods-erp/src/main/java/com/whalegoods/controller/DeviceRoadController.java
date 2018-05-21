@@ -199,7 +199,7 @@ public class DeviceRoadController  {
 		  }
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
-		  deviceRoadService.updateByObjCdt(deviceRoad);
+		  deviceRoadService.updateByObjCdtForErp(deviceRoad);
 		  return resBody;
 	  }
 

@@ -2,6 +2,8 @@ package com.whalegoods.entity.response;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,13 +20,24 @@ public class ResGoodsAdsMiddle implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@JsonProperty("goods_code")
 	private String goodsCode;
 	    
+	@JsonProperty("pic_url")
 	private String picUrl;
 	
+	@JsonProperty("start_time")
+	private String startTime;
+	
+	@JsonProperty("end_time")
+	private String endTime;
+	
+	@JsonProperty("sale_price")
 	private Double salePrice;
 	
-	private Integer stock;
+	@JsonProperty("stock")
+	private Byte stock;
 	
+	@JsonProperty("market_price")
 	private Double marketPrice;
 }

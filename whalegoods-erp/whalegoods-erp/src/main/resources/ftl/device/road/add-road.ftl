@@ -82,7 +82,7 @@
      <!-- 报警临界值-->
     <div class="layui-form-item">
       <label for="warningNum" class="layui-form-label"><span class="x-red">*</span>报警临界值</label>
-      <div class="layui-input-inline"><input type="text"  id="warningNum" name="warningNum" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="warningNum" value="1" name="warningNum" lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
       <div id="ms" class="layui-form-mid layui-word-aux"><span id="ums">临界值不能大于或等于货道容量值</span></div>
     </div>
  

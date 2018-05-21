@@ -58,9 +58,9 @@
 <script type="text/html" id="tplStock">
   {{#  if(d.actionType==1&&(d.stock ==null||d.stock ==undefined||d.stock=="")){ }}
     <span></span>
-  {{#  } if (d.actionType==2&&!(d.stock ==null||d.stock ==undefined||d.stock=="")) { }}
+  {{#  } if ((d.actionType==2&&!(d.stock ==null||d.stock ==undefined||d.stock==""))||d.stock==0) { }}
 <span>{{ d.stock}}</span>
-  {{#  } if (d.actionType==2&&(d.stock ==null||d.stock ==undefined||d.stock=="")) { }}
+  {{#  } if (d.actionType==2&&(d.stock ==null||d.stock ==undefined||d.stock=="")&&d.stock!=0) { }}
 <span style="color:red;">未上架</span>
   {{#  } }}
 </script>

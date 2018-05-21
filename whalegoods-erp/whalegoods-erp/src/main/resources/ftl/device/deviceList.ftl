@@ -123,7 +123,7 @@
         });
       },
       add: function () {
-        add('添加设备', 'showAddDevice', 400, 350);
+        add('添加设备（仅需填写供应商提供的编号）', 'showAddDevice', 400, 350);
       },
       update: function () {
         var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;

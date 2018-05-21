@@ -67,15 +67,21 @@ public class V1AdsController {
 			if(adsMiddle.getType()==1){
 				 if(DateUtil.belongTime(nowDate,DateUtil.getFormatHms(adsMiddle.getStartHms(),nowDate), DateUtil.getFormatHms(adsMiddle.getEndHms(),nowDate))){
 					 item=new ResGoodsAdsMiddle();
+					 BeanUtils.copyProperties(adsMiddle,item);
+					 item.setStartTime(adsMiddle.getStartHms());
+					 item.setEndTime(adsMiddle.getEndHms());
+					 resList.add(item);
 				  }
 			}
 			if(adsMiddle.getType()==2){
 				 if(DateUtil.belongTime(nowDate,adsMiddle.getStartDate(),adsMiddle.getEndDate())){
 					 item=new ResGoodsAdsMiddle();
+					 BeanUtils.copyProperties(adsMiddle,item);
+					 item.setStartTime(DateUtil.formatDateTime(adsMiddle.getStartDate()));
+					 item.setEndTime(DateUtil.formatDateTime(adsMiddle.getEndDate()));
+					 resList.add(item);
 				  }
 			}
-			BeanUtils.copyProperties(adsMiddle,item);
-			resList.add(item);
 		}
 		  resBody.setData(resList);
 		  return resBody;

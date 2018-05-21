@@ -21,6 +21,7 @@ import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqUpDeviceStatus;
 import com.whalegoods.entity.request.ReqUploadLog;
 import com.whalegoods.entity.response.ResBody;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.ApkVersionService;
 import com.whalegoods.service.DeviceService;
@@ -72,10 +73,16 @@ public class V1DeviceController {
 	  Map<String,Object> mapCdt=new HashMap<>();
 	  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
 	  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
-	  int status=deviceService.getDeviceStatus(mapCdt);
-	  Map<String,Object> mapData=new HashMap<>();
-	  mapData.put("operate_status",status);
-	  resBody.setData(mapData);
+	  Integer status=deviceService.getDeviceStatus(mapCdt);
+	  if(status!=null){
+		  Map<String,Object> mapData=new HashMap<>();
+		  mapData.put("operate_status",status);
+		  resBody.setData(mapData);
+	  }
+	  else
+	  {
+		  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+	  }
 	  return resBody;
 	}
   

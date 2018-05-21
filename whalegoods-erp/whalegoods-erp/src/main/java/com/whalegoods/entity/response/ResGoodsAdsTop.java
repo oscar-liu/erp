@@ -21,7 +21,7 @@ public class ResGoodsAdsTop implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
     
-	@JsonProperty("goods_code")
+	@JsonProperty("action_content")
     private String goodsCode;
     
 	@JsonProperty("big_pic_url")

@@ -57,7 +57,7 @@
       url: 'showUserList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'userName',title: '用户名',align:'center', style: 'background-color: #009688; color: #fff;' }, 
+        {field: 'userName',title: '用户名',align:'center' }, 
         {field: 'headPicUrl', title: '头像', align:'center', templet: '#tplheadPicUrl'},
         {field: 'accountStatus',title: '账号状态',align:'center',templet: '#switchTpl', unresize: true},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}

@@ -17,5 +17,6 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
   ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
 
+  int updateByObjCdtForErp(DeviceRoad objCdt);
   
 }

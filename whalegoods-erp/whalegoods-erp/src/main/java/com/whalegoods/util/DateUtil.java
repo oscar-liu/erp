@@ -49,7 +49,7 @@ public class DateUtil {
 	public static Date getFormatHms(String hms,Date date) throws SystemException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			return dateFormat.parse(getCurrentYmd(date)+hms);
+			return dateFormat.parse(getCurrentYmd(date)+" "+hms);
 		} catch (ParseException e) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}

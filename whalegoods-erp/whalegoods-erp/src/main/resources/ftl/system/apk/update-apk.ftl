@@ -16,6 +16,16 @@
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin-left: 20px;">
     <div style="width:100%;height:400px;overflow: auto;">
+        <div class="layui-form-item">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+      <legend style="font-size:16px;">版本号</legend>
+    </fieldset>
+    <input type="hidden" id="hidApkUrl" name="apkUrl" value="" />
+    <input value="${apk.id}" type="hidden" name="id">
+      <label for="uname" class="layui-form-label"><span class="x-red">*</span>版本号</label>
+      <div class="layui-input-inline"><input type="text"  id="apkVersion" name="apkVersion" value="${apk.apkVersion}"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">将会成为唯一的版本号</span></div>
+    </div>
     <div class="layui-form-item">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
       <legend style="font-size:16px;">APK上传</legend>
@@ -30,13 +40,6 @@
           <div  id="upApkNow" style="margin-top: 20px;margin-left: 50px">           
           </div>
       </div>
-    </div>
-    <div class="layui-form-item">
-    <input type="hidden" id="hidApkUrl" name="apkUrl" value="" />
-    <input value="${apk.id}" type="hidden" name="id">
-      <label for="uname" class="layui-form-label"><span class="x-red">*</span>版本号</label>
-      <div class="layui-input-inline"><input type="text"  id="apkVersion" name="apkVersion" value="${apk.apkVersion}"  lay-verify="required" autocomplete="off" class="layui-input"></div>
-      <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">将会成为唯一的版本号</span></div>
     </div>
     <div class="layui-form-item">
       <div style="height: 60px"></div>
@@ -91,7 +94,7 @@
       },
       done: function(res){
        if(!res.result_code==0){
-         layer.msg(res.result_msg,{icon: 5});
+         layer.msg(res.result_msg,{icon: 5,time:1000});
        }
        else{
     	   $('#hidApkUrl').val(res.data.file_url);
@@ -116,14 +119,14 @@
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
             window.parent.layui.table.reload('apkList');
-            window.top.layer.msg(d.result_msg,{icon:6});
+            window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});
           }},
           error:function(){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.top.layer.msg('请求失败',{icon:5});
+            window.top.layer.msg('请求失败',{icon:5,time:1000});
         }
       });
       return false;

@@ -5,8 +5,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceRoad;
-import com.whalegoods.entity.GoodsAdsMiddle;
-import com.whalegoods.entity.GoodsAdsTop;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
@@ -39,8 +33,6 @@ import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.PayService;
-import com.whalegoods.util.FileUtil;
-import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -69,9 +61,6 @@ public class DeviceRoadController  {
 	  
 	  @Autowired
 	  GoodsSkuService goodsSkuService;
-	  
-	  @Autowired
-	  FileUtil fileUtil;
 	  
 	  @Autowired
 	  PayService payService;
@@ -135,13 +124,13 @@ public class DeviceRoadController  {
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
 		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
-		  if(goodsSku==null)
+		  if(goodsSku==null) 
 		  {
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
 		  //查询货道是否已存在
 		  Map<String,Object> mapCdt2=new HashMap<>();
-		  mapCdt2.put("deviceIdJp",deviceRoad.getDeviceIdJp());
+		  mapCdt2.put("deviceId",deviceRoad.getDeviceId());
 		  mapCdt2.put("ctn",deviceRoad.getCtn());
 		  mapCdt2.put("floor",deviceRoad.getFloor());
 		  mapCdt2.put("pathCode",deviceRoad.getPathCode());
@@ -151,6 +140,7 @@ public class DeviceRoadController  {
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setDeviceId(device.getId());
+		  deviceRoad.setStock(0);
 		  deviceRoad.setCreateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoadService.insert(deviceRoad);
@@ -227,84 +217,6 @@ public class DeviceRoadController  {
 	   return resBody;
 	  }
 	  
-	  /**
-	   * 跳转到设置顶部广告页面
-	   * @author henrysun
-	   * 2018年5月8日 上午10:09:50
-	   */
-	  @GetMapping(value = "showAddAdsTop")
-	  public String showAddAdsTop(Model model,GoodsAdsTop adsTop ) {
-		if(adsTop.getActionType()==1){
-			model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
-		}
-		model.addAttribute("topData", adsTop);
-	    return "/device/road/add-adstop";
-	  }
-
-	  /**
-	   * 添加顶部广告接口
-	   * @author henrysun
-	   * 2018年5月7日 上午11:44:51
-	   */
-	  @PostMapping(value = "addAdsTop")
-	  @ResponseBody
-	  public ResBody addAdsTop(@RequestBody GoodsAdsTop adsTop) {
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		  adsTop.setId(StringUtil.getUUID());
-		  adsTop.setCreateBy(ShiroUtil.getCurrentUserId());
-		  adsTop.setUpdateBy(ShiroUtil.getCurrentUserId());
-		  goodsAdsTopService.insert(adsTop);
-		  return resBody;
-	  }
-	  
-	  /**
-	   * 上传顶部广告大图接口
-	   * @author henrysun
-	   * 2018年5月7日 上午11:42:14
-	   */
-	  @PostMapping(value = "uploadBigPic")
-	  @ResponseBody
-	  public JsonUtil uploadBigPic(HttpServletRequest request,HttpSession session) {
-		  JsonUtil jsonUtil=JsonUtil.sucess(null);
-		  String childFolder="big_pic";
-		  String newFileName=childFolder+"_"+System.currentTimeMillis()+StringUtil.randomString(3);
-		  String fileUrl=null;
-		  try {
-			  fileUrl= fileUtil.uploadFile(request,childFolder,newFileName);
-			  JSONObject json=new JSONObject();
-			  json.put("file_url",fileUrl);
-			  jsonUtil.setData(json);
-		} catch (SystemException e) {
-			jsonUtil.setFlag(false);
-			jsonUtil.setMsg("上传失败，请联系管理员");
-		}
-		  return jsonUtil;
-	  }
-	  
-	  /**
-	   * 上传顶部广告缩略图接口
-	   * @author henrysun
-	   * 2018年5月7日 上午11:42:14
-	   */
-	  @PostMapping(value = "uploadTinyPic")
-	  @ResponseBody
-	  public JsonUtil uploadTinyPic(HttpServletRequest request,HttpSession session) {
-		  JsonUtil jsonUtil=JsonUtil.sucess(null);
-		  String childFolder="tiny_pic";
-		  String newFileName=childFolder+"_"+System.currentTimeMillis()+StringUtil.randomString(3);
-		  String fileUrl=null;
-		  try {
-			  fileUrl= fileUtil.uploadFile(request,childFolder,newFileName);
-			  JSONObject json=new JSONObject();
-			  json.put("file_url",fileUrl);
-			  jsonUtil.setData(json);
-		} catch (SystemException e) {
-			jsonUtil.setFlag(false);
-			jsonUtil.setMsg("上传失败，请联系管理员");
-		}
-		  return jsonUtil;
-	  }
-	  
 		/**
 		 * 生成预支付订单（ERP）
 		 * @author henrysun
@@ -314,7 +226,7 @@ public class DeviceRoadController  {
 	  @GetMapping(value="/createPrepayBack")
 	  @RequiresPermissions("device:road:prepay")
 	  String createPrepay(ReqCreatePrepay reqCreatePrepay,Model model) throws SystemException {
-		  String order=((Map)payService.createPrepay(reqCreatePrepay).getData()).get("order").toString();
+		  String order=((Map)payService.createPrepay(reqCreatePrepay,(byte) 2).getData()).get("order").toString();
 		  ReqCreateQrCode reqObj=new ReqCreateQrCode();
 		  reqObj.setOrder(order);
 		  reqObj.setPayType(reqCreatePrepay.getSaleType());

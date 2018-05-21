@@ -10,4 +10,6 @@ import com.whalegoods.entity.OrderList;
 public interface OrderListMapper extends BaseMapper<OrderList,String> {
 
     List<ErpOrderList> selectListByObjCdt(ErpOrderList objCdt);
+
+	Integer getCountByErpObjCdt(ErpOrderList orderList);
 }

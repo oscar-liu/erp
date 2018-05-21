@@ -3,13 +3,15 @@ package com.whalegoods.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.exception.SystemException;
 
-import sun.tools.tree.ThisExpression;
 
 /**
  * 日期处理工具类
@@ -22,7 +24,7 @@ public class DateUtil {
 	 * 日期时间格式化对象
 	 */
 	private static DateFormat dateTimeFormat = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm");
+			"yyyy-MM-dd HH:mm:ss");
 
 	/**
 	 * 返回当前“年月”字符串，例如“2018_04”
@@ -54,7 +56,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * 格式化输出 默认格式为 "yyyy-MM-dd HH:mm"
+	 * 格式化输出 默认格式为 "yyyy-MM-dd HH:mm:ss"
 	 * @param date
 	 * @return
 	 */
@@ -62,6 +64,21 @@ public class DateUtil {
 		if (date == null)
 			return "";
 		return dateTimeFormat.format(date);
+	}
+	
+	/**
+	 * string转date
+	 * @author henrysun
+	 * 2018年5月15日 下午10:59:01
+	 * @throws SystemException 
+	 */
+	public static Date stringToDate(String date) throws SystemException {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
 	}
 
 	
@@ -76,6 +93,61 @@ public class DateUtil {
     return nowTime.getTime() >= beginTime.getTime() && nowTime.getTime() <= endTime.getTime();  
   }
   
+  /**
+   * 计算两个日期之间差多少个月
+   * @author henrysun
+   * 2018年5月17日 上午9:56:45
+ * @throws SystemException 
+   */
+  public static int countMonths(String date1,String date2,String pattern) throws SystemException{
+      SimpleDateFormat sdf=new SimpleDateFormat(pattern);
+      Calendar c1=Calendar.getInstance();
+      Calendar c2=Calendar.getInstance();
+      try {
+		c1.setTime(sdf.parse(date1));
+		c2.setTime(sdf.parse(date2));
+	} catch (ParseException e) {
+		throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+	}
+      int year =c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR);
+      //开始日期若小月结束日期
+      if(year<0){
+          year=-year;
+          return year*12+c1.get(Calendar.MONTH)-c2.get(Calendar.MONTH);
+      }
+      return year*12+c2.get(Calendar.MONTH)-c1.get(Calendar.MONTH);
+  }
+  
+  /**
+   * 计算两个日期之间的月份集合
+   * @author henrysun
+   * 2018年5月17日 上午10:08:55
+   */
+  public static List<String> getMonthBetween(String startDate, String endDate,String pattern) throws SystemException {
+	    ArrayList<String> result = new ArrayList<String>();
+	    SimpleDateFormat sdf = new SimpleDateFormat(pattern);//格式化为年月
+	    Calendar min = Calendar.getInstance();
+	    Calendar max = Calendar.getInstance();
+	    try {
+			min.setTime(sdf.parse(startDate));
+		} catch (ParseException e) {
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
+	    min.set(min.get(Calendar.YEAR), min.get(Calendar.MONTH), 1);
+	    try {
+			max.setTime(sdf.parse(endDate));
+		} catch (ParseException e) {
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
+	    max.set(max.get(Calendar.YEAR), max.get(Calendar.MONTH), 2);
+	    Calendar curr = min;
+	    while (curr.before(max)) {
+	     result.add(sdf.format(curr.getTime()));
+	     curr.add(Calendar.MONTH, 1);
+	    }
+	    return result;
+	  }
+  
 	/**
 	 * 得到当前时间的年月日
 	 * @author henrysun
@@ -84,6 +156,16 @@ public class DateUtil {
 	private static String getCurrentYmd(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(date).substring(0,10);
+	}
+	
+	@SuppressWarnings("static-access")
+	public static  String getMoveDay(Date date){
+	        Calendar calendar = new GregorianCalendar();
+	        calendar.setTime(date);
+	        calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动
+	        date=calendar.getTime(); //这个时间就是日期往后推一天的结果        
+	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        return formatter.format(date); 
 	}
 	
 }

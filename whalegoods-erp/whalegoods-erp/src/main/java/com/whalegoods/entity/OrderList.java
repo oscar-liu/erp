@@ -51,5 +51,7 @@ public class OrderList extends BaseEntity implements Serializable {
     private String payTime;
     
     private String prefix;
+    
+    private Byte orderType;
 
 }

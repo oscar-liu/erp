@@ -16,7 +16,7 @@
 <div class="erp-search">
   <div class="select">
            版本号： <div class="layui-inline"><input class="layui-input" height="20px" id="apkVersion" autocomplete="off"></div>
-    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>模糊查询</button>
     <@shiro.hasPermission name="apk:add"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>上传APK</button></@shiro.hasPermission>
     <@shiro.hasPermission name="apk:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
@@ -57,7 +57,7 @@
         {checkbox: true, fixed: true},
         {field: 'apkVersion',title: '版本号',align:'center' }, 
         {field: 'apkUrl', title: 'APK文件', align:'center', templet: '#tplApk'},
-        {field: 'apkStatus',title: '账号状态',align:'center',templet: '#switchTpl', unresize: true},
+        {field: 'apkStatus',title: '状态',align:'center',templet: '#switchTpl', unresize: true},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
@@ -72,13 +72,13 @@
             async:false,
             success:function(r){
               if(r.result_code==0){
-                window.top.layer.msg(r.result_msg,{icon:6});
+                window.top.layer.msg(r.result_msg,{icon:6,time:1000});
               }else{
-                window.top.layer.msg(r.result_msg,{icon:5});
+                window.top.layer.msg(r.result_msg,{icon:5,time:1000});
               }
             },
             error:function(){
-            	window.top.layer.msg("设置失败,请联系管理员",{icon:5});
+            	window.top.layer.msg("设置失败,请联系管理员",{icon:5,time:1000});
             }
           });
     });
@@ -106,7 +106,7 @@
       update: function () {
         var checkStatus = table.checkStatus('apkList'), data = checkStatus.data;
         if (data.length != 1) {
-          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
+          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
         update('编辑APK', 'updateApk?id=' + data[0].id, 700, 450);

@@ -2,8 +2,10 @@ package com.whalegoods.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.whalegoods.config.log.Log;
+import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.SysMenu;
 import com.whalegoods.exception.BizApiException;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.MenuService;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.ShiroUtil;
@@ -40,6 +42,11 @@ public class MenuController {
 	    return "/system/menu/menuList";
 	  }
 
+	  /**
+	   * 跳转到添加菜单页面
+	   * @author henrysun
+	   * 2018年5月16日 下午1:53:48
+	   */
 	  @GetMapping(value = "showAddMenu")
 	  public String addMenu(Model model){
 	    JSONArray ja=menuService.getMenuJsonList();
@@ -48,9 +55,18 @@ public class MenuController {
 	    return "/system/menu/add-menu";
 	  }
 
+	  /**
+	   * 添加菜单接口
+	   * @author henrysun
+	   * 2018年5月16日 下午1:53:39
+	   */
 	  @PostMapping(value = "addMenu")
 	  @ResponseBody
-	  public JsonUtil addMenu(SysMenu sysMenu,Model model){
+	  public JsonUtil addMenu(SysMenu sysMenu,Model model) throws SystemException{
+		  //加上此处代码是防止抓包请求引发Comparison method violates its general contract!异常
+		  if(sysMenu.getOrderNum()==null){
+			  throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		  }
 		  if(StringUtils.isEmpty(sysMenu.getPId())){
 	      sysMenu.setPId(null);
 	    }
@@ -82,7 +98,6 @@ public class MenuController {
 	          jsonUtil.setMsg("添加失败");
 		}
 	    }catch (BizApiException e){
-	      e.printStackTrace();
 	      jsonUtil.setMsg("添加失败");
 	    }
 	    return jsonUtil;

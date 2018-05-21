@@ -49,6 +49,7 @@ import com.whalegoods.util.HttpUtils;
 import com.whalegoods.util.IpUtil;
 import com.whalegoods.util.Md5Util;
 import com.whalegoods.util.NumberUtil;
+import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
 import com.whalegoods.util.XmlUtil;
 
@@ -70,7 +71,7 @@ public class PayServiceImpl implements PayService{
 	
 	@Transactional
 	@Override
-	public ResBody createPrepay(ReqCreatePrepay model) throws SystemException {
+	public ResBody createPrepay(ReqCreatePrepay model,Byte orderType) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("deviceIdJp", model.getDevice_code_wg());
@@ -96,7 +97,12 @@ public class PayServiceImpl implements PayService{
 		orderPrepay.setOrderStatus((byte) 1);
 		orderPrepay.setDeviceIdJp(model.getDevice_code_wg());
 		orderPrepay.setDeviceIdSupp(model.getDevice_code_sup());
-		orderPrepay.setPrefix(DateUtil.getCurrentMonth());
+		orderPrepay.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
+		orderPrepay.setOrderType(orderType);
+		if(orderType==2){
+			orderPrepay.setCreateBy(ShiroUtil.getCurrentUserId());
+			orderPrepay.setUpdateBy(ShiroUtil.getCurrentUserId());
+		}
 		orderListService.insert(orderPrepay);
 		Map<String,Object> mapData=new HashMap<>();
 		mapData.put("order",orderId);
@@ -115,7 +121,7 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
 		mapCdt.put("orderStatus",ConstOrderStatus.NOT_PAY);
-		mapCdt.put("prefix", DateUtil.getCurrentMonth());
+		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
@@ -159,7 +165,7 @@ public class PayServiceImpl implements PayService{
 		//更新预支付订单信息
 		orderList.setPayType(model.getPayType());		
 		try {
-			orderList.setPrefix(DateUtil.getCurrentMonth());
+			orderList.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 			orderListService.updateByObjCdt(orderList);
 		} catch (Exception e) {
 			//更新预支付记录异常不影响生成二维码
@@ -176,7 +182,7 @@ public class PayServiceImpl implements PayService{
 		//根据订单号查找预支付记录
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
-		mapCdt.put("prefix", DateUtil.getCurrentMonth());
+		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
@@ -184,7 +190,7 @@ public class PayServiceImpl implements PayService{
 		Map<String, String> mapQrRst;
 		//微信
 		if(orderList.getPayType()==1){
-			this.wxOrderQueryDoor(orderList);
+			this.wxOrderQueryDoor(orderList); 
 		}
 		//支付宝
 		else if(orderList.getPayType()==2){
@@ -225,7 +231,7 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",model.getOrder());
 		mapCdt.put("orderStatus",ConstOrderStatus.PAID);
-		mapCdt.put("prefix", DateUtil.getCurrentMonth());
+		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
@@ -519,10 +525,10 @@ public class PayServiceImpl implements PayService{
 	 */
 	@Transactional
 	private void updateStockAndOrderInfo(OrderList orderList){
-		orderList.setPrefix(DateUtil.getCurrentMonth());
+		orderList.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		orderListService.updateByObjCdt(orderList);
 		int stock=0;
-		if(orderList.getOrderStatus()==ConstOrderStatus.PAID)
+		if(orderList.getOrderStatus()==ConstOrderStatus.PAID&&orderList.getOrderType()==1)
 		{
 			stock=-1;
 		}

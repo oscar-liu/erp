@@ -33,7 +33,6 @@
   {{#  } else { }}
 <a href="{{d.picUrl}}" class="layui-table-link" target="_blank">查看</a>
   {{#  } }}
-  
 </script>
 <script>
 

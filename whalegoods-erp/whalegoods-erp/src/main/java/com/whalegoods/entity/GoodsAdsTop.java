@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 顶部促销表goods_ads_top实体类
+ * 广告表goods_ads_top实体类
  * @author henry-sun
  *
  */
@@ -18,14 +18,22 @@ public class GoodsAdsTop extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
     
-    private String deviceRoadId;
-    
     private String deviceId;
     
     private Byte actionType;
     
+    private String goodsCode;
+    
+    private String goodsName;
+    
     private String bigPicUrl;
     
     private String tinyPicUrl;
+    
+    private Integer stock;
+    
+    private String shortName;
+    
+    private Double salePrice;
 
 }

@@ -2,9 +2,10 @@ package com.whalegoods.service;
 
 
 import com.whalegoods.entity.GoodsAdsTop;
+import com.whalegoods.entity.request.ReqGetAdsTopList;
+import com.whalegoods.entity.response.ResGoodsAdsTop;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 顶部广告Service接口层
@@ -13,6 +14,6 @@ import java.util.Map;
  */
 public interface GoodsAdsTopService extends BaseService<GoodsAdsTop,String> {
   
-  List<Map<String, Object>> selectAdsTopList(Map<String,Object> mapCdt);
+	public List<ResGoodsAdsTop> selectAdsTopList(ReqGetAdsTopList objCdt);
 
 }

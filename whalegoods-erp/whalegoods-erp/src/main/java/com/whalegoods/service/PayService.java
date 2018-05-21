@@ -19,7 +19,7 @@ public interface PayService {
 	
 	ResBody getOrderStatus(String orderId) throws SystemException;
 	
-	ResBody createPrepay(ReqCreatePrepay model) throws SystemException;
+	ResBody createPrepay(ReqCreatePrepay model,Byte orderType) throws SystemException;
 	
 	ResBody refund(ReqRefund model) throws SystemException;
 }

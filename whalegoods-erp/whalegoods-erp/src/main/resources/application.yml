@@ -52,6 +52,8 @@ mapper:
 # PageHelperConfig 可以替代此方案
 pagehelper:
     helperDialect: mysql
-    reasonable: true
+    reasonable: false
+    offsetAsPageNum: true
+    rowBoundsWithCount: true
     supportMethodsArguments: true
     params: count=countSql

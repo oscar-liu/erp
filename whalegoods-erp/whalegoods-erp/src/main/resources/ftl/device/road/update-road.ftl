@@ -88,6 +88,7 @@
       <div class="layui-input-inline"><input type="text"  id="iptStock" name="stock" value="${road.stock}" lay-verify="required|number"  autocomplete="off" class="layui-input"></div>
       <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">如果需要修改，请联系管理员解锁</span></div>
     </div>
+    <span style="color:red;">注意</span>：修改库存是累加或累减操作
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="confirm" lay-submit="">确定</button>
@@ -101,7 +102,8 @@ var flag,msg;
 var lockStatus=$('#hidLockStatus').val();
 $(function(){
 	$('#sltGoodsCode').select2();
-	$("#sltGoodsCode").find("option[value = '"+${road.goodsCode}+"']").attr("selected","selected");
+	$("#select2-sltGoodsCode-container").text($("#sltGoodsCode").find("option[value = "+'${road.goodsCode}'+"]").text());
+	$('#sltGoodsCode').val('${road.goodsCode}');
 	if(lockStatus==1)
 		{
 		$('#iptStock').attr('disabled','true');

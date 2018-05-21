@@ -131,6 +131,7 @@
      AND c.short_name LIKE  "%" #{shortName} "%"
      </if>
     </where>
+    ORDER BY a.create_date DESC
   </select>
   
  <!--  根据设备编号查询所有商品，给柜机API使用 -->
@@ -175,6 +176,7 @@
     goods_sku_id, 
     sale_price,
     capacity,
+    stock,
     warning_num,
     create_by,
     create_date,
@@ -189,6 +191,7 @@
     #{goodsSkuId},
     #{salePrice},
     #{capacity},
+    #{stock},
     #{warningNum},
     #{createBy}, 
     now(),
@@ -248,8 +251,8 @@
     SELECT COUNT(1) FROM device_road c
     INNER JOIN device b ON c.device_id=b.id
    <where>
-     <if test="deviceIdJp !=null and deviceIdJp !=''"> 
-     AND b.device_id_jp=#{deviceIdJp}
+     <if test="deviceId !=null and deviceId !=''"> 
+     AND c.device_id=#{deviceId}
      </if>
      <if test="ctn !=null and ctn !=''"> 
      AND c.ctn=#{ctn}

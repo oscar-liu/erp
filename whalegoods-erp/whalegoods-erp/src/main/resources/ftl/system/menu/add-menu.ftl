@@ -60,7 +60,7 @@
         url
       </label>
       <div class="layui-input-inline">
-        <input type="text" id="url" name="url" lay-verify="url"  autocomplete="off" class="layui-input">
+        <input type="text" id="menuUrl" name="menuUrl" lay-verify="menuUrl"  autocomplete="off" class="layui-input">
       </div>
     </div>
     <div class="layui-form-item">
@@ -87,8 +87,7 @@
           <span class="x-red">*</span>序号
         </label>
         <div class="layui-input-inline">
-          <input type="orderNum" id="orderNum" name="orderNum"  lay-verify="orderNum"
-                 autocomplete="off" class="layui-input">
+          <input type="orderNum" id="orderNum" name="orderNum"  lay-verify="required|orderNum"  autocomplete="off" class="layui-input">
         </div>
     </div>
       <div style="height: 60px"></div>
@@ -140,9 +139,9 @@
               return '名称不能为空';
           }
       }
-      ,url:function(v){
+      ,menuUrl:function(v){
             if(type.val()=='1'){
-                $('#url').val('');
+                $('#menuUrl').val('');
             }
             if(type.val()=='0'&&v.trim()==''){
                 return 'url不能为空';
@@ -159,7 +158,7 @@
   form.on('select(menuType)', function(data){
       if(data.value=='2'){
           $('#pId').val('');
-          dOs('pName',true);dOs('permission',true);dOs('url',false);
+          dOs('pName',true);dOs('permission',true);dOs('menuUrl',false);
       }else if(data.value=='1'){//按钮
           dOs('url',true);dOs('pName',false);dOs('permission',false);
       }else if(data.value=='0'){

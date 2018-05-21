@@ -66,6 +66,7 @@
    <where>
      <if test="goodsCode !=null and goodsCode!=''"> AND goods_code LIKE  #{goodsCode} "%"</if>
     </where>
+    ORDER BY create_date DESC
   </select>
   
   <select id="selectByMapCdt" parameterType="java.util.Map" resultMap="BaseResultMap">

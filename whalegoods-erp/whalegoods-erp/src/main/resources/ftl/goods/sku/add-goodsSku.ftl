@@ -199,14 +199,14 @@
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
             window.parent.layui.table.reload('skuList');
-            window.top.layer.msg(d.result_msg,{icon:6});
+            window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});
           }},
           error:function(){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.top.layer.msg('请求失败',{icon:5});
+            window.top.layer.msg('请求失败',{icon:5,time:1000});
         }
       });
       return false;

@@ -53,7 +53,7 @@ public class V1OrderController {
 			  throw new BizApiException(ConstApiResCode.VIEWTIME_NOT_EMPTY);
 		  }
 	  }
-	  return payService.createPrepay(model);
+	  return payService.createPrepay(model,(byte) 1);
 	}
 
 	/**

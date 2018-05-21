@@ -77,16 +77,7 @@ public class MenuServiceImpl extends BaseServiceImpl<SysMenu,String> implements 
 	    Collections.sort(menuList, new Comparator<SysMenu>() {
 	      @Override
 	      public int compare(SysMenu o1, SysMenu o2) {
-	        if(o1.getOrderNum()==null||o2.getOrderNum()==null){
-	          return -1;
-	        }
-	        if(o1.getOrderNum()>o2.getOrderNum()){
-	          return 1;
-	        }
-	        if(o1.getOrderNum()==o2.getOrderNum()){
-	          return 0;
-	        }
-	        return -1;
+	        return o1.getOrderNum().compareTo(o2.getOrderNum());
 	      }
 	    });
 	    int pNum=1000;

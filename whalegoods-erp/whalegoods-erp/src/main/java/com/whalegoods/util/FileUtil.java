@@ -2,15 +2,19 @@ package com.whalegoods.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,9 @@ import org.springframework.util.ResourceUtils;
 
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.exception.SystemException;
+
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 
 /**
  * 文件处理工具类
@@ -110,5 +117,32 @@ public class FileUtil {
             file.mkdirs();
         }
         return file;
+    }
+    
+    
+    /**
+     * 导出EXCEL
+     * @author henrysun
+     * 2018年5月17日 上午11:26:44
+     */
+    public static void exportExcel(List<?> list, String title, String sheetName, Class<?> pojoClass,String fileName, HttpServletResponse response) throws SystemException{
+        defaultExport(list, pojoClass, fileName, response, new ExportParams(title, sheetName));
+    }
+    
+    private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response, ExportParams exportParams) throws SystemException {
+        Workbook workbook = ExcelExportUtil.exportExcel(exportParams,pojoClass,list);
+        if (workbook != null);
+        downLoadExcel(fileName, response, workbook);
+    }
+
+    private static void downLoadExcel(String fileName, HttpServletResponse response, Workbook workbook) throws SystemException {
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("content-Type", "application/vnd.ms-excel");
+            response.setHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+        }
     }
 }

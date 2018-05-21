@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.GoodsAdsTopMapper">
-
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.response.ResGoodsAdsTop">
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="big_pic_url" jdbcType="VARCHAR" property="bigPicUrl" />
@@ -9,43 +8,122 @@
     <result column="action_type" jdbcType="TINYINT" property="actionType" />
   </resultMap>
   
-    <select id="selectAdsTopList" parameterType="java.util.Map" resultMap="BaseResultMap">
-  SELECT 
-  d.goods_code,
+    <sql id="Base_Column_List">
   a.big_pic_url,
   a.tiny_pic_url,
-  a.action_type
-  FROM goods_ads_top a 
-  LEFT JOIN device_road b  ON a.device_road_id = b.id 
-  LEFT JOIN device c ON c.id = a.device_id 
-  LEFT JOIN goods_sku d ON d.id=b.goods_sku_id
-  WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
+  a.action_type,
+  d.goods_code
+  </sql>
+  
+  <resultMap id="BaseResultMap2" type="com.whalegoods.entity.GoodsAdsTop">
+  <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="big_pic_url" jdbcType="VARCHAR" property="bigPicUrl" />
+    <result column="tiny_pic_url" jdbcType="VARCHAR" property="tinyPicUrl" />
+    <result column="action_type" jdbcType="TINYINT" property="actionType" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+  </resultMap>
+  
+  <sql id="Base_Column_List2">
+  a.id,
+  a.big_pic_url,
+  a.tiny_pic_url,
+  a.action_type,
+  b.goods_code,
+  b.goods_name,
+  SUM(c.stock) stock,
+  c.sale_price,
+  d.short_name,
+  d.id deviceId
+  </sql>
+  
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap2">
+    SELECT <include refid="Base_Column_List2" /> FROM goods_ads_top a 
+   LEFT JOIN  goods_sku b ON b.goods_code=a.goods_code 
+  LEFT JOIN device_road c ON c.goods_sku_id=b.id
+  LEFT JOIN device d ON  d.id=a.device_id
+    WHERE a.id= #{_parameter}
+  </select>
+  
+  <!-- 查询广告列表(柜机API)-->
+    <select id="selectAdsTopList" parameterType="com.whalegoods.entity.request.ReqGetAdsTopList" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> FROM goods_ads_top a 
+  LEFT JOIN  goods_sku b ON b.goods_code=a.goods_code 
+  LEFT JOIN device_road c ON c.goods_sku_id=b.id
+  LEFT JOIN device d ON  d.id=a.device_id
+      <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> AND d.device_id_jp=#{deviceIdJp}</if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND d.device_id_supp=#{deviceIdSupp}</if>
+    </where>
+  </select>
+  
+      <!-- 查询广告列表(ERP)-->
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsAdsTop" resultMap="BaseResultMap2">
+    SELECT  <include refid="Base_Column_List2" />  FROM goods_ads_top a 
+  LEFT JOIN goods_sku b  ON b.goods_code = a.goods_code 
+  INNER JOIN device d   ON d.id = a.device_id 
+  LEFT JOIN device_road c ON c.goods_sku_id = b.id AND c.device_id=d.id
+    <where>
+     <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
+    </where>
+    GROUP BY a.goods_code,a.device_id
   </select>
 
    <insert id="insert" parameterType="com.whalegoods.entity.GoodsAdsTop">
     INSERT INTO goods_ads_top (
     id,
-    device_road_id, 
     device_id,
     action_type,
     big_pic_url,
     tiny_pic_url, 
+    goods_code,
     create_by,
     create_date,
     update_by,
     update_date)
     VALUES (
     #{id},
-    #{deviceRoadId}, 
-    #{deviceId}, 
+    #{deviceId},
     #{actionType},
     #{bigPicUrl},
     #{tinyPicUrl},
+    #{goodsCode},
     #{createBy}, 
     now(),
     #{updateBy},
     now()
     )
   </insert>
+  
+  <update id="updateByObjCdt" parameterType="com.whalegoods.entity.GoodsAdsTop">
+		UPDATE goods_ads_top a 
+	   <set>
+      <if test="goodsCode != null and goodsCode != ''">a.goods_code=#{goodsCode},</if>
+      <if test="actionType != null and actionType !='' ">a.action_type=#{actionType},</if>
+      <if test="deviceId != null and deviceId != ''">a.device_id=#{deviceId},</if>
+      <if test="bigPicUrl != null and bigPicUrl != ''">a.big_pic_url=#{bigPicUrl},</if>
+      <if test="tinyPicUrl != null and tinyPicUrl != ''">a.tiny_pic_url=#{tinyPicUrl},</if>
+      <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
+      update_date = now(),
+      </set>
+        <where>
+        <if test="id !=null and id !=''"> AND a.id =#{id}</if>
+    </where>
+	</update>
+	
+	 <select id="selectCountByMapCdt" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM goods_ads_top
+    <where>
+     <if test="deviceId !=null and deviceId !=''"> AND device_id=#{deviceId}</if>
+     <if test="goodsCode !=null and goodsCode !=''"> AND goods_code=#{goodsCode}</if>
+    </where>
+  </select>
+  
+     <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM goods_ads_top  WHERE id = #{_parameter}
+  </delete>
 
 </mapper>

@@ -19,6 +19,15 @@ public abstract class ConstApiResCode {
     
     
     /**
+     * 促销相关 6开头
+     */
+    public final static Integer GOODS_CODE_FOR_SALE_EXIST= 6001;
+    public final static Integer SALE_ALREADY_THREE= 6002;
+    public final static Integer ADS_TOP_ALREADY_THREE= 6003;
+    public final static Integer GOODS_CODE_FOR_ADS_TOP_EXIST= 6004;
+    public final static Integer TIME_RANGE_NOT_EMPTY= 6005;
+    
+    /**
      * 商品库存相关 7开头
      */
     public final static Integer GOODS_CODE_NOT_EMPTY= 7001;
@@ -53,6 +62,8 @@ public abstract class ConstApiResCode {
     public final static Integer WX_APPLY_REFUND_TWO_FAILED= 9012;
     public final static Integer ALIPAY_REFUND_FALID= 9013;
     public final static Integer ORDERID_EMPTY= 9014;
+    public final static Integer CANNOT_TWELEVE= 9015;
+    public final static Integer SDLIST_EMPTY= 9016;
     
     
 	static {
@@ -60,6 +71,12 @@ public abstract class ConstApiResCode {
 		resMap.put(EXCEPTION_UNKNOWN,"未知异常");
 		resMap.put(SYSTEM_ERROR,"系统错误");
 		resMap.put(APK_VERSION_EXIST,"APK版本已存在");
+		
+		resMap.put(GOODS_CODE_FOR_SALE_EXIST,"商品已在对应的设备促销中");
+		resMap.put(SALE_ALREADY_THREE,"该设备已经有三款商品在促销");
+		resMap.put(ADS_TOP_ALREADY_THREE,"该设备已经有三个广告");
+		resMap.put(GOODS_CODE_FOR_ADS_TOP_EXIST,"商品已在对应的设备投放广告");
+		resMap.put(TIME_RANGE_NOT_EMPTY,"时间范围不能为空");
 		
 		resMap.put(GOODS_CODE_NOT_EMPTY,"商品编号不能为空");
 		resMap.put(PATH_CODE_NOT_EMPTY,"货道编号不能为空");
@@ -87,6 +104,8 @@ public abstract class ConstApiResCode {
 		resMap.put(WX_APPLY_REFUND_TWO_FAILED,"微信申请退款-二级失败");
 		resMap.put(ALIPAY_REFUND_FALID,"支付宝退款申请失败");
 		resMap.put(ORDERID_EMPTY,"订单号不能为空");
+		resMap.put(CANNOT_TWELEVE,"不能超过12个月");
+		resMap.put(SDLIST_EMPTY,"当前用户无刷单记录");
 		
 	}
 	

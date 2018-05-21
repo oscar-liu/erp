@@ -10,7 +10,23 @@ public class ConstSysParamName {
 	
 	public static String KEY_LAST="key=";
 	
+	public static String UNDERLINE="_";
+	
 	public static String GANG="-";
+	
+	public static String KGANG=" - ";
+	
+	public static String START_DAY="-01";
+	
+	public static String END_DAY="-31";
+	
+	public static String START_HMS=" 00:00:00";
+	
+	public static String END_HMS=" 23:59:59";
+	
+	public static String YMD="yyyy-MM-dd";
+	
+	public static String YM="yyyy-MM";
 	
 	public static String ORDER_ID_PREFIX="wg";
 	

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>货道信息列表</title>
+  <title>广告列表</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
@@ -10,10 +10,9 @@
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
-    <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
-  <script type="text/javascript" src="${re.contextPath}/plugin/qrcode/jquery.qrcode.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -31,34 +30,62 @@
    </div>
    </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
-    <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
-    <@shiro.hasPermission name="device:road:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
-     &nbsp;&nbsp;&nbsp;
-    <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe65e;</i>生成支付二维码</button>&nbsp;
-          支付类型：
-       <div class="layui-inline">
-       <div class="layui-input-inline">
-     <select id="sltPayType" name="sltPayType" lay-ignore>
-        <option value="1" selected="">微信</option>
-        <option value="2" >支付宝</option>
-      </select>
-      </div>
-  </div>
-    </@shiro.hasPermission>
+    <@shiro.hasPermission name="ads:top:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="ads:top:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
-<table id="roadList" class="layui-hide" lay-filter="road"></table>
+<table id="adsTopList" class="layui-hide" lay-filter="adsTop"></table>
 <script type="text/html" id="rightToolBar">
-<@shiro.hasPermission name="device:road:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
+<@shiro.hasPermission name="ads:middle:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
 </script>
-<script type="text/html" id="tpllackLevel">
-  {{#  if(d.stock<=d.warningNum){ }}
-    <span style="color:red;">缺货</span>
-  {{#  } else { }}
-<span style="color:#76EE00;font-weight:bold;">充足</span>
+<script type="text/html" id="tplActionType">
+  {{#  if(d.actionType==1){ }}
+    <span style="color:blue;">纯广告</span>
+  {{#  } if (d.actionType==2) { }}
+<span style="color:green;">可购买商品</span>
+{{#  } if(d.actionType ==null||d.actionType ==undefined) { }}
+<span style="color:red;">未知类型</span>
   {{#  } }}
-  
+</script>
+<script type="text/html" id="tplGoodsName">
+  {{#  if(d.actionType==1&&(d.goodsName ==null||d.goodsName ==undefined||d.goodsName=="")){ }}
+    <span></span>
+  {{#  } if (d.actionType==2&&!(d.goodsName ==null||d.goodsName ==undefined||d.goodsName=="")) { }}
+<span>{{ d.goodsName}}</span>
+  {{#  } }}
+</script>
+<script type="text/html" id="tplStock">
+  {{#  if(d.actionType==1&&(d.stock ==null||d.stock ==undefined||d.stock=="")){ }}
+    <span></span>
+  {{#  } if (d.actionType==2&&!(d.stock ==null||d.stock ==undefined||d.stock=="")) { }}
+<span>{{ d.stock}}</span>
+  {{#  } if (d.actionType==2&&(d.stock ==null||d.stock ==undefined||d.stock=="")) { }}
+<span style="color:red;">未上架</span>
+  {{#  } }}
+</script>
+<script type="text/html" id="tplSalePrice">
+    {{#  if(d.actionType==1&&(d.salePrice ==null||d.salePrice ==undefined||d.salePrice=="")){ }}
+    <span></span>
+  {{#  } if (d.actionType==2&&!(d.salePrice ==null||d.salePrice ==undefined||d.salePrice=="")) { }}
+<span>{{ d.salePrice}}</span>
+  {{#  } if (d.actionType==2&&(d.salePrice ==null||d.salePrice ==undefined||d.salePrice=="")) { }}
+<span style="color:red;">未上架</span>
+  {{#  } }}
+</script>
+<script type="text/html" id="tplBigPicUrl">
+  {{#  if(d.bigPicUrl==null||d.bigPicUrl==undefined||d.bigPicUrl==""){ }}
+    <span style="color: #F581B1;">无</span>
+  {{#  } else { }}
+<a href="{{d.bigPicUrl}}" class="layui-table-link" target="_blank">查看</a>
+  {{#  } }}
+</script>
+<script type="text/html" id="tplTinyPicUrl">
+  {{#  if(d.tinyPicUrl==null||d.tinyPicUrl==undefined||d.tinyPicUrl==""){ }}
+    <span style="color: #F581B1;">无</span>
+  {{#  } else { }}
+<a href="{{d.tinyPicUrl}}" class="layui-table-link" target="_blank">查看</a>
+  {{#  } }}
 </script>
 <script>
 
@@ -71,49 +98,40 @@
   }
   $(function(){
 	  $('#sltDeviceList').select2();
-	  $('#sltPayWay').select2();
-	  $('#sltPayWay + span').css('width','80px');
-  });
+  }); 
   
   layui.use('table', function () {
     var table = layui.table;
     table.render({
-      id: 'roadList',
-      elem: '#roadList', 
-      url: 'showRoadList',
+      id: 'adsTopList',
+      elem: '#adsTopList', 
+      url: 'showAdsTopList',
       cols: [[
         {checkbox: true, fixed: true},
         {field: 'shortName', title: '点位短名', align:'center'},
-        {field: 'ctn', title: '柜号', align:'center'},
-        {field: 'floor', title: '层级', align:'center'},
-        {field: 'pathCode', title: '货道号', align:'center'},        
-        {field: 'goodsName', title: '商品名称', align:'center'},
-        {field: 'salePrice', title: '售价', align:'center'},
-        {field: 'goodsCode',title: '商品编号',align:'center'},
-        {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel'},
-        {field: 'stock', title: '库存', align:'center',sort: true},        
-        {field: 'deviceIdJp',title: '设备编号(鲸品)',align:'center'}, 
-        {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center'},
-        {field: 'capacity', title: '最大容量', align:'center',sort: true},
-        {field: 'warningNum', title: '报警临界值', align:'center',sort: true},
-        {field: 'deviceId',minWidth:0,width:0,type:'space',style:'display:none'},
+        {field: 'bigPicUrl', title: '大图', align:'center',templet: '#tplBigPicUrl'},
+        {field: 'tinyPicUrl',title: '缩略图',align:'center',templet: '#tplTinyPicUrl'},
+        {field: 'goodsName', title: '广告商品', align:'center',templet: '#tplGoodsName'},
+        {field: 'stock', title: '库存', align:'center',templet: '#tplStock'},
+        {field: 'salePrice', title: '售价', align:'center',templet: '#tplSalePrice'},
+        {field: 'actionType', title: '类型', align:'center',templet: '#tplActionType'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
-      height: 'full-83'
+      height: 'full-100'
     });
 
     var $ = layui.$, active = {
       select: function () {
         var deviceId = $('#sltDeviceList').val();
-        table.reload('roadList', {
+        table.reload('adsTopList', {
           where: {
         	  deviceId: deviceId
           }
         });
       },
       reload:function(){       
-       table.reload('roadList', {
+       table.reload('adsTopList', {
           where: {
         	  deviceId: null
           }
@@ -122,38 +140,22 @@
        $("#sltDeviceList").val('');
       },
       add: function () {
-        add('添加货道', 'showAddRoad', 800, 500);
+        add('添加广告（同一设备最多只能有三个广告）', 'showAddAdsTop', 600, 680);
       },
       update: function () {
-        var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
+        var checkStatus = table.checkStatus('adsTopList'), data = checkStatus.data;
         if (data.length != 1) {
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('编辑货道', 'showUpdateRoad?id=' + data[0].id, 900, 500);
-      },
-          prepay: function () {
-          	var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
-            if (data.length != 1) {
-              layer.msg('请选择1一个货道,已选['+data.length+']个', {icon: 5,time:1000});
-              return false;
-            }
-            else{
-             var device_code_sup=data[0].deviceIdSupp;
-             var device_code_wg=data[0].deviceIdJp;
-             var ctn=data[0].ctn;
-             var floor=data[0].floor;
-             var path_code=data[0].pathCode;
-             var sale_type=$("#sltPayType").val();
-            }
-            prepay('生成支付二维码', 'createPrepayBack?saleType=' + sale_type+'&pathCode='+path_code+'&floor='+floor+'&ctn='+ctn+'&device_code_wg='+device_code_wg+'&device_code_sup='+device_code_sup, 400, 280);
-            }
+        update('编辑广告', 'showUpdateAdsTop?id=' + data[0].id, 600, 680);
+      }
     };
     //监听工具条
-    table.on('tool(road)', function (obj) {
+    table.on('tool(adsTop)', function (obj) {
       var data = obj.data;
       if (obj.event === 'del') {
-        layer.confirm('确定删除该货道?',{ title:'提示'},
+        layer.confirm('确定删除该广告?',{ title:'提示'},
         function (index) {
           del(data.id);
           layer.close(index);
@@ -170,14 +172,14 @@
 
   function del(id) {
     $.ajax({
-      url:"delRoad",
+      url:"delAdsTop",
       type:"post",
       data:{id:id},
       async:false,
       success:function(d){
         if(d.result_code==0){
           window.top.layer.msg(d.result_msg,{icon:6,time:1000});
-          layui.table.reload('roadList');
+          layui.table.reload('adsTopList');
         }else{
           window.top.layer.msg(d.result_msg);
         }},
@@ -201,7 +203,7 @@
       h = ($(window).height() - 50);
     }
     layer.open({
-      id: 'road-update',
+      id: 'adsTop-update',
       type: 2,
       area: [w + 'px', h + 'px'],
       fix: false,
@@ -240,7 +242,7 @@
     }
     ;
     layer.open({
-      id: 'road-add',
+      id: 'adsTop-add',
       type: 2,
       area: [w + 'px', h + 'px'],
       fix: false,
@@ -251,36 +253,6 @@
       content: url
     });
   }
-  
-  function prepay(title, url, w, h) {
-	    if (title == null || title == '') {
-	      title = false;
-	    }
-	    ;
-	    if (url == null || url == '') {
-	      url = "404.html";
-	    }
-	    ;
-	    if (w == null || w == '') {
-	      w = ($(window).width() * 0.9);
-	    }
-	    ;
-	    if (h == null || h == '') {
-	      h = ($(window).height() - 50);
-	    }
-	    ;
-	    layer.open({
-	      id: 'road-prepay',
-	      type: 2,
-	      area: [w + 'px', h + 'px'],
-	      fix: false,
-	      maxmin: true,
-	      shadeClose: false,
-	      shade: 0.4,
-	      title: title,
-	      content: url
-	    });
-	  }
 </script>
 </body>
 

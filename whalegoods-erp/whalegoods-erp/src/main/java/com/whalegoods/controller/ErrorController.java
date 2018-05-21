@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 错误处理API
- * @author chencong
- * 2018年4月11日 上午9:29:17
+ * @author henrysun
+ * 2018年5月14日 下午7:40:55
  */
 @Controller
 @RequestMapping(value = "/error")

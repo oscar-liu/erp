@@ -5,7 +5,7 @@
   <title>任务列表</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+  <meta name="viewport" content="width=job-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
@@ -15,26 +15,20 @@
 <body>
 <div class="erp-search">
   <div class="select">
-           点位短名： <div class="layui-inline"><input class="layui-input" height="20px" id="shortName" autocomplete="off"></div>
-    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>模糊查询</button>
-    <@shiro.hasPermission name="device:add"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
-    <@shiro.hasPermission name="device:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="job:add"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="job:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
-<table id="deviceList" class="layui-hide" lay-filter="device"></table>
+<table id="jobList" class="layui-hide" lay-filter="job"></table>
 <script type="text/html" id="rightToolBar">
-<@shiro.hasPermission name="device:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
+<@shiro.hasPermission name="job:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
 </script>
-<script type="text/html" id="tplLockStatus">
-<input type="checkbox" name="lockStatus" value="{{d.id}}" lay-skin="switch" lay-text="开启|锁定" lay-filter="radioLockStatus" {{ d.lockStatus == 2 ? 'checked' : '' }}>
+<script type="text/html" id="tplJobStatus">
+<input type="checkbox" name="jobStatus" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="radioJobStatus" {{ d.jobStatus == 1 ? 'checked' : '' }}>
 </script>
-<script type="text/html" id="tplDeviceStatus">
-  {{#  if(d.deviceStatus==1||d.deviceStatus==2){ }}
-<input type="checkbox" name="deviceStatus" value="{{d.id}}" lay-skin="switch" lay-text="运行|停止" lay-filter="radioDeviceStatus" {{ d.deviceStatus == 1 ? 'checked' : '' }}>
-  {{#  } else { }}
-<span style="color: #F581B1;">已下线</span>
-  {{#  } }}
+<script type="text/html" id="tplSwitchStatus">
+<input type="checkbox" name="switchStatus" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="radioSwitchStatus" {{ d.switchStatus == 1 ? 'checked' : '' }}>
 </script>
 <script>
 
@@ -49,29 +43,28 @@
   layui.use('table', function () {
     var table = layui.table,form = layui.form;
     table.render({
-      id: 'deviceList',
-      elem: '#deviceList', 
-      url: 'showDeviceList',
+      id: 'jobList',
+      elem: '#jobList',  
+      url: 'showJobList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'shortName',title: '点位短名',align:'center' }, 
-        {field: 'location', title: '点位地址', align:'center'},
-        {field: 'deviceStatus',title: '设备运行状态',align:'center',templet: '#tplDeviceStatus', unresize: true},
-        {field: 'signCode', title: '签到码', align:'center'},
-        {field: 'deviceIdJp', title: '设备编号（鲸品）', align:'center'},
-        {field: 'deviceIdSupp', title: '设备编号（供应商）', align:'center'},
-        {field: 'lockStatus', title: '库存锁定状态',templet: '#tplLockStatus',align:'center'},
+        {field: 'jobName',title: '任务名称',align:'center' }, 
+        {field: 'jobCron', title: 'Cron表达式', align:'center'},
+        {field: 'jobStatus', title: '任务启动状态',templet: '#tplJobStatus',align:'center'},
+        {field: 'execPath', title: '执行路径', align:'center'},
+        {field: 'switchStatus',title: '通知开关状态',align:'center',templet: '#tplSwitchStatus', unresize: true},
+        {field: 'jobDesc', title: '任务描述', align:'center'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
       height: 'full-83'
     });
     
-    form.on('switch(radioDeviceStatus)', function(obj){
+    form.on('switch(radioJobStatus)', function(obj){
         $.ajax({
-            url:"updateDeviceStatus",
+            url:"updateJobStatus",
             type:"post",
-            data:{id:this.value,device_status:obj.elem.checked},
+            data:{id:this.value,jobStatus:obj.elem.checked},
             async:false,
             success:function(r){
               if(r.result_code==0){
@@ -86,11 +79,11 @@
           });
     });
     
-    form.on('switch(radioLockStatus)', function(obj){
+    form.on('switch(radioSwitchStatus)', function(obj){
         $.ajax({
-            url:"updateLockStatus",
+            url:"updateSwitchStatus",
             type:"post",
-            data:{id:this.value,lock_status:obj.elem.checked},
+            data:{id:this.value,switchStatus:obj.elem.checked},
             async:false,
             success:function(r){
               if(r.result_code==0){
@@ -106,39 +99,29 @@
     });
 
     var $ = layui.$, active = {
-      select: function () {
-        var shortName = $('#shortName').val();
-        table.reload('deviceList', {
-          where: {
-        	  shortName: shortName,
-          }
-        });
-      },
       reload:function(){
-        $('#shortName').val('');
-        table.reload('deviceList', {
+        table.reload('jobList', {
           where: {
-        	  shortName: null,
           }
         });
       },
       add: function () {
-        add('添加设备（仅需填写供应商提供的编号）', 'showAddDevice', 400, 350);
+        add('添加任务', 'showAddJob', 600, 500);
       },
       update: function () {
-        var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
+        var checkStatus = table.checkStatus('jobList'), data = checkStatus.data;
         if (data.length != 1) {
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('更新设备', 'showUpdateDevice?id=' + data[0].id, 400, 350);
+        update('更新任务', 'showUpdateJob?id=' + data[0].id, 600, 500);
       }
     };
     //监听工具条
-    table.on('tool(device)', function (obj) {
+    table.on('tool(job)', function (obj) {
       var data = obj.data;
       if (obj.event === 'del') {
-        layer.confirm('确定删除：[<label style="color: #00AA91;">' + data.shortName + '</label>]的设备?',{ title:'提示'},
+        layer.confirm('确定删除：[<label style="color: #00AA91;">' + data.jobName+ '</label>]这个任务?',{ title:'提示'},
          function (index) {
             del(data.id);
             layer.close(index);
@@ -155,14 +138,14 @@
 
   function del(id) {
     $.ajax({
-      url:"delDevice",
+      url:"delJob",
       type:"post",
       data:{id:id},
       async:false,
       success:function(d){
         if(d.result_code==0){
           window.top.layer.msg(d.result_msg,{icon:6,time:1000});
-          layui.table.reload('deviceList');
+          layui.table.reload('jobList');
         }else{ 
           window.top.layer.msg(d.result_msg);
         }},
@@ -186,7 +169,7 @@
       h = ($(window).height() - 50);
     }
     layer.open({
-      id: 'device-update',
+      id: 'job-update',
       type: 2,
       area: [w + 'px', h + 'px'],
       fix: false,
@@ -225,7 +208,7 @@
     }
     ;
     layer.open({
-      id: 'device-add',
+      id: 'job-add',
       type: 2,
       area: [w + 'px', h + 'px'],
       fix: false,

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
-  <title>添加设备</title>
+  <title>添加任务</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -16,28 +15,37 @@
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
-    <input  type="hidden" name="id">
-      <label for="deviceIdSupp" class="layui-form-label"><span class="x-red">*</span>设备编号</label>
-      <div class="layui-input-inline"><input type="text"  id="deviceIdSupp" name="deviceIdSupp" lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <label for="jobName" class="layui-form-label"><span class="x-red">*</span>任务名称</label>
+      <div class="layui-input-inline"><input type="text"  id="jobName" name="jobName" lay-verify="required" autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-form-item">
-      <label for="shortName" class="layui-form-label"><span class="x-red">*</span>点位短名</label>
-      <div class="layui-input-inline"><input type="text"  id="shortName" name="shortName"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <label for="jobCron" class="layui-form-label"><span class="x-red">*</span>Cron表达式</label>
+      <div class="layui-input-inline"><input type="text"  id="jobCron" name="jobCron"  lay-verify="required" autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-form-item">
-      <label for="location" class="layui-form-label"><span class="x-red">*</span>点位地址</label>
-      <div class="layui-input-inline"><input type="text"  id="location" name="location"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <label for="execPath" class="layui-form-label"><span class="x-red">*</span>执行路径</label>
+      <div class="layui-input-inline"><input type="text"  id="execPath" name="execPath"  lay-verify="required" autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-form-item">
-      <label for="signCode" class="layui-form-label"><span class="x-red">*</span>签到码</label>
-      <div class="layui-input-inline"><input type="text"  id="signCode" name="signCode"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <label for="jobDesc" class="layui-form-label"><span class="x-red">*</span>任务描述</label>
+      <div class="layui-input-inline"><input type="text"  id="jobDesc" name="jobDesc"  lay-verify="required" autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline" style="padding-top: 10px;"><a href="http://cron.qqe2.com" target="_blank" style="color:blue;">Cron表达式生成器</a></div>
     </div>
+    
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit="">增加</button>
       <button  class="layui-btn layui-btn-primary" id="close">取消</button>
     </div>
   </div>
+        <div class="layui-form-item">
+        <label class="layui-form-label">通知角色</label>
+        <div class="layui-input-block">
+            <#list boxJson as json>
+                <input type="checkbox" name="role" title="${json.name}" lay-filter="check" value="${json.id}">
+            </#list>
+        </div>
+      </div>
   </form>
 </div>
 <script>
@@ -51,8 +59,16 @@
    });
     //监听提交
     form.on('submit(add)', function(data){
+        var r=document.getElementsByName("role");
+        var role=[];
+        for(var i=0;i<r.length;i++){
+            if(r[i].checked){
+                role.push(r[i].value);
+            }
+        }
+        data.field.role=role;
       $.ajax({
-        url:'addDevice',
+        url:'addJob',
         type:'post',
         data:data.field,
         async:false,
@@ -61,7 +77,7 @@
           if(d.result_code==0){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.parent.layui.table.reload('deviceList');
+            window.parent.layui.table.reload('jobList');
             window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});

@@ -8,7 +8,7 @@
     <result column="job_cron" jdbcType="VARCHAR" property="jobCron" />
     <result column="exec_path" jdbcType="VARCHAR" property="execPath" />
     <result column="job_status" jdbcType="TINYINT" property="jobStatus" />
-    <result column="swich_status" jdbcType="TINYINT" property="swichStatus" />
+    <result column="switch_status" jdbcType="TINYINT" property="switchStatus" />
     <result column="job_desc" jdbcType="VARCHAR" property="jobDesc" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -23,9 +23,13 @@
     a.job_cron,
     a.exec_path,
     a.job_status, 
-    a.swich_status,
+    a.switch_status,
     a.job_desc
   </sql>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.SysJob" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM sys_job a
+  </select>
   
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  FROM sys_job a WHERE id = #{_parameter}
@@ -42,7 +46,7 @@
     job_cron, 
     exec_path, 
     job_status, 
-    swich_status, 
+    switch_status, 
     job_desc,
     create_by,
     create_date,
@@ -54,7 +58,7 @@
     #{jobCron}, 
     #{execPath}, 
     #{jobStatus},
-    #{swichStatus},
+    #{switchStatus},
     #{jobDesc},
     #{createBy}, 
     now(),
@@ -71,7 +75,7 @@
       <if test="jobCron != null and jobCron != ''">a.job_cron=#{jobCron},</if>
       <if test="execPath != null and execPath != ''">a.exec_path=#{execPath},</if>
       <if test="jobStatus != null and jobStatus != ''">a.job_status=#{jobStatus},</if>
-      <if test="swichStatus != null and swichStatus != ''">a.swich_status=#{swichStatus},</if>
+      <if test="switchStatus != null and switchStatus != ''">a.switch_status=#{switchStatus},</if>
       <if test="jobDesc != null and jobDesc != ''">a.job_desc=#{jobDesc},</if>
       <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
       update_date = now(),

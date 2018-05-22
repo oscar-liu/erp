@@ -25,7 +25,9 @@ public class SysJob extends BaseEntity implements Serializable {
 
     private Byte jobStatus;
     
-    private Byte swichStatus;
+    private Byte switchStatus;
 
     private String jobDesc;
+    
+    private String role[];
 }

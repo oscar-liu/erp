@@ -16,6 +16,7 @@ public abstract class ConstApiResCode {
     public final static Integer EXCEPTION_UNKNOWN= 10000;
     public final static Integer SYSTEM_ERROR= 10001;
     public final static Integer APK_VERSION_EXIST= 10002;
+    public final static Integer ILLEGAL_CRON_EXPRESSION= 10003;
     
     
     /**
@@ -71,6 +72,7 @@ public abstract class ConstApiResCode {
 		resMap.put(EXCEPTION_UNKNOWN,"未知异常");
 		resMap.put(SYSTEM_ERROR,"系统错误");
 		resMap.put(APK_VERSION_EXIST,"APK版本已存在");
+		resMap.put(ILLEGAL_CRON_EXPRESSION,"不合法的cron表达式");
 		
 		resMap.put(GOODS_CODE_FOR_SALE_EXIST,"商品已在对应的设备促销中");
 		resMap.put(SALE_ALREADY_THREE,"该设备已经有三款商品在促销");

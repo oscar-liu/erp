@@ -140,10 +140,10 @@ public class GoodsAdsController  {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("deviceId", goodsAdsMiddle.getDeviceId());
-		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>=3)
+		 /* if(adsMiddleService.selectCountByMapCdt(mapCdt)>=3)
 		  {
 			  throw new BizApiException(ConstApiResCode.SALE_ALREADY_THREE);
-		  }
+		  }*/
 		  mapCdt.put("goodsCode", goodsAdsMiddle.getGoodsCode());
 		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>=1)
 		  {

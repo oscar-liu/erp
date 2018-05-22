@@ -168,7 +168,7 @@ public class UserController {
 	  @Log(desc = "更新用户",type = LOG_TYPE.UPDATE)
 	  @PostMapping(value = "updateUser")
 	  @ResponseBody
-	  public JsonUtil updateUser(SysUser user,String role[]) {
+	  public JsonUtil updateUser(SysUser user) {
 	    JsonUtil jsonUtil = new JsonUtil();
 	    jsonUtil.setFlag(false);
 	    if (user == null) {
@@ -185,8 +185,8 @@ public class UserController {
 	      for(SysRoleUser sysRoleUser1 :keyList){
 	        roleUserService.deleteById(sysRoleUser1.getId());
 	      }
-	      if(role!=null){
-	        for(String r:role){
+	      if(user.getRole()!=null){
+	        for(String r:user.getRole()){
 	          sysRoleUser.setId(StringUtil.getUUID());
 	          sysRoleUser.setRoleId(r);
 	          roleUserService.insert(sysRoleUser);

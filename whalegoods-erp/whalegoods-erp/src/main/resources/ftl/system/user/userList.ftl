@@ -110,7 +110,7 @@
       update: function () {
         var checkStatus = table.checkStatus('userList'), data = checkStatus.data;
         if (data.length != 1) {
-          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
+          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
         update('编辑用户', 'showUpdateUser?id=' + data[0].id, 700, 600);
@@ -119,7 +119,7 @@
         var checkStatus = table.checkStatus('userList')
             , data = checkStatus.data;
         if (data.length != 1) {
-          layer.msg('请选择一个用户,已选['+data.length+']行', {icon: 5});
+          layer.msg('请选择一个用户,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
         rePwd('修改密码','goRePass?id='+data[0].id,500,350);

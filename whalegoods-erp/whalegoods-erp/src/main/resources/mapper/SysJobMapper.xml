@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.SysJobMapper">
+
+ <resultMap id="BaseResultMap" type="com.whalegoods.entity.SysJob">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="job_name" jdbcType="VARCHAR" property="jobName" /> 	
+    <result column="job_cron" jdbcType="VARCHAR" property="jobCron" />
+    <result column="exec_path" jdbcType="VARCHAR" property="execPath" />
+    <result column="job_status" jdbcType="TINYINT" property="jobStatus" />
+    <result column="swich_status" jdbcType="TINYINT" property="swichStatus" />
+    <result column="job_desc" jdbcType="VARCHAR" property="jobDesc" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+    a.id,
+    a.job_name,
+    a.job_cron,
+    a.exec_path,
+    a.job_status, 
+    a.swich_status,
+    a.job_desc
+  </sql>
+  
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />  FROM sys_job a WHERE id = #{_parameter}
+  </select>
+  
+   <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM sys_job  WHERE id = #{_parameter}
+  </delete>
+  
+      <insert id="insert" parameterType="com.whalegoods.entity.SysJob">
+    INSERT INTO sys_job (
+    id,
+    job_name, 
+    job_cron, 
+    exec_path, 
+    job_status, 
+    swich_status, 
+    job_desc,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{jobName}, 
+    #{jobCron}, 
+    #{execPath}, 
+    #{jobStatus},
+    #{swichStatus},
+    #{jobDesc},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+
+<!-- 根据对象条件更新 -->  
+	<update id="updateByObjCdt" parameterType="com.whalegoods.entity.SysJob">
+		UPDATE sys_job a 
+	   <set>
+      <if test="jobName != null and jobName != ''">a.job_name=#{jobName},</if>
+      <if test="jobCron != null and jobCron != ''">a.job_cron=#{jobCron},</if>
+      <if test="execPath != null and execPath != ''">a.exec_path=#{execPath},</if>
+      <if test="jobStatus != null and jobStatus != ''">a.job_status=#{jobStatus},</if>
+      <if test="swichStatus != null and swichStatus != ''">a.swich_status=#{swichStatus},</if>
+      <if test="jobDesc != null and jobDesc != ''">a.job_desc=#{jobDesc},</if>
+      <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
+      update_date = now(),
+      </set>
+        <where>
+        <if test="id !=null and id !=''"> AND a.id =#{id}</if>
+    </where>
+	</update>
+  
+</mapper>

@@ -31,7 +31,7 @@
 
 <body>
 <div class="x-body">
-  <form class="layui-form layui-form-pane" style="margin: 20px;">
+  <form class="layui-form layui-form-pane" style="margin: 20px;height: 420px;">
     <div class="layui-form-item">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">头像上传</legend></fieldset>
       <div class="layui-input-inline">
@@ -61,7 +61,7 @@
         <span class="x-red">*</span><span id="ums">将会成为唯一的登录名</span>
       </div>
     </div>
-         <div class="layui-form-item">
+  <div class="layui-form-item">
       <div class="layui-inline">
       <label for="phone" class="layui-form-label"><span class="x-red">*</span>手机号</label>
       <div class="layui-input-inline"><input type="text" value="${user.phone}" id="phone" name="phone"  lay-verify="phone|required" autocomplete="off" class="layui-input"> </div>
@@ -71,8 +71,7 @@
         <div class="layui-input-inline"><input type="text" id="email" value="${user.email}" name="email"  lay-verify="email|required" autocomplete="off" class="layui-input"></div>
       </div>
     </div> 
-    <div class="layui-form-item">
-    </div>
+            
       <div class="layui-form-item">
         <label class="layui-form-label">角色选择</label>
         <div class="layui-input-block">
@@ -81,7 +80,8 @@
           </#list>
         </div>
       </div>
-    </div>
+        
+     
   <#if !detail>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6;position: fixed;bottom: 1px;margin-left:-20px;">
   <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -199,26 +199,21 @@
       var role=[];
       for(var i=0;i<r.length;i++){
         if(r[i].checked){
-          console.info(r[i].value);
           role.push(r[i].value);
         }
       }
       data.field.role=role;
-      data.field.headPicUrl=$('#hidheadPicUrl').val();
-      data.field.phone=$('#phone').val();
-      data.field.email=$('#email').val();
       $.ajax({
         url:'updateUser',
         type:'post',
-        contentType : 'application/json',  
-        data:JSON.stringify(data.field),
+        data:data.field,
         async:false,
         traditional: true,
         success:function(d){
             var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           window.parent.layui.table.reload('userList');
-          window.top.layer.msg(d.msg,{icon:6});
+          window.top.layer.msg(d.msg,{icon:6,time:1000});
         },
         error:function(){
             var index = parent.layer.getFrameIndex(window.name);

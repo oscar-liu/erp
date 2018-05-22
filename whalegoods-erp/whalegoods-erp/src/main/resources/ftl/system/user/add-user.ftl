@@ -14,8 +14,7 @@
 
 <body>
 <div class="x-body">
-  <form class="layui-form layui-form-pane" style="margin-left: 20px;">
-    <div style="width:100%;height:400px;overflow: auto;">
+  <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
       <legend style="font-size:16px;">头像上传</legend>
@@ -44,6 +43,16 @@
       <div class="layui-input-inline"><input type="text"  id="uname" name="userName"  lay-verify="username" autocomplete="off" class="layui-input"></div>
       <div id="ms" class="layui-form-mid layui-word-aux"><span class="x-red">*</span><span id="ums">将会成为唯一的登录名</span></div>
     </div>
+     <div class="layui-form-item">
+      <div class="layui-inline">
+      <label for="phone" class="layui-form-label"><span class="x-red">*</span>手机号</label>
+      <div class="layui-input-inline"><input type="text" id="phone" name="phone"  lay-verify="phone|required" autocomplete="off" class="layui-input"> </div>
+      </div>
+      <div class="layui-inline">
+        <label for="email" class="layui-form-label"><span class="x-red">*</span>邮箱</label>
+        <div class="layui-input-inline"><input type="text" id="email" name="email"  lay-verify="email|required" autocomplete="off" class="layui-input"></div>
+      </div>
+    </div> 
     <div class="layui-form-item">
     <div class="layui-form-item">
       <div class="layui-inline">
@@ -63,7 +72,6 @@
             </#list>
         </div>
       </div>
-      <div style="height: 60px"></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -149,6 +157,20 @@
         if(!flag){
           return msg;
         }},
+        phone: function(value){
+        	var p_reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+        	 if(!p_reg.test(value))
+        	 {
+        		 return "请输入正确的手机号";
+        	 }
+          },
+          email: function(value){
+        	  var e_reg = /^(?:\w+\.?)*\w+@(?:\w+\.)*\w+$/;    
+         	 if(!e_reg.test(value))
+        	 {
+        		 return "请输入正确的邮箱地址";
+        	 }
+          },
       password: [/(.+){6,12}$/, '密码必须6到12位'],
       repass: function(value){
         if($('#password').val()!=$('#l_repass').val()){

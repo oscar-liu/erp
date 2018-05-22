@@ -21,8 +21,14 @@ public class SysUser extends BaseEntity implements Serializable {
 
     private String password;
 
+    private String phone;
+    
+    private String email;
+    
     private String headPicUrl;
 
     private Byte accountStatus;
+    
+    private String role[];
     
 }

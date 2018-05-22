@@ -5,6 +5,8 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="head_pic_url" jdbcType="VARCHAR" property="headPicUrl" />
     <result column="account_status" jdbcType="TINYINT" property="accountStatus" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
@@ -18,6 +20,8 @@
     id,
     username,
     password,
+    phone,
+    email,
     head_pic_url,
     account_status,
     create_by,
@@ -52,6 +56,8 @@
     id,
     username, 
     password, 
+    phone,
+    email,
     head_pic_url, 
     create_by,
     create_date,
@@ -61,6 +67,8 @@
     #{id},
     #{userName}, 
     #{password}, 
+    #{phone},
+    #{email},
     #{headPicUrl}, 
     #{createBy}, 
     now(),
@@ -77,6 +85,12 @@
       </if>
       <if test="password != null and password !='' ">
         password = #{password},
+      </if>
+        <if test="phone != null and phone != '' ">
+        phone = #{phone},
+      </if>
+        <if test="email != null and email != '' ">
+        email = #{email},
       </if>
       <if test="headPicUrl != null and headPicUrl != '' ">
         head_pic_url = #{headPicUrl},

@@ -84,7 +84,7 @@ public class PayServiceImpl implements PayService{
 		if(deviceGoodsInfo==null){
 			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
 		}
-		if(deviceGoodsInfo.getStock()==0){
+		if(deviceGoodsInfo.getStock()==0&&orderType!=2){
 			throw new BizServiceException(ConstApiResCode.STOCK_NOT_ENOUGH);
 		}
 		//生成预支付订单记录

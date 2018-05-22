@@ -103,6 +103,12 @@ public class UserController {
 	    if (StringUtils.isBlank(user.getUserName())) {
 	      return JsonUtil.error("用户名不能为空");
 	    }
+	    if (StringUtils.isBlank(user.getPhone())) {
+		      return JsonUtil.error("手机号不能为空");
+		    }
+	    if (StringUtils.isBlank(user.getEmail())) {
+		      return JsonUtil.error("邮箱不能为空");
+		    }
 	    if (StringUtils.isBlank(user.getPassword())) {
 	      return JsonUtil.error("密码不能为空");
 	    }

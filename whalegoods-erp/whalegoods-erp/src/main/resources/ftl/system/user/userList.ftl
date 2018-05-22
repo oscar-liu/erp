@@ -59,6 +59,8 @@
         {checkbox: true, fixed: true},
         {field: 'userName',title: '用户名',align:'center' }, 
         {field: 'headPicUrl', title: '头像', align:'center', templet: '#tplheadPicUrl'},
+        {field: 'phone', title: '手机号', align:'center'},
+        {field: 'email', title: '邮箱地址', align:'center'},
         {field: 'accountStatus',title: '账号状态',align:'center',templet: '#switchTpl', unresize: true},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
@@ -103,7 +105,7 @@
         });
       },
       add: function () {
-        add('添加用户', 'showAddUser', 700, 450);
+        add('添加用户', 'showAddUser', 700, 600);
       },
       update: function () {
         var checkStatus = table.checkStatus('userList'), data = checkStatus.data;
@@ -111,7 +113,7 @@
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
           return false;
         }
-        update('编辑用户', 'showUpdateUser?id=' + data[0].id, 700, 450);
+        update('编辑用户', 'showUpdateUser?id=' + data[0].id, 700, 600);
       },
       changePwd:function(){
         var checkStatus = table.checkStatus('userList')

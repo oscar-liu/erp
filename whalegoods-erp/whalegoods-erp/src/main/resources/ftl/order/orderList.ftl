@@ -36,6 +36,7 @@
     <@shiro.hasPermission name="order:sd:show"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdQuery"><i class="layui-icon">&#xe615;</i>刷单查询</button></@shiro.hasPermission>
     <@shiro.hasPermission name="order:sd:confirm"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdConfirm"><i class="layui-icon">&#x1005;</i>刷单确认</button></@shiro.hasPermission>
     <@shiro.hasPermission name="order:sd:excel"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdExcel"><i class="layui-icon">&#xe601;</i>导出刷单记录</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="order:refund"><button class="layui-btn layui-btn-sm" data-type="orderRefund"><i class="layui-icon">&#xe602;</i>手动退款</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
@@ -132,6 +133,14 @@
               }
             sdConfirm(data[0].orderId);
           },
+          orderRefund: function () {
+              var checkStatus = table.checkStatus('orderList'), data = checkStatus.data;
+              if (data.length != 1) {
+                layer.msg('请选择一行确认,已选['+data.length+']行', {icon: 5,time:1000});
+                return false;
+              }
+              orderRefund(data[0].orderId);
+            },
           sdExcel: function () {
             	var deviceId = $('#sltDeviceList').val();
               	var timeRange = $('#iptTimeRange').val();
@@ -175,6 +184,31 @@
 	          window.top.layer.msg("确认失败,请联系管理员",{icon:5,time:1000});
 	      }
 	    });
+	  }
+  function orderRefund(orderId) {
+	  var data=new Object();
+	  data.order=orderId;
+      $.ajax({
+          url:'/v1/pay/refund',
+          type:'post',
+          contentType : 'application/json',  
+          data:JSON.stringify(data),
+          async:false,
+          traditional: true,
+          success:function(d){
+            if(d.result_code==0){
+  	          window.top.layer.msg(d.result_msg,{icon:6,time:1000});
+	          layui.table.reload('orderList');
+            }else{
+              layer.msg(d.result_msg,{icon:5,time:1000});
+            }},
+            error:function(){
+              var index = parent.layer.getFrameIndex(window.name);
+              parent.layer.close(index);
+              window.top.layer.msg('请求失败',{icon:5,time:1000});
+          }
+        });
+
 	  }
 </script>
 </body>

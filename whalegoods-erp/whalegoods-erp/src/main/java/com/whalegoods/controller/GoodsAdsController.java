@@ -283,10 +283,10 @@ public class GoodsAdsController  {
 		  }
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("deviceId", goodsAdsTop.getDeviceId());
-		  if(adsTopService.selectCountByMapCdt(mapCdt)>=3)
+/*		  if(adsTopService.selectCountByMapCdt(mapCdt)>=3)
 		  {
 			  throw new BizApiException(ConstApiResCode.ADS_TOP_ALREADY_THREE);
-		  }
+		  }*/
 		  mapCdt.put("goodsCode", goodsAdsTop.getGoodsCode());
 		  mapCdt.put("actionType",2);
 		  if(adsTopService.selectCountByMapCdt(mapCdt)>=1)

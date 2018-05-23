@@ -112,7 +112,7 @@ public class DeviceRoadController  {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity())
 		  {
-			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+			  throw new BizApiException(ConstApiResCode.CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM);
 		  }
 		  //查询设备是否存在
 		  Device device=deviceService.selectById(deviceRoad.getDeviceId());

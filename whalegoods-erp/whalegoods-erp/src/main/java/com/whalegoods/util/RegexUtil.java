@@ -14,6 +14,11 @@ import com.whalegoods.exception.SystemException;
  */
 public class RegexUtil {
 
+	/**
+	 * 有问题，暂时不用
+	 * @author henrysun
+	 * 2018年5月23日 下午6:27:21
+	 */
 	public static boolean isValidExpression(final String cronExpression) throws SystemException{
         CronTriggerImpl trigger = new CronTriggerImpl();
         try {

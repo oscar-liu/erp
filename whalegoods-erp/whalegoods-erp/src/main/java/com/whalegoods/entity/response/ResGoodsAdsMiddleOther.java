@@ -9,22 +9,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 柜机APP获取促销商品信息API 映射实体类
+ * 柜机APP获取促销商品信息API other部分返回实体类
  * @author henrysun
  * 2018年5月15日 上午10:42:06
  */
 @Getter
 @Setter
 @ToString
-public class ResGoodsAdsMiddle implements Serializable {
+public class ResGoodsAdsMiddleOther implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	
-	@JsonProperty("goods_code")
-	private String goodsCode;
-	    
-	@JsonProperty("pic_url")
-	private String picUrl;
 	
 	@JsonProperty("start_time")
 	private String startTime;
@@ -32,13 +26,6 @@ public class ResGoodsAdsMiddle implements Serializable {
 	@JsonProperty("end_time")
 	private String endTime;
 	
-	@JsonProperty("sale_price")
-	private Double salePrice;
-	
-	@JsonProperty("stock")
-	private Byte stock;
-	
-	@JsonProperty("market_price")
-	private Double marketPrice;
-	
+	//1灯亮2灯灭
+	private Byte type;
 }

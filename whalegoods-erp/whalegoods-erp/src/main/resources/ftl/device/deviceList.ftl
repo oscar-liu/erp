@@ -60,6 +60,7 @@
         {field: 'signCode', title: '签到码', align:'center'},
         {field: 'deviceIdJp', title: '设备编号（鲸品）', align:'center'},
         {field: 'deviceIdSupp', title: '设备编号（供应商）', align:'center'},
+        {field: 'modelName', title: '设备型号', align:'center'},
         {field: 'lockStatus', title: '库存锁定状态',templet: '#tplLockStatus',align:'center'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
@@ -123,7 +124,7 @@
         });
       },
       add: function () {
-        add('添加设备（仅需填写供应商提供的编号）', 'showAddDevice', 400, 350);
+        add('添加设备（仅需填写供应商提供的编号）', 'showAddDevice', 400, 450);
       },
       update: function () {
         var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
@@ -131,7 +132,7 @@
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('更新设备', 'showUpdateDevice?id=' + data[0].id, 400, 350);
+        update('更新设备', 'showUpdateDevice?id=' + data[0].id, 400, 450);
       }
     };
     //监听工具条

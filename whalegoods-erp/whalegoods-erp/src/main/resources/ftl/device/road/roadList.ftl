@@ -31,8 +31,10 @@
    </div>
    </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <@shiro.hasPermission name="device:road:init"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="init"><i class="layui-icon">&#xe614;</i>初始化货道</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:road:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出货道清单</button></@shiro.hasPermission>
      &nbsp;&nbsp;&nbsp;
     <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe65e;</i>生成支付二维码</button>&nbsp;
           支付类型：
@@ -87,7 +89,7 @@
         {field: 'ctn', title: '柜号', align:'center'},
         {field: 'floor', title: '层级', align:'center'},
         {field: 'pathCode', title: '货道号', align:'center'},        
-        {field: 'goodsName', title: '商品名称', align:'center'},
+        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;'},
         {field: 'salePrice', title: '售价', align:'center'},
         {field: 'goodsCode',title: '商品编号',align:'center'},
         {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel'},
@@ -124,6 +126,9 @@
       add: function () {
         add('添加货道', 'showAddRoad', 800, 500);
       },
+      init: function () {
+    	  init('初始化货道', 'showInitRoad', 750, 400);
+        },
       update: function () {
         var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
         if (data.length != 1) {
@@ -132,6 +137,14 @@
         }
         update('编辑货道', 'showUpdateRoad?id=' + data[0].id, 900, 500);
       },
+      excel: function () {
+          var deviceId=$("#sltDeviceList").val();
+          if(deviceId==null||deviceId==''){
+              layer.msg('请选择一个设备', {icon: 5,time:1000});
+              return false;
+          }
+      	window.location.href="roadExcel?deviceId="+deviceId;
+        },
           prepay: function () {
           	var checkStatus = table.checkStatus('roadList'), data = checkStatus.data;
             if (data.length != 1) {
@@ -149,6 +162,7 @@
             prepay('生成支付二维码', 'createPrepayBack?saleType=' + sale_type+'&pathCode='+path_code+'&floor='+floor+'&ctn='+ctn+'&device_code_wg='+device_code_wg+'&device_code_sup='+device_code_sup, 400, 280);
             }
     };
+    
     //监听工具条
     table.on('tool(road)', function (obj) {
       var data = obj.data;
@@ -158,6 +172,9 @@
           del(data.id);
           layer.close(index);
         });
+      }
+      if(obj.event === 'setGoods'){
+    	  setGoods('设置商品', 'showUpdateGoods?id=' + data.id, 500, 300);
       }
     });
 
@@ -212,6 +229,32 @@
       content: url
     });
   }
+  
+  function setGoods(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    layer.open({
+	      id: 'road-setGoods',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
 
   /*弹出层*/
   /*
@@ -251,6 +294,36 @@
       content: url
     });
   }
+  
+  function init(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    ;
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    ;
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    ;
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    ;
+	    layer.open({
+	      id: 'road-init',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
   
   function prepay(title, url, w, h) {
 	    if (title == null || title == '') {

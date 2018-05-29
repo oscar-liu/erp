@@ -102,8 +102,11 @@ var flag,msg;
 var lockStatus=$('#hidLockStatus').val();
 $(function(){
 	$('#sltGoodsCode').select2();
-	$("#select2-sltGoodsCode-container").text($("#sltGoodsCode").find("option[value = "+'${road.goodsCode}'+"]").text());
-	$('#sltGoodsCode').val('${road.goodsCode}');
+	var goodsCode='${road.goodsCode}';
+	if(goodsCode!=null&&goodsCode!=''){
+		$("#select2-sltGoodsCode-container").text($("#sltGoodsCode").find("option[value = "+'${road.goodsCode}'+"]").text());
+		$('#sltGoodsCode').val('${road.goodsCode}');
+	}
 	if(lockStatus==1)
 		{
 		$('#iptStock').attr('disabled','true');

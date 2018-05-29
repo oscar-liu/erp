@@ -28,13 +28,11 @@ import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysJob;
 import com.whalegoods.entity.SysJobRole;
 import com.whalegoods.entity.response.ResBody;
-import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
-import com.whalegoods.job.BaseJob;
 import com.whalegoods.service.SysJobRoleService;
 import com.whalegoods.service.SysJobService;
 import com.whalegoods.util.ReType;
-import com.whalegoods.util.RegexUtil;
+import com.whalegoods.util.ReflectionUtil;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
 
@@ -124,7 +122,7 @@ public class JobController {
 	        //构建job信息
 	        JobDetail jobDetail;
 			try {
-				jobDetail = JobBuilder.newJob(getClass(sysJob.getExecPath()).getClass()).withIdentity(sysJob.getExecPath(),null).build();
+				jobDetail = JobBuilder.newJob(ReflectionUtil.getClass(sysJob.getExecPath()).getClass()).withIdentity(sysJob.getExecPath(),null).build();
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e1) {
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}
@@ -242,6 +240,7 @@ public class JobController {
 		sysJobService.updateByObjCdt(sysJob);
 		sysJob=sysJobService.selectById(id);
 		try {
+			scheduler.start();
 			if(sysJob.getJobStatus()==1){
 				scheduler.resumeJob(JobKey.jobKey(sysJob.getExecPath(),null));
 			}
@@ -276,9 +275,6 @@ public class JobController {
 	    return resBody;
 	  }
 	  
-	    private static BaseJob getClass(String classname) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
-	        Class<?> class1 = Class.forName(classname);
-	        return (BaseJob)class1.newInstance();
-	    }
+
 
 }

@@ -50,10 +50,9 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 上传文件，并得到文件的访问
-	 * @author chencong
-	 * 2018年4月25日 上午10:34:34
-	 * @throws SystemException 
+	 * 上传文件，并得到文件的访问路径
+	 * @author henrysun
+	 * 2018年5月29日 下午3:10:42
 	 */
 	public  String uploadFile(HttpServletRequest request,String sonFolder,String newFileName) throws SystemException{
 		//如果不是multipart/form-data类型
@@ -108,8 +107,8 @@ public class FileUtil {
     
     /**
      * 创建子目录
-     * @author chencong
-     * 2018年4月25日 上午10:43:24
+     * @author henrysun
+     * 2018年5月29日 下午3:10:33
      */
     private  File getChildDirectory(String path,String sonFolder ) {
         File file = new File(path,sonFolder);

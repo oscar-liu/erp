@@ -9,6 +9,7 @@
     <result column="ctn" jdbcType="TINYINT" property="ctn" />
     <result column="spec" jdbcType="VARCHAR" property="spec" />
     <result column="goods_detail" jdbcType="VARCHAR" property="goodsDetail" />
+    <result column="goods_detail_en" jdbcType="VARCHAR" property="goodsDetailEn" />
     <result column="made_in" jdbcType="VARCHAR" property="madeIn" />
     <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
     <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
@@ -23,13 +24,14 @@
     a.sale_price,
     a.path_code,
     a.floor,
-    a.ctn, 
+    a.ctn,
     a.stock,
     b.goods_code, 
     b.goods_name, 
     b.goods_name_en,
     b.spec, 
-    b.goods_detail, 
+    b.goods_detail,
+    b.goods_detail_en,
     b.pic_url,
     b.made_in, 
     b.market_price,
@@ -45,7 +47,8 @@
     b.goods_code, 
     b.goods_name, 
     b.spec, 
-    b.goods_detail, 
+    b.goods_detail,
+    b.goods_detail_en, 
     b.pic_url,
     b.made_in, 
     b.market_price
@@ -89,10 +92,19 @@
     c.lock_status
   </sql>
   
+    <sql id="Base_Column_List4">
+    c.short_name ,
+    a.ctn,
+    a.floor,
+    a.path_code,
+    a.sale_price,
+    b.goods_name
+  </sql>
+  
       <select id="selectById" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
     SELECT <include refid="Base_Column_List3" />
     FROM device_road a 
-    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    LEFT JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
     WHERE a.id=#{id}
   </select>
@@ -112,10 +124,20 @@
     </where>
   </select>
   
+  <!-- ERP后台导出货道清单专用 -->
+      <select id="selectListByDeviceIdForExcel" parameterType="java.lang.String" resultMap="BaseResultMap2">
+    SELECT <include refid="Base_Column_List4" />
+    FROM device_road a 
+    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
+    WHERE device_id = #{_parameter}
+    ORDER BY a.ctn,a.floor,a.path_code
+  </select>
+  
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
     SELECT <include refid="Base_Column_List3" />
     FROM device_road a 
-    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    LEFT JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
    <where>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> 
@@ -131,7 +153,7 @@
      AND c.short_name LIKE  "%" #{shortName} "%"
      </if>
     </where>
-    ORDER BY a.create_date DESC
+    ORDER BY a.ctn,a.floor,a.path_code
   </select>
   
  <!--  根据设备编号查询所有商品，给柜机API使用 -->
@@ -199,11 +221,44 @@
     now()
     )
   </insert>
+  
+  <insert id="insertBatch" parameterType="java.util.List">
+   INSERT INTO device_road (
+    id,
+    device_id, 
+    ctn, 
+    path_code, 
+    floor, 
+    capacity,
+    stock,
+    warning_num,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+   #{item.id},
+      #{item.deviceId},
+      #{item.ctn},
+      #{item.pathCode},
+      #{item.floor},
+     #{item.capacity},
+     #{item.stock},
+     #{item.warningNum},
+     #{item.createBy},
+     now(),
+     #{item.updateBy},
+     now()
+  )
+    </foreach>
+ </insert>
 	
 	  	<!-- 根据条件更新货道信息 -->
 		<update id="updateByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad">
 		UPDATE device_road a INNER JOIN device b ON a.device_id=b.id
-		INNER JOIN goods_sku c ON  c.id=a.goods_sku_id
+		LEFT JOIN goods_sku c ON  c.id=a.goods_sku_id
 	   <set>
       <if test="stock != null and stock != ''">a.stock=a.stock+#{stock},</if>
       <if test="stockOrderId != null and stockOrderId != '' and stock!=0">a.stock_order_id=#{stockOrderId},</if>
@@ -214,7 +269,6 @@
       <if test="salePrice != null ">a.sale_price=#{salePrice},</if>
       <if test="capacity != null ">a.capacity=#{capacity},</if>
       <if test="warningNum != null ">a.warning_num=#{warningNum},</if>
-      
       a.update_date=now(),
       </set>
     		<where>
@@ -250,7 +304,7 @@
 		  	<!-- 根据条件更新货道信息 -->
 		<update id="updateByObjCdtForErp" parameterType="com.whalegoods.entity.DeviceRoad">
 		UPDATE device_road a INNER JOIN device b ON a.device_id=b.id
-		INNER JOIN goods_sku c ON  c.id=a.goods_sku_id
+		LEFT JOIN goods_sku c ON  c.id=a.goods_sku_id
 	   <set>
       <if test="stock != null and stock != ''">a.stock=a.stock+#{stock},</if>
       <if test="stockOrderId != null and stockOrderId != '' and stock!=0">a.stock_order_id=#{stockOrderId},</if>
@@ -292,6 +346,10 @@
   
      <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM device_road  WHERE id = #{_parameter}
+  </delete>
+  
+  <delete id="deleteByDeviceId" parameterType="java.lang.String">
+    DELETE FROM device_road  WHERE device_id = #{_parameter}
   </delete>
  
 

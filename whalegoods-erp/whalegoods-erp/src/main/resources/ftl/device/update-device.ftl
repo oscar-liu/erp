@@ -7,8 +7,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
+  <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
+    <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/select2.min.js"></script>
+  <script type="text/javascript" src="${re.contextPath}/plugin/select2/js/zh-CN.js"></script>
+      <style type="text/css">
+    .select2-container .select2-selection--single{  
+      height:37px;  
+      line-height: 37px;
+    }
+</style>
 
 </head>
 
@@ -16,6 +25,19 @@
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin:20px;">
   <input value="${device.id}" type="hidden" name="id">
+      <div class="layui-form-item">
+          <div class="layui-inline">
+     <label for="sltDeviceModel" class="layui-form-label"><span class="x-red">*</span>所属型号</label>
+      <div class="layui-input-inline">
+       <select id="sltDeviceModel" name="sltDeviceModel" lay-verify="required"  lay-ignore>
+     <option value="">直接选择或搜索选择</option>
+  	<#list modelList as model>
+          <option value="${model.id}">${model.modelName}</option>
+    </#list>
+    </select>
+      </div>
+    </div>
+  </div>
     <div class="layui-form-item">
       <label for="shortName" class="layui-form-label"><span class="x-red">*</span>点位短名</label>
       <div class="layui-input-inline"><input type="text"  id="shortName" name="shortName" value="${device.shortName}" lay-verify="required" autocomplete="off" class="layui-input"></div>
@@ -37,6 +59,12 @@
   </form>
 </div>
 <script>  
+$(function(){
+	 $('#sltDeviceModel').select2();
+	 $("#select2-sltDeviceModel-container").text($("#sltDeviceModel").find("option[value = "+'${device.deviceModelId}'+"]").text());
+	 $('#sltDeviceModel').val('${device.deviceModelId}');
+});
+
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
     var form = layui.form,layer = layui.layer;
@@ -47,6 +75,7 @@
    });
     //监听提交
     form.on('submit(confirm)', function(data){
+      data.field.deviceModelId=$('#sltDeviceModel').val();
       $.ajax({
         url:'updateDevice',
         type:'post',

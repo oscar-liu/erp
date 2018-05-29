@@ -48,5 +48,20 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		return deviceRoadMapper.updateByObjCdtForErp(objCdt);
 	}
 
+	@Override
+	public int deleteByDeviceId(String deviceId) {
+		return deviceRoadMapper.deleteByDeviceId(deviceId);
+	}
+
+	@Override
+	public int insertBatch(List<DeviceRoad> list) {
+		return deviceRoadMapper.insertBatch(list);
+	}
+
+	@Override
+	public List<DeviceRoad> selectListByDeviceIdForExcel(String deviceId) {
+		return deviceRoadMapper.selectListByDeviceIdForExcel(deviceId);
+	}
+
 
 }

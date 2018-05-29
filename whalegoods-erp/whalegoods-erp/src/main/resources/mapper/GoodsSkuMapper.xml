@@ -20,6 +20,7 @@
     <result column="shelf_life" jdbcType="TINYINT" property="shelfLife" />
     <result column="made_in" jdbcType="TINYINT" property="madeIn" />
     <result column="goods_detail" jdbcType="TINYINT" property="goodsDetail" />
+    <result column="goods_detail_en" jdbcType="TINYINT" property="goodsDetailEn" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_date" jdbcType="DATE" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
@@ -45,6 +46,7 @@
     shelf_life,
     made_in,
     goods_detail,
+    goods_detail_en,
     create_by, 
     create_date, 
     update_by, 
@@ -95,6 +97,7 @@
     shelf_life,
     made_in,
     goods_detail,
+    goods_detail_en,
     create_by,
     create_date,
     update_by,
@@ -119,6 +122,7 @@
     #{shelfLife},
     #{madeIn},
     #{goodsDetail},
+    #{goodsDetailEn},
     #{createBy}, 
     now(),
     #{updateBy},
@@ -177,6 +181,9 @@
       </if>
       <if test="goodsDetail != null and goodsDetail != '' ">
         goods_detail = #{goodsDetail},
+      </if>
+      <if test="goodsDetailEn != null and goodsDetailEn != '' ">
+        goods_detail_en = #{goodsDetailEn},
       </if>
       <if test="updateBy != null and updateBy != '' ">
         update_by = #{updateBy},

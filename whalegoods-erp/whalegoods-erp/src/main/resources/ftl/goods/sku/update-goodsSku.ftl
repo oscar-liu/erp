@@ -107,6 +107,13 @@
       <textarea placeholder="请输入商品详情" class="layui-textarea" name="goodsDetail" >${goodsSku.goodsDetail}</textarea>
     </div>
     </div>
+    <!-- 商品详情英文 -->
+    <div class="layui-form-item layui-form-text">
+      <label for="goodsDetailEn" class="layui-form-label">英文介绍</label>
+      <div class="layui-input-block">
+      <textarea placeholder="please input english description" class="layui-textarea" id="goodsDetailEn" name="goodsDetailEn" >${goodsSku.goodsDetailEn}</textarea>
+    </div>
+    </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="confirm" lay-submit="">确定</button>

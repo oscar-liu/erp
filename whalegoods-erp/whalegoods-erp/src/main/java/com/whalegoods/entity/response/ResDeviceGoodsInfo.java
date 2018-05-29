@@ -37,6 +37,9 @@ public class ResDeviceGoodsInfo implements Serializable {
 	@JsonProperty("goods_detail")
 	private String goodsDetail;
 	
+	@JsonProperty("goods_detail_en")
+	private String goodsDetailEn;
+	
 	@JsonProperty("made_in")
 	private String madeIn;
 	

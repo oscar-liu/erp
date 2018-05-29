@@ -71,12 +71,12 @@
     <div class="layui-inline">
     <!--单个成本价-->
     <label for="oneCost" class="layui-form-label"><span class="x-red">*</span>单个成本价</label>
-      <div class="layui-input-inline"><input type="text"  id="oneCost" name="oneCost" lay-verify="required|number"  placeholder="￥"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="oneCost" name="oneCost" lay-verify="required|number|FFS"  placeholder="￥"  autocomplete="off" class="layui-input"></div>
      </div>
      <div class="layui-inline">
      <!--建议零售价-->
      <label for="marketPrice" class="layui-form-label"><span class="x-red">*</span>建议零售价</label>
-      <div class="layui-input-inline"><input type="text"  id="marketPrice" name="marketPrice" lay-verify="required|number"  placeholder="￥"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="marketPrice" name="marketPrice" lay-verify="required|number|FFS"  placeholder="￥"  autocomplete="off" class="layui-input"></div>
      </div>
       
     </div>
@@ -102,9 +102,16 @@
     </div>
     <!-- 商品详情 -->
     <div class="layui-form-item layui-form-text">
-      <label for="goodsDetail" class="layui-form-label">商品详情</label>
+      <label for="goodsDetail" class="layui-form-label">中文介绍</label>
       <div class="layui-input-block">
       <textarea placeholder="请输入商品详情" class="layui-textarea" id="goodsDetail" name="goodsDetail" ></textarea>
+    </div>
+    </div>
+    <!-- 商品详情英文 -->
+    <div class="layui-form-item layui-form-text">
+      <label for="goodsDetailEn" class="layui-form-label">英文介绍</label>
+      <div class="layui-input-block">
+      <textarea placeholder="please input english description" class="layui-textarea" id="goodsDetailEn" name="goodsDetailEn" ></textarea>
     </div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
@@ -146,6 +153,16 @@
   layui.use(['form','layer','upload','laydate'], function(){
     $ = layui.jquery;
     var form = layui.form,layer = layui.layer,upload = layui.upload,laydate = layui.laydate;
+    
+    //自定义验证规则
+    form.verify({
+  	  FFS: function(value){
+  	  var reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
+        if(!reg.test(value)){
+          return "必须为非负数";
+        }
+    	}
+    });
     
     laydate.render({
         elem: '#productDate'

@@ -87,7 +87,7 @@
         {field: 'stock', title: '库存', align:'center',templet: '#tplStock'},
         {field: 'salePrice', title: '售价', align:'center',templet: '#tplSalePrice'},
         {field: 'marketPrice',title: '原价',align:'center'},
-        {field: 'timeRange', title: '时间范围', align:'center'},
+        {field: 'timeRange', title: '时间范围', align:'center',sort: true},
         {field: 'type', title: '时间类型', align:'center',templet: '#tplType'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
@@ -114,7 +114,7 @@
        $("#sltDeviceList").val('');
       },
       add: function () {
-        add('添加促销商品（同一设备最多只能有三个促销商品）', 'showAddAdsMiddle', 650, 400);
+        add('添加促销商品（同一设备同一时间段最多只能有三个促销商品）', 'showAddAdsMiddle', 650, 400);
       },
       update: function () {
         var checkStatus = table.checkStatus('adsMiddleList'), data = checkStatus.data;

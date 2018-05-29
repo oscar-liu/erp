@@ -50,7 +50,7 @@
               <label for="sltTimeType" class="layui-form-label"><span class="x-red">*</span>时间类型</label>
           <select id="sltTimeType" name="sltTimeType" lay-verify="required" lay-ignore>
         <option value="1" selected="">整点</option>
-        <option value="2" >时间段</option>
+        <!-- <option value="2" >时间段</option> -->
       </select>
   </div>
     </div>

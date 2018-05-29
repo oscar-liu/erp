@@ -11,6 +11,8 @@
     <result column="device_status" jdbcType="VARCHAR" property="deviceStatus" />
     <result column="sign_code" jdbcType="VARCHAR" property="signCode" />
     <result column="lock_status" jdbcType="VARCHAR" property="lockStatus" />
+    <result column="model_name" jdbcType="VARCHAR" property="modelName" />
+    <result column="device_model_id" jdbcType="VARCHAR" property="deviceModelId" />
   </resultMap>
   
    <sql id="Base_Column_List">
@@ -21,15 +23,20 @@
     a.location, 
     a.device_status,
     a.sign_code,
-    a.lock_status
+    a.lock_status,
+    a.device_model_id,
+    b.model_name
   </sql>
   
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT  <include refid="Base_Column_List" />  FROM device a WHERE id = #{_parameter}
+    SELECT  <include refid="Base_Column_List" />  FROM device a 
+    INNER JOIN device_model b ON a.device_model_id=b.id
+    WHERE a.id = #{_parameter}
   </select>
   
     <select id="selectByObjCdt" parameterType="com.whalegoods.entity.Device" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  FROM device a 
+    INNER JOIN device_model b ON a.device_model_id=b.id
     <where>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> AND device_id_jp=#{deviceIdJp}</if>
      <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND device_id_supp=#{deviceIdSupp}</if>
@@ -58,6 +65,7 @@
     up_time, 
     sign_code,
     device_supp_id,
+    device_model_id,
     create_by,
     create_date,
     update_by,
@@ -71,6 +79,7 @@
     #{upTime},
     #{signCode},
     #{deviceSuppId},
+    #{deviceModelId},
     #{createBy}, 
     now(),
     #{updateBy},
@@ -79,7 +88,8 @@
   </insert>
   
   <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.Device" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/> FROM device a
+    SELECT <include refid="Base_Column_List"/> FROM device a 
+    INNER JOIN device_model b ON a.device_model_id=b.id
    <where>
      <if test="shortName !=null and shortName !=''"> AND short_name LIKE "%" #{shortName} "%"</if>
     </where>
@@ -95,6 +105,7 @@
       <if test="upTime != null and upTime != ''">a.up_time=#{upTime},</if>
       <if test="signCode != null and signCode != ''">a.sign_code=#{signCode},</if>
       <if test="deviceSuppId != null and deviceSuppId != ''">a.device_supp_id=#{deviceSuppId},</if>
+      <if test="deviceModelId != null and deviceModelId != ''">a.device_model_id=#{deviceModelId},</if>
       <if test="lockStatus != null and lockStatus != ''">a.lock_status=#{lockStatus},</if>
       <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
       update_date = now(),

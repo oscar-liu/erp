@@ -3,7 +3,9 @@ package com.whalegoods.controller;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceModel;
 import com.whalegoods.entity.response.ResBody;
+import com.whalegoods.service.DeviceModelService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
@@ -31,6 +33,9 @@ public class DeviceController {
 	
 	  @Autowired
 	  DeviceService deviceService;
+	  
+	  @Autowired
+	  DeviceModelService modelService;
 
 	  /**
 	   * 跳转到设备列表页面
@@ -62,6 +67,7 @@ public class DeviceController {
 	   */
 	  @GetMapping(value = "showAddDevice")
 	  public String showAddDevice(Model model) {
+		model.addAttribute("modelList",modelService.selectListByObjCdt(new DeviceModel()));
 	    return "/device/add-device";
 	  }
 
@@ -72,7 +78,7 @@ public class DeviceController {
 	   */
 	  @PostMapping(value = "addDevice")
 	  @ResponseBody
-	  public ResBody addUser(Device device) {
+	  public ResBody addDevice(Device device) {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		device.setId(StringUtil.getUUID());
 		device.setDeviceIdJp(ConstSysParamName.DEVICE_PREFIX+StringUtil.getNumberRadom());
@@ -92,6 +98,7 @@ public class DeviceController {
 	  public String showUpdateDevice(String id, Model model){
 		Device device=deviceService.selectById(id);
 		model.addAttribute("device", device);
+		model.addAttribute("modelList",modelService.selectListByObjCdt(new DeviceModel()));
 	    return "/device/update-device";
 	  }
 

@@ -15,4 +15,10 @@ public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
 
     int updateByObjCdtForErp(DeviceRoad objCdt);
     
+    int deleteByDeviceId(String deviceId);
+    
+    int insertBatch(List<DeviceRoad> list);
+    
+    List<DeviceRoad> selectListByDeviceIdForExcel(String deviceId);
+    
 }

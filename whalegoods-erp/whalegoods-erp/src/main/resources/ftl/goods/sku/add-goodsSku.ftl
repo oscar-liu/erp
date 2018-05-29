@@ -12,9 +12,8 @@
 </head>
 
 <body>
-<div class="x-body">
-  <form class="layui-form layui-form-pane" style="margin-left: 20px;">
-    <div style="width:100%;height:400px;overflow: auto;">
+<div class="x-body" style="width:800px;height:950px">
+  <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">商品图片上传</legend></fieldset>
      <div class="layui-input-inline">

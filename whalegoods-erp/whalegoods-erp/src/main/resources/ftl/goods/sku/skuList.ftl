@@ -92,15 +92,15 @@
         });
       },
       add: function () {
-        add('添加商品', 'showAddGoodsSku', 800, 700);
+        add('添加商品', 'showAddGoodsSku', 800, 850);
       },
       update: function () {
         var checkStatus = table.checkStatus('skuList'), data = checkStatus.data;
         if (data.length != 1) {
-          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5});
+          layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('编辑商品', 'showUpdateGoodsSku?id=' + data[0].id, 800, 700);
+        update('编辑商品', 'showUpdateGoodsSku?id=' + data[0].id, 800, 850);
       }
     };
     //监听工具条

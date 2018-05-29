@@ -1,6 +1,6 @@
 spring: 
   datasource:
-        url: jdbc:mysql://rm-wz94344lxtoa3m4m59o.mysql.rds.aliyuncs.com:3306/whalegoods?useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://rm-wz94344lxtoa3m4m5.mysql.rds.aliyuncs.com:3306/whalegoods?useUnicode=true&characterEncoding=UTF-8
         username: whalegoods_rds
         password: WhaleGoods2018
   http:

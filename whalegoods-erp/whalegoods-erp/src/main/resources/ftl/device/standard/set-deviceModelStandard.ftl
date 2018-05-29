@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<div class="x-body">
+<div class="x-body" style="height:850px;">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
   <div class="layui-form-item">
           <div class="layui-inline">

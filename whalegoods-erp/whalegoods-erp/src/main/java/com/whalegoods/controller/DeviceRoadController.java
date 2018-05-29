@@ -25,7 +25,6 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceModelStandard;
 import com.whalegoods.entity.DeviceRoad;
-import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;

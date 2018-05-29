@@ -46,7 +46,7 @@
         });
       },
       setStandard: function () {
-    	  setStandard('设置型号标准', 'showSetDeviceModelStandard', 600, 900);
+    	  setStandard('设置型号标准', 'showSetDeviceModelStandard', 600, 800);
       }
     };
 

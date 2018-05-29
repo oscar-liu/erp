@@ -27,8 +27,8 @@
    <delete id="deleteByDeviceModelId" parameterType="java.lang.String">
     DELETE FROM device_model_standard  WHERE device_model_id = #{_parameter}
   </delete>
-
-  <insert id="insert" parameterType="com.whalegoods.entity.DeviceModelStandard">
+  
+   <insert id="insertBatch" parameterType="java.util.List">
     INSERT INTO device_model_standard (
     id,
     device_model_id, 
@@ -39,18 +39,21 @@
     create_date,
     update_by,
     update_date)
-    VALUES (
-    #{id},
-    #{deviceModelId}, 
-    #{ctn},
-    #{floor},
-    #{pathNum},
-    #{createBy}, 
-    now(),
-    #{updateBy},
-    now()
-    )
-  </insert>
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+   #{item.id},
+      #{item.deviceModelId},
+      #{item.ctn},
+      #{item.floor},
+     #{item.pathNum},
+     #{item.createBy},
+     now(),
+     #{item.updateBy},
+     now()
+  )
+    </foreach>
+ </insert>
   
   <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceModelStandard" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM device_model_standard a 
@@ -60,6 +63,7 @@
      AND a.device_model_id=#{deviceModelId}
      </if>
     </where>
+    ORDER BY a.device_model_id,a.ctn,a.floor
   </select>
   
 </mapper>

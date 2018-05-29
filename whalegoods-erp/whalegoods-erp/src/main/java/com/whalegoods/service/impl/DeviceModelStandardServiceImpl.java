@@ -1,5 +1,7 @@
 package com.whalegoods.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,11 @@ public class DeviceModelStandardServiceImpl extends BaseServiceImpl<DeviceModelS
 	@Override
 	public int deleteByDeviceModelId(String id) {
 		return deviceModelStandardMapper.deleteByDeviceModelId(id);
+	}
+
+	@Override
+	public int insertBatch(List<DeviceModelStandard> list) {
+		return deviceModelStandardMapper.insertBatch(list);
 	}
 	  
 }

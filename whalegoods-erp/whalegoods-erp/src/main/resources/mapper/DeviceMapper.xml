@@ -100,7 +100,7 @@
 		UPDATE device a 
 	   <set>
       <if test="shortName != null and shortName != ''">a.short_name=#{shortName},</if>
-      <if test="location != null and location != ''">a.location=#{shortName},</if>
+      <if test="location != null and location != ''">a.location=#{location},</if>
       <if test="deviceStatus != null and deviceStatus != ''">a.device_status=#{deviceStatus},</if>
       <if test="upTime != null and upTime != ''">a.up_time=#{upTime},</if>
       <if test="signCode != null and signCode != ''">a.sign_code=#{signCode},</if>

@@ -5,11 +5,16 @@
   <title>设备列表</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
+  	<style type="text/css">
+	body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+	</style>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=YSGitlzU7AI58VMnjYQgQEOQcHOFcL2x"></script>
 </head>
 
 <body>
@@ -19,6 +24,7 @@
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>模糊查询</button>
     <@shiro.hasPermission name="device:add"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:map"><button class="layui-btn  layui-btn-sm" data-type="map"><i class="layui-icon">&#xe715;</i>查看地图</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
@@ -46,8 +52,8 @@
     }
   }
   
-  layui.use('table', function () {
-    var table = layui.table,form = layui.form;
+  layui.use(['table','layer','form'], function () {
+    var table = layui.table,form = layui.form,layer = layui.layer;
     table.render({
       id: 'deviceList',
       elem: '#deviceList', 
@@ -133,7 +139,49 @@
           return false;
         }
         update('更新设备', 'showUpdateDevice?id=' + data[0].id, 400, 450);
-      }
+      },
+      map: function () {
+          var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
+          if (data.length == 0) {
+            layer.msg('请选择至少一行查看', {icon: 5,time:1000});
+            return false;
+          }
+          $('#deviceList').after("<div id='allmap' style='width:800px;height:700px;'></div>");
+       // 百度地图API功能
+      	var map = new BMap.Map("allmap");
+      	// 创建地址解析器实例
+      	var myGeo = new BMap.Geocoder();
+      	var j,len;
+      	for(j = 0,len=data.length; j < len; j++) {
+      		// 将地址解析结果显示在地图上,并调整地图视野
+      		myGeo.getPoint(data[j].location, function(point){
+      			if (point) {
+      				map.centerAndZoom(point, 12);
+      	          var marker = new BMap.Marker(point);  // 创建标注
+      		map.addOverlay(marker);               // 将标注添加到地图中
+      		marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+      	  map.enableScrollWheelZoom(true);
+      			}else{
+      				alert("您选择地址没有解析到结果!");
+      			}
+      		});
+      	}
+          layer.open({
+        	  type: 1,
+        	  title: '查看地图',
+        	  skin: 'layui-layer-nobg', //没有背景色
+        	  shadeClose: false,
+        	  area: ['801px', '804px'],
+        	  closeBtn: 0,
+        	  content: $('#allmap'),
+        	  btn: ['关闭'],
+        	  yes: function(index, layero){
+        		  $('#allmap').remove();
+        	      $("[id^='layui-layer']").remove();
+        		  layer.close(index);
+        		  }
+        	});
+        }
     };
     //监听工具条
     table.on('tool(device)', function (obj) {

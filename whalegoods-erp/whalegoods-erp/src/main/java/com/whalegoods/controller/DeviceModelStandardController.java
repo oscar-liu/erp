@@ -11,6 +11,7 @@ import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -84,13 +84,15 @@ public class DeviceModelStandardController {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		List<DeviceModelStandard> list = JSON.parseArray(standard, DeviceModelStandard.class);
 		if(list.size()>0){
+			List<DeviceModelStandard> newList=new ArrayList<>();
 			standardService.deleteByDeviceModelId(list.get(0).getDeviceModelId());
 			for (DeviceModelStandard deviceModelStandard : list) {
 				deviceModelStandard.setId(StringUtil.getUUID());
 				deviceModelStandard.setCreateBy(ShiroUtil.getCurrentUserId());
 				deviceModelStandard.setUpdateBy(ShiroUtil.getCurrentUserId());
-				standardService.insert(deviceModelStandard); 
+				newList.add(deviceModelStandard);
 			}
+			standardService.insertBatch(newList);
 		}
 	    return resBody;
 	  }

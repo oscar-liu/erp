@@ -118,6 +118,6 @@
   </select>
   
   <update id="rePass" parameterType="com.whalegoods.entity.SysUser">
-    UPDATE sys_user set password=#{password} WHERE id = #{_parameter}
+    UPDATE sys_user SET password=#{password} WHERE id = #{id}
   </update>
 </mapper>

@@ -229,11 +229,11 @@ public class UserController {
 	  }
 
 	  /**
-	   * 修改系统用户密码页面
+	   * 修改系统用户密码
 	   * @author henrysun
 	   * 2018年4月26日 下午3:31:48
 	   */
-	  @Log(desc = "修改密码",type = LOG_TYPE.UPDATE)
+	  /*@Log(desc = "修改密码",type = LOG_TYPE.UPDATE)*/
 	  @PostMapping(value = "rePass")
 	  @ResponseBody
 	  @RequiresPermissions("user:repass")
@@ -263,7 +263,6 @@ public class UserController {
 	      j.setMsg("修改成功");
 	      j.setFlag(true);
 	    }catch (BizApiException e){
-	      e.printStackTrace();
 	    }
 	    return j;
 	  }

@@ -205,6 +205,7 @@ public class DeviceRoadController  {
 				  deviceRoad.setCtn(item.getCtn());
 				  deviceRoad.setFloor(item.getFloor());
 				  deviceRoad.setPathCode((byte) i);
+				  deviceRoad.setStock(0);
 				  deviceRoad.setDeviceId(device.getId());
 				  deviceRoad.setCapacity(reqInitRoad.getCapacity());
 				  deviceRoad.setWarningNum(reqInitRoad.getWarningNum());

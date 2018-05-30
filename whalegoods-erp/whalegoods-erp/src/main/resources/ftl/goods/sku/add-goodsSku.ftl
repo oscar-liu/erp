@@ -12,10 +12,9 @@
 </head>
 
 <body>
-<div class="x-body" style="width:800px;height:950px">
-  <form class="layui-form layui-form-pane" style="margin: 20px;">
+<div class="x-body">
+  <form class="layui-form layui-form-pane" style="margin: 10px 20px 20px 10px;">
     <div class="layui-form-item">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">商品图片上传</legend></fieldset>
      <div class="layui-input-inline">
     <div class="layui-upload-drag" style="margin-left:10%;" id="upPic">
       <i style="font-size:30px;" class="layui-icon"></i>
@@ -28,9 +27,6 @@
           </div>
 
       </div>
-    </div>
-    <div class="layui-form-item">
-      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">商品信息</legend></fieldset>
     </div>
     <!-- 商品编码 -->
     <div class="layui-form-item">

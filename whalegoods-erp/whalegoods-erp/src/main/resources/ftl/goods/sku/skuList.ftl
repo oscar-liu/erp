@@ -93,7 +93,7 @@
         });
       },
       add: function () {
-        add('添加商品', 'showAddGoodsSku', 800, 850);
+        add('添加商品', 'showAddGoodsSku', 800, 500);
       },
       update: function () {
         var checkStatus = table.checkStatus('skuList'), data = checkStatus.data;
@@ -101,7 +101,7 @@
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('编辑商品', 'showUpdateGoodsSku?id=' + data[0].id, 800, 850);
+        update('编辑商品', 'showUpdateGoodsSku?id=' + data[0].id, 800, 500);
       }
     };
     //监听工具条

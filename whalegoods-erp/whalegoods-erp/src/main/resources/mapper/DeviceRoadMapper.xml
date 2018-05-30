@@ -161,7 +161,7 @@
     SELECT <include refid="Base_Column_List1" />
     FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
-    INNER JOIN device c  ON c.id=a.device_id 
+    INNER JOIN device c  ON c.id=a.device_id s
     LEFT JOIN goods_ads_middle d ON d.device_id=a.id
     WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
   </select>
@@ -315,7 +315,6 @@
       <if test="salePrice != null ">a.sale_price=#{salePrice},</if>
       <if test="capacity != null ">a.capacity=#{capacity},</if>
       <if test="warningNum != null ">a.warning_num=#{warningNum},</if>
-      
       a.update_date=now(),
       </set>
     		<where>

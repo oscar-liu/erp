@@ -13,6 +13,7 @@ import com.whalegoods.service.RoleService;
 import com.whalegoods.service.RoleUserService;
 import com.whalegoods.util.JsonUtil;
 import com.whalegoods.util.ReType;
+import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
 
 import java.util.List;
@@ -78,6 +79,10 @@ public class RoleController {
 	    }
 	    JsonUtil j=new JsonUtil();
 	    try{
+	    	sysRole.setId(StringUtil.getUUID());
+	    	String currentUserId=ShiroUtil.getCurrentUserId();
+	    	sysRole.setCreateBy(currentUserId);
+	    	sysRole.setUpdateBy(currentUserId);
 	      roleService.insert(sysRole);
 	      //操作role-menu data
 	      SysRoleMenu sysRoleMenu=new SysRoleMenu();
@@ -86,13 +91,15 @@ public class RoleController {
 	      if(menus!=null)
 	      for(String menu:menus){
 	        sysRoleMenu.setMenuId(menu);
+	        sysRoleMenu.setId(StringUtil.getUUID());
+	        sysRoleMenu.setCreateBy(currentUserId);
+	        sysRoleMenu.setUpdateBy(currentUserId);
 	        roleMenuService.insert(sysRoleMenu);
 	      }
 	      j.setMsg("保存成功");
 	    }catch (BizApiException e){
 	      j.setMsg("保存失败");
 	      j.setFlag(false);
-	      e.printStackTrace();
 	    }
 	    return j;
 	  }

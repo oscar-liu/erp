@@ -67,7 +67,8 @@
         {field: 'productDate', title: '生产日期', align:'center'},
         {field: 'shelfLife', title: '保质期', align:'center'},
         {field: 'madeIn', title: '产地', align:'center'},
-        {field: 'goodsDetail', title: '商品详情', align:'center'},
+        {field: 'goodsDetail', title: '中文介绍', align:'center'},
+        {field: 'goodsDetailEn', title: '英文介绍', align:'center'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
@@ -114,7 +115,7 @@
         });
       } 
       else if (obj.event === 'edit') {
-        update('编辑商品', 'showUpdateGoodsSku?id=' + data.id, 700, 550);
+        update('编辑商品', 'showUpdateGoodsSku?id=' + data.id, 800, 850);
       }
     });
 

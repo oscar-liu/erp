@@ -34,11 +34,9 @@
     </div> -->
     <ul class="layui-nav layui-layout-right kit-nav">
       <li class="layui-nav-item">
-        <a href="javascript:;">
-        <#assign currentUser = Session["currentUser"]>
-          欢迎你，${currentUser.username}
-        </a>
+        <a href="javascript:;"><#assign currentUser = Session["currentUser"]>欢迎你，${currentUser.username}</a>
       </li>
+      <li class="layui-nav-item"><a href="/user/goRePass?id=${currentUser.id}"><i class="fa fa-cog" aria-hidden="true"></i> 修改密码</a></li>
       <li class="layui-nav-item"><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a></li>
     </ul>
   </div>

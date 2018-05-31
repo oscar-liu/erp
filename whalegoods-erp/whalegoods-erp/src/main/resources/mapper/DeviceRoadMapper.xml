@@ -161,8 +161,8 @@
     SELECT <include refid="Base_Column_List1" />
     FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
-    INNER JOIN device c  ON c.id=a.device_id s
-    LEFT JOIN goods_ads_middle d ON d.device_id=a.id
+    INNER JOIN device c  ON c.id=a.device_id
+    LEFT  JOIN goods_ads_middle d ON d.goods_code = b.goods_code
     WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
   </select>
   

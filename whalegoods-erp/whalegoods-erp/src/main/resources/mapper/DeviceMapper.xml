@@ -78,7 +78,7 @@
     #{location},
     #{upTime},
     #{signCode},
-    #{deviceSuppId},
+    #{deviceIdSupp},
     #{deviceModelId},
     #{createBy}, 
     now(),
@@ -104,7 +104,7 @@
       <if test="deviceStatus != null and deviceStatus != ''">a.device_status=#{deviceStatus},</if>
       <if test="upTime != null and upTime != ''">a.up_time=#{upTime},</if>
       <if test="signCode != null and signCode != ''">a.sign_code=#{signCode},</if>
-      <if test="deviceSuppId != null and deviceSuppId != ''">a.device_supp_id=#{deviceSuppId},</if>
+      <if test="deviceIdSupp != null and deviceIdSupp != ''">a.device_supp_id=#{deviceIdSupp},</if>
       <if test="deviceModelId != null and deviceModelId != ''">a.device_model_id=#{deviceModelId},</if>
       <if test="lockStatus != null and lockStatus != ''">a.lock_status=#{lockStatus},</if>
       <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>

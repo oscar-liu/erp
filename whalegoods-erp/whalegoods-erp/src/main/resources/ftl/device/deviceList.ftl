@@ -146,7 +146,7 @@
             layer.msg('请选择至少一行查看', {icon: 5,time:1000});
             return false;
           }
-          $('#deviceList').after("<div id='allmap' style='width:800px;height:700px;'></div>");
+          $('#deviceList').after("<div id='allmap' style='width:800px;height:500px;'></div>");
        // 百度地图API功能
       	var map = new BMap.Map("allmap");
       	// 创建地址解析器实例
@@ -171,7 +171,7 @@
         	  title: '查看地图',
         	  skin: 'layui-layer-nobg', //没有背景色
         	  shadeClose: false,
-        	  area: ['801px', '804px'],
+        	  area: ['801px', '500px'],
         	  closeBtn: 0,
         	  content: $('#allmap'),
         	  btn: ['关闭'],

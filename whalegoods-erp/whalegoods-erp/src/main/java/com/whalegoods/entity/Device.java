@@ -36,8 +36,6 @@ public class Device extends BaseEntity implements Serializable {
     
     private String deviceModelId;
     
-    private String deviceSuppId;
-    
     private Byte lockStatus;
 
 }

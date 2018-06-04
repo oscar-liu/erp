@@ -9,8 +9,8 @@ security:
 spring: 
   mail: 
     host: smtp.exmail.qq.com
-    username: chencong@whalegoods.com
-    password: Qq123456?
+    username: police@whalegoods.com
+    password: Aa123456?
     properties:
       mail: 
         smtp: 

@@ -8,12 +8,10 @@ import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.whalegoods.config.job.QuartzConfig;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysJob;
@@ -51,9 +50,8 @@ public class JobController {
 	  @Autowired
 	  SysJobRoleService sysJobRoleService;
 	  
-	    //加入Qulifier注解，通过名称注入bean
-	  @Autowired @Qualifier("Scheduler")
-	  private Scheduler scheduler;
+	  @Autowired
+	  private QuartzConfig config;
 
 	  /**
 	   * 跳转到任务列表页面
@@ -115,7 +113,7 @@ public class JobController {
 		}
 	        // 启动调度器  
 	        try {
-				scheduler.start();
+	        	config.scheduler().start();
 			} catch (SchedulerException e1) {
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			} 
@@ -131,8 +129,8 @@ public class JobController {
 	        //按新的cronExpression表达式构建一个新的trigger
 	        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(sysJob.getExecPath(),null).withSchedule(scheduleBuilder).build();
 	        try {
-				scheduler.scheduleJob(jobDetail, trigger);
-				scheduler.pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
+	        	config.scheduler().scheduleJob(jobDetail, trigger);
+	        	config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
 			} catch (SchedulerException e) {
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}	        
@@ -184,11 +182,11 @@ public class JobController {
           // 表达式调度构建器
           CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(sysJob.getJobCron());
           try {
-              CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+              CronTrigger trigger = (CronTrigger) config.scheduler().getTrigger(triggerKey);
               // 按新的cronExpression表达式重新构建trigger
               trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
               // 按新的trigger重新设置job执行
-              scheduler.rescheduleJob(triggerKey, trigger);
+              config.scheduler().rescheduleJob(triggerKey, trigger);
 		} catch (SchedulerException e) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
@@ -208,9 +206,9 @@ public class JobController {
 	    ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	    SysJob sysJob = sysJobService.selectById(id);
 	    try {
-		    scheduler.pauseTrigger(TriggerKey.triggerKey(sysJob.getExecPath(), null));
-		    scheduler.unscheduleJob(TriggerKey.triggerKey(sysJob.getExecPath(), null));
-		    scheduler.deleteJob(JobKey.jobKey(sysJob.getExecPath(), null));
+		    config.scheduler().pauseTrigger(TriggerKey.triggerKey(sysJob.getExecPath(), null));
+		    config.scheduler().unscheduleJob(TriggerKey.triggerKey(sysJob.getExecPath(), null));
+		    config.scheduler().deleteJob(JobKey.jobKey(sysJob.getExecPath(), null));
 		} catch (SchedulerException e) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
@@ -241,12 +239,12 @@ public class JobController {
 		sysJobService.updateByObjCdt(sysJob);
 		sysJob=sysJobService.selectById(id);
 		try {
-			scheduler.start();
+			config.scheduler().start();
 			if(sysJob.getJobStatus()==1){
-				scheduler.resumeJob(JobKey.jobKey(sysJob.getExecPath(),null));
+				config.scheduler().resumeJob(JobKey.jobKey(sysJob.getExecPath(),null));
 			}
 			if(sysJob.getJobStatus()==2){
-				scheduler.pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
+				config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
 			}
 		} catch (SchedulerException e) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);

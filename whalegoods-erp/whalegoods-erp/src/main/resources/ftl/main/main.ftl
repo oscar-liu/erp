@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
   <title>鲸品智能后台管理系统</title>
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/layui/css/layui.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/font-awesome/css/font-awesome.min.css" media="all" />

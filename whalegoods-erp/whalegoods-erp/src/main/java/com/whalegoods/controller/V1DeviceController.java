@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.request.ReqBase;
@@ -78,15 +79,20 @@ public class V1DeviceController {
   ResBody getOperateStatus(@Valid ReqBase model) {
 	  logger.info("收到getOperateStatus请求：{}",model.toString());
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	  //查询设备运行状态
 	  Device objCdt=new Device();
 	  objCdt.setDeviceIdJp(model.getDevice_code_wg());
-	  objCdt.setDeviceIdSupp(model.getDevice_code_sup());
-	  objCdt.setUpTime(model.getTimestamp());
-	  //更新上报时间
-	  deviceService.updateByObjCdt(objCdt);
-	  //查询设备运行状态
+	  objCdt.setDeviceIdSupp(model.getDevice_code_sup());	 
 	  Device device=deviceService.selectByObjCdt(objCdt);
 	  if(device!=null){
+		  //如果之前的状态是已下线，则更新为在线状态
+		  if(device.getDeviceStatus()==3){
+			  objCdt.setDeviceStatus((byte) 1);
+			  device.setDeviceStatus((byte) 1);
+		  }
+		  //更新上报时间
+		  objCdt.setUpTime(model.getTimestamp());
+		  deviceService.updateByObjCdt(objCdt);
 		  Map<String,Object> mapData=new HashMap<>();
 		  mapData.put("operate_status",device.getDeviceStatus());
 		  resBody.setData(mapData);
@@ -101,7 +107,7 @@ public class V1DeviceController {
   
   /**
    * 客户端升级接口
-   * @author chencong
+   * @author henrysun
    * 2018年4月9日 上午11:05:57
    */
   @GetMapping(value="/updateClient")
@@ -111,7 +117,7 @@ public class V1DeviceController {
   
   /**
    * 上传异常文件
-   * @author chencong
+   * @author 
    * 2018年4月23日 上午10:44:47
  * @throws SystemException 
  * @throws FileNotFoundException 

@@ -25,9 +25,9 @@ public class EmailUtil {
     	mailSender = mailSender2;
     }
 
-	public static void sendSimpleMail(String from,String to,String subject,String content){
+	public static void sendSimpleMail(String to,String subject,String content){
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(from);
+		message.setFrom(EnvironmentUtil.getEmailFrom());
 		message.setTo(to);
 		message.setSubject(subject);
 		message.setText(content);

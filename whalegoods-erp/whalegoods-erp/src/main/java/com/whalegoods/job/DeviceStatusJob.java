@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.whalegoods.constant.ConstSysParamValue;
 import com.whalegoods.entity.Device;
 import com.whalegoods.service.DeviceService;
@@ -25,13 +23,17 @@ public class DeviceStatusJob implements BaseJob{
     public DeviceStatusJob() {}
   
     public void execute(JobExecutionContext context) {
-		Long beforeTime = System.currentTimeMillis() - ConstSysParamValue.DEVICE_OFFLINE_TIME;
+		Long beforeTime = System.currentTimeMillis()-ConstSysParamValue.DEVICE_OFFLINE_TIME;
 		List<Device> listOff=deviceService.selectListOfOffLine(beforeTime);
 		if(listOff.size()>0){
-			String from="chencong@whalegoods.com";
+			//邮件主题
+			String subject="设备下线报警";
+			//邮件内容
+			StringBuffer sb=new StringBuffer();
 			for (Device device : listOff) {
-				EmailUtil.sendSimpleMail("chencong",from,"测试邮件","测试邮件的内容");
+				sb.append("点位地址："+device.getShortName());
 			}
+			EmailUtil.sendSimpleMail("",subject,"测试邮件的内容");
 		}
     }
 

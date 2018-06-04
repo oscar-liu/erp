@@ -17,8 +17,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -37,17 +35,6 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 public class FileUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
-	
-	@Autowired
-	private  Environment env;
-
-	public String getLocation() {
-		return env.getProperty("spring.http.multipart.location");
-	}
-	
-	public String getAddr() {
-		return env.getProperty("spring.http.multipart.addr");
-	}
 	
 	/**
 	 * 上传文件，并得到文件的访问路径
@@ -83,14 +70,14 @@ public class FileUtil {
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}
 	    }
-	    return getAddr()+sonFolder+"/"+newWholeFileName;
+	    return EnvironmentUtil.getFileUrl()+sonFolder+"/"+newWholeFileName;
 	}
     
     private  String handleUploadField(FileItem item,String sonFolder,String newFileName) throws FileNotFoundException, SystemException {
     	//得到上传文件的文件名
         String fileName = item.getName();  
         //上传文件存储路径
-        String path = ResourceUtils.getFile(getLocation()).getPath();
+        String path = ResourceUtils.getFile(EnvironmentUtil.getUploadPath()).getPath();
         //创建子目录
         File childDirectory =this.getChildDirectory(path,sonFolder);
         //新的带后缀名的文件名

@@ -168,4 +168,17 @@ public class DateUtil {
 	        return formatter.format(date); 
 	}
 	
+	/**
+	 * 得到前后移动一定时间后的时间戳
+	 * @author henrysun
+	 * 2018年6月3日 下午9:14:21
+	 */
+	public static  Long getMoveTimestamp(Date date,Integer moveType,Integer moveTime){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(moveType,moveTime);//整数往后推,负数往前移动
+        date=calendar.getTime(); //这个时间就是日期往后推一天的结果
+        return date.getTime();
+}
+	
 }

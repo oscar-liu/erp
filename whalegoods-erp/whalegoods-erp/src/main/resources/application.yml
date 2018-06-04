@@ -7,6 +7,17 @@ security:
 
 
 spring: 
+  mail: 
+    host: smtp.exmail.qq.com
+    username: chencong@whalegoods.com
+    password: Qq123456?
+    properties:
+      mail: 
+        smtp: 
+          auth: true
+          starttls:
+            enable: true
+            required: true
   freemarker: 
     charset: UTF-8
     cache: false

@@ -1,11 +1,8 @@
 package com.whalegoods;
 
-import java.util.Arrays;
-
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -27,9 +24,7 @@ import com.whalegoods.job.JobRunner;;
 public class Application {
 	
   public static void main(String[] args) throws SystemException {
-    ApplicationContext applicationContext=SpringApplication.run(Application.class,args);
-    String[] names = applicationContext.getBeanDefinitionNames();
-    Arrays.asList(names).forEach(name -> System.out.println("初始化bean名称："+name));
+	  SpringApplication.run(Application.class,args);
   }
   
   @Bean

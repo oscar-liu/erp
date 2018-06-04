@@ -25,7 +25,6 @@ public class ReqBase implements Serializable{
 	
 	@JsonProperty("device_code_sup")
 	@NotEmpty(message="供应商设备号不能为空")
-	/*@Length(min=32,max=32,message="系统设备号长度不正确")*/
 	private String device_code_sup;
 	
 	@JsonProperty("device_code_wg")
@@ -34,7 +33,7 @@ public class ReqBase implements Serializable{
 	
 	private String appid;
 	
-	private Long timestamp;
+	private Integer timestamp;
 	
 	private String sign;
 

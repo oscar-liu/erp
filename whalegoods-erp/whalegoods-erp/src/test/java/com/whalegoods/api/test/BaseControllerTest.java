@@ -1,4 +1,4 @@
-package com.whalegoods.api.test;
+/*package com.whalegoods.api.test;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,4 +33,4 @@ public class BaseControllerTest {
 	public void test(){
 		
 	}
-}
+}*/

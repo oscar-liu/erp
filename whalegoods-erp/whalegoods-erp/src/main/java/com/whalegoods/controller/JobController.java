@@ -132,9 +132,10 @@ public class JobController {
 	        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(sysJob.getExecPath(),null).withSchedule(scheduleBuilder).build();
 	        try {
 				scheduler.scheduleJob(jobDetail, trigger);
+				scheduler.pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
 			} catch (SchedulerException e) {
 				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			}
+			}	        
 	    return resBody;
 	  }
 

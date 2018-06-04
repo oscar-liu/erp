@@ -26,5 +26,7 @@ public class ConstSysParamValue {
 	public static String WX_QUERY=WX_API+"/pay/orderquery";
 	//微信申请退款地址
 	public static String WX_APPLY_REFUND=WX_API+"/secapi/pay/refund";
+	//判断设备是否下线间隔时间
+	public static Long DEVICE_OFFLINE_TIME=5*60*1000L;
 	
 }

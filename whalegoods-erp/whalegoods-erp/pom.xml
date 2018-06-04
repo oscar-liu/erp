@@ -276,6 +276,14 @@
             <artifactId>easypoi-annotation</artifactId>
             <version>3.0.3</version>
         </dependency>
+        <dependency>  
+       <groupId>ch.qos.logback</groupId>  
+       <artifactId>logback-classic</artifactId>  
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
   </dependencies>
   
    <build>

@@ -1,6 +1,6 @@
 package com.whalegoods.service.impl;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +23,8 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String>  implement
 	}
 
 	@Override
-	public Integer getDeviceStatus(Map<String, Object> mapCdt) {
-		return deviceMapper.getDeviceStatus(mapCdt);
+	public List<Device> selectListOfOffLine(Long beforeTime) {
+		return deviceMapper.selectListOfOffLine(beforeTime);
 	}
 
 }

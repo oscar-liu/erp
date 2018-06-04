@@ -7,7 +7,7 @@ spring:
       multipart: 
         location: /usr/local/erp/whalegoods-file/
         addr: http://erpt.whalegoods.com/file/
-
 logging:
   level:
       com.whalegoods.mapper: debug
+  config: classpath:logback-spring.xml

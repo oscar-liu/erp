@@ -75,6 +75,7 @@
 				AND a.order_id='${order}'
 			</if>
 		 </where>
+		 FOR UPDATE
   </select>
   
   	<!-- 生成预支付订单信息 -->

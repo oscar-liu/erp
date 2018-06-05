@@ -36,6 +36,7 @@ public class ReqCreatePrepay extends ReqBase{
 	@JsonProperty("view_time")
 	private Long viewTime;
 	
+	//1正常商品 2促销商品
 	@JsonProperty("sale_type")
 	@NotNull(message="sale_type必填")
 	@Max(2)

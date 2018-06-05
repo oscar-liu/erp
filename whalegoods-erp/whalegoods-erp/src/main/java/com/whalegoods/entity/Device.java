@@ -28,7 +28,7 @@ public class Device extends BaseEntity implements Serializable {
     
     private Byte deviceStatus;
     
-    private Integer upTime;
+    private Long upTime;
     
     private String signCode;
     

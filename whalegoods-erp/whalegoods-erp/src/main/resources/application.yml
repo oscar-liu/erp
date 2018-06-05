@@ -7,13 +7,24 @@ security:
 
 
 spring: 
+  mail: 
+    host: smtp.exmail.qq.com
+    username: police@whalegoods.com
+    password: Aa123456?
+    properties:
+      mail: 
+        smtp: 
+          auth: true
+          starttls:
+            enable: true
+            required: true
   freemarker: 
     charset: UTF-8
     cache: false
     settings: 
       template_update_delay: 0
   profiles: 
-    active: dev
+    active: release
   datasource: 
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource

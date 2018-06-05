@@ -5,7 +5,7 @@
   <title>促销商品列表</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+  <!-- <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/> -->
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/erp/main.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/select2/css/select2.css">

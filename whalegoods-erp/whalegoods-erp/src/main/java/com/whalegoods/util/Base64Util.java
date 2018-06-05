@@ -81,8 +81,8 @@ public final class Base64Util {
 
     /**
      * 编码
-     * @author chencong
-     * 2018年4月11日 下午3:56:23
+     * @author henrysun
+     * 2018年6月4日 下午2:41:23
      */
     public static String encode(byte[] binaryData) {
         if (binaryData == null) {
@@ -155,8 +155,8 @@ public final class Base64Util {
 
     /**
      * 解码
-     * @author chencong
-     * 2018年4月11日 下午3:57:01
+     * @author henrysun
+     * 2018年6月4日 下午2:41:29
      */
     public static byte[] decode(String encoded) {
         if (encoded == null) {

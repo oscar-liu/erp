@@ -29,6 +29,7 @@
     </select>
    </div>
    </div>&nbsp;
+订单号： <div class="layui-inline"><div class="layui-input-inline"><input class="layui-input" height="20px" style="width: 162px;" id="iptOrderId" autocomplete="off"></div></div>
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptTimeRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
@@ -38,7 +39,7 @@
     <@shiro.hasPermission name="order:sd:excel"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdExcel"><i class="layui-icon">&#xe601;</i>导出刷单记录</button></@shiro.hasPermission>
     <@shiro.hasPermission name="order:refund"><button class="layui-btn layui-btn-sm" data-type="orderRefund"><i class="layui-icon">&#xe602;</i>手动退款</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
-  </div>
+   </div>
 </div>
 <table id="orderList" class="layui-hide" lay-filter="order"></table>
 <script type="text/html" id="tplPayType">
@@ -103,20 +104,25 @@
       select: function () {
     	var deviceId = $('#sltDeviceList').val();
     	var timeRange = $('#iptTimeRange').val();
+    	var orderId = $('#iptOrderId').val();
         table.reload('orderList', {
           where: {
         	  deviceId: deviceId,
-        	  timeRange: timeRange
+        	  timeRange: timeRange,
+        	  orderId: orderId
+        	  
           }
         });
       },
       sdQuery: function () {
       	var deviceId = $('#sltDeviceList').val();
       	var timeRange = $('#iptTimeRange').val();
+      	var orderId = $('#iptOrderId').val();
           table.reload('orderList', {
             where: {
           	  deviceId: deviceId,
           	  timeRange: timeRange,
+          	  orderId: orderId,
           	  orderType:2
             }
           });
@@ -150,7 +156,8 @@
         table.reload('orderList', {
           where: {
         	  deviceId: null,
-        	  timeRange: null
+        	  timeRange: null,
+        	  orderId:null,
           }
         });
         $("#iptTimeRange").attr("placeholder","开始 到 结束");

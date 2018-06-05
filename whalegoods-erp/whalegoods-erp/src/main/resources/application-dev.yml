@@ -7,7 +7,7 @@ spring:
       multipart: 
         location: D:/whalegoods-file/
         addr: http://127.0.0.1/file/
-
 logging:
   level:
       com.whalegoods.mapper: debug
+  config: classpath:logback-spring.xml

@@ -32,7 +32,7 @@
    <select id="getApk"  resultType="java.util.Map">
    SELECT apk_version,apk_url
     FROM apk_version
-    WHERE apk_status=2
+    WHERE apk_status=1
     ORDER BY create_date DESC LIMIT 1
   </select>
 

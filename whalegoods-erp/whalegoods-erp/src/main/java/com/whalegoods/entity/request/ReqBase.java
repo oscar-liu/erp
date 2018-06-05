@@ -33,7 +33,7 @@ public class ReqBase implements Serializable{
 	
 	private String appid;
 	
-	private Integer timestamp;
+	private Long timestamp;
 	
 	private String sign;
 

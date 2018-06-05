@@ -4,11 +4,9 @@ package com.whalegoods.service.impl;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -61,7 +59,7 @@ import com.whalegoods.util.XmlUtil;
 @Service
 public class PayServiceImpl implements PayService{
 	
-	private static Logger logger = LoggerFactory.getLogger(PayServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private DeviceRoadService deviceRoadService;
@@ -69,7 +67,6 @@ public class PayServiceImpl implements PayService{
 	@Autowired
 	private OrderListService orderListService;
 	
-	@Transactional
 	@Override
 	public ResBody createPrepay(ReqCreatePrepay model,Byte orderType) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
@@ -82,9 +79,12 @@ public class PayServiceImpl implements PayService{
 		//根据设备编号和商品编号查询商品信息
 		ResDeviceGoodsInfo deviceGoodsInfo=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
 		if(deviceGoodsInfo==null){
+			logger.error("货道不存在或未上架商品");
 			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
 		}
-		if(deviceGoodsInfo.getStock()==0&&orderType!=2){
+		//判断库存状态（略过后台刷单订单）
+		if(deviceGoodsInfo.getStock()==0&&orderType==1){
+			logger.error("库存不足");
 			throw new BizServiceException(ConstApiResCode.STOCK_NOT_ENOUGH);
 		}
 		//生成预支付订单记录
@@ -100,6 +100,7 @@ public class PayServiceImpl implements PayService{
 		orderPrepay.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		orderPrepay.setOrderType(orderType);
 		if(orderType==2){
+			//如果是刷单订单，记录创建人
 			orderPrepay.setCreateBy(ShiroUtil.getCurrentUserId());
 			orderPrepay.setUpdateBy(ShiroUtil.getCurrentUserId());
 		}
@@ -116,7 +117,7 @@ public class PayServiceImpl implements PayService{
 	public ResBody getQrCode(ReqCreateQrCode model) throws SystemException{
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		Map<String,Object> mapData=new HashMap<>();
-		//根据订单号查找未支付订单
+		//根据订单号查找预支付订单
 		String orderId=model.getOrder();
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("order",orderId);
@@ -124,17 +125,16 @@ public class PayServiceImpl implements PayService{
 		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
+			logger.error("预支付订单不存在，查询数据：{}",mapCdt.toString());
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
-		//请求第三方支付预支付API
+		//准备参数请求第三方支付预支付API
 		String goodsName=orderList.getGoodsName();
 		Double salePrice=orderList.getSalePrice();
 		//微信
 		if(model.getPayType()==1){
-			Map<String, String> mapPpRst;
-			mapPpRst = this.wxPrepay(goodsName, salePrice, orderId);
-			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
-			{
+			Map<String, String> mapPpRst=this.wxPrepay(goodsName, salePrice, orderId);
+			if(mapPpRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX)){
 				if(mapPpRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){			
 					try {
 						mapData.put("qrcode_url",URLEncoder.encode(Base64Utils.encodeToUrlSafeString(mapPpRst.get("code_url").getBytes()),"utf-8"));
@@ -146,13 +146,12 @@ public class PayServiceImpl implements PayService{
 					orderList.setWxPrepayId(mapPpRst.get("prepay_id"));
 				}
 				else {
-					logger.error("微信预支付二级失败,错误代码："+mapPpRst.get("err_code")+" 描述："+mapPpRst.get("err_code_des"));
+					logger.error("微信预支付二级失败,错误代码：{},描述：{}",mapPpRst.get("err_code"),mapPpRst.get("err_code_des"));
 					throw new BizServiceException(ConstApiResCode.WX_PREPAY_TWO_FAILED);
 				}
 			}
-			else
-			{
-				logger.error("微信预支付一级失败："+mapPpRst.get("return_msg"));
+			else{
+				logger.error("微信预支付一级失败：{}",mapPpRst.get("return_msg"));
 				throw new BizServiceException(ConstApiResCode.WX_PREPAY_ONE_FAILED);
 			}
 		}
@@ -169,7 +168,7 @@ public class PayServiceImpl implements PayService{
 			orderListService.updateByObjCdt(orderList);
 		} catch (Exception e) {
 			//更新预支付记录异常不影响生成二维码
-			logger.error("更新预支付记录失败："+orderList.toString()+" 原因："+e.getMessage());
+			logger.error("更新预支付记录失败：{} 原因：{}",orderList.toString(),e.getMessage());
 		}
 		return resBody;
 	}
@@ -185,12 +184,13 @@ public class PayServiceImpl implements PayService{
 		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
 		if(orderList==null){
+			logger.error("预支付订单不存在，查询数据：{}",mapCdt.toString());
 			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
 		}
 		Map<String, String> mapQrRst;
 		//微信
 		if(orderList.getPayType()==1){
-			this.wxOrderQueryDoor(orderList); 
+			this.wxOrderQueryDoor(orderList);
 		}
 		//支付宝
 		else if(orderList.getPayType()==2){
@@ -386,11 +386,11 @@ public class PayServiceImpl implements PayService{
 
 	/**
 	 * 调用微信预支付API
-	 * @author chencong
-	 * 2018年4月11日 下午3:29:30
-	 * @throws UnknownHostException 
-	 * @throws DocumentException 
-	 * @throws SystemException 
+	 * goodsName  商品名称
+	 * salePrice  商品价格
+	 * orderId  商户订单号
+	 * @author henrysun
+	 * 2018年6月5日 下午7:19:09
 	 */
 	private  Map<String,String> wxPrepay(String goodsName,Double salePrice,String orderId) throws  SystemException {
 		//定义请求数据集合
@@ -409,9 +409,9 @@ public class PayServiceImpl implements PayService{
 		String sign=Md5Util.getSign(json,ConstSysParamValue.WX_KEY);
 		map.put("sign",sign);
 		String xmlData=XmlUtil.mapToXml(map);
-		logger.info("微信统一下单请求数据："+xmlData);
+		logger.info("wxPrepay请求数据：{}",xmlData);
 		String xmlResult=HttpUtils.sendPost(ConstSysParamValue.WX_PREPAY_URL,xmlData,null);
-		logger.info("结果："+xmlResult);
+		logger.info("结果：{}",xmlResult);
 		return XmlUtil.xmlToMap(xmlResult);
 	}
 	
@@ -512,8 +512,7 @@ public class PayServiceImpl implements PayService{
 		if(response.isSuccess()){
 			return true;
 		}
-		else
-		{
+		else{
 			logger.error("调用支付宝退款申请API结果失败："+response.getMsg());
 			return false;
 		}
@@ -528,8 +527,7 @@ public class PayServiceImpl implements PayService{
 		orderList.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		orderListService.updateByObjCdt(orderList);
 		int stock=0;
-		if(orderList.getOrderStatus()==ConstOrderStatus.PAID&&orderList.getOrderType()==1)
-		{
+		if(orderList.getOrderStatus()==ConstOrderStatus.PAID&&orderList.getOrderType()==1){
 			stock=-1;
 		}
 		DeviceRoad deviceRoad=new DeviceRoad();

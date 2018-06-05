@@ -24,14 +24,14 @@ import com.whalegoods.service.PayService;
 
 /**
  * 订单相关API
- * @author henry-sun
- *
+ * @author henrysun
+ * 2018年6月5日 下午7:15:24
  */
 @RestController
 @RequestMapping(value = "/v1/pay")
 public class V1OrderController {
 	
-	private static Logger logger = LoggerFactory.getLogger(V1OrderController.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	HttpServletRequest request;
@@ -41,31 +41,35 @@ public class V1OrderController {
 	
 	/**
 	 * 生成预支付订单
-	 * @param model
-	 * @return
-	 * @throws SystemException
+	 * @author henrysun
+	 * 2018年6月5日 下午7:15:08
 	 */
   @PostMapping(value="/createPrepay")
   ResBody createPrepay(@RequestBody @Valid ReqCreatePrepay model) throws SystemException {
-	  logger.info("收到生成商品支付二维码API请求："+model.toString());
+	  logger.info("收到createPrepay请求：{}",model.toString());
+	  //如果是促销商品，则下单时viewtime字段不能为空
 	  if(model.getSaleType()==2){
 		  if(model.getViewTime()==null){
+			  logger.error("viewtime字段不能为空"); 
 			  throw new BizApiException(ConstApiResCode.VIEWTIME_NOT_EMPTY);
 		  }
 	  }
-	  return payService.createPrepay(model,(byte) 1);
+	  ResBody resBody=payService.createPrepay(model,(byte) 1);
+	  logger.info("结果：{}",resBody.toString());
+	  return resBody;
 	}
 
 	/**
-	 * 预支付生成二维码
-	 * @param model
-	 * @return
-	 * @throws SystemException
+	 * 生成支付二维码
+	 * @author henrysun
+	 * 2018年6月5日 下午7:15:04
 	 */
   @PostMapping(value="/createQrCode")
-  ResBody getlistGoodsAdsTop(@RequestBody @Valid ReqCreateQrCode model) throws SystemException {
-	  logger.info("收到生成商品支付二维码API请求："+model.toString());
-	  return payService.getQrCode(model);
+  ResBody createQrCode(@RequestBody @Valid ReqCreateQrCode model) throws SystemException {
+	  logger.info("收到createQrCode请求：{}",model.toString());
+	  ResBody resBody=payService.getQrCode(model);
+	  logger.info("结果：{}",resBody.toString());
+	  return resBody;
 	}
   
   /**
@@ -76,7 +80,7 @@ public class V1OrderController {
    */
   @GetMapping(value="/getOrderStatus")
   ResBody getOrderStatus(@RequestParam String order) throws SystemException  {
-	  logger.info("收到查询交易状态API请求："+order);
+	  logger.info("收到getOrderStatus请求："+order);
 	  return payService.getOrderStatus(order);
 	}
   
@@ -88,8 +92,7 @@ public class V1OrderController {
    */
   @PostMapping(value="/refund")
   ResBody refund(@RequestBody @Valid ReqRefund model) throws SystemException  {
-	  logger.info("收到退款申请API请求："+model.toString());
+	  logger.info("收到refund请求："+model.toString());
 	  return payService.refund(model);
 	}
-  
 }

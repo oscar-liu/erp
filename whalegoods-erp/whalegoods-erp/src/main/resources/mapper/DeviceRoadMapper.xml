@@ -168,11 +168,16 @@
   
    <!--  根据当前设备商品编号或货道号获取商品信息 -->
     <select id="selectByGoodsOrPathCode" parameterType="java.util.Map" resultMap="BaseResultMap1">
-    SELECT  <include refid="Base_Column_List2" />
-    FROM device_road a INNER JOIN goods_sku b ON a.goods_sku_id=b.id
+    SELECT  <include refid="Base_Column_List2" /> FROM device_road a 
+    INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
     <where>
-			c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
+			<if test="deviceIdJp !=null and deviceIdJp !=''">
+				AND c.device_id_jp=#{deviceIdJp}
+			</if>
+			<if test="device_id_supp !=null and device_id_supp !=''">
+				AND c.device_id_supp=#{deviceIdSupp}
+			</if>
 			<if test="goodsCode !=null and goodsCode !=''">
 				AND b.goods_code=#{goodsCode}
 			</if>

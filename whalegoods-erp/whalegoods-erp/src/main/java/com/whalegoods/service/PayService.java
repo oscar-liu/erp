@@ -15,10 +15,21 @@ import com.whalegoods.exception.SystemException;
  */
 public interface PayService {
 	
+	/**
+	 * 生成支付二维码
+	 * @author henrysun
+	 * 2018年6月5日 下午7:16:30
+	 */
 	ResBody getQrCode(ReqCreateQrCode model) throws SystemException;
 	
 	ResBody getOrderStatus(String orderId) throws SystemException;
 	
+	/**
+	 * 创建预付单
+	 * orderType 订单类型 1正常 2刷单
+	 * @author henrysun
+	 * 2018年6月5日 下午6:11:39
+	 */
 	ResBody createPrepay(ReqCreatePrepay model,Byte orderType) throws SystemException;
 	
 	ResBody refund(ReqRefund model) throws SystemException;

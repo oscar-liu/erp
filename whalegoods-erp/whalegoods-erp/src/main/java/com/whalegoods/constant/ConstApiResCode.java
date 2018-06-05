@@ -84,12 +84,12 @@ public abstract class ConstApiResCode {
 		
 		resMap.put(GOODS_CODE_NOT_EMPTY,"商品编号不能为空");
 		resMap.put(PATH_CODE_NOT_EMPTY,"货道编号不能为空");
-		resMap.put(VIEWTIME_NOT_EMPTY,"限时折扣商品时间戳不能为空");
+		resMap.put(VIEWTIME_NOT_EMPTY,"促销商品下单时viewtime不能为空");
 		resMap.put(STOCK_NOT_ENOUGH,"该商品所在货道库存不足");
 		resMap.put(GOODS_CODE_EXIST,"商品编号已存在");
 		resMap.put(GOODS_CODE_NOT_EXIST,"商品编号不存在");
 		
-		resMap.put(PATH_NOT_EXIST,"该货道不存在");
+		resMap.put(PATH_NOT_EXIST,"货道不存在或未上架商品");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");
 		resMap.put(PATH_EXIST,"货道已存在");
 		resMap.put(CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM,"临界值不能大于或等于货道容量值");

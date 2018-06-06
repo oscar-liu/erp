@@ -37,7 +37,5 @@ public interface SysUserService extends BaseService<SysUser,String> {
 	   * 2018年5月3日 下午5:21:08
 	   */
 	  int rePass(SysUser user);
-	  
-	  String[] getEmailArr(String jobName);
 
 }

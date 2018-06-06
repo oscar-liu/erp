@@ -115,9 +115,4 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	    return sysUserMapper.rePass(user);
 	  }
 
-	@Override
-	public String[] getEmailArr(String jobName) {
-		return sysUserMapper.getEmailArr(jobName);
-	}
-
 }

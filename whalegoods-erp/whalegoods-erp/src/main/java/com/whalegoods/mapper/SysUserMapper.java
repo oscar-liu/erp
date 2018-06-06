@@ -21,5 +21,11 @@ public interface SysUserMapper extends BaseMapper<SysUser, String>{
      */
     int rePass(SysUser user);
 
+    /**
+     * 根据任务名称查找对应的收件人邮箱列表
+     * @author henrysun
+     * 2018年6月6日 上午11:54:56
+     */
+    String[] getEmailArr(String jobName);
 
 }

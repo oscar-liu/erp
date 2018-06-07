@@ -3,6 +3,8 @@ package com.whalegoods.job;
 import java.util.List;
 
 import org.quartz.JobExecutionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.whalegoods.constant.ConstSysParamValue;
@@ -18,6 +20,8 @@ import com.whalegoods.service.SysUserService;
  */
 public class DeviceStatusJob implements BaseJob{
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private DeviceService deviceService;
 	
@@ -32,6 +36,7 @@ public class DeviceStatusJob implements BaseJob{
     public void execute(JobExecutionContext context) {
 		Long beforeTime = System.currentTimeMillis()-ConstSysParamValue.DEVICE_OFFLINE_TIME;
 		List<Device> listOff=deviceService.selectListOfOffLine(beforeTime);
+		logger.info("查询到的离线设备：{}",listOff.toString());
 		if(listOff.size()>0){
 			//设备状态更新为离线
 			deviceService.updateBatch(listOff);

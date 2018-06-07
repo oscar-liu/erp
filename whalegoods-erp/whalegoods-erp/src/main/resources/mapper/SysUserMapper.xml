@@ -16,6 +16,21 @@
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   
+    <resultMap id="BaseResultMap" type="com.whalegoods.entity.response.">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="head_pic_url" jdbcType="VARCHAR" property="headPicUrl" />
+    <result column="account_status" jdbcType="TINYINT" property="accountStatus" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
   <sql id="Base_Column_List">
     id,
     username,

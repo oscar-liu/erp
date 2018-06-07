@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysUser;
+import com.whalegoods.entity.response.ResJobEmail;
 import com.whalegoods.util.JsonUtil;
 
 /**
@@ -38,6 +39,6 @@ public interface SysUserService extends BaseService<SysUser,String> {
 	   */
 	  int rePass(SysUser user);
 	  
-	  String[] getEmailArr(String jobName);
+	  List<ResJobEmail> getEmailArr(String jobName);
 
 }

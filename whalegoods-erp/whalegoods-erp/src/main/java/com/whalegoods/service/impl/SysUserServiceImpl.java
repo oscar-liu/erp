@@ -11,6 +11,7 @@ import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysRole;
 import com.whalegoods.entity.SysRoleUser;
 import com.whalegoods.entity.SysUser;
+import com.whalegoods.entity.response.ResJobEmail;
 import com.whalegoods.exception.BizServiceException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.SysRoleUserMapper;
@@ -116,7 +117,7 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUser,String> implemen
 	  }
 
 	@Override
-	public String[] getEmailArr(String jobName) {
+	public List<ResJobEmail> getEmailArr(String jobName) {
 		return sysUserMapper.getEmailArr(jobName);
 	}
 

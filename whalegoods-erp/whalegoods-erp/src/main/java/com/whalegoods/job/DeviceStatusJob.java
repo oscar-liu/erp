@@ -12,7 +12,6 @@ import com.whalegoods.entity.Device;
 import com.whalegoods.entity.response.ResJobEmail;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
-import com.whalegoods.service.EmailService;
 import com.whalegoods.service.SysUserService;
 import com.whalegoods.util.SmsUtil;
 

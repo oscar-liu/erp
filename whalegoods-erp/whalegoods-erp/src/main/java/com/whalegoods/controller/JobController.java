@@ -106,12 +106,14 @@ public class JobController {
     	sysJob.setUpdateBy(currentUserId);
 		sysJobService.insert(sysJob);
 		SysJobRole sysJobRole=new SysJobRole();
+		List<SysJobRole> jobRoles=new ArrayList<>();
 		sysJobRole.setJobId(sysJob.getId());
 		 for(String r:role){
 			 sysJobRole.setId(StringUtil.getUUID());
 			 sysJobRole.setRoleId(r);
-			 sysJobRoleService.insert(sysJobRole);
+			 jobRoles.add(sysJobRole);
 		}
+		 sysJobRoleService.insertBatch(jobRoles);
 	        // 启动调度器  
 	        try {
 	        	config.scheduler().start();
@@ -191,9 +193,8 @@ public class JobController {
               trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
               // 按新的trigger重新设置job执行
               config.scheduler().rescheduleJob(triggerKey, trigger);
-              //如果状态是关闭，则暂停任务
               SysJob sysJob2=sysJobService.selectById(sysJobId);
-              if(sysJob2.getSwitchStatus()==2){
+              if(sysJob2.getJobStatus()==2){
             	  config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
               }
 		} catch (SchedulerException e) {
@@ -248,7 +249,6 @@ public class JobController {
 		sysJobService.updateByObjCdt(sysJob);
 		sysJob=sysJobService.selectById(id);
 		try {
-			config.scheduler().start();
 			if(sysJob.getJobStatus()==1){
 				config.scheduler().resumeJob(JobKey.jobKey(sysJob.getExecPath(),null));
 			}

@@ -2,6 +2,7 @@ package com.whalegoods.service;
 
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.SystemException;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
-  List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt);
+  List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt) throws SystemException;
   
   ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
 

@@ -27,4 +27,9 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String>  implement
 		return deviceMapper.selectListOfOffLine(beforeTime);
 	}
 
+	@Override
+	public int updateBatch(List<Device> listDevice) {
+		return deviceMapper.updateBatch(listDevice);
+	}
+
 }

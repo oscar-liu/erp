@@ -121,5 +121,14 @@
        <if test="deviceIdSupp !=null and deviceIdSupp !=''"> AND device_id_supp =#{deviceIdSupp}</if>
     </where>
 	</update>
+	
+	<update id="updateBatch" parameterType="java.util.List">
+    UPDATE device a 
+    SET  a.device_status=3
+    WHERE a.id IN
+    <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+        #{item.id}
+    </foreach>
+ </update>
 
 </mapper>

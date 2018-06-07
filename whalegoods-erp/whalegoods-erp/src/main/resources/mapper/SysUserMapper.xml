@@ -46,6 +46,15 @@
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  FROM sys_user WHERE id = #{_parameter}
   </select>
+  
+    <select id="getEmailArr" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT a.email FROM sys_user a
+INNER JOIN sys_role_user b ON a.id=b.user_id
+INNER JOIN sys_role c ON c.id=b.role_id
+INNER JOIN sys_job_role d ON d.role_id=c.id
+INNER JOIN sys_job e ON e.id=d.job_id
+    WHERE e.job_name = #{_parameter}
+  </select>
 
   <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM sys_user  WHERE id = #{_parameter}

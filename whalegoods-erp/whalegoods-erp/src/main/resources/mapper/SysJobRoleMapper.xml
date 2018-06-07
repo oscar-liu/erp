@@ -10,8 +10,8 @@
     id,job_id,role_id
   </sql>
 
-  <delete id="deleteById" parameterType="com.whalegoods.entity.SysJobRole">
-    DELETE FROM sys_job_role  WHERE id = #{id}
+  <delete id="deleteByJobId" parameterType="java.lang.String">
+    DELETE FROM sys_job_role  WHERE job_id = #{_parameter}
   </delete>
 
   <insert id="insert" parameterType="com.whalegoods.entity.SysJobRole">
@@ -34,6 +34,30 @@
     now()
     )
   </insert>
+  
+    <insert id="insertBatch" parameterType="java.util.List">
+    INSERT INTO sys_job_role (
+    id,
+    job_id, 
+    role_id,
+    create_by,
+    create_date,
+    update_by,
+    update_date
+    )
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+   #{item.id},
+      #{item.jobId},
+      #{item.roleId},
+     #{item.createBy},
+     now(),
+     #{item.updateBy},
+     now()
+  )
+    </foreach>
+ </insert>
 
   <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.SysJobRole" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" />  FROM sys_job_role

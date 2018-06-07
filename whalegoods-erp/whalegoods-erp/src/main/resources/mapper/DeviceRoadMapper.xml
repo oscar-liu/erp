@@ -18,6 +18,10 @@
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
     <result column="adsMiddleType" jdbcType="TINYINT" property="saleType" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="start_hms" jdbcType="VARCHAR" property="startHms" />
+    <result column="end_hms" jdbcType="VARCHAR" property="endHms" />
   </resultMap>
   
    <sql id="Base_Column_List1">
@@ -35,7 +39,11 @@
     b.pic_url,
     b.made_in, 
     b.market_price,
-    d.type adsMiddleType
+    d.type adsMiddleType,
+    d.start_date startDate,
+    d.end_date endDate,
+    d.start_hms startHms,
+    d.end_hms endHms
   </sql>
   
    <sql id="Base_Column_List2">

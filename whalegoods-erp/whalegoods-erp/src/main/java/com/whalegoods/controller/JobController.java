@@ -1,5 +1,6 @@
 package com.whalegoods.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -163,20 +164,23 @@ public class JobController {
 	  @ResponseBody
 	  public ResBody updateJob(@RequestBody SysJob sysJob) throws SystemException {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  String sysJobId=sysJob.getId();
+		  //先更新sys_job表
 		  sysJobService.updateByObjCdt(sysJob);
-		  SysJob oldJob = sysJobService.selectById(sysJob.getId());
-		  SysJobRole sysJobRole =new SysJobRole();
-		  sysJobRole.setJobId(oldJob.getId());
-	      List<SysJobRole> keyList=sysJobRoleService.selectListByObjCdt(sysJobRole);
-	      for(SysJobRole sysJobRole2 :keyList){
-	        sysJobRoleService.deleteById(sysJobRole2.getId());
-	      }
+		  //删除sys_job_role表相关数据
+		  sysJobRoleService.deleteByJobId(sysJobId);
+		  //生成新的关联信息
 	      if(sysJob.getRole()!=null){
+	    	 List<SysJobRole> jobRoles=new ArrayList<>();
+	    	 SysJobRole sysJobRole=null;
 	        for(String r:sysJob.getRole()){
+	        	sysJobRole=new SysJobRole();
 	        	sysJobRole.setId(StringUtil.getUUID());
 	        	sysJobRole.setRoleId(r);
-	          sysJobRoleService.insert(sysJobRole);
+	        	sysJobRole.setJobId(sysJobId);
+	        	jobRoles.add(sysJobRole);
 	        }
+	        sysJobRoleService.insertBatch(jobRoles);
 	      }
           TriggerKey triggerKey = TriggerKey.triggerKey(sysJob.getExecPath(),null);
           // 表达式调度构建器
@@ -187,6 +191,11 @@ public class JobController {
               trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
               // 按新的trigger重新设置job执行
               config.scheduler().rescheduleJob(triggerKey, trigger);
+              //如果状态是关闭，则暂停任务
+              SysJob sysJob2=sysJobService.selectById(sysJobId);
+              if(sysJob2.getSwitchStatus()==2){
+            	  config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
+              }
 		} catch (SchedulerException e) {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}

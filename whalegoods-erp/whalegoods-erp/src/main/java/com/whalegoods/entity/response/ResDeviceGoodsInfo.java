@@ -1,7 +1,9 @@
 package com.whalegoods.entity.response;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -61,4 +63,14 @@ public class ResDeviceGoodsInfo implements Serializable {
 	
 	@JsonProperty("sale_type")
 	private Byte saleType;
+	
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startDate;
+    
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endDate;
+    
+    private String startHms;
+    
+    private String endHms;
 }

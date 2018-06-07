@@ -33,6 +33,8 @@ public class DeviceStatusJob implements BaseJob{
 		Long beforeTime = System.currentTimeMillis()-ConstSysParamValue.DEVICE_OFFLINE_TIME;
 		List<Device> listOff=deviceService.selectListOfOffLine(beforeTime);
 		if(listOff.size()>0){
+			//设备状态更新为离线
+			deviceService.updateBatch(listOff);
 			//邮件主题必须和任务名称一致，否则会导致收件人列表为空
 			String subject="设备离线报警";
 			//邮件内容

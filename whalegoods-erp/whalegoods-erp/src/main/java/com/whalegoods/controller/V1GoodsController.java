@@ -49,14 +49,15 @@ public class V1GoodsController {
 	   * 根据设备编号获取所有商品信息列表接口
 	   * @author chencong
 	   * 2018年4月9日 下午5:08:30
+	 * @throws SystemException 
 	   */
 	  @GetMapping(value="/getListByDeviceCode")
-	  ResBody getListByDeviceCode( @Valid ReqBase model) {
+	  ResBody getListByDeviceCode( @Valid ReqBase model) throws SystemException {
 		  logger.info("收到getListByDeviceCode请求：{}",model.toString());
-		  Map<String,Object> condition=new HashMap<>();
-		  condition.put("deviceIdJp",model.getDevice_code_wg());
-		  condition.put("deviceIdSupp",model.getDevice_code_sup());
-		  List<ResDeviceGoodsInfo> listDeviceRoad=deviceRoadService.selectByIdOfJpAndSupp(condition);
+		  Map<String,Object> mapcdt=new HashMap<>();
+		  mapcdt.put("deviceIdJp",model.getDevice_code_wg());
+		  mapcdt.put("deviceIdSupp",model.getDevice_code_sup());
+		  List<ResDeviceGoodsInfo> listDeviceRoad=deviceRoadService.selectByIdOfJpAndSupp(mapcdt);
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),listDeviceRoad);
 		  logger.info("返回结果：{}",resBody.toString());
 		  return resBody;

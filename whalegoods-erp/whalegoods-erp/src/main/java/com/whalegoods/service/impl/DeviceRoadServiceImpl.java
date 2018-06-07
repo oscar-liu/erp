@@ -1,5 +1,6 @@
 package com.whalegoods.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.DeviceRoadMapper;
 import com.whalegoods.service.DeviceRoadService;
+import com.whalegoods.util.DateUtil;
 
 /**
  * 货道商品信息业务逻辑实现类
@@ -29,18 +32,37 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 	}
 	
 	@Override
-	public List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String, Object> condition) {
-		List<ResDeviceGoodsInfo> list=deviceRoadMapper.selectByIdOfJpAndSupp(condition);
+	public List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String, Object> mapCdt) throws SystemException {
+		List<ResDeviceGoodsInfo> list=deviceRoadMapper.selectByIdOfJpAndSupp(mapCdt);
+		Date nowDate=new Date();
 		for (ResDeviceGoodsInfo resDeviceGoodsInfo : list) {
-			//右连接查询，如果为空，需要做此转换
-			resDeviceGoodsInfo.setSaleType((byte) (resDeviceGoodsInfo.getSaleType()!=null?1:2));
+			if(resDeviceGoodsInfo.getSaleType()!=null){
+				//整点
+				if(resDeviceGoodsInfo.getSaleType()==1){
+					//在指定的时间范围之内，则是促销商品
+					if(DateUtil.belongTime(nowDate,DateUtil.getFormatHms(resDeviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(resDeviceGoodsInfo.getEndHms(),nowDate))){
+						resDeviceGoodsInfo.setSaleType((byte) 1);	
+					}
+					//否则是正常商品
+					else{
+						resDeviceGoodsInfo.setSaleType((byte) 2);	
+					}
+				}
+				//时间段
+/*				if(resDeviceGoodsInfo.getSaleType()==2){
+					
+				}*/
+			}
+			else{
+				resDeviceGoodsInfo.setSaleType((byte) 2);	
+			}
 		}
 		return list;
 	}
 
 	@Override
-	public ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String, Object> condition) {
-		return deviceRoadMapper.selectByGoodsOrPathCode(condition);
+	public ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String, Object> mapCdt) {
+		return deviceRoadMapper.selectByGoodsOrPathCode(mapCdt);
 	}
 
 	@Override

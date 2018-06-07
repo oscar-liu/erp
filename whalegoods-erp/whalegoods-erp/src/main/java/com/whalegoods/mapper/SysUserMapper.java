@@ -1,6 +1,9 @@
 package com.whalegoods.mapper;
 
+import java.util.List;
+
 import com.whalegoods.entity.SysUser;
+import com.whalegoods.entity.response.ResJobEmail;
 
 
 public interface SysUserMapper extends BaseMapper<SysUser, String>{
@@ -26,6 +29,6 @@ public interface SysUserMapper extends BaseMapper<SysUser, String>{
      * @author henrysun
      * 2018年6月6日 上午11:54:56
      */
-    String[] getEmailArr(String jobName);
+    List<ResJobEmail> getEmailArr(String jobName);
 
 }

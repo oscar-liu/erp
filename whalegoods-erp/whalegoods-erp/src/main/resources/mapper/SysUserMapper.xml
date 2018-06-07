@@ -16,19 +16,9 @@
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   
-    <resultMap id="BaseResultMap" type="com.whalegoods.entity.response.">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="userName" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
+    <resultMap id="BaseResultMap2" type="com.whalegoods.entity.response.ResJobEmail">
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="head_pic_url" jdbcType="VARCHAR" property="headPicUrl" />
-    <result column="account_status" jdbcType="TINYINT" property="accountStatus" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="switch_status" jdbcType="TINYINT" property="switchStatus" />
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -44,6 +34,11 @@
     update_by,
     update_date,
     remark
+  </sql>
+  
+    <sql id="Base_Column_List2">
+    a.phone,
+    e.switch_status
   </sql>
   
   <!-- 登录 -->
@@ -62,8 +57,8 @@
     SELECT  <include refid="Base_Column_List" />  FROM sys_user WHERE id = #{_parameter}
   </select>
   
-    <select id="getEmailArr" parameterType="java.lang.String" resultType="java.lang.String">
-    SELECT a.email FROM sys_user a
+    <select id="getEmailArr" parameterType="java.lang.String" resultMap="BaseResultMap2">
+    SELECT <include refid="Base_Column_List2" /> FROM sys_user a
 INNER JOIN sys_role_user b ON a.id=b.user_id
 INNER JOIN sys_role c ON c.id=b.role_id
 INNER JOIN sys_job_role d ON d.role_id=c.id

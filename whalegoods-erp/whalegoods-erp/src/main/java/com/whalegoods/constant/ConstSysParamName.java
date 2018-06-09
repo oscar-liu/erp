@@ -1,6 +1,8 @@
 package com.whalegoods.constant;
 
 public class ConstSysParamName {
+	
+	public static String NOTHING="无";
 
 	public static String SIGN="sign";
 

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
@@ -48,6 +49,7 @@ import com.whalegoods.util.IpUtil;
 import com.whalegoods.util.Md5Util;
 import com.whalegoods.util.NumberUtil;
 import com.whalegoods.util.ShiroUtil;
+import com.whalegoods.util.SmsUtil;
 import com.whalegoods.util.StringUtil;
 import com.whalegoods.util.XmlUtil;
 
@@ -224,6 +226,7 @@ public class PayServiceImpl implements PayService{
 		return resBody;
 	}
 	
+	@Async
 	@Override
 	public ResBody refund(ReqRefund model) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
@@ -270,6 +273,24 @@ public class PayServiceImpl implements PayService{
 			logger.error("更新订单信息和货道库存异常："+e.getMessage());
 		}
 		return resBody;
+	}
+	
+	@Async
+	@Override
+	public void refundNotify(ReqRefund model){
+		//任务名称必须和后台配置的一样，否则无法获取收件人列表
+		String jobName="设备退款报警";
+		//邮件模板
+		String templateId="SMS_136856409";
+		//根据订单号查询点位名称
+		Map<String,Object> mapCdt=new HashMap<>();
+		mapCdt.put("orderId",model.getOrder());
+		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
+		String shortName=orderListService.selectDeviceByOrderId(mapCdt);
+		//邮件内容
+		String content="{\"short_name\":\""+shortName+"\"}";
+		//发送邮件
+		SmsUtil.sendSms(jobName,templateId,content);
 	}
 	
 	private OrderList wxOrderQueryDoor(OrderList orderList) throws SystemException{

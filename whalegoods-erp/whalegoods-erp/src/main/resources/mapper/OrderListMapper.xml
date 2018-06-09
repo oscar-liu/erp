@@ -24,6 +24,14 @@
     a.order_type
   </sql>
   
+      <select id="selectDeviceByOrderId" statementType="STATEMENT" resultType="java.lang.String">
+   SELECT b.short_name FROM ${prefix}_order_list a 
+   INNER JOIN device b ON a.device_id_jp= b.device_id_jp
+   <where>
+     <if test="orderId !=null and orderId !=''"> AND a.order_id= '${orderId}'</if>
+    </where>
+  </select>
+  
     <select id="selectListByObjCdt"  parameterType="com.whalegoods.entity.ErpOrderList" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/>  FROM #{prefix}_order_list a 
     INNER JOIN device b ON a.device_id_jp= b.device_id_jp

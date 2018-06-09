@@ -33,4 +33,11 @@ public interface PayService {
 	ResBody createPrepay(ReqCreatePrepay model,Byte orderType) throws SystemException;
 	
 	ResBody refund(ReqRefund model) throws SystemException;
+
+	/**
+	 * 退款短信通知
+	 * @author henrysun
+	 * 2018年6月9日 下午3:28:06
+	 */
+	void refundNotify(ReqRefund model);
 }

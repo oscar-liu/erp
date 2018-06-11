@@ -94,6 +94,20 @@ public class DateUtil {
   }
   
   /**
+   * 时间戳转Date
+   * @author henrysun
+   * 2018年6月11日 下午12:57:48
+ * @throws SystemException 
+   */
+  public static Date timestampToDate(Long timestamp) throws SystemException{
+	  try {
+		return dateTimeFormat.parse(dateTimeFormat.format(timestamp)) ;
+	} catch (ParseException e) {
+		throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+	}
+  }
+  
+  /**
    * 计算两个日期之间差多少个月
    * @author henrysun
    * 2018年5月17日 上午9:56:45

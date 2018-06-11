@@ -41,10 +41,10 @@
     b.made_in, 
     b.market_price,
     d.type adsMiddleType,
-    d.start_date startDate,
-    d.end_date endDate,
-    d.start_hms startHms,
-    d.end_hms endHms,
+    d.start_date,
+    d.end_date,
+    d.start_hms,
+    d.end_hms,
     d.sale_price m_sale_price
   </sql>
   
@@ -62,6 +62,11 @@
     b.pic_url,
     b.made_in, 
     b.market_price,
+    d.type adsMiddleType,
+    d.start_date,
+    d.end_date,
+    d.start_hms,
+    d.end_hms,
     d.sale_price m_sale_price
   </sql>
   
@@ -182,7 +187,7 @@
     SELECT  <include refid="Base_Column_List2" /> FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
-    LEFT JOIN goods_ads_middle d ON a.goods_code=b.goods_code AND d.device_id=c.id
+    LEFT JOIN goods_ads_middle d ON d.goods_code=b.goods_code AND d.device_id=c.id
     <where>
 			<if test="deviceIdJp !=null and deviceIdJp !=''">
 				AND c.device_id_jp=#{deviceIdJp}

@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<div class="x-body">
+<div class="x-body" style="height:410px;">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
       <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">促销信息</legend></fieldset>

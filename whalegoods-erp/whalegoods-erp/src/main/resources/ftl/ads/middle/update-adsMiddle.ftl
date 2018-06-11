@@ -22,7 +22,7 @@
 </head>
 
 <body>
-<div class="x-body">
+<div class="x-body" style="height:360px;">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
       <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">促销信息</legend></fieldset>
@@ -42,6 +42,11 @@
     </select>
       </div>
     </div>
+    </div>
+        <!-- 促销价格 -->
+        <div class="layui-form-item">
+     <label for="salePrice" class="layui-form-label"><span class="x-red">*</span>促销价</label>
+      <div class="layui-input-inline"><input type="text"  id="iptSalePrice" name="iptSalePrice" value="${adsMiddle.salePrice}" lay-verify="required|number|FFS"  placeholder="￥"  autocomplete="off" class="layui-input"></div>
     </div>
     
      <!-- 时间类型-->
@@ -115,7 +120,17 @@
   
   layui.use(['form','layer','laydate'], function(){
     $ = layui.jquery;
-    var form = layui.form,layer = layui.layer,laydate = layui.laydate;;
+    var form = layui.form,layer = layui.layer,laydate = layui.laydate;
+    
+    //自定义验证规则
+    form.verify({
+  	  FFS: function(value){
+  	  var reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
+        if(!reg.test(value)){
+          return "必须为非负数";
+        }
+    	}
+    });
     
     laydate.render({
       elem: '#iptHmsRange'
@@ -136,6 +151,7 @@
     //监听提交
     form.on('submit(confirm)', function(data){
      data.field.goodsCode=$("#sltGoodsCode").val();
+     data.field.salePrice=$("#iptSalePrice").val();
      data.field.type=$("#sltTimeType").val();
      data.field.hmsRange=$("#iptHmsRange").val();
      data.field.dateRange=$("#iptDateRange").val();

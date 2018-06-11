@@ -4,6 +4,7 @@ package com.whalegoods.service.impl;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,6 +89,21 @@ public class PayServiceImpl implements PayService{
 		if(deviceGoodsInfo.getStock()==0&&orderType==1){
 			logger.error("库存不足");
 			throw new BizServiceException(ConstApiResCode.STOCK_NOT_ENOUGH);
+		}
+		//如果saleType不为空则是促销商品
+		if(deviceGoodsInfo.getSaleType()!=null){
+			Date nowDate=new Date();
+			//整点
+			if(deviceGoodsInfo.getSaleType()==1){
+				//进入详情页的时间在指定的时间范围之内，则为促销价
+				if(DateUtil.belongTime(DateUtil.timestampToDate(model.getViewTime()),DateUtil.getFormatHms(deviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(deviceGoodsInfo.getEndHms(),nowDate))){
+					deviceGoodsInfo.setSalePrice(deviceGoodsInfo.getMSalePrice());
+				}
+			}
+			//时间段
+/*				if(deviceGoodsInfo.getSaleType()==2){
+				
+			}*/
 		}
 		//生成预支付订单记录
 		OrderList orderPrepay=new OrderList();

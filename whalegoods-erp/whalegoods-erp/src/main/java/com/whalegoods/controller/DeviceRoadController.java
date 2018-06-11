@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,6 +55,8 @@ import com.whalegoods.util.StringUtil;
 @Controller
 @RequestMapping(value = "/road")
 public class DeviceRoadController  {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	  @Autowired
 	  DeviceRoadService deviceRoadService; 
@@ -334,7 +338,8 @@ public class DeviceRoadController  {
 	  @SuppressWarnings({ "deprecation", "rawtypes" })
 	  @GetMapping(value="/createPrepayBack")
 	  @RequiresPermissions("device:road:prepay")
-	  String createPrepay(ReqCreatePrepay reqCreatePrepay,Model model) throws SystemException {
+	  String createPrepayBack(ReqCreatePrepay reqCreatePrepay,Model model) throws SystemException {
+		  logger.info("收到createPrepayBack请求：{}",reqCreatePrepay.toString());
 		  String order=((Map)payService.createPrepay(reqCreatePrepay,(byte) 2).getData()).get("order").toString();
 		  ReqCreateQrCode reqObj=new ReqCreateQrCode();
 		  reqObj.setOrder(order);

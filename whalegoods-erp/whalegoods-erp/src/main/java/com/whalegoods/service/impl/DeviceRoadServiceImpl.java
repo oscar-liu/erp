@@ -36,11 +36,17 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		List<ResDeviceGoodsInfo> list=deviceRoadMapper.selectByIdOfJpAndSupp(mapCdt);
 		Date nowDate=new Date();
 		for (ResDeviceGoodsInfo resDeviceGoodsInfo : list) {
+			//如果saleType不为空则是促销商品
 			if(resDeviceGoodsInfo.getSaleType()!=null){
 				//整点
 				if(resDeviceGoodsInfo.getSaleType()==1){
 					//在指定的时间范围之内，则是促销商品
 					if(DateUtil.belongTime(nowDate,DateUtil.getFormatHms(resDeviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(resDeviceGoodsInfo.getEndHms(),nowDate))){
+						//如果商品正在促销，则mSalePrice取代salePrice作为当前销售价
+						//salePrice取代marketPrice作为原价
+						Double salePrice=resDeviceGoodsInfo.getSalePrice();
+						resDeviceGoodsInfo.setSalePrice(resDeviceGoodsInfo.getMSalePrice());
+						resDeviceGoodsInfo.setMarketPrice(salePrice);
 						resDeviceGoodsInfo.setSaleType((byte) 1);	
 					}
 					//否则是正常商品

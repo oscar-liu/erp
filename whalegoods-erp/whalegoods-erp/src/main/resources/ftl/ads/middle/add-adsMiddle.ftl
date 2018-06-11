@@ -55,6 +55,11 @@
       </div>
     </div>
     </div>
+    <!-- 促销价格 -->
+        <div class="layui-form-item">
+     <label for="salePrice" class="layui-form-label"><span class="x-red">*</span>促销价</label>
+      <div class="layui-input-inline"><input type="text"  id="iptSalePrice" name="iptSalePrice" lay-verify="required|number|FFS"  placeholder="￥"  autocomplete="off" class="layui-input"></div>
+    </div>
     
      <!-- 时间类型-->
     <div class="layui-form-item">
@@ -114,7 +119,17 @@
   
   layui.use(['form','layer','laydate'], function(){
     $ = layui.jquery;
-    var form = layui.form,layer = layui.layer,laydate = layui.laydate;;
+    var form = layui.form,layer = layui.layer,laydate = layui.laydate;
+    
+    //自定义验证规则
+    form.verify({
+  	  FFS: function(value){
+  	  var reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
+        if(!reg.test(value)){
+          return "必须为非负数";
+        }
+    	}
+    });
     
     laydate.render({
       elem: '#iptHmsRange'
@@ -137,6 +152,7 @@
      data.field.deviceId=$("#sltDeviceId").val();
      data.field.goodsCode=$("#sltGoodsCode").val();
      data.field.type=$("#sltTimeType").val();
+     data.field.salePrice=$("#iptSalePrice").val();
      data.field.hmsRange=$("#iptHmsRange").val();
      data.field.dateRange=$("#iptDateRange").val();
       $.ajax({

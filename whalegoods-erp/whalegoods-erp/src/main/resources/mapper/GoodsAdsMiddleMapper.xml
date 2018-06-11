@@ -21,16 +21,17 @@
   <sql id="Base_Column_List">
     a.id,
     a.goods_code,
+    a.sale_price,
     a.start_date,
     a.end_date,
     a.start_hms,
     a.end_hms,
     a.type,
     a.device_id,
-    b.market_price,
+    <!-- 此时的原货道设置价格变成了原价 -->
+    c.sale_price market_price,
     b.pic_url,
     b.goods_name,
-    c.sale_price,
     SUM(c.stock) stock,
     d.short_name
   </sql>
@@ -74,6 +75,7 @@
     INSERT INTO goods_ads_middle (
     id,
     goods_code, 
+    sale_price,
     start_date, 
     end_date,
     start_hms,
@@ -87,6 +89,7 @@
     VALUES (
     #{id},
     #{goodsCode}, 
+    #{salePrice}, 
     #{startDate}, 
     #{endDate},
     #{startHms},
@@ -104,6 +107,7 @@
 		UPDATE goods_ads_middle a 
 	   <set>
       <if test="goodsCode != null and goodsCode != ''">a.goods_code=#{goodsCode},</if>
+      <if test="salePrice != null and salePrice != ''">a.sale_price=#{salePrice},</if>
       a.start_date=#{startDate},
       a.end_date=#{endDate},
       a.start_hms=#{startHms},

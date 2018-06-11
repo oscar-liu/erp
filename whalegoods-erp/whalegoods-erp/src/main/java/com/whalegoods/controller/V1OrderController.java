@@ -50,7 +50,7 @@ public class V1OrderController {
 	  //如果是促销商品，则下单时viewtime字段不能为空
 	  if(model.getSaleType()==2){
 		  if(model.getViewTime()==null){
-			  logger.error("viewtime字段不能为空"); 
+			  logger.error("viewtime字段为空");
 			  throw new BizApiException(ConstApiResCode.VIEWTIME_NOT_EMPTY);
 		  }
 	  }

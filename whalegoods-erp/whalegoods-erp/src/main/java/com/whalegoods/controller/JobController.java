@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.whalegoods.config.job.QuartzConfig;
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Checkbox;
 import com.whalegoods.entity.SysJob;
 import com.whalegoods.entity.SysJobRole;
@@ -114,29 +115,31 @@ public class JobController {
 			 jobRoles.add(sysJobRole);
 		}
 		 sysJobRoleService.insertBatch(jobRoles);
-	        // 启动调度器  
-	        try {
-	        	config.scheduler().start();
-			} catch (SchedulerException e1) {
-				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			} 
-	        //构建job信息
-	        JobDetail jobDetail;
-			try {
-				jobDetail = JobBuilder.newJob(ReflectionUtil.getClass(sysJob.getExecPath()).getClass()).withIdentity(sysJob.getExecPath(),null).build();
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e1) {
-				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			}
-	        //表达式调度构建器(即任务执行的时间)
-	        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(sysJob.getJobCron());
-	        //按新的cronExpression表达式构建一个新的trigger
-	        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(sysJob.getExecPath(),null).withSchedule(scheduleBuilder).build();
-	        try {
-	        	config.scheduler().scheduleJob(jobDetail, trigger);
-	        	config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
-			} catch (SchedulerException e) {
-				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-			}	        
+		 if(!sysJob.getJobCron().equals(ConstSysParamName.NOTHING)&&!sysJob.getExecPath().equals(ConstSysParamName.NOTHING)){
+			 // 启动调度器  
+		        try {
+		        	config.scheduler().start();
+				} catch (SchedulerException e1) {
+					throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+				} 
+		        //构建job信息
+		        JobDetail jobDetail;
+				try {
+					jobDetail = JobBuilder.newJob(ReflectionUtil.getClass(sysJob.getExecPath()).getClass()).withIdentity(sysJob.getExecPath(),null).build();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e1) {
+					throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+				}
+		        //表达式调度构建器(即任务执行的时间)
+		        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(sysJob.getJobCron());
+		        //按新的cronExpression表达式构建一个新的trigger
+		        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(sysJob.getExecPath(),null).withSchedule(scheduleBuilder).build();
+		        try {
+		        	config.scheduler().scheduleJob(jobDetail, trigger);
+		        	config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
+				} catch (SchedulerException e) {
+					throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+				}	         
+		 }
 	    return resBody;
 	  }
 
@@ -184,22 +187,24 @@ public class JobController {
 	        }
 	        sysJobRoleService.insertBatch(jobRoles);
 	      }
-          TriggerKey triggerKey = TriggerKey.triggerKey(sysJob.getExecPath(),null);
-          // 表达式调度构建器
-          CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(sysJob.getJobCron());
-          try {
-              CronTrigger trigger = (CronTrigger) config.scheduler().getTrigger(triggerKey);
-              // 按新的cronExpression表达式重新构建trigger
-              trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
-              // 按新的trigger重新设置job执行
-              config.scheduler().rescheduleJob(triggerKey, trigger);
-              SysJob sysJob2=sysJobService.selectById(sysJobId);
-              if(sysJob2.getJobStatus()==2){
-            	  config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
-              }
-		} catch (SchedulerException e) {
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-		}
+	      if(!sysJob.getJobCron().equals(ConstSysParamName.NOTHING)&&!sysJob.getExecPath().equals(ConstSysParamName.NOTHING)){
+	    	  TriggerKey triggerKey = TriggerKey.triggerKey(sysJob.getExecPath(),null);
+	          // 表达式调度构建器
+	          CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(sysJob.getJobCron());
+	          try {
+	              CronTrigger trigger = (CronTrigger) config.scheduler().getTrigger(triggerKey);
+	              // 按新的cronExpression表达式重新构建trigger
+	              trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+	              // 按新的trigger重新设置job执行
+	              config.scheduler().rescheduleJob(triggerKey, trigger);
+	              SysJob sysJob2=sysJobService.selectById(sysJobId);
+	              if(sysJob2.getJobStatus()==2){
+	            	  config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
+	              }
+			} catch (SchedulerException e) {
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}
+	      }        
 		return resBody;
 	  }
 
@@ -215,13 +220,15 @@ public class JobController {
 	  public ResBody delJob(@RequestParam String id) throws SystemException {
 	    ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	    SysJob sysJob = sysJobService.selectById(id);
-	    try {
-		    config.scheduler().pauseTrigger(TriggerKey.triggerKey(sysJob.getExecPath(), null));
-		    config.scheduler().unscheduleJob(TriggerKey.triggerKey(sysJob.getExecPath(), null));
-		    config.scheduler().deleteJob(JobKey.jobKey(sysJob.getExecPath(), null));
-		} catch (SchedulerException e) {
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-		}
+	    if(!sysJob.getJobCron().equals(ConstSysParamName.NOTHING)&&!sysJob.getExecPath().equals(ConstSysParamName.NOTHING)){
+		    try {
+			    config.scheduler().pauseTrigger(TriggerKey.triggerKey(sysJob.getExecPath(), null));
+			    config.scheduler().unscheduleJob(TriggerKey.triggerKey(sysJob.getExecPath(), null));
+			    config.scheduler().deleteJob(JobKey.jobKey(sysJob.getExecPath(), null));
+			} catch (SchedulerException e) {
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+			}
+	    }
 	    sysJobService.deleteById(id);
 	   return resBody;
 	  }
@@ -248,15 +255,17 @@ public class JobController {
 		}
 		sysJobService.updateByObjCdt(sysJob);
 		sysJob=sysJobService.selectById(id);
-		try {
-			if(sysJob.getJobStatus()==1){
-				config.scheduler().resumeJob(JobKey.jobKey(sysJob.getExecPath(),null));
+		if(!sysJob.getJobCron().equals(ConstSysParamName.NOTHING)&&!sysJob.getExecPath().equals(ConstSysParamName.NOTHING)){			
+			try {
+				if(sysJob.getJobStatus()==1){
+					config.scheduler().resumeJob(JobKey.jobKey(sysJob.getExecPath(),null));
+				}
+				if(sysJob.getJobStatus()==2){
+					config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
+				}
+			} catch (SchedulerException e) {
+				throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 			}
-			if(sysJob.getJobStatus()==2){
-				config.scheduler().pauseJob(JobKey.jobKey(sysJob.getExecPath(),null));
-			}
-		} catch (SchedulerException e) {
-			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
 	    return resBody;
 	  }

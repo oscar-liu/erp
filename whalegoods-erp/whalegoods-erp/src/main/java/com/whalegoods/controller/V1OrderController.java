@@ -50,7 +50,7 @@ public class V1OrderController {
 	  //如果是促销商品，则下单时viewtime字段不能为空
 	  if(model.getSaleType()==2){
 		  if(model.getViewTime()==null){
-			  logger.error("viewtime字段不能为空"); 
+			  logger.error("viewtime字段为空");
 			  throw new BizApiException(ConstApiResCode.VIEWTIME_NOT_EMPTY);
 		  }
 	  }
@@ -85,7 +85,7 @@ public class V1OrderController {
 	}
   
   /**
-   * 退款申请
+   * 柜机退款申请
    * @param order
    * @return
  * @throws SystemException 
@@ -93,6 +93,21 @@ public class V1OrderController {
   @PostMapping(value="/refund")
   ResBody refund(@RequestBody @Valid ReqRefund model) throws SystemException  {
 	  logger.info("收到refund请求："+model.toString());
+	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	  //异步执行
+	  payService.refund(model);
+	  payService.refundNotify(model);
+	  return resBody;
+	}
+  
+  /**
+   * 柜机退款申请
+   * @param order
+   * @return
+ * @throws SystemException 
+   */
+  @PostMapping(value="/erpRefund")
+  ResBody erpRefund(@RequestBody @Valid ReqRefund model) throws SystemException  {
 	  return payService.refund(model);
 	}
 }

@@ -1,6 +1,7 @@
 package com.whalegoods.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.OrderList;
@@ -22,4 +23,6 @@ public interface OrderListService extends BaseService<OrderList,String>{
 	List<ErpOrderList> getListByObjCdt(ErpOrderList orderList) throws SystemException;
 
 	int getCountByErpObjCdt(ErpOrderList orderList) throws SystemException;
+	
+	String selectDeviceByOrderId(Map<String,Object> mapCdt);
 }

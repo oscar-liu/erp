@@ -85,7 +85,7 @@
         {field: 'shortName', title: '点位短名', align:'center'},
         {field: 'goodsName', title: '促销商品', align:'center'},
         {field: 'stock', title: '库存', align:'center',templet: '#tplStock'},
-        {field: 'salePrice', title: '售价', align:'center',templet: '#tplSalePrice'},
+        {field: 'salePrice', title: '促销价', align:'center',templet: '#tplSalePrice'},
         {field: 'marketPrice',title: '原价',align:'center'},
         {field: 'timeRange', title: '时间范围', align:'center',sort: true},
         {field: 'type', title: '时间类型', align:'center',templet: '#tplType'},

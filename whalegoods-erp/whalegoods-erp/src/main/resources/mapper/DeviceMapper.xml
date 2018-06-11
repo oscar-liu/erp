@@ -41,6 +41,13 @@
     WHERE a.up_time &lt; #{_parameter}
   </select>
   
+    <select id="selectOosDevice" resultType="java.lang.String">
+    SELECT a.short_name FROM device a 
+    INNER JOIN device_road b ON a.id = b.device_id 
+    WHERE b.stock &lt;= b.warning_num
+    GROUP BY a.id 
+  </select>
+  
     <select id="selectByObjCdt" parameterType="com.whalegoods.entity.Device" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  FROM device a 
     INNER JOIN device_model b ON a.device_model_id=b.id

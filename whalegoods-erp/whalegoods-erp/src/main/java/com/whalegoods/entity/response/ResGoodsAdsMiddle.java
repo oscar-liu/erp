@@ -32,12 +32,14 @@ public class ResGoodsAdsMiddle implements Serializable {
 	@JsonProperty("end_time")
 	private String endTime;
 	
+	//促销价格，goods_ads_middle表中的sale_price字段
 	@JsonProperty("sale_price")
 	private Double salePrice;
 	
 	@JsonProperty("stock")
 	private Byte stock;
 	
+	//原价，device_road表中的sale_price字段
 	@JsonProperty("market_price")
 	private Double marketPrice;
 	

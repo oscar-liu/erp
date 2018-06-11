@@ -32,4 +32,9 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String>  implement
 		return deviceMapper.updateBatch(listDevice);
 	}
 
+	@Override
+	public List<String> selectOosDevice() {
+		return deviceMapper.selectOosDevice();
+	}
+
 }

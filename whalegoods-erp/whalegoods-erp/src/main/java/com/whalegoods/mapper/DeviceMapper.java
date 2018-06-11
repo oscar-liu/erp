@@ -10,4 +10,6 @@ public interface DeviceMapper extends BaseMapper<Device,String> {
 	List<Device> selectListOfOffLine(Long beforeTime);
 	
 	int updateBatch(List<Device> listDevice);
+	
+	List<String> selectOosDevice();
 }

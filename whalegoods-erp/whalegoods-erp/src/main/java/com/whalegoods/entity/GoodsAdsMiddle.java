@@ -37,12 +37,14 @@ public class GoodsAdsMiddle extends BaseEntity implements Serializable {
     
     private String deviceId;
    
+    //原价，device_road表中的sale_price字段
     private Double marketPrice;
     
     private String picUrl;
     
     private String goodsName;
     
+    //促销价格，goods_ads_middle表中的sale_price字段
     private Double salePrice;
     
     private Byte stock;

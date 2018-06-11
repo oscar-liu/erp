@@ -2,6 +2,7 @@ package com.whalegoods.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,8 +124,7 @@ public  class OrderListServiceImpl extends BaseServiceImpl<OrderList,String> imp
 					}
 					else{
 						List<String> dateList=DateUtil.getMonthBetween(startTime,endTime,ConstSysParamName.YM);
-						int total=0;
-						List<ErpOrderList> allResultList=new ArrayList<>();						
+						int total=0;		
 						for (int i = 0; i < dateList.size(); i++) {
 							if(i==0){
 								orderList.setStartOrderTime(startTime+ConstSysParamName.START_HMS);
@@ -151,5 +151,10 @@ public  class OrderListServiceImpl extends BaseServiceImpl<OrderList,String> imp
 				return orderListMapper.getCountByErpObjCdt(orderList);
 			}	
 	  }
+
+	@Override
+	public String selectDeviceByOrderId(Map<String, Object> mapCdt) {
+		return orderListMapper.selectDeviceByOrderId(mapCdt);
+	}
 
 }

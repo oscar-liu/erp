@@ -73,4 +73,7 @@ public class ResDeviceGoodsInfo implements Serializable {
     private String startHms;
     
     private String endHms;
+
+    //如果是促销商品，该字段取代salePrice字段作为当前销售价
+	private Double mSalePrice;
 }

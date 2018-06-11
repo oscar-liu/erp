@@ -22,6 +22,7 @@
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="start_hms" jdbcType="VARCHAR" property="startHms" />
     <result column="end_hms" jdbcType="VARCHAR" property="endHms" />
+    <result column="m_sale_price" jdbcType="DECIMAL" property="mSalePrice" />
   </resultMap>
   
    <sql id="Base_Column_List1">
@@ -40,10 +41,11 @@
     b.made_in, 
     b.market_price,
     d.type adsMiddleType,
-    d.start_date startDate,
-    d.end_date endDate,
-    d.start_hms startHms,
-    d.end_hms endHms
+    d.start_date,
+    d.end_date,
+    d.start_hms,
+    d.end_hms,
+    d.sale_price m_sale_price
   </sql>
   
    <sql id="Base_Column_List2">
@@ -59,7 +61,13 @@
     b.goods_detail_en, 
     b.pic_url,
     b.made_in, 
-    b.market_price
+    b.market_price,
+    d.type adsMiddleType,
+    d.start_date,
+    d.end_date,
+    d.start_hms,
+    d.end_hms,
+    d.sale_price m_sale_price
   </sql>
   
   <resultMap id="BaseResultMap2" type="com.whalegoods.entity.DeviceRoad">
@@ -145,7 +153,7 @@
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
     SELECT <include refid="Base_Column_List3" />
     FROM device_road a 
-    LEFT JOIN goods_sku b ON a.goods_sku_id=b.id
+    LEFT JOIN goods_sku b ON a.goods_sku_id=b.id 
     INNER JOIN device c  ON c.id=a.device_id 
    <where>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> 
@@ -170,7 +178,7 @@
     FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id
-    LEFT  JOIN goods_ads_middle d ON d.goods_code = b.goods_code
+    LEFT  JOIN goods_ads_middle d ON d.goods_code = b.goods_code AND d.device_id=c.id
     WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
   </select>
   
@@ -179,6 +187,7 @@
     SELECT  <include refid="Base_Column_List2" /> FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
+    LEFT JOIN goods_ads_middle d ON d.goods_code=b.goods_code AND d.device_id=c.id
     <where>
 			<if test="deviceIdJp !=null and deviceIdJp !=''">
 				AND c.device_id_jp=#{deviceIdJp}

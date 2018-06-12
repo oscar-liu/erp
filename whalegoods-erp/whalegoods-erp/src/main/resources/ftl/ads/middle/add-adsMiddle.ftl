@@ -21,13 +21,9 @@
 </head>
 
 <body>
-<div class="x-body" style="height:410px;">
+<div class="x-body" style="height:430px;">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
     <div class="layui-form-item">
-      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;"><legend style="font-size:16px;">促销信息</legend></fieldset>
-    </div>
-    <div class="layui-form-item">
-      <div class="layui-inline">
      <!--设备-->
      <label for="sltDeviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
       <div class="layui-input-inline">
@@ -39,14 +35,12 @@
     </select>
       </div>
     </div>
-    </div>
      
     <div class="layui-form-item">
-     <div class="layui-inline">
         <!--商品编号-->
-     <label for="sltGoodsCode" class="layui-form-label"><span class="x-red">*</span>商品</label>
+     <label for="sltGoodsCode1" class="layui-form-label"><span class="x-red">*</span>商品1</label>
       <div class="layui-input-inline">
-       <select id="sltGoodsCode" name="sltGoodsCode" lay-verify="required"  lay-ignore>
+       <select id="sltGoodsCode1" name="sltGoodsCode1" lay-verify="required"  lay-ignore>
      <option value="">直接选择或搜索选择</option>
   	<#list goodsList as goods>
           <option value="${goods.goodsCode}">${goods.goodsName}</option>
@@ -54,7 +48,31 @@
     </select>
       </div>
     </div>
+        <div class="layui-form-item">
+        <!--商品编号-->
+     <label for="sltGoodsCode2" class="layui-form-label"><span class="x-red">*</span>商品2</label>
+      <div class="layui-input-inline">
+       <select id="sltGoodsCode2" name="sltGoodsCode2" lay-verify="required"  lay-ignore>
+     <option value="">直接选择或搜索选择</option>
+  	<#list goodsList as goods>
+          <option value="${goods.goodsCode}">${goods.goodsName}</option>
+    </#list>
+    </select>
+      </div>
     </div>
+        <div class="layui-form-item">
+        <!--商品编号-->
+     <label for="sltGoodsCode3" class="layui-form-label"><span class="x-red">*</span>商品3</label>
+      <div class="layui-input-inline">
+       <select id="sltGoodsCode3" name="sltGoodsCode3" lay-verify="required"  lay-ignore>
+     <option value="">直接选择或搜索选择</option>
+  	<#list goodsList as goods>
+          <option value="${goods.goodsCode}">${goods.goodsName}</option>
+    </#list>
+    </select>
+      </div>
+    </div>
+    
     <!-- 促销价格 -->
         <div class="layui-form-item">
      <label for="salePrice" class="layui-form-label"><span class="x-red">*</span>促销价</label>

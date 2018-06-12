@@ -122,28 +122,26 @@ public class GoodsAdsController  {
 	  @PostMapping(value = "addAdsMiddle")
 	  @ResponseBody
 	  public ResBody addAdsMiddle(@RequestBody GoodsAdsMiddle goodsAdsMiddle) throws SystemException {
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  if(StringUtil.isEmpty(goodsAdsMiddle.getHmsRange())&&StringUtil.isEmpty(goodsAdsMiddle.getDateRange())){
 			  throw new BizApiException(ConstApiResCode.TIME_RANGE_NOT_EMPTY);
 		  }
+		  //整点
 		  if(goodsAdsMiddle.getType()==1){
 			  goodsAdsMiddle.setStartHms(goodsAdsMiddle.getHmsRange().split(ConstSysParamName.KGANG)[0]);
 			  goodsAdsMiddle.setEndHms(goodsAdsMiddle.getHmsRange().split(ConstSysParamName.KGANG)[1]);
 			  goodsAdsMiddle.setStartDate(null);
 			  goodsAdsMiddle.setEndDate(null);
 		  }
+		  //时间段
 		  if(goodsAdsMiddle.getType()==2){
 			  goodsAdsMiddle.setStartDate(DateUtil.stringToDate(goodsAdsMiddle.getDateRange().split(ConstSysParamName.KGANG)[0]));
 			  goodsAdsMiddle.setEndDate(DateUtil.stringToDate(goodsAdsMiddle.getDateRange().split(ConstSysParamName.KGANG)[1]));
 			  goodsAdsMiddle.setStartHms(null);
 			  goodsAdsMiddle.setEndHms(null);
 		  }
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("deviceId", goodsAdsMiddle.getDeviceId());
-		 /* if(adsMiddleService.selectCountByMapCdt(mapCdt)>=3)
-		  {
-			  throw new BizApiException(ConstApiResCode.SALE_ALREADY_THREE);
-		  }*/
 		  mapCdt.put("goodsCode", goodsAdsMiddle.getGoodsCode());
 		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>=1)
 		  {

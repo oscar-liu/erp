@@ -48,6 +48,7 @@ public abstract class ConstApiResCode {
     public final static Integer CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM= 8004;
     public final static Integer STANDARD_NOT_EXIST= 8005;
     public final static Integer ROADLIST_EMPTY= 8006;
+    public final static Integer SALE_PRICE_MUST_SAME= 8007;
     
     /**
      * 订单相关 9开头
@@ -97,6 +98,7 @@ public abstract class ConstApiResCode {
 		resMap.put(CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM,"临界值不能大于或等于货道容量值");
 		resMap.put(STANDARD_NOT_EXIST,"型号标准不存在");
 		resMap.put(ROADLIST_EMPTY,"货道清单为空");
+		resMap.put(SALE_PRICE_MUST_SAME,"同一个设备相同的商品价格必须一样");
 		
 		resMap.put(WX_PREPAY_ONE_FAILED,"微信预支付-一级失败");
 		resMap.put(WX_PREPAY_TWO_FAILED,"微信预支付-二级失败");

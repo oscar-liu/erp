@@ -151,6 +151,14 @@ public class DeviceRoadController  {
 		  if(deviceRoadService.selectCountByMapCdt(mapCdt2)>0){
 			  throw new BizApiException(ConstApiResCode.PATH_EXIST);
 		  }
+		  //查询改设备是否已存在相同的商品，如果存在，则价格必须保持一致
+		  DeviceRoad objCdt=new DeviceRoad();
+		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		  objCdt.setDeviceId(deviceRoad.getDeviceId());
+		  int existSalePrice=deviceRoadService.selectExistPrice(objCdt).get(0);
+		  if(existSalePrice!=deviceRoad.getSalePrice()){
+			  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+		  }
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setDeviceId(device.getId());
@@ -258,6 +266,14 @@ public class DeviceRoadController  {
 		  {
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
+		  //查询改设备是否已存在相同的商品，如果存在，则价格必须保持一致
+		  DeviceRoad objCdt=new DeviceRoad();
+		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		  objCdt.setDeviceId(deviceRoad.getDeviceId());
+		  int existSalePrice=deviceRoadService.selectExistPrice(objCdt).get(0);
+		  if(existSalePrice!=deviceRoad.getSalePrice()){
+			  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+		  }
 		  //查询货道是否已存在
 		  Map<String,Object> mapCdt2=new HashMap<>();
 		  mapCdt2.put("deviceIdJp",deviceRoad.getDeviceIdJp());
@@ -309,6 +325,14 @@ public class DeviceRoadController  {
 		  if(goodsSku==null)
 		  {
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+		  }
+		  //查询改设备是否已存在相同的商品，如果存在，则价格必须保持一致
+		  DeviceRoad objCdt=new DeviceRoad();
+		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		  objCdt.setDeviceId(deviceRoad.getDeviceId());
+		  int existSalePrice=deviceRoadService.selectExistPrice(objCdt).get(0);
+		  if(existSalePrice!=deviceRoad.getSalePrice()){
+			  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
 		  }
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());

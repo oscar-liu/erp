@@ -78,6 +78,7 @@
           });
         }
       });
+      $('#upApkNow').append('<p  width="100px" height="100px">'+"${apk.apkUrl}"+'</p>');
   });
   
   layui.use(['form','layer','upload'], function(){
@@ -86,9 +87,12 @@
     upload.render({
       elem: '#upApk',
       url: 'uploadApk',
+      accept:'file',
+      exts: 'apk',
       before: function(obj){
         //预读，不支持ie8
         obj.preview(function(index, file, result){
+          $('#upApkNow').find("p").remove();
           $('#upApkNow').append('<p  width="100px" height="100px">'+file.name+'</p>');
         });
       },
@@ -111,7 +115,8 @@
       $.ajax({
         url:'updateApk',
         type:'post',
-        data:data.field,
+        contentType : 'application/json',  
+        data:JSON.stringify(data.field),
         async:false,
         traditional: true,
         success:function(d){

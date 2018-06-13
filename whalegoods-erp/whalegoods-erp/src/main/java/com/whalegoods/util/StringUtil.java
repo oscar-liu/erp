@@ -1,6 +1,5 @@
 package com.whalegoods.util;
 
-import java.util.Random;
 import java.util.UUID;
 
 import com.whalegoods.constant.ConstSysParamName;
@@ -52,7 +51,6 @@ public class StringUtil {
 		return sb.toString();
 	}
 	
-	
 	public static String getUUID(){
 		return UUID.randomUUID().toString().replace(ConstSysParamName.GANG,"");
 	}
@@ -61,8 +59,12 @@ public class StringUtil {
 		return (str == null || "".equals(str));
 	}
 	
+	/**
+	 * 五位随机正整数
+	 * @author henrysun
+	 * 2018年6月13日 上午11:32:38
+	 */
 	public static int getNumberRadom(){
-		Random random=new Random();
-		return random.nextInt(1000000);
+		return (int) ((Math.random()*9+1)*10000);
 	}
 }

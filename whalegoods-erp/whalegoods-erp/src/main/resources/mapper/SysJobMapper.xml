@@ -36,7 +36,8 @@
   </select>
   
    <delete id="deleteById" parameterType="java.lang.String">
-    DELETE FROM sys_job  WHERE id = #{_parameter}
+    DELETE FROM sys_job  WHERE id = #{_parameter};
+    DELETE FROM sys_job_role  WHERE job_id = #{_parameter}; 
   </delete>
   
       <insert id="insert" parameterType="com.whalegoods.entity.SysJob">

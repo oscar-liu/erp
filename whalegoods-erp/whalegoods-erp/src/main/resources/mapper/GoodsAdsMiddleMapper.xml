@@ -93,6 +93,7 @@
     <where>
      <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
     </where>
+    ORDER BY d.short_name,a.start_hms,a.start_date 
   </select>
   
   <!-- 插入新记录 -->

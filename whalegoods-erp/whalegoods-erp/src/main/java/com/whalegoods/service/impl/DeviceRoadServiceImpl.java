@@ -7,8 +7,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.DeviceRoadMapper;
@@ -92,9 +94,8 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 	}
 
 	@Override
-	public List<Integer> selectExistPrice(DeviceRoad objCdt) {
+	public List<Double> selectExistPrice(DeviceRoad objCdt) {
 		return  deviceRoadMapper.selectExistPrice(objCdt);
 	}
-
 
 }

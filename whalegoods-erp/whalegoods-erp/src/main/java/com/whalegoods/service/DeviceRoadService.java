@@ -26,5 +26,6 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
   List<DeviceRoad> selectListByDeviceIdForExcel(String deviceId);
   
-  List<Integer> selectExistPrice(DeviceRoad objCdt);
+  List<Double> selectExistPrice(DeviceRoad objCdt);
+ 
 }

@@ -106,10 +106,10 @@ public class JobController {
     	sysJob.setCreateBy(currentUserId);
     	sysJob.setUpdateBy(currentUserId);
 		sysJobService.insert(sysJob);
-		SysJobRole sysJobRole=new SysJobRole();
-		List<SysJobRole> jobRoles=new ArrayList<>();
-		sysJobRole.setJobId(sysJob.getId());
+		List<SysJobRole> jobRoles=new ArrayList<>();		
 		 for(String r:role){
+			 SysJobRole sysJobRole=new SysJobRole();
+			 sysJobRole.setJobId(sysJob.getId());
 			 sysJobRole.setId(StringUtil.getUUID());
 			 sysJobRole.setRoleId(r);
 			 jobRoles.add(sysJobRole);

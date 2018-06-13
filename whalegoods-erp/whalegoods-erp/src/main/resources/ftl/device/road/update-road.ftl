@@ -32,6 +32,8 @@
      <div class="layui-inline">
      <!--货道柜号-->
      <input value="${road.id}" type="hidden" name="id" >
+     <!-- 设备编号 -->
+     <input value="${road.deviceId}" type="hidden" name="deviceId" >
      <input value="${road.lockStatus}" type="hidden" id="hidLockStatus" name="hidLockStatus">
      <label for="ctn" class="layui-form-label"><span class="x-red">*</span>货道柜号</label>
       <div class="layui-input-inline"><input type="text"  id="ctn" name="ctn" value="${road.ctn}" lay-verify="required|number|ZZS" autocomplete="off" class="layui-input"></div>

@@ -27,6 +27,7 @@ public abstract class ConstApiResCode {
     public final static Integer ADS_TOP_ALREADY_THREE= 6003;
     public final static Integer GOODS_CODE_FOR_ADS_TOP_EXIST= 6004;
     public final static Integer TIME_RANGE_NOT_EMPTY= 6005;
+    public final static Integer IS_OVER_LAP= 6006;
     
     /**
      * 商品库存相关 7开头
@@ -81,6 +82,7 @@ public abstract class ConstApiResCode {
 		resMap.put(ADS_TOP_ALREADY_THREE,"该设备已经有三个广告");
 		resMap.put(GOODS_CODE_FOR_ADS_TOP_EXIST,"商品已在对应的设备投放广告");
 		resMap.put(TIME_RANGE_NOT_EMPTY,"时间范围不能为空");
+		resMap.put(IS_OVER_LAP,"和该设备已有的促销时段有重叠");
 		
 		resMap.put(GOODS_CODE_NOT_EMPTY,"商品编号不能为空");
 		resMap.put(PATH_CODE_NOT_EMPTY,"货道编号不能为空");

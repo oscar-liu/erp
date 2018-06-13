@@ -47,8 +47,6 @@ public class GoodsAdsMiddle extends BaseEntity implements Serializable {
     //促销价格，goods_ads_middle表中的sale_price字段
     private Double salePrice;
     
-    private Byte stock;
-    
     private String shortName;
     
     //用于在ERP列表中组合显示

@@ -195,4 +195,25 @@ public class DateUtil {
         return date.getTime();
 }
 	
+	/**
+	 * 判断两个时间段是否有重叠 true：有重叠  false：无重叠
+	 * @author henrysun
+	 * 2018年6月12日 下午10:14:23
+	 */
+	public static Boolean isOverlap(Date leftStartDate, Date leftEndDate,Date rightStartDate, Date rightEndDate) {    	            
+	        return     
+	            ((leftStartDate.getTime() >= rightStartDate.getTime())     
+	                    && leftStartDate.getTime() < rightEndDate.getTime())    
+	            ||    
+	            ((leftStartDate.getTime() > rightStartDate.getTime())     
+	                    && leftStartDate.getTime() <= rightEndDate.getTime())    
+	            ||    
+	            ((rightStartDate.getTime() >= leftStartDate.getTime())     
+	                    && rightStartDate.getTime() < leftEndDate.getTime())    
+	            ||    
+	            ((rightStartDate.getTime() > leftStartDate.getTime())     
+	                    && rightStartDate.getTime() <= leftEndDate.getTime());    
+	                
+	    }    
+	
 }

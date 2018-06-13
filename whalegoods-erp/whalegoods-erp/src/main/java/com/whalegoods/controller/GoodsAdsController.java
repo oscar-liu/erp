@@ -1,5 +1,7 @@
 package com.whalegoods.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -90,14 +93,16 @@ public class GoodsAdsController  {
 		Page<GoodsAdsMiddle> tPage= PageHelper.startPage(Integer.valueOf(page),Integer.valueOf(limit));
 	    List<GoodsAdsMiddle> goodsAdsMiddles=adsMiddleService.selectListByObjCdt(goodsAdsMiddle);
 	    for (GoodsAdsMiddle item : goodsAdsMiddles) {
+	    	//整点
 			if(item.getType()==1){
 				item.setTimeRange(item.getStartHms()+"至"+item.getEndHms());
 			}
-			if(item.getType()==2){
+			//时间段
+/*			if(item.getType()==2){
 				item.setTimeRange(DateUtil.formatDateTime(item.getStartDate())+"至"+DateUtil.formatDateTime(item.getEndDate()));
-			}
+			}*/
 		}
-	    ReType reType=new ReType(tPage.getTotal(),goodsAdsMiddles);
+	   ReType reType=new ReType(tPage.getTotal(),goodsAdsMiddles);
 	   return reType;
 	  }
 	  
@@ -121,36 +126,39 @@ public class GoodsAdsController  {
 	   */
 	  @PostMapping(value = "addAdsMiddle")
 	  @ResponseBody
-	  public ResBody addAdsMiddle(@RequestBody GoodsAdsMiddle goodsAdsMiddle) throws SystemException {
+	  public ResBody addAdsMiddle(@RequestBody String adsMiddles) throws SystemException {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		  if(StringUtil.isEmpty(goodsAdsMiddle.getHmsRange())&&StringUtil.isEmpty(goodsAdsMiddle.getDateRange())){
+		  List<GoodsAdsMiddle> list = JSON.parseArray(adsMiddles, GoodsAdsMiddle.class);
+		  //无论是整点还是时间段，时间范围都必须其中一个不为空
+		  if(StringUtil.isEmpty(list.get(0).getHmsRange())&&StringUtil.isEmpty(list.get(0).getDateRange())){
 			  throw new BizApiException(ConstApiResCode.TIME_RANGE_NOT_EMPTY);
-		  }
-		  //整点
-		  if(goodsAdsMiddle.getType()==1){
-			  goodsAdsMiddle.setStartHms(goodsAdsMiddle.getHmsRange().split(ConstSysParamName.KGANG)[0]);
-			  goodsAdsMiddle.setEndHms(goodsAdsMiddle.getHmsRange().split(ConstSysParamName.KGANG)[1]);
-			  goodsAdsMiddle.setStartDate(null);
-			  goodsAdsMiddle.setEndDate(null);
-		  }
-		  //时间段
-		  if(goodsAdsMiddle.getType()==2){
-			  goodsAdsMiddle.setStartDate(DateUtil.stringToDate(goodsAdsMiddle.getDateRange().split(ConstSysParamName.KGANG)[0]));
-			  goodsAdsMiddle.setEndDate(DateUtil.stringToDate(goodsAdsMiddle.getDateRange().split(ConstSysParamName.KGANG)[1]));
-			  goodsAdsMiddle.setStartHms(null);
-			  goodsAdsMiddle.setEndHms(null);
-		  }
+		  }	  
 		  Map<String,Object> mapCdt=new HashMap<>();
-		  mapCdt.put("deviceId", goodsAdsMiddle.getDeviceId());
-		  mapCdt.put("goodsCode", goodsAdsMiddle.getGoodsCode());
-		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>=1)
-		  {
-			  throw new BizApiException(ConstApiResCode.GOODS_CODE_FOR_SALE_EXIST);
+		  mapCdt.put("deviceId", list.get(0).getDeviceId());
+		  mapCdt.put("type", list.get(0).getType());
+		  //校验是否和当前设备其他促销时间段有重叠
+		  Date nowDate=new Date();
+		  List<GoodsAdsMiddle> adsMiddles2=adsMiddleService.selectTimeRangeByDeviceId(mapCdt);
+		  for (GoodsAdsMiddle item : adsMiddles2){
+			  //整点
+			  if(list.get(0).getType()==1){
+				  if(DateUtil.isOverlap(DateUtil.getFormatHms(item.getStartHms(),nowDate), DateUtil.getFormatHms(item.getStartHms(),nowDate), DateUtil.getFormatHms(list.get(0).getStartHms(),nowDate),  DateUtil.getFormatHms(list.get(0).getEndHms(),nowDate))){
+					  throw new BizApiException(ConstApiResCode.IS_OVER_LAP);
+				  }  
+			  }
+			  //时间段
+/*			  if(goodsAdsMiddle.getType()==2){
+				  
+			  }*/
 		  }
-		  goodsAdsMiddle.setId(StringUtil.getUUID());
-		  goodsAdsMiddle.setCreateBy(ShiroUtil.getCurrentUserId());
-		  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
-		  adsMiddleService.insert(goodsAdsMiddle);
+		  adsMiddles2=new ArrayList<>();
+		  for (GoodsAdsMiddle item : list){
+			  item.setId(StringUtil.getUUID());
+			  item.setCreateBy(ShiroUtil.getCurrentUserId());
+			  item.setUpdateBy(ShiroUtil.getCurrentUserId());
+			  adsMiddles2.add(item);
+		  }
+		  adsMiddleService.insertBatch(adsMiddles2);
 		  return resBody;
 	  }
 	  

@@ -1,6 +1,7 @@
 package com.whalegoods.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,16 @@ public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,St
 	@Override
 	public List<GoodsAdsMiddle> selectAdsMiddleList(ReqGetAdsMiddleList objCdt) throws SystemException {
 		 return GoodsAdsMiddleMapper.selectAdsMiddleList(objCdt);
+	}
+
+	@Override
+	public List<GoodsAdsMiddle> selectTimeRangeByDeviceId(Map<String, Object> mapCdt) {
+		return GoodsAdsMiddleMapper.selectTimeRangeByDeviceId(mapCdt);
+	}
+
+	@Override
+	public int insertBatch(List<GoodsAdsMiddle> list) {
+		return GoodsAdsMiddleMapper.insertBatch(list);
 	}
 
 }

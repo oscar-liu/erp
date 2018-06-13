@@ -27,6 +27,7 @@ public abstract class ConstApiResCode {
     public final static Integer ADS_TOP_ALREADY_THREE= 6003;
     public final static Integer GOODS_CODE_FOR_ADS_TOP_EXIST= 6004;
     public final static Integer TIME_RANGE_NOT_EMPTY= 6005;
+    public final static Integer IS_OVER_LAP= 6006;
     
     /**
      * 商品库存相关 7开头
@@ -47,6 +48,7 @@ public abstract class ConstApiResCode {
     public final static Integer CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM= 8004;
     public final static Integer STANDARD_NOT_EXIST= 8005;
     public final static Integer ROADLIST_EMPTY= 8006;
+    public final static Integer SALE_PRICE_MUST_SAME= 8007;
     
     /**
      * 订单相关 9开头
@@ -81,6 +83,7 @@ public abstract class ConstApiResCode {
 		resMap.put(ADS_TOP_ALREADY_THREE,"该设备已经有三个广告");
 		resMap.put(GOODS_CODE_FOR_ADS_TOP_EXIST,"商品已在对应的设备投放广告");
 		resMap.put(TIME_RANGE_NOT_EMPTY,"时间范围不能为空");
+		resMap.put(IS_OVER_LAP,"和该设备已有的促销时段有重叠");
 		
 		resMap.put(GOODS_CODE_NOT_EMPTY,"商品编号不能为空");
 		resMap.put(PATH_CODE_NOT_EMPTY,"货道编号不能为空");
@@ -95,6 +98,7 @@ public abstract class ConstApiResCode {
 		resMap.put(CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM,"临界值不能大于或等于货道容量值");
 		resMap.put(STANDARD_NOT_EXIST,"型号标准不存在");
 		resMap.put(ROADLIST_EMPTY,"货道清单为空");
+		resMap.put(SALE_PRICE_MUST_SAME,"同一个设备相同的商品价格必须一样");
 		
 		resMap.put(WX_PREPAY_ONE_FAILED,"微信预支付-一级失败");
 		resMap.put(WX_PREPAY_TWO_FAILED,"微信预支付-二级失败");

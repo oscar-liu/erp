@@ -91,5 +91,10 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		return deviceRoadMapper.selectListByDeviceIdForExcel(deviceId);
 	}
 
+	@Override
+	public List<Integer> selectExistPrice(DeviceRoad objCdt) {
+		return  deviceRoadMapper.selectExistPrice(objCdt);
+	}
+
 
 }

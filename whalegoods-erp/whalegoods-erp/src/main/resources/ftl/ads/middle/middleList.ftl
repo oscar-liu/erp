@@ -47,18 +47,11 @@
 <span style="color:blue;">时间段</span>
   {{#  } }}
 </script>
-<script type="text/html" id="tplStock">
-  {{#  if(d.stock ==null||d.stock ==undefined){ }}
+<script type="text/html" id="tplMarketPrice">
+  {{#  if(d.marketPrice ==null||d.marketPrice ==undefined ||d.marketPrice ==''){ }}
     <span style="color:red;">未上架</span>
   {{#  } else { }}
-<span>{{ d.stock}}</span>
-  {{#  } }}
-</script>
-<script type="text/html" id="tplSalePrice">
-  {{#  if(d.salePrice ==null||d.salePrice ==undefined ||d.salePrice ==''){ }}
-    <span style="color:red;">未上架</span>
-  {{#  } else { }}
-<span>{{ d.salePrice}}</span>
+<span>{{ d.marketPrice}}</span>
   {{#  } }}
 </script>
 <script>
@@ -84,9 +77,8 @@
         {checkbox: true, fixed: true},
         {field: 'shortName', title: '点位短名', align:'center'},
         {field: 'goodsName', title: '促销商品', align:'center'},
-        {field: 'stock', title: '库存', align:'center',templet: '#tplStock'},
-        {field: 'salePrice', title: '促销价', align:'center',templet: '#tplSalePrice'},
-        {field: 'marketPrice',title: '原价',align:'center'},
+        {field: 'salePrice', title: '促销价', align:'center'},
+        {field: 'marketPrice',title: '原价',align:'center',templet: '#tplMarketPrice'},
         {field: 'timeRange', title: '时间范围', align:'center',sort: true},
         {field: 'type', title: '时间类型', align:'center',templet: '#tplType'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}

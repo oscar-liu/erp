@@ -14,7 +14,6 @@
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
     <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
-    <result column="stock" jdbcType="INTEGER" property="stock" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
   </resultMap>
   
@@ -32,9 +31,37 @@
     c.sale_price market_price,
     b.pic_url,
     b.goods_name,
-    SUM(c.stock) stock,
     d.short_name
   </sql>
+  
+  <!-- 查询当前设备已有的促销时间段 -->
+     <select id="selectTimeRangeByDeviceId" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT 
+            <choose>  
+            <when test="type==1">  
+                a.start_hms,a.end_hms
+            </when>  
+            <when test="type==2">  
+                a.start_date,a.end_date
+            </when>  
+        </choose> 
+    FROM goods_ads_middle a 
+    INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
+    INNER JOIN device_road c ON c.goods_sku_id=b.id
+    INNER JOIN device d ON  d.id=a.device_id
+    <where>
+     <if test="deviceId !=null and deviceId !=''"> AND a.device_id=#{deviceId}</if>
+    </where>
+    GROUP BY
+            <choose>  
+            <when test="type==1">  
+                a.start_hms
+            </when>  
+            <when test="type==2">  
+                a.start_date
+            </when>  
+        </choose> 
+  </select>
   
    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> FROM goods_ads_middle a 
@@ -55,7 +82,6 @@
      <if test="device_code_wg !=null and device_code_wg !=''"> AND d.device_id_jp=#{device_code_wg}</if>
      <if test="device_code_sup !=null and device_code_sup !=''"> AND d.device_id_supp=#{device_code_sup}</if>
     </where>
-      GROUP BY  a.goods_code
   </select>
   
       <!-- 查询促销商品列表(ERP)-->
@@ -63,11 +89,10 @@
     SELECT  <include refid="Base_Column_List" />  FROM goods_ads_middle a 
     INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
     INNER JOIN device d ON  d.id=a.device_id
-    LEFT JOIN device_road c ON c.goods_sku_id=b.id
+    LEFT JOIN device_road c ON c.device_id=a.device_id AND c.goods_sku_id = b.id
     <where>
      <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
     </where>
-    GROUP BY a.goods_code,a.device_id
   </select>
   
   <!-- 插入新记录 -->
@@ -102,6 +127,41 @@
     now()
     )
   </insert>
+  
+    <insert id="insertBatch" parameterType="java.util.List">
+    INSERT INTO goods_ads_middle (
+    id,
+    goods_code, 
+    sale_price,
+    start_date, 
+    end_date,
+    start_hms,
+    end_hms,
+    type,
+    device_id,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+    #{item.id},
+    #{item.goodsCode}, 
+    #{item.salePrice}, 
+    #{item.startDate}, 
+    #{item.endDate},
+    #{item.startHms},
+    #{item.endHms},
+    #{item.type},
+    #{item.deviceId},
+    #{item.createBy}, 
+    now(),
+    #{item.updateBy},
+    now()
+  )
+    </foreach>
+ </insert>
   
   	<update id="updateByObjCdt" parameterType="com.whalegoods.entity.GoodsAdsMiddle">
 		UPDATE goods_ads_middle a 

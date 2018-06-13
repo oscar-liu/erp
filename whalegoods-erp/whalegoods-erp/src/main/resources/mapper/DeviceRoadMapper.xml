@@ -126,7 +126,7 @@
   </select>
   
   <!-- 根据设备编号商品编号查询已存在的价格 -->
-        <select id="selectExistPrice" parameterType="com.whalegoods.entity.DeviceRoad" resultType="java.lang.Integer">
+        <select id="selectExistPrice" parameterType="com.whalegoods.entity.DeviceRoad" resultType="java.lang.Double">
     SELECT a.sale_price FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
@@ -184,7 +184,7 @@
      AND c.short_name LIKE  "%" #{shortName} "%"
      </if>
     </where>
-    ORDER BY a.ctn,a.floor,a.path_code
+    ORDER BY c.short_name,a.ctn,a.floor,a.path_code
   </select>
   
  <!--  根据设备编号查询所有商品，给柜机API使用 -->

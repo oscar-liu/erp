@@ -135,7 +135,7 @@
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('编辑货道', 'showUpdateRoad?id=' + data[0].id, 900, 500);
+        update('编辑货道', 'showUpdateRoad?id='+data[0].id, 900, 500);
       },
       excel: function () {
           var deviceId=$("#sltDeviceList").val();
@@ -174,7 +174,7 @@
         });
       }
       if(obj.event === 'setGoods'){
-    	  setGoods('设置商品', 'showUpdateGoods?id=' + data.id, 500, 300);
+    	  setGoods('设置商品', 'showUpdateGoods?id='+data.id, 500, 300);
       }
     });
 

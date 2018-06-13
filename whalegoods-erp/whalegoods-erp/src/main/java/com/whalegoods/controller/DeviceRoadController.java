@@ -124,22 +124,19 @@ public class DeviceRoadController  {
 	  @ResponseBody
 	  public ResBody addRoad(@RequestBody DeviceRoad deviceRoad) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity())
-		  {
+		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity()){
 			  throw new BizApiException(ConstApiResCode.CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM);
 		  }
 		  //查询设备是否存在
 		  Device device=deviceService.selectById(deviceRoad.getDeviceId());
-		  if(device==null)
-		  {
+		  if(device==null){
 			  throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
 		  }
 		  //查询商品是否存在
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
 		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
-		  if(goodsSku==null) 
-		  {
+		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
 		  //查询货道是否已存在
@@ -155,9 +152,12 @@ public class DeviceRoadController  {
 		  DeviceRoad objCdt=new DeviceRoad();
 		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
 		  objCdt.setDeviceId(deviceRoad.getDeviceId());
-		  int existSalePrice=deviceRoadService.selectExistPrice(objCdt).get(0);
-		  if(existSalePrice!=deviceRoad.getSalePrice()){
-			  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+		  List<Double> prices=deviceRoadService.selectExistPrice(objCdt);
+		  if(prices.size()>0){
+			  Double existSalePrice=prices.get(0);
+			  if(existSalePrice.doubleValue()!=deviceRoad.getSalePrice().doubleValue()){
+				  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+			  }  
 		  }
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
@@ -254,25 +254,26 @@ public class DeviceRoadController  {
 	  @ResponseBody
 	  public ResBody updateRoad(@RequestBody DeviceRoad deviceRoad) {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity())
-		  {
+		  if(deviceRoad.getWarningNum()>=deviceRoad.getCapacity()){
 			  throw new BizApiException(ConstApiResCode.CAPACITY_CANNOT_BIGGER_THAN_WARNINGNUM);
 		  }
 		  //查询商品是否存在
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
 		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
-		  if(goodsSku==null)
-		  {
+		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
 		  //查询改设备是否已存在相同的商品，如果存在，则价格必须保持一致
 		  DeviceRoad objCdt=new DeviceRoad();
 		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
 		  objCdt.setDeviceId(deviceRoad.getDeviceId());
-		  int existSalePrice=deviceRoadService.selectExistPrice(objCdt).get(0);
-		  if(existSalePrice!=deviceRoad.getSalePrice()){
-			  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+		  List<Double> prices=deviceRoadService.selectExistPrice(objCdt);
+		  if(prices.size()>0){
+			  Double existSalePrice=prices.get(0);
+			  if(existSalePrice.doubleValue()!=deviceRoad.getSalePrice().doubleValue()){
+				  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+			  }  
 		  }
 		  //查询货道是否已存在
 		  Map<String,Object> mapCdt2=new HashMap<>();
@@ -322,17 +323,19 @@ public class DeviceRoadController  {
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("goodsCode",deviceRoad.getGoodsCode());
 		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
-		  if(goodsSku==null)
-		  {
+		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
 		  //查询改设备是否已存在相同的商品，如果存在，则价格必须保持一致
 		  DeviceRoad objCdt=new DeviceRoad();
 		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
 		  objCdt.setDeviceId(deviceRoad.getDeviceId());
-		  int existSalePrice=deviceRoadService.selectExistPrice(objCdt).get(0);
-		  if(existSalePrice!=deviceRoad.getSalePrice()){
-			  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+		  List<Double> prices=deviceRoadService.selectExistPrice(objCdt);
+		  if(prices.size()>0){
+			  Double existSalePrice=prices.get(0);
+			  if(existSalePrice.doubleValue()!=deviceRoad.getSalePrice().doubleValue()){
+				  throw new BizApiException(ConstApiResCode.SALE_PRICE_MUST_SAME);
+			  }  
 		  }
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());

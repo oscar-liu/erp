@@ -24,6 +24,7 @@
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
    <input value="${road.id}" type="hidden" name="id" >  
+   <input value="${road.deviceId}" type="hidden" name="deviceId" >
      <div class="layui-form-item">
         <!--商品编号-->
      <label for="sltGoodsCode" class="layui-form-label"><span class="x-red">*</span>商品</label>

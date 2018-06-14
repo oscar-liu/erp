@@ -163,37 +163,13 @@ public class GoodsAdsController  {
 	  }
 	  
 	  /**
-	   * 跳转到更新促销商品页面
+	   * 更新促销商品
 	   * @author henrysun
-	   * 2018年5月7日 上午11:54:54
+	   * 2018年6月13日 下午10:21:19
 	   */
-	  @GetMapping(value = "showUpdateAdsMiddle")
-	  public String showUpdateAdsMiddle(@RequestParam String id, Model model) {
-		GoodsAdsMiddle goodsAdsMiddle= adsMiddleService.selectById(id);
-		if(goodsAdsMiddle.getType()==1)
-		{
-			goodsAdsMiddle.setTimeRange(goodsAdsMiddle.getStartHms()+ConstSysParamName.KGANG+goodsAdsMiddle.getEndHms());	
-		}
-		if(goodsAdsMiddle.getType()==2)
-		{
-			goodsAdsMiddle.setTimeRange(DateUtil.formatDateTime(goodsAdsMiddle.getStartDate())+ConstSysParamName.KGANG+DateUtil.formatDateTime(goodsAdsMiddle.getEndDate()));
-		}		
-		model.addAttribute("adsMiddle",goodsAdsMiddle);
-		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
-		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
-	    return "/ads/middle/update-adsMiddle";
-	  }
-
-
-	  /**
-	   * 更新促销商品接口
-	   * @author henrysun
-	   * 2018年4月26日 下午3:30:49
-	 * @throws SystemException 
-	   */
-	  @PostMapping(value = "updateAdsMiddle")
+	  @PostMapping(value = "updateAdsMiddleGoods")
 	  @ResponseBody
-	  public ResBody updateAdsMiddle(@RequestBody GoodsAdsMiddle goodsAdsMiddle) throws SystemException {
+	  public ResBody updateAdsMiddleGoods(@RequestBody GoodsAdsMiddle goodsAdsMiddle) throws SystemException {
 		  if(StringUtil.isEmpty(goodsAdsMiddle.getHmsRange())&&StringUtil.isEmpty(goodsAdsMiddle.getDateRange())){
 			  throw new BizApiException(ConstApiResCode.TIME_RANGE_NOT_EMPTY);
 		  }

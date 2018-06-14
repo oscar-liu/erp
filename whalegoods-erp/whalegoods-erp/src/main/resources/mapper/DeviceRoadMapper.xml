@@ -343,12 +343,12 @@
     		<if test="id !=null and id !=''">
 				AND a.id=#{id}
 			</if>
-			<if test="deviceId !=null and deviceId !=''">
+<!-- 			<if test="deviceId !=null and deviceId !=''">
 				AND a.device_id=#{deviceId}
-			</if>
-			 <if test="goodsSkuId !=null and goodsSkuId !=''">
+			</if> -->
+<!-- 			 <if test="goodsSkuId !=null and goodsSkuId !=''">
 				AND a.goods_sku_id=#{goodsSkuId}
-			</if>
+			</if> -->
 		 </where>
 	</update>
 	

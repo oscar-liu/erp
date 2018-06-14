@@ -59,9 +59,7 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	
 	private Byte lockStatus;
 
-	public DeviceRoad() {
-		
-	}
+	public DeviceRoad(){}
 	
 	public DeviceRoad(String deviceId, String deviceIdJp, String deviceIdSupp, String shortName, String goodsSkuId,
 			String goodsCode, String goodsName, Byte ctn, String stockOrderId, Byte pathCode, Byte floor,

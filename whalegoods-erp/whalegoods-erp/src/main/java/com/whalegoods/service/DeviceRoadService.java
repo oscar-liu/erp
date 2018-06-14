@@ -25,7 +25,5 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   int insertBatch(List<DeviceRoad> list);
   
   List<DeviceRoad> selectListByDeviceIdForExcel(String deviceId);
-  
-  List<Double> selectExistPrice(DeviceRoad objCdt);
  
 }

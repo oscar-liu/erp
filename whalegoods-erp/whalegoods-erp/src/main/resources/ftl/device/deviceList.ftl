@@ -37,7 +37,7 @@
 </script>
 <script type="text/html" id="tplDeviceStatus">
   {{#  if(d.deviceStatus==1||d.deviceStatus==2){ }}
-<input type="checkbox" name="deviceStatus" value="{{d.id}}" lay-skin="switch" lay-text="运行中|停止" lay-filter="radioDeviceStatus" {{ d.deviceStatus == 1 ? 'checked' : '' }}>
+<input type="checkbox" name="deviceStatus" value="{{d.id}}" lay-skin="switch" lay-text="运行|停止" lay-filter="radioDeviceStatus" {{ d.deviceStatus == 1 ? 'checked' : '' }}>
   {{#  } else { }}
 <span style="color: #F581B1;">离线</span>
   {{#  } }}

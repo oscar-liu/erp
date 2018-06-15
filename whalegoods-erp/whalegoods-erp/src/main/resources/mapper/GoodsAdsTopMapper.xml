@@ -71,6 +71,7 @@
      <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
     </where>
     GROUP BY a.goods_code,a.device_id
+    ORDER BY d.short_name
   </select>
 
    <insert id="insert" parameterType="com.whalegoods.entity.GoodsAdsTop">

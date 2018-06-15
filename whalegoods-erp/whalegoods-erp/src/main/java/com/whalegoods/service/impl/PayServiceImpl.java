@@ -56,8 +56,8 @@ import com.whalegoods.util.XmlUtil;
 
 /**
  * 微信和支付宝支付API调用
- * @author chencong
- *
+ * @author henrysun
+ * 2018年4月15日 下午2:17:50
  */
 @Service
 public class PayServiceImpl implements PayService{

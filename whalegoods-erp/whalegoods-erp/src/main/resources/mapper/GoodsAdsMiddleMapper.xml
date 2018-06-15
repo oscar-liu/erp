@@ -82,6 +82,7 @@
      <if test="device_code_wg !=null and device_code_wg !=''"> AND d.device_id_jp=#{device_code_wg}</if>
      <if test="device_code_sup !=null and device_code_sup !=''"> AND d.device_id_supp=#{device_code_sup}</if>
     </where>
+     GROUP BY a.goods_code,a.start_hms,a.start_date
   </select>
   
       <!-- 查询促销商品列表(ERP)-->
@@ -93,6 +94,7 @@
     <where>
      <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
     </where>
+    GROUP BY a.goods_code,a.start_hms,a.start_date
     ORDER BY d.short_name,a.start_hms,a.start_date 
   </select>
   

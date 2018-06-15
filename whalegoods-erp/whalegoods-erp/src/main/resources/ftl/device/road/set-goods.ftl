@@ -32,7 +32,7 @@
        <select id="sltGoodsCode" name="sltGoodsCode" lay-verify="required" lay-ignore>
      <option value="">直接选择或搜索选择</option>
   	<#list goodsList as goods>
-          <option value="${goods.goodsCode}">${goods.goodsName}</option>
+          <option value="${goods.goodsCode}">${goods.goodsName}${goods.spec}</option>
     </#list>
     </select>
       </div>

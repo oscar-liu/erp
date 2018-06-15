@@ -180,6 +180,7 @@
     INNER JOIN device c  ON c.id=a.device_id
     LEFT  JOIN goods_ads_middle d ON d.goods_code = b.goods_code AND d.device_id=c.id
     WHERE c.device_id_jp=#{deviceIdJp} AND c.device_id_supp=#{deviceIdSupp}
+    GROUP BY a.ctn,a.floor,a.path_code
   </select>
   
    <!--  根据当前设备商品编号或货道号获取商品信息 -->

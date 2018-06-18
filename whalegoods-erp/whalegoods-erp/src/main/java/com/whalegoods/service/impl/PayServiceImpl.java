@@ -114,6 +114,9 @@ public class PayServiceImpl implements PayService{
 					
 				}*/
 			}
+			else{
+				deviceGoodsInfo=resDeviceGoodsInfo;
+			}
 		}
 		//生成预支付订单记录
 		OrderList orderPrepay=new OrderList();

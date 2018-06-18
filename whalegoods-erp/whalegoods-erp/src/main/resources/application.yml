@@ -24,7 +24,7 @@ spring:
     settings: 
       template_update_delay: 0
   profiles: 
-    active: pro
+    active: dev
   datasource: 
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource

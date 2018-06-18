@@ -47,7 +47,7 @@ public class V1GoodsController {
 
 	  /**
 	   * 根据设备编号获取所有商品信息列表接口
-	   * @author chencong
+	   * @author henrysun
 	   * 2018年4月9日 下午5:08:30
 	 * @throws SystemException 
 	   */
@@ -65,7 +65,7 @@ public class V1GoodsController {
 	  
 	  /**
 	   * 根据当前设备商品编号获取商品信息接口
-	   * @author chencong
+	   * @author henrysun
 	   * 2018年4月9日 下午5:08:44
 	   */
 	  @GetMapping(value="/getInfoByGoodsCode")
@@ -74,14 +74,14 @@ public class V1GoodsController {
 		  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
 		  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
 		  mapCdt.put("goodsCode",model.getGoods_code());
-		  ResDeviceGoodsInfo info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
+		  List<ResDeviceGoodsInfo> info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info.get(0));
 		  return resBody;
 		}
 	  
 	  /**
 	   * 根据当前设备货道号获取商品信息接口
-	   * @author chencong
+	   * @author henrysun
 	   * 2018年4月9日 下午5:08:44
 	   */
 	  @GetMapping(value="/getInfoByPathCode")
@@ -92,14 +92,14 @@ public class V1GoodsController {
 		  mapCdt.put("pathCode",model.getPath_code());
 		  mapCdt.put("floor",model.getFloor());
 		  mapCdt.put("ctn",model.getCtn());
-		  ResDeviceGoodsInfo info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info);
+		  List<ResDeviceGoodsInfo> info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info.get(0));
 		  return resBody;
 		}
 	  
 	  /**
 	   * 库存上报接口
-	   * @author chencong
+	   * @author henrysun
 	   * 2018年4月9日 下午5:08:14
 	 * @throws SystemException 
 	   */

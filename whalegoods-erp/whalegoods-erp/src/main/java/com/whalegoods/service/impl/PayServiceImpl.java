@@ -92,10 +92,10 @@ public class PayServiceImpl implements PayService{
 			throw new BizServiceException(ConstApiResCode.STOCK_NOT_ENOUGH);
 		}
 		ResDeviceGoodsInfo deviceGoodsInfo=null;
+		Date nowDate=new Date();
 		for (ResDeviceGoodsInfo resDeviceGoodsInfo : goodsInfos) {
 			//如果saleType不为空则是促销商品
 			if(resDeviceGoodsInfo.getSaleType()!=null){
-				Date nowDate=new Date();
 				//整点
 				if(resDeviceGoodsInfo.getSaleType()==1){
 					//进入详情页的时间在指定的时间范围之内，则为促销价

@@ -16,7 +16,7 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   
   List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String,Object> mapCdt) throws SystemException;
   
-  ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String,Object> mapCdt);
+  List<ResDeviceGoodsInfo> selectByGoodsOrPathCode(Map<String,Object> mapCdt);
 
   int updateByObjCdtForErp(DeviceRoad objCdt);
   

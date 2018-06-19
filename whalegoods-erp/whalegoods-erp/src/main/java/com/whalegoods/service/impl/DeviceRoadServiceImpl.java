@@ -47,18 +47,19 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		List<GoodsAdsMiddle> listAdsMiddle=adsMiddleService.selectAdsMiddleList(amObjCdt);
 		Date nowDate=new Date();
 		for (ResDeviceGoodsInfo resDeviceGoodsInfo:list) {
-			//如果saleType不为空则是促销商品
-			if(resDeviceGoodsInfo.getSaleType()!=null){
+			//如果adsMiddleType不为空则是促销商品
+			if(resDeviceGoodsInfo.getAdsMiddleType()!=null){
 				//整点
-				if(resDeviceGoodsInfo.getSaleType()==1){
+				if(resDeviceGoodsInfo.getAdsMiddleType()==1){
 					for (GoodsAdsMiddle goodsAdsMiddle : listAdsMiddle) {
 						//在指定的时间范围之内，则是促销商品
 						if(goodsAdsMiddle.getGoodsCode().equals(resDeviceGoodsInfo.getGoodsCode())&&DateUtil.belongTime(nowDate,DateUtil.getFormatHms(goodsAdsMiddle.getStartHms(),nowDate), DateUtil.getFormatHms(goodsAdsMiddle.getEndHms(),nowDate))){
 							//如果商品正在促销，则mSalePrice取代salePrice作为当前销售价
 							//salePrice取代marketPrice作为原价
 							Double salePrice=resDeviceGoodsInfo.getSalePrice();
-							resDeviceGoodsInfo.setSalePrice(resDeviceGoodsInfo.getMSalePrice());
+							resDeviceGoodsInfo.setSalePrice(goodsAdsMiddle.getSalePrice());
 							resDeviceGoodsInfo.setMarketPrice(salePrice);
+							//标识为促销商品
 							resDeviceGoodsInfo.setSaleType((byte) 1);
 							break;
 						}
@@ -73,6 +74,7 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 				}*/
 			}
 			else{
+				//标识为正常价格销售商品
 				resDeviceGoodsInfo.setSaleType((byte) 2);	
 			}
 		}

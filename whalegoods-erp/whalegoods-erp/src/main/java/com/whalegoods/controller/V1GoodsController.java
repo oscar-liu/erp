@@ -59,7 +59,7 @@ public class V1GoodsController {
 		  mapcdt.put("deviceIdSupp",model.getDevice_code_sup());
 		  List<ResDeviceGoodsInfo> listDeviceRoad=deviceRoadService.selectByIdOfJpAndSupp(mapcdt);
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),listDeviceRoad);
-		  logger.info("返回结果：{}",resBody.toString());
+		  logger.info("结果：{}",resBody.toString());
 		  return resBody;
 		}
 	  
@@ -70,12 +70,14 @@ public class V1GoodsController {
 	   */
 	  @GetMapping(value="/getInfoByGoodsCode")
 	  ResBody getInfoByCode(@Valid ReqGetInfoByGoodsCode model) {
+		  logger.info("收到getInfoByGoodsCode请求：{}",model.toString());
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
 		  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
 		  mapCdt.put("goodsCode",model.getGoods_code());
 		  List<ResDeviceGoodsInfo> info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info.get(0));
+		  logger.info("结果：{}",resBody.toString());
 		  return resBody;
 		}
 	  
@@ -86,6 +88,7 @@ public class V1GoodsController {
 	   */
 	  @GetMapping(value="/getInfoByPathCode")
 	  ResBody getInfoByPathCode(@Valid ReqGetInfoByPathCode model) {
+		  logger.info("收到getInfoByPathCode请求：{}",model.toString());
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
 		  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
@@ -94,6 +97,7 @@ public class V1GoodsController {
 		  mapCdt.put("ctn",model.getCtn());
 		  List<ResDeviceGoodsInfo> info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info.get(0));
+		  logger.info("结果：{}",resBody.toString());
 		  return resBody;
 		}
 	  

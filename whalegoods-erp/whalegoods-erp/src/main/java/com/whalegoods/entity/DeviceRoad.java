@@ -49,8 +49,10 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	@Excel(name = "价格",orderNum = "6")
 	private Double salePrice;
 	
+	@Excel(name = "最大容量",orderNum = "8")
 	private Byte capacity;
 	
+	@Excel(name = "库存",orderNum = "7")
 	private Integer stock;
 	
 	private Byte warningNum;

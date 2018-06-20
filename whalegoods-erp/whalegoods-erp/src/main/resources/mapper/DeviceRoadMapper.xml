@@ -17,7 +17,7 @@
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
-    <result column="adsMiddleType" jdbcType="TINYINT" property="saleType" />
+    <result column="adsMiddleType" jdbcType="TINYINT" property="adsMiddleType" />
     <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="start_hms" jdbcType="VARCHAR" property="startHms" />
@@ -40,12 +40,7 @@
     b.pic_url,
     b.made_in, 
     b.market_price,
-    d.type adsMiddleType,
-    d.start_date,
-    d.end_date,
-    d.start_hms,
-    d.end_hms,
-    d.sale_price m_sale_price
+    d.type adsMiddleType
   </sql>
   
    <sql id="Base_Column_List2">
@@ -114,6 +109,8 @@
     a.floor,
     a.path_code,
     a.sale_price,
+    a.capacity,
+    a.stock,
     b.goods_name
   </sql>
   

@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -80,30 +81,42 @@ public class PayServiceImpl implements PayService{
 		mapCdt.put("floor",model.getFloor());
 		mapCdt.put("pathCode",model.getPathCode());
 		//根据设备编号和商品编号查询商品信息
-		ResDeviceGoodsInfo deviceGoodsInfo=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
-		if(deviceGoodsInfo==null){
+		List<ResDeviceGoodsInfo> goodsInfos=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
+		if(goodsInfos.size()==0){
 			logger.error("货道不存在或未上架商品");
 			throw new BizServiceException(ConstApiResCode.PATH_NOT_EXIST);
 		}
 		//判断库存状态（略过后台刷单订单）
-		if(deviceGoodsInfo.getStock()==0&&orderType==1){
+		if(goodsInfos.get(0).getStock()==0&&orderType==1){
 			logger.error("库存不足");
 			throw new BizServiceException(ConstApiResCode.STOCK_NOT_ENOUGH);
 		}
-		//如果saleType不为空则是促销商品
-		if(deviceGoodsInfo.getSaleType()!=null){
-			Date nowDate=new Date();
-			//整点
-			if(deviceGoodsInfo.getSaleType()==1){
-				//进入详情页的时间在指定的时间范围之内，则为促销价
-				if(DateUtil.belongTime(DateUtil.timestampToDate(model.getViewTime()),DateUtil.getFormatHms(deviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(deviceGoodsInfo.getEndHms(),nowDate))){
-					deviceGoodsInfo.setSalePrice(deviceGoodsInfo.getMSalePrice());
+		ResDeviceGoodsInfo deviceGoodsInfo=null;
+		Date nowDate=new Date();
+		for (ResDeviceGoodsInfo resDeviceGoodsInfo : goodsInfos) {
+			//如果adsMiddleType不为空则是促销商品
+			if(resDeviceGoodsInfo.getAdsMiddleType()!=null){
+				//整点
+				if(resDeviceGoodsInfo.getAdsMiddleType()==1){
+					//进入详情页的时间在指定的时间范围之内，则为促销价
+					if(DateUtil.belongTime(DateUtil.timestampToDate(model.getViewTime()),DateUtil.getFormatHms(resDeviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(resDeviceGoodsInfo.getEndHms(),nowDate))){
+						resDeviceGoodsInfo.setSalePrice(resDeviceGoodsInfo.getMSalePrice());
+						deviceGoodsInfo=resDeviceGoodsInfo;
+						break;
+					}
+					else{
+						deviceGoodsInfo=resDeviceGoodsInfo;
+						continue;
+					}
 				}
+				//时间段
+	/*				if(deviceGoodsInfo.getSaleType()==2){
+					
+				}*/
 			}
-			//时间段
-/*				if(deviceGoodsInfo.getSaleType()==2){
-				
-			}*/
+			else{
+				deviceGoodsInfo=resDeviceGoodsInfo;
+			}
 		}
 		//生成预支付订单记录
 		OrderList orderPrepay=new OrderList();
@@ -571,6 +584,8 @@ public class PayServiceImpl implements PayService{
 		BeanUtils.copyProperties(orderList,deviceRoad); 
 		deviceRoad.setStock((Integer)stock);
 		deviceRoad.setStockOrderId(orderList.getOrderId());
+		//copyProperties操作后会导致salePrice被赋予值，如果是促销商品，不设置为null会导致货道价格被更新为促销价格！
+		deviceRoad.setSalePrice(null);
 		deviceRoadService.updateByObjCdt(deviceRoad);
 	}
 

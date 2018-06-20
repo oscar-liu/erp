@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.GoodsAdsMiddle;
+import com.whalegoods.entity.request.ReqGetAdsMiddleList;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.DeviceRoadMapper;
 import com.whalegoods.service.DeviceRoadService;
+import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.util.DateUtil;
 
 /**
@@ -26,6 +29,9 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 	@Autowired
 	DeviceRoadMapper deviceRoadMapper;
 	
+	@Autowired
+	GoodsAdsMiddleService adsMiddleService;
+	
 	@Override
 	public BaseMapper<DeviceRoad, String> getMapper() {
 		return deviceRoadMapper;
@@ -34,24 +40,32 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 	@Override
 	public List<ResDeviceGoodsInfo> selectByIdOfJpAndSupp(Map<String, Object> mapCdt) throws SystemException {
 		List<ResDeviceGoodsInfo> list=deviceRoadMapper.selectByIdOfJpAndSupp(mapCdt);
+		//查询该设备的促销商品
+		ReqGetAdsMiddleList amObjCdt=new ReqGetAdsMiddleList();
+		amObjCdt.setDevice_code_sup(mapCdt.get("deviceIdSupp").toString());
+		amObjCdt.setDevice_code_wg(mapCdt.get("deviceIdJp").toString());
+		List<GoodsAdsMiddle> listAdsMiddle=adsMiddleService.selectAdsMiddleList(amObjCdt);
 		Date nowDate=new Date();
-		for (ResDeviceGoodsInfo resDeviceGoodsInfo : list) {
-			//如果saleType不为空则是促销商品
-			if(resDeviceGoodsInfo.getSaleType()!=null){
+		for (ResDeviceGoodsInfo resDeviceGoodsInfo:list) {
+			//如果adsMiddleType不为空则是促销商品
+			if(resDeviceGoodsInfo.getAdsMiddleType()!=null){
 				//整点
-				if(resDeviceGoodsInfo.getSaleType()==1){
-					//在指定的时间范围之内，则是促销商品
-					if(DateUtil.belongTime(nowDate,DateUtil.getFormatHms(resDeviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(resDeviceGoodsInfo.getEndHms(),nowDate))){
-						//如果商品正在促销，则mSalePrice取代salePrice作为当前销售价
-						//salePrice取代marketPrice作为原价
-						Double salePrice=resDeviceGoodsInfo.getSalePrice();
-						resDeviceGoodsInfo.setSalePrice(resDeviceGoodsInfo.getMSalePrice());
-						resDeviceGoodsInfo.setMarketPrice(salePrice);
-						resDeviceGoodsInfo.setSaleType((byte) 1);	
-					}
-					//否则是正常商品
-					else{
-						resDeviceGoodsInfo.setSaleType((byte) 2);	
+				if(resDeviceGoodsInfo.getAdsMiddleType()==1){
+					for (GoodsAdsMiddle goodsAdsMiddle : listAdsMiddle) {
+						//在指定的时间范围之内，则是促销商品
+						if(goodsAdsMiddle.getGoodsCode().equals(resDeviceGoodsInfo.getGoodsCode())&&DateUtil.belongTime(nowDate,DateUtil.getFormatHms(goodsAdsMiddle.getStartHms(),nowDate), DateUtil.getFormatHms(goodsAdsMiddle.getEndHms(),nowDate))){
+							//如果商品正在促销，则mSalePrice取代salePrice作为当前销售价
+							//salePrice取代marketPrice作为原价
+							Double salePrice=resDeviceGoodsInfo.getSalePrice();
+							resDeviceGoodsInfo.setSalePrice(goodsAdsMiddle.getSalePrice());
+							resDeviceGoodsInfo.setMarketPrice(salePrice);
+							//标识为促销商品
+							resDeviceGoodsInfo.setSaleType((byte) 1);
+							break;
+						}
+						else{
+							continue;
+						}
 					}
 				}
 				//时间段
@@ -60,6 +74,7 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 				}*/
 			}
 			else{
+				//标识为正常价格销售商品
 				resDeviceGoodsInfo.setSaleType((byte) 2);	
 			}
 		}
@@ -67,7 +82,7 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 	}
 
 	@Override
-	public ResDeviceGoodsInfo selectByGoodsOrPathCode(Map<String, Object> mapCdt) {
+	public List<ResDeviceGoodsInfo> selectByGoodsOrPathCode(Map<String, Object> mapCdt) {
 		return deviceRoadMapper.selectByGoodsOrPathCode(mapCdt);
 	}
 

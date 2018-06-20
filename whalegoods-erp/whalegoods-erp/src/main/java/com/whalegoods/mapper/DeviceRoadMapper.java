@@ -21,4 +21,6 @@ public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
     
     List<DeviceRoad> selectListByDeviceIdForExcel(String deviceId);
     
+    int updateSalePrice(Map<String,Object> mapCdt);
+    
 }

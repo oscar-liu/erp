@@ -31,17 +31,10 @@ public class PathStockJob implements BaseJob{
     	if(oosDeviceList.size()>0){
 			//任务名称必须和后台配置的一样，否则无法获取收件人列表
 			String jobName="库存不足通知";
-			//发送内容
-			StringBuffer sb=new StringBuffer();
-			for (String shortName : oosDeviceList) {
-				sb.append(shortName);
-				sb.append(",");
-			}
-			String deviceNameArr = sb.toString().substring(0,sb.toString().length() - 1);
 			//邮件模板
-			String templateId="SMS_136870748";
+			String templateId="SMS_137665800";
 			//邮件内容
-			String content="{\"device_name\":\""+deviceNameArr+"\"}";
+			String content="{\"deviceCount\":\""+oosDeviceList.size()+"\"}";
 			//发送邮件
 			SmsUtil.sendSms(jobName,templateId,content);
     	}

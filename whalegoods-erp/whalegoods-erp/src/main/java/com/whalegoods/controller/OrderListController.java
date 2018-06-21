@@ -76,6 +76,18 @@ public class OrderListController {
 	  }
 	  
 	  /**
+	   * 跳转到销售统计>按设备页面
+	   * @author henrysun
+	   * 2018年6月21日 下午6:11:29
+	   */
+	  @GetMapping(value = "showReportByDevice")
+	  @RequiresPermissions("order:report:byDevice")
+	  public String showReportByDevice(Model model) {
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	    return "/order/report/reportByDeviceList";
+	  }
+	  
+	  /**
 	   * 刷单确认
 	   * @author henrysun
 	   * 2018年5月17日 上午10:54:08

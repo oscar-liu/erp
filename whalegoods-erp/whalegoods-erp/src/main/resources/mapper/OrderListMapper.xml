@@ -13,6 +13,15 @@
     <result column="order_type" jdbcType="TINYINT" property="orderType" />
   </resultMap>
   
+    <resultMap id="BaseResultMap2" type="com.whalegoods.entity.ReportBase">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_day" jdbcType="DATE" property="orderDay" />
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+  </resultMap>
+  
   <sql id="Base_Column_List">
     a.order_time,
     b.short_name,
@@ -45,6 +54,26 @@
      <if test="createBy !=null and createBy !=''"> AND a.create_by =#{createBy}</if>
     </where>
     ORDER BY a.order_time DESC
+  </select>
+  
+      <select id="selectReportBaseList"  parameterType="java.util.Map" resultMap="BaseResultMap2">
+  SELECT  REPLACE(UUID(), '-', '') id,
+  DATE_FORMAT(a.order_time, '%Y-%m-%d') order_day,
+  COUNT(a.id) sales_count,
+  SUM(a.sale_price) sales_amount,
+  a.goods_code,
+  c.id device_id 
+  FROM #{prefix}_order_list a  
+  INNER JOIN goods_sku b ON b.goods_code = a.goods_code 
+  INNER JOIN device c ON c.device_id_jp = a.device_id_jp 
+   <where>
+     <if test="startOrderTime !=null "> AND a.order_time &gt;=#{startOrderTime}</if>
+     <if test="endOrderTime !=null "> AND a.order_time &lt;=#{endOrderTime}</if>
+     AND a.order_status=2 
+    </where>
+    GROUP BY a.goods_code,
+  a.device_id_jp,
+  order_day 
   </select>
   
       <select id="getCountByErpObjCdt"  parameterType="com.whalegoods.entity.ErpOrderList" resultType="java.lang.Integer">

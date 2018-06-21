@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.OrderList;
+import com.whalegoods.entity.ReportBase;
 
 
 public interface OrderListMapper extends BaseMapper<OrderList,String> {
@@ -15,4 +16,6 @@ public interface OrderListMapper extends BaseMapper<OrderList,String> {
 	Integer getCountByErpObjCdt(ErpOrderList orderList);
 	
 	String selectDeviceByOrderId(Map<String,Object> mapCdt);
+	
+	List<ReportBase> selectReportBaseList(Map<String,Object> mapCdt);
 }

@@ -13,6 +13,7 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.OrderList;
+import com.whalegoods.entity.ReportBase;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.mapper.BaseMapper;
@@ -155,6 +156,11 @@ public  class OrderListServiceImpl extends BaseServiceImpl<OrderList,String> imp
 	@Override
 	public String selectDeviceByOrderId(Map<String, Object> mapCdt) {
 		return orderListMapper.selectDeviceByOrderId(mapCdt);
+	}
+
+	@Override
+	public List<ReportBase> selectReportBaseList(Map<String, Object> mapCdt) {
+		return orderListMapper.selectReportBaseList(mapCdt);
 	}
 
 }

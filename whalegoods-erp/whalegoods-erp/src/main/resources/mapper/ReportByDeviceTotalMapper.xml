@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.ReportByDeviceTotalMapper">
+
+  <insert id="insertBatch" parameterType="java.util.List">
+   INSERT INTO report_by_device_total (
+    id,
+    sales_count, 
+    sales_amount, 
+    order_day,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+   #{item.id},
+      #{item.salesCount},
+      #{item.salesAmount},
+     #{item.orderDay},
+     #{item.createBy},
+     now(),
+     #{item.updateBy},
+     now()
+  )
+    </foreach>
+ </insert>
+</mapper>

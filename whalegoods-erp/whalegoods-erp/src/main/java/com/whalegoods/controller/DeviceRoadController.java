@@ -148,12 +148,6 @@ public class DeviceRoadController  {
 		  if(deviceRoadService.selectCountByMapCdt(mapCdt2)>0){
 			  throw new BizApiException(ConstApiResCode.PATH_EXIST);
 		  }
-		  //将该设备相同的商品价格保持一致
-	/*	  DeviceRoad objCdt=new DeviceRoad();
-		  objCdt.setGoodsSkuId(goodsSku.getId());
-		  objCdt.setDeviceId(deviceRoad.getDeviceId());
-		  objCdt.setSalePrice(deviceRoad.getSalePrice());
-		  deviceRoadService.updateByObjCdtForErp(objCdt);*/
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setDeviceId(device.getId());
@@ -161,6 +155,12 @@ public class DeviceRoadController  {
 		  deviceRoad.setCreateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoadService.insert(deviceRoad);
+		  //将该设备相同的商品价格保持一致
+		  Map<String,Object> mapCdt3=new HashMap<>();
+		  mapCdt3.put("salePrice",deviceRoad.getSalePrice());
+		  mapCdt3.put("deviceId",deviceRoad.getDeviceId());
+		  mapCdt3.put("goodsSkuId",goodsSku.getId());
+		  deviceRoadService.updateSalePrice(mapCdt3);
 		  return resBody;
 	  }
 	  
@@ -259,12 +259,6 @@ public class DeviceRoadController  {
 		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
-		  //将该设备相同的商品价格保持一致
-/*		  DeviceRoad objCdt=new DeviceRoad();
-		  objCdt.setGoodsSkuId(goodsSku.getId());
-		  objCdt.setDeviceId(deviceRoad.getDeviceId());
-		  objCdt.setSalePrice(deviceRoad.getSalePrice());
-		  deviceRoadService.updateByObjCdtForErp(objCdt);*/
 		  //查询货道是否已存在
 		  Map<String,Object> mapCdt2=new HashMap<>();
 		  mapCdt2.put("deviceIdJp",deviceRoad.getDeviceIdJp());
@@ -283,6 +277,12 @@ public class DeviceRoadController  {
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoadService.updateByObjCdtForErp(deviceRoad);
+		  //将该设备相同的商品价格保持一致
+		  Map<String,Object> mapCdt3=new HashMap<>();
+		  mapCdt3.put("salePrice",deviceRoad.getSalePrice());
+		  mapCdt3.put("deviceId",deviceRoad.getDeviceId());
+		  mapCdt3.put("goodsSkuId",goodsSku.getId());
+		  deviceRoadService.updateSalePrice(mapCdt3);
 		  return resBody;
 	  }
 	  
@@ -316,15 +316,15 @@ public class DeviceRoadController  {
 		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
-		  //将该设备相同的商品价格保持一致
-/*		  DeviceRoad objCdt=new DeviceRoad();
-		  objCdt.setGoodsSkuId(goodsSku.getId());
-		  objCdt.setDeviceId(deviceRoad.getDeviceId());
-		  objCdt.setSalePrice(deviceRoad.getSalePrice());
-		  deviceRoadService.updateByObjCdtForErp(objCdt);*/
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  deviceRoadService.updateByObjCdtForErp(deviceRoad);
+		  //将该设备相同的商品价格保持一致
+		  Map<String,Object> mapCdt2=new HashMap<>();
+		  mapCdt2.put("salePrice",deviceRoad.getSalePrice());
+		  mapCdt2.put("deviceId",deviceRoad.getDeviceId());
+		  mapCdt2.put("goodsSkuId",goodsSku.getId());
+		  deviceRoadService.updateSalePrice(mapCdt2);
 		  return resBody;
 	  }
 

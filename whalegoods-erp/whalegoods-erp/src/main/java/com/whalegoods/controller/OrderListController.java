@@ -1,17 +1,21 @@
 package com.whalegoods.controller;
 
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.ErpOrderList;
+import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.OrderListService;
 import com.whalegoods.service.PayService;
+import com.whalegoods.service.ReportByDeviceService;
 import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
+import com.whalegoods.util.StringUtil;
 
 import java.util.List;
 
@@ -36,13 +40,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class OrderListController {
 	
 	  @Autowired
-	  OrderListService orderListService;
+	  private OrderListService orderListService;
 	  
 	  @Autowired
-	  DeviceService deviceService;
+	  private DeviceService deviceService;
 	  
 	  @Autowired
-	  public PayService payService;
+	  private PayService payService;
+	  
+	  @Autowired
+	  private ReportByDeviceService reportByDeviceService;
 
 	  /**
 	   * 跳转到订单列表页面
@@ -67,12 +74,40 @@ public class OrderListController {
 	  @RequiresPermissions("order:show") 
 	  public ReType showOrderList(Model model, ErpOrderList orderList, String page, String limit) throws SystemException {
 		if(orderList.getOrderType()!=null){
-			if(orderList.getOrderType()==2)
-			{
-				orderList.setCreateBy(ShiroUtil.getCurrentUserId());		
+			if(orderList.getOrderType()==2){
+				orderList.setCreateBy(ShiroUtil.getCurrentUserId());
 			}
 		}
 		return orderListService.selectByPage(orderList,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 跳转到销售统计>按设备页面
+	   * @author henrysun
+	   * 2018年6月21日 下午6:11:29
+	   */
+	  @GetMapping(value = "showReportByDevice")
+	  @RequiresPermissions("order:report:byDevice:show")
+	  public String showReportByDevice(Model model) {
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	    return "/order/report/reportByDeviceList";
+	  }
+	  
+	  /**
+	   * 查询销售统计>按设备列表
+	   * @author henrysun
+	   * 2018年4月26日 下午3:29:23
+	 * @throws SystemException 
+	   */
+	  @GetMapping(value = "showReportByDeviceList")
+	  @ResponseBody
+	  @RequiresPermissions("order:report:byDevice:show") 
+	  public ReType showReportByDeviceList(Model model, ReportByDevice reportByDevice, String page, String limit) throws SystemException {
+		if(!StringUtil.isEmpty(reportByDevice.getDayRange())){
+				reportByDevice.setStartOrderDay(reportByDevice.getDayRange().split(ConstSysParamName.KGANG)[0]);
+				reportByDevice.setEndOrderDay(reportByDevice.getDayRange().split(ConstSysParamName.KGANG)[1]);
+		}
+		return reportByDeviceService.selectByPage(reportByDevice,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
 	  /**

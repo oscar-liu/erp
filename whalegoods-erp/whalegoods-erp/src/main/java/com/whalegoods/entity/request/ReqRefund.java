@@ -25,4 +25,7 @@ public class ReqRefund implements Serializable {
 	@Length(min=32,max=32,message="订单号长度不正确")
 	private String order;
 	
+	//2表示ERP后台退款
+	private Byte refundType;
+	
 }

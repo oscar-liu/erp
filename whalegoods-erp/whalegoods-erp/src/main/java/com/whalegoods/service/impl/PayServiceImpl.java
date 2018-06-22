@@ -94,10 +94,10 @@ public class PayServiceImpl implements PayService{
 		ResDeviceGoodsInfo deviceGoodsInfo=null;
 		Date nowDate=new Date();
 		for (ResDeviceGoodsInfo resDeviceGoodsInfo : goodsInfos) {
-			//如果saleType不为空则是促销商品
-			if(resDeviceGoodsInfo.getSaleType()!=null){
+			//如果adsMiddleType不为空则是促销商品
+			if(resDeviceGoodsInfo.getAdsMiddleType()!=null){
 				//整点
-				if(resDeviceGoodsInfo.getSaleType()==1){
+				if(resDeviceGoodsInfo.getAdsMiddleType()==1){
 					//进入详情页的时间在指定的时间范围之内，则为促销价
 					if(DateUtil.belongTime(DateUtil.timestampToDate(model.getViewTime()),DateUtil.getFormatHms(resDeviceGoodsInfo.getStartHms(),nowDate), DateUtil.getFormatHms(resDeviceGoodsInfo.getEndHms(),nowDate))){
 						resDeviceGoodsInfo.setSalePrice(resDeviceGoodsInfo.getMSalePrice());
@@ -245,7 +245,7 @@ public class PayServiceImpl implements PayService{
 		}
 		//更新订单信息和货道库存
 		try {
-			this.updateStockAndOrderInfo(orderList);
+			this.updateStockAndOrderInfo(orderList,null);
 		} catch (Exception e) {
 			//上述操作不应影响客户端
 			logger.error("更新订单信息和货道库存异常："+e.getMessage());
@@ -296,7 +296,7 @@ public class PayServiceImpl implements PayService{
 		try {
 			//更新预支付订单信息
 			orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);
-			this.updateStockAndOrderInfo(orderList);
+			this.updateStockAndOrderInfo(orderList,model.getRefundType());
 		} catch (Exception e) {
 			//上述操作不应影响客户端
 			logger.error("更新订单信息和货道库存异常："+e.getMessage());
@@ -573,17 +573,23 @@ public class PayServiceImpl implements PayService{
 	 * @param orderList
 	 */
 	@Transactional
-	private void updateStockAndOrderInfo(OrderList orderList){
+	private void updateStockAndOrderInfo(OrderList orderList,Byte refundType){
 		orderList.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		orderListService.updateByObjCdt(orderList);
 		int stock=0;
 		if(orderList.getOrderStatus()==ConstOrderStatus.PAID&&orderList.getOrderType()==1){
 			stock=-1;
 		}
+		//非ERP后台退款才加库存
+		if(orderList.getOrderStatus()==ConstOrderStatus.APPLY_REFUND_SUCCESS&&refundType==null){
+			stock=1;
+		}
 		DeviceRoad deviceRoad=new DeviceRoad();
 		BeanUtils.copyProperties(orderList,deviceRoad); 
 		deviceRoad.setStock((Integer)stock);
 		deviceRoad.setStockOrderId(orderList.getOrderId());
+		//copyProperties操作后会导致salePrice被赋予值，如果是促销商品，不设置为null会导致货道价格被更新为促销价格！
+		deviceRoad.setSalePrice(null);
 		deviceRoadService.updateByObjCdt(deviceRoad);
 	}
 

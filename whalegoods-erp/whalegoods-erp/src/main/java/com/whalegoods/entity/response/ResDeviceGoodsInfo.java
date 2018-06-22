@@ -64,6 +64,9 @@ public class ResDeviceGoodsInfo implements Serializable {
 	@JsonProperty("sale_type")
 	private Byte saleType;
 	
+	@JsonProperty("ads_middle_type")
+	private Byte adsMiddleType;
+	
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startDate;
     

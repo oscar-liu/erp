@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.ReportBaseMapper">
+
+    <resultMap id="BaseResultMap" type="com.whalegoods.entity.ReportByDevice">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_day" jdbcType="DATE" property="orderDay" />
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+  </resultMap>
+
+<!-- 按照设备ID分组查询基本统计报表 -->
+    <select id="selectListGroupByDevice"  parameterType="java.util.Map" resultMap="BaseResultMap">
+SELECT 
+  REPLACE(UUID(), '-', '') id,
+  SUM(a.sales_count) sales_count,
+  SUM(a.sales_amount) sales_amount,
+  a.order_day,
+  a.device_id
+FROM report_base a 
+    WHERE a.order_day=#{orderDay}
+    GROUP BY a.device_id
+  </select>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+   INSERT INTO report_base (
+    id,
+    device_id, 
+    goods_code, 
+    sales_count, 
+    sales_amount, 
+    order_day,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+   #{item.id},
+      #{item.deviceId},
+      #{item.goodsCode},
+      #{item.salesCount},
+      #{item.salesAmount},
+     #{item.orderDay},
+     #{item.createBy},
+     now(),
+     #{item.updateBy},
+     now()
+  )
+    </foreach>
+ </insert>
+</mapper>

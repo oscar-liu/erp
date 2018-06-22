@@ -245,7 +245,7 @@ public class PayServiceImpl implements PayService{
 		}
 		//更新订单信息和货道库存
 		try {
-			this.updateStockAndOrderInfo(orderList);
+			this.updateStockAndOrderInfo(orderList,null);
 		} catch (Exception e) {
 			//上述操作不应影响客户端
 			logger.error("更新订单信息和货道库存异常："+e.getMessage());
@@ -296,7 +296,7 @@ public class PayServiceImpl implements PayService{
 		try {
 			//更新预支付订单信息
 			orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);
-			this.updateStockAndOrderInfo(orderList);
+			this.updateStockAndOrderInfo(orderList,model.getRefundType());
 		} catch (Exception e) {
 			//上述操作不应影响客户端
 			logger.error("更新订单信息和货道库存异常："+e.getMessage());
@@ -573,12 +573,16 @@ public class PayServiceImpl implements PayService{
 	 * @param orderList
 	 */
 	@Transactional
-	private void updateStockAndOrderInfo(OrderList orderList){
+	private void updateStockAndOrderInfo(OrderList orderList,Byte refundType){
 		orderList.setPrefix(DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		orderListService.updateByObjCdt(orderList);
 		int stock=0;
 		if(orderList.getOrderStatus()==ConstOrderStatus.PAID&&orderList.getOrderType()==1){
 			stock=-1;
+		}
+		//非ERP后台退款才加库存
+		if(orderList.getOrderStatus()==ConstOrderStatus.APPLY_REFUND_SUCCESS&&refundType==null){
+			stock=1;
 		}
 		DeviceRoad deviceRoad=new DeviceRoad();
 		BeanUtils.copyProperties(orderList,deviceRoad); 

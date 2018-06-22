@@ -195,6 +195,7 @@
   function orderRefund(orderId) {
 	  var data=new Object();
 	  data.order=orderId;
+	  data.refundType=2;
       $.ajax({
           url:'/v1/pay/erpRefund',
           type:'post',

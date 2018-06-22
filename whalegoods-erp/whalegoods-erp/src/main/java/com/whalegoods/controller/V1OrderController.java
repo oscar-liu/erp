@@ -101,7 +101,7 @@ public class V1OrderController {
 	}
   
   /**
-   * 柜机退款申请
+   * ERP后台退款申请
    * @param order
    * @return
  * @throws SystemException 

@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.ReportByDeviceTotalMapper">
 
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.ReportByDeviceTotal">
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="order_day" jdbcType="DATE" property="orderDay" />
+  </resultMap>
+  
+    <select id="selectListByMapCdt"  parameterType="java.util.Map" resultMap="BaseResultMap">
+    
+  </select>
+
   <insert id="insertBatch" parameterType="java.util.List">
    INSERT INTO report_by_device_total (
     id,

@@ -9,6 +9,13 @@
     <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
   </resultMap>
   
+      <resultMap id="BaseResultMap2" type="com.whalegoods.entity.ReportByDevice">
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="order_day" jdbcType="DATE" property="orderDay" />
+  </resultMap>
+  
   <!-- 按照日期分组查询按设备统计报表 -->
     <select id="selectListGroupByOrderDay"  parameterType="java.util.Map" resultMap="BaseResultMap">
 SELECT 
@@ -19,6 +26,24 @@ SELECT
 FROM report_by_device a 
     WHERE a.order_day=#{orderDay}
     GROUP BY a.order_day
+  </select>
+  
+  <!-- ERP后台查询列表 -->
+    <select id="selectListByObjCdt" parameterType="java.util.Map" resultMap="BaseResultMap2">
+    SELECT   a.sales_count,
+  a.sales_amount,
+  a.order_day,
+  b.short_name
+FROM
+  report_by_device a 
+  INNER JOIN device b 
+    ON a.device_id = b.id 
+   <where>
+     <if test="deviceId !=null and deviceId !=''"> AND a.device_id=#{deviceId}</if>
+     <if test="startOrderDay !=null and startOrderDay !=''"> AND a.order_day&gt;=#{startOrderDay}</if>
+     <if test="endOrderDay !=null and endOrderDay !=''"> AND a.order_day&lt;=#{endOrderDay}</if>
+    </where>
+   ORDER BY a.order_day DESC,a.sales_count DESC 
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">

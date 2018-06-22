@@ -22,6 +22,8 @@ public class ReportByDevice extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
     private String deviceId;
+    
+    private String shortName;
 
     private Integer salesCount;
 	
@@ -29,5 +31,11 @@ public class ReportByDevice extends BaseEntity implements Serializable {
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date orderDay;
+    
+    private String dayRange;
+    
+    private String startOrderDay;
+    
+    private String endOrderDay;
 
 }

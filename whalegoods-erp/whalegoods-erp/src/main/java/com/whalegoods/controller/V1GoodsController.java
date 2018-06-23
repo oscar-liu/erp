@@ -59,7 +59,6 @@ public class V1GoodsController {
 		  mapcdt.put("deviceIdSupp",model.getDevice_code_sup());
 		  List<ResDeviceGoodsInfo> listDeviceRoad=deviceRoadService.selectByIdOfJpAndSupp(mapcdt);
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),listDeviceRoad);
-		  logger.info("结果：{}",resBody.toString());
 		  return resBody;
 		}
 	  

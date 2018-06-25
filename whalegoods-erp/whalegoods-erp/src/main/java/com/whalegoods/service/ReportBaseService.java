@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.whalegoods.entity.ReportBase;
 import com.whalegoods.entity.ReportByDevice;
+import com.whalegoods.entity.ReportByGoods;
 
 
 /**
@@ -18,4 +19,8 @@ public interface ReportBaseService extends BaseService<ReportBase,String>{
 	
 	//按照设备分组查询基本统计报表
 	List<ReportByDevice> selectListGroupByDevice(Map<String,Object> mapCdt);
+	
+	//按照商品分组查询基本统计报表
+	List<ReportByGoods> selectListGroupByGoods(Map<String,Object> mapCdt);
+	
 }

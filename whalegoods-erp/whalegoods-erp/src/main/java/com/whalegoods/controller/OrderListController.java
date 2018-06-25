@@ -4,14 +4,20 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.ErpOrderList;
+import com.whalegoods.entity.GoodsSku;
+import com.whalegoods.entity.ReportBase;
 import com.whalegoods.entity.ReportByDevice;
+import com.whalegoods.entity.ReportByGoods;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
+import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.OrderListService;
 import com.whalegoods.service.PayService;
+import com.whalegoods.service.ReportBaseService;
 import com.whalegoods.service.ReportByDeviceService;
+import com.whalegoods.service.ReportByGoodsService;
 import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
@@ -46,10 +52,19 @@ public class OrderListController {
 	  private DeviceService deviceService;
 	  
 	  @Autowired
+	  private GoodsSkuService goodsSkuService;
+	  
+	  @Autowired
 	  private PayService payService;
 	  
 	  @Autowired
 	  private ReportByDeviceService reportByDeviceService;
+	  
+	  @Autowired
+	  private ReportByGoodsService reportByGoodsService;
+	  
+	  @Autowired
+	  private ReportBaseService reportBaseService;
 
 	  /**
 	   * 跳转到订单列表页面
@@ -108,6 +123,63 @@ public class OrderListController {
 				reportByDevice.setEndOrderDay(reportByDevice.getDayRange().split(ConstSysParamName.KGANG)[1]);
 		}
 		return reportByDeviceService.selectByPage(reportByDevice,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 跳转到销售统计>明细 列表
+	   * @author henrysun
+	   * 2018年6月25日 下午12:29:11
+	   */
+	  @GetMapping(value = "showReportBaseDetail")
+	  @RequiresPermissions("order:reportDetail:show")
+	  public String showReportBaseDetail(Model model) {
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	    return "/order/report/reportBaseDetailList";
+	  }
+	  
+	  /**
+	   * 查询销售统计>明细 列表
+	   * @author henrysun
+	   * 2018年6月25日 下午12:29:27
+	   */
+	  @GetMapping(value = "showReportBaseDetailList")
+	  @ResponseBody
+	  @RequiresPermissions("order:reportDetail:show") 
+	  public ReType showReportBaseDetailList(Model model, ReportBase reportBase, String page, String limit) throws SystemException {
+		if(!StringUtil.isEmpty(reportBase.getDayRange())){
+			reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
+			reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
+		}
+		return reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 跳转到销售统计>按商品 页面
+	   * @author henrysun
+	   * 2018年6月25日 下午2:22:18
+	   */
+	  @GetMapping(value = "showReportByGoods")
+	  @RequiresPermissions("order:report:byGoods:show")
+	  public String showReportByGoods(Model model) {
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	    return "/order/report/reportByGoodsList";
+	  }
+	  
+	  /**
+	   * 查询销售统计>按商品 列表
+	   * @author henrysun
+	   * 2018年6月25日 下午2:22:53
+	   */
+	  @GetMapping(value = "showReportByGoodsList")
+	  @ResponseBody
+	  @RequiresPermissions("order:report:byGoods:show") 
+	  public ReType showReportByGoodsList(Model model, ReportByGoods reportByGoods, String page, String limit) throws SystemException {
+		if(!StringUtil.isEmpty(reportByGoods.getDayRange())){
+			reportByGoods.setStartOrderDay(reportByGoods.getDayRange().split(ConstSysParamName.KGANG)[0]);
+			reportByGoods.setEndOrderDay(reportByGoods.getDayRange().split(ConstSysParamName.KGANG)[1]);
+		}
+		return reportByGoodsService.selectByPage(reportByGoods,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
 	  /**

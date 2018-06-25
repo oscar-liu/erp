@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>销售统计>按设备</title>
+  <title>销售统计>明细</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
@@ -29,6 +29,17 @@
     </select>
    </div>
    </div>
+   商品：
+        <div class="layui-inline">
+      <div class="layui-input-inline">
+       <select id="sltGoodsCode" name="sltGoodsCode" lay-ignore>
+     <option value="">直接选择或搜索选择</option>
+  	<#list goodsList as goods>
+          <option value="${goods.goodsCode}">${goods.goodsName}</option>
+    </#list>
+    </select>
+      </div>
+    </div>
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
@@ -36,7 +47,7 @@
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
    </div>
 </div>
-<table id="reportByDeviceList" class="layui-hide" lay-filter="reportByDevice"></table>
+<table id="reportBaseDetailList" class="layui-hide" lay-filter="reportBaseDetail"></table>
 <script>
   document.onkeydown = function (e) {
     var theEvent = window.event || e;
@@ -48,6 +59,7 @@
   
   $(function(){
 	  $('#sltDeviceList').select2();
+	  $('#sltGoodsCode').select2();
   });
   
   layui.use(['table','layer','laydate'], function () {
@@ -57,12 +69,13 @@
         ,range: true
       });
     table.render({
-      id: 'reportByDeviceList',
-      elem: '#reportByDeviceList', 
-      url: 'showReportByDeviceList',
+      id: 'reportBaseDetailList',
+      elem: '#reportBaseDetailList', 
+      url: 'showReportBaseDetailList',
       cols: [[
-    	{field: 'orderDay',title: '订单日期',align:'center' },
+        {field: 'orderDay',title: '订单日期',align:'center' },
     	{field: 'shortName',title: '点位短名',align:'center' }, 
+        {field: 'goodsName',title: '商品名称',align:'center' },
         {field: 'salesCount', title: '销量', align:'center',sort: true},
         {field: 'salesAmount', title: '销售额', align:'center',sort: true}
       ]],
@@ -73,18 +86,21 @@
     var $ = layui.$, active = {
       select: function () {
     	var deviceId = $('#sltDeviceList').val();
+    	var goodsCode = $('#sltGoodsCode').val();
     	var dayRange = $('#iptDayRange').val();
-        table.reload('reportByDeviceList', {
+        table.reload('reportBaseDetailList', {
           where: {
         	  deviceId: deviceId,
+        	  goodsCode: goodsCode,
         	  dayRange: dayRange
           }
         });
       },
       reload:function(){
-        table.reload('reportByDeviceList', {
+        table.reload('reportBaseDetailList', {
           where: {
         	  deviceId: null,
+        	  goodsCode: null,
         	  dayRange: null,
           }
         });
@@ -92,6 +108,8 @@
         $("#iptDayRange").val('');
         $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
         $("#sltDeviceList").val('');
+        $("#select2-sltGoodsCode-container").text($("#sltGoodsCode").find("option[value = '']").text());
+        $("#sltGoodsCode").val('');
       }
     };
 

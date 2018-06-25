@@ -2,6 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.whalegoods.mapper.ReportByDeviceTotalMapper">
 
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.ReportByDeviceTotal">
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="order_day" jdbcType="DATE" property="orderDay" />
+  </resultMap>
+  
+    <sql id="Base_Column_List">
+    a.order_time,
+    b.short_name,
+    a.order_id,
+    a.order_status,
+    a.goods_name,
+    a.sale_price,
+    a.pay_type,
+    a.order_type
+  </sql>
+  
+    <select id="selectListByMapCdt"  parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>  FROM #{prefix}_order_list a 
+    INNER JOIN device b ON a.device_id_jp= b.device_id_jp
+   <where>
+     <if test="startOrderTime !=null "> AND order_time &gt;=#{startOrderTime}</if>
+     <if test="endOrderTime !=null "> AND order_time &lt;#{endOrderTime}</if>
+     <if test="orderId !=null and orderId !=''"> AND a.order_id LIKE "%" #{orderId} "%"</if>
+     <if test="deviceId !=null and deviceId !='' "> AND b.id =#{deviceId}</if>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> AND a.device_id_jp =#{deviceIdJp}</if>
+     <if test="orderType !=null and orderType !=''"> AND a.order_type =#{orderType}</if>
+     <if test="createBy !=null and createBy !=''"> AND a.create_by =#{createBy}</if>
+    </where>
+    ORDER BY a.order_time DESC
+  </select>
+
   <insert id="insertBatch" parameterType="java.util.List">
    INSERT INTO report_by_device_total (
     id,

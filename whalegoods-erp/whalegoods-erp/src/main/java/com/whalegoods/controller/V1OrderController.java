@@ -81,7 +81,9 @@ public class V1OrderController {
   @GetMapping(value="/getOrderStatus")
   ResBody getOrderStatus(@RequestParam String order) throws SystemException  {
 	  logger.info("收到getOrderStatus请求："+order);
-	  return payService.getOrderStatus(order);
+	  ResBody resBody=payService.getOrderStatus(order);
+	  logger.info("结果：{}",resBody.toString());
+	  return resBody;
 	}
   
   /**

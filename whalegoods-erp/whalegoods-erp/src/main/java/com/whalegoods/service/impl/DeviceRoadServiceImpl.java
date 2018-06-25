@@ -64,6 +64,7 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 							break;
 						}
 						else{
+							resDeviceGoodsInfo.setSaleType((byte) 2);
 							continue;
 						}
 					}
@@ -75,7 +76,7 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 			}
 			else{
 				//标识为正常价格销售商品
-				resDeviceGoodsInfo.setSaleType((byte) 2);	
+				resDeviceGoodsInfo.setSaleType((byte) 2);
 			}
 		}
 		return list;

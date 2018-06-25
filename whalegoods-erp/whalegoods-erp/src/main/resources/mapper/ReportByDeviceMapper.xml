@@ -29,7 +29,7 @@ FROM report_by_device a
   </select>
   
   <!-- ERP后台查询列表 -->
-    <select id="selectListByObjCdt" parameterType="java.util.Map" resultMap="BaseResultMap2">
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.ReportByDevice" resultMap="BaseResultMap2">
     SELECT   a.sales_count,
   a.sales_amount,
   a.order_day,

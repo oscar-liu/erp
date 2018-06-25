@@ -10,20 +10,20 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 基本统计报表report_base实体类
+ * 统计报表（按商品）report_by_goods实体类
  * @author henrysun
- * 2018年6月21日 上午11:31:33
+ * 2018年6月25日 下午2:00:55
  */
 @Getter
 @Setter
 @ToString
-public class ReportBase extends BaseEntity implements Serializable {
+public class ReportByGoods extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-    private String deviceId;
-    
     private String goodsCode;
+    
+    private String goodsName;
 
     private Integer salesCount;
 	
@@ -31,10 +31,6 @@ public class ReportBase extends BaseEntity implements Serializable {
     
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date orderDay;
-    
-    private String goodsName;
-    
-    private String shortName;
     
     private String dayRange;
     

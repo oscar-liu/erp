@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.ReportByGoodsMapper">
+  
+      <resultMap id="BaseResultMap" type="com.whalegoods.entity.ReportByGoods">
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="order_day" jdbcType="DATE" property="orderDay" />
+  </resultMap>
+  
+  <!-- ERP后台查询列表 -->
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.ReportByGoods" resultMap="BaseResultMap">
+    SELECT   a.sales_count,
+  a.sales_amount,
+  a.order_day,
+  b.goods_name
+FROM
+  report_by_goods a 
+  INNER JOIN goods_sku b 
+    ON a.goods_code = b.goods_code
+   <where>
+     <if test="goodsCode !=null and goodsCode !=''"> AND a.goods_code=#{goodsCode}</if>
+     <if test="startOrderDay !=null and startOrderDay !=''"> AND a.order_day&gt;=#{startOrderDay}</if>
+     <if test="endOrderDay !=null and endOrderDay !=''"> AND a.order_day&lt;=#{endOrderDay}</if>
+    </where>
+   ORDER BY a.order_day DESC,a.sales_count DESC 
+  </select>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+   INSERT INTO report_by_goods (
+    id,
+    goods_code, 
+    sales_count, 
+    sales_amount, 
+    order_day,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES
+    <foreach collection="list" item="item" index="index"  separator=",">
+  (
+   #{item.id},
+      #{item.goodsCode},
+      #{item.salesCount},
+      #{item.salesAmount},
+     #{item.orderDay},
+     #{item.createBy},
+     now(),
+     #{item.updateBy},
+     now()
+  )
+    </foreach>
+ </insert>
+</mapper>

@@ -43,7 +43,7 @@
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
-    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button><span>&nbsp;&nbsp;总销量：<span style="color:red;" id="spnSalesCount">${total.salesCount?c}</span>&nbsp;&nbsp;总销售额：<span style="color:red;"  id="spnSalesAmount">${total.salesAmount?c}</span></span>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
    </div>
 </div>
@@ -79,6 +79,10 @@
         {field: 'salesCount', title: '销量', align:'center',sort: true},
         {field: 'salesAmount', title: '销售额', align:'center',sort: true}
       ]],
+      done:function(res, curr, count){
+/*     	  $('#spnSalesCount').text(totalNew.salesCount);
+    	  $('#spnSalesAmount').text(totalNew.salesAmount); */
+      },
       page: true,
       height: 'full-83'
     });

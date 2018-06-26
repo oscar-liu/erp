@@ -25,6 +25,7 @@ import com.whalegoods.util.StringUtil;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -65,6 +66,9 @@ public class OrderListController {
 	  
 	  @Autowired
 	  private ReportBaseService reportBaseService;
+	  
+	  @Autowired
+	  private HttpServletRequest request;
 
 	  /**
 	   * 跳转到订单列表页面
@@ -133,8 +137,12 @@ public class OrderListController {
 	  @GetMapping(value = "showReportBaseDetail")
 	  @RequiresPermissions("order:reportDetail:show")
 	  public String showReportBaseDetail(Model model) {
-		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
-		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+		ReportBase total=reportBaseService.selectTotalSalesCountAndAmount(new ReportBase());
+		List<Device> listDevice=deviceService.selectListByObjCdt(new Device());
+		List<GoodsSku> listGoods=goodsSkuService.selectListByObjCdt(new GoodsSku());
+		model.addAttribute("deviceList",listDevice);
+		model.addAttribute("goodsList",listGoods);
+		model.addAttribute("total",total);
 	    return "/order/report/reportBaseDetailList";
 	  }
 	  
@@ -151,7 +159,11 @@ public class OrderListController {
 			reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 			reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
 		}
-		return reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
+		ReportBase total=reportBaseService.selectTotalSalesCountAndAmount((reportBase));
+		ReType reType=reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
+		//由于是tabel更新，属于ajax请求，所以无法构建新的request，需要放在session里
+		request.getSession().setAttribute("totalNew", total);
+		return reType;
 	  }
 	  
 	  /**

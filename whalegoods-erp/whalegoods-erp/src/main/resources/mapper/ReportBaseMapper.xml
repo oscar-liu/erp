@@ -44,7 +44,7 @@
   INNER JOIN goods_sku c ON c.goods_code = a.goods_code 
    <where>
      <if test="deviceId !=null and deviceId !=''"> AND b.id=#{deviceId}</if>
-     <if test="goodsCode !=null and goodsCode !=''"> AND a.goods_code=#{goodsCode}</if>
+     <if test="goodsCode !=null and goodsCode !=''"> AND c.goods_code=#{goodsCode}</if>
      <if test="startOrderDay !=null and startOrderDay !=''"> AND a.order_day&gt;=#{startOrderDay}</if>
      <if test="endOrderDay !=null and endOrderDay !=''"> AND a.order_day&lt;=#{endOrderDay}</if>
     </where>
@@ -105,4 +105,20 @@ FROM report_base a
   )
     </foreach>
  </insert>
+ 
+   <!-- 根据条件查询总销量和总销售额 -->
+    <select id="selectTotalSalesCountAndAmount"  parameterType="com.whalegoods.entity.ReportBase" resultMap="BaseResultMap2">
+SELECT 
+  SUM(a.sales_count) sales_count,
+  SUM(a.sales_amount) sales_amount 
+FROM
+  report_base a INNER JOIN device b ON b.id=a.device_id
+  INNER JOIN goods_sku c ON c.goods_code=a.goods_code
+     <where>
+     <if test="deviceId !=null and deviceId !=''"> AND b.id=#{deviceId}</if>
+     <if test="goodsCode !=null and goodsCode !=''"> AND c.goods_code=#{goodsCode}</if>
+     <if test="startOrderDay !=null and startOrderDay !=''"> AND a.order_day&gt;=#{startOrderDay}</if>
+     <if test="endOrderDay !=null and endOrderDay !=''"> AND a.order_day&lt;=#{endOrderDay}</if>
+    </where>
+  </select>
 </mapper>

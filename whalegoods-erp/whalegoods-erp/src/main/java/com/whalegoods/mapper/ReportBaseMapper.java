@@ -15,4 +15,6 @@ public interface ReportBaseMapper extends BaseMapper<ReportBase,String> {
 	List<ReportByDevice> selectListGroupByDevice(Map<String,Object> mapCdt);
 	
 	List<ReportByGoods> selectListGroupByGoods(Map<String,Object> mapCdt);
+	
+	ReportBase selectTotalSalesCountAndAmount(ReportBase objCdt);
 }

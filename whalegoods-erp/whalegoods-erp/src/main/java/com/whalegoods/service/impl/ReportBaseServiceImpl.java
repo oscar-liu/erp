@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.whalegoods.entity.ReportBase;
@@ -39,4 +40,9 @@ public  class ReportBaseServiceImpl extends BaseServiceImpl<ReportBase,String> i
 		return reportBaseMapper.selectListGroupByGoods(mapCdt);
 	}
 
+	@Override
+	public ReportBase selectTotalSalesCountAndAmount(ReportBase objCdt) {
+		return reportBaseMapper.selectTotalSalesCountAndAmount(objCdt);
+	}
+	
 }

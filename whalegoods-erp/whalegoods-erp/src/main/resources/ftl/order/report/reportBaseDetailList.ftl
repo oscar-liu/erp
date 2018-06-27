@@ -17,6 +17,9 @@
 
 <body>
 <div class="erp-search">
+${Session['totalNew']
+<input value="${Session['totalNew'].salesCount}" type="hidden" name="id">
+<input value="${Session.totalNew.salesCount}" type="hidden" name="id">
   <div class="select">
                设备：
    <div class="layui-inline">

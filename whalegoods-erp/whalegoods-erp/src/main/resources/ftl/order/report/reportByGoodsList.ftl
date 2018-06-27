@@ -32,7 +32,7 @@
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
-    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button><span>&nbsp;&nbsp;&nbsp;总销量：<span style="color:red;" id="spnSalesCount">${total.salesCount?c}</span>&nbsp;&nbsp;总销售额：<span style="color:red;"  id="spnSalesAmount">${total.salesAmount?c}</span></span>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
    </div>
 </div>
@@ -51,7 +51,7 @@
   });
   
   layui.use(['table','layer','laydate'], function () {
-    var table = layui.table,layer = layui.layer,laydate = layui.laydate;
+    var table = layui.table,layer = layui.layer,laydate = layui.laydate,$ = layui.$;
     laydate.render({
         elem: '#iptDayRange'
         ,range: true
@@ -66,11 +66,38 @@
         {field: 'salesCount', title: '销量', align:'center',sort: true},
         {field: 'salesAmount', title: '销售额', align:'center',sort: true}
       ]],
+      done:function(res, curr, count){
+    	  var obj=new Object();
+    	  obj.goodsCode=$('#sltGoodsCode').val();
+    	  obj.dayRange=$('#iptDayRange').val();
+          $.ajax({
+              url:'getTotalCountAndAmount',
+              type:'get',
+              data:obj,
+              async:false,
+              traditional: true,
+              success:function(d){
+            	  if(d==""||d==null||d==undefined){
+                	  $("#spnSalesCount").text(0);
+                	  $("#spnSalesAmount").text(0);
+            	  }
+            	  else{
+                	  $("#spnSalesCount").text(d.salesCount);
+                	  $("#spnSalesAmount").text(d.salesAmount);
+            	  }
+                },
+                error:function(){
+                  window.top.layer.msg('查询总销量和总销售额异常',{icon:5,time:1000});
+            	  $("#spnSalesCount").text("查询异常");
+            	  $("#spnSalesAmount").text("查询异常");
+              }
+            });
+      },
       page: true,
       height: 'full-83'
     });
 
-    var $ = layui.$, active = {
+    var active = {
       select: function () {
     	var goodsCode = $('#sltGoodsCode').val();
     	var dayRange = $('#iptDayRange').val();

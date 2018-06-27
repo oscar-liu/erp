@@ -6,6 +6,7 @@ import java.util.Map;
 import com.whalegoods.entity.ReportBase;
 import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.ReportByGoods;
+import com.whalegoods.entity.ReportTotalCountAndAmount;
 
 
 /**
@@ -22,5 +23,7 @@ public interface ReportBaseService extends BaseService<ReportBase,String>{
 	
 	//按照商品分组查询基本统计报表
 	List<ReportByGoods> selectListGroupByGoods(Map<String,Object> mapCdt);
+	
+	ReportTotalCountAndAmount selectTotalSalesCountAndAmount(ReportBase objCdt);
 	
 }

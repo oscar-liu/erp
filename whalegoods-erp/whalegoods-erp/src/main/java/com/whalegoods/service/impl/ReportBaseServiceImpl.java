@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.whalegoods.entity.ReportBase;
 import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.ReportByGoods;
+import com.whalegoods.entity.ReportTotalCountAndAmount;
 import com.whalegoods.mapper.BaseMapper;
 import com.whalegoods.mapper.ReportBaseMapper;
 import com.whalegoods.service.ReportBaseService;
@@ -39,4 +40,9 @@ public  class ReportBaseServiceImpl extends BaseServiceImpl<ReportBase,String> i
 		return reportBaseMapper.selectListGroupByGoods(mapCdt);
 	}
 
+	@Override
+	public ReportTotalCountAndAmount selectTotalSalesCountAndAmount(ReportBase objCdt) {
+		return reportBaseMapper.selectTotalSalesCountAndAmount(objCdt);
+	}
+	
 }

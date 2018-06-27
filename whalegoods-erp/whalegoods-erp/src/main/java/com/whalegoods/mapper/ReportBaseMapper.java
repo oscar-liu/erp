@@ -6,6 +6,7 @@ import java.util.Map;
 import com.whalegoods.entity.ReportBase;
 import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.ReportByGoods;
+import com.whalegoods.entity.ReportTotalCountAndAmount;
 
 
 public interface ReportBaseMapper extends BaseMapper<ReportBase,String> {
@@ -16,5 +17,5 @@ public interface ReportBaseMapper extends BaseMapper<ReportBase,String> {
 	
 	List<ReportByGoods> selectListGroupByGoods(Map<String,Object> mapCdt);
 	
-	ReportBase selectTotalSalesCountAndAmount(ReportBase objCdt);
+	ReportTotalCountAndAmount selectTotalSalesCountAndAmount(ReportBase objCdt);
 }

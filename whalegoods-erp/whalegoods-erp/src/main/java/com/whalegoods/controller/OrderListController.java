@@ -8,6 +8,7 @@ import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.ReportBase;
 import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.ReportByGoods;
+import com.whalegoods.entity.ReportTotalCountAndAmount;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
@@ -25,7 +26,6 @@ import com.whalegoods.util.StringUtil;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -66,9 +66,6 @@ public class OrderListController {
 	  
 	  @Autowired
 	  private ReportBaseService reportBaseService;
-	  
-	  @Autowired
-	  private HttpServletRequest request;
 
 	  /**
 	   * 跳转到订单列表页面
@@ -108,7 +105,10 @@ public class OrderListController {
 	  @GetMapping(value = "showReportByDevice")
 	  @RequiresPermissions("order:report:byDevice:show")
 	  public String showReportByDevice(Model model) {
-		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+		ReportTotalCountAndAmount total=reportBaseService.selectTotalSalesCountAndAmount(new ReportBase());
+		List<Device> listDevice=deviceService.selectListByObjCdt(new Device());
+		model.addAttribute("deviceList",listDevice);
+		model.addAttribute("total",total);
 	    return "/order/report/reportByDeviceList";
 	  }
 	  
@@ -137,7 +137,7 @@ public class OrderListController {
 	  @GetMapping(value = "showReportBaseDetail")
 	  @RequiresPermissions("order:reportDetail:show")
 	  public String showReportBaseDetail(Model model) {
-		ReportBase total=reportBaseService.selectTotalSalesCountAndAmount(new ReportBase());
+		ReportTotalCountAndAmount total=reportBaseService.selectTotalSalesCountAndAmount(new ReportBase());
 		List<Device> listDevice=deviceService.selectListByObjCdt(new Device());
 		List<GoodsSku> listGoods=goodsSkuService.selectListByObjCdt(new GoodsSku());
 		model.addAttribute("deviceList",listDevice);
@@ -159,11 +159,22 @@ public class OrderListController {
 			reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 			reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
 		}
-		ReportBase total=reportBaseService.selectTotalSalesCountAndAmount((reportBase));
-		ReType reType=reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
-		//由于是tabel更新，属于ajax请求，所以无法构建新的request，需要放在session里
-		request.getSession().setAttribute("totalNew", total);
-		return reType;
+		return reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 获取总销量和总销售额
+	   * @author henrysun
+	   * 2018年6月27日 下午2:35:56
+	   */
+	  @GetMapping(value = "getTotalCountAndAmount")
+	  @ResponseBody
+	  public ReportTotalCountAndAmount getTotalCountAndAmount(ReportBase reportBase) {
+		 if(!StringUtil.isEmpty(reportBase.getDayRange())){
+				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
+				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
+		  }
+		  return reportBaseService.selectTotalSalesCountAndAmount(reportBase);
 	  }
 	  
 	  /**
@@ -174,7 +185,10 @@ public class OrderListController {
 	  @GetMapping(value = "showReportByGoods")
 	  @RequiresPermissions("order:report:byGoods:show")
 	  public String showReportByGoods(Model model) {
-		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+		ReportTotalCountAndAmount total=reportBaseService.selectTotalSalesCountAndAmount(new ReportBase());
+		List<GoodsSku> listGoods=goodsSkuService.selectListByObjCdt(new GoodsSku());
+		model.addAttribute("goodsList",listGoods);
+		model.addAttribute("total",total);
 	    return "/order/report/reportByGoodsList";
 	  }
 	  

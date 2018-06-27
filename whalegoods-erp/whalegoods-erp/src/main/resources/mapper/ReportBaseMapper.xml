@@ -20,7 +20,7 @@
     <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
   </resultMap>
   
-        <resultMap id="BaseResultMap3" type="com.whalegoods.entity.ReportByGoods">
+   <resultMap id="BaseResultMap3" type="com.whalegoods.entity.ReportByGoods">
     <result column="id" jdbcType="VARCHAR" property="id" />
     <result column="order_day" jdbcType="DATE" property="orderDay" />
     <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
@@ -28,7 +28,12 @@
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
   </resultMap>
   
-     <sql id="Base_Column_List">
+   <resultMap id="BaseResultMap4" type="com.whalegoods.entity.ReportTotalCountAndAmount">
+    <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
+   </resultMap>
+  
+  <sql id="Base_Column_List">
   a.id,
   b.short_name,
   c.goods_name,
@@ -107,7 +112,7 @@ FROM report_base a
  </insert>
  
    <!-- 根据条件查询总销量和总销售额 -->
-    <select id="selectTotalSalesCountAndAmount"  parameterType="com.whalegoods.entity.ReportBase" resultMap="BaseResultMap2">
+    <select id="selectTotalSalesCountAndAmount"  parameterType="com.whalegoods.entity.ReportBase" resultMap="BaseResultMap4">
 SELECT 
   SUM(a.sales_count) sales_count,
   SUM(a.sales_amount) sales_amount 

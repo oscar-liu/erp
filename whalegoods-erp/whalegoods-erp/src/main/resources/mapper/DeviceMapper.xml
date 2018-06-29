@@ -44,7 +44,7 @@
     <select id="selectOosDevice" resultType="java.lang.String">
     SELECT a.short_name FROM device a 
     INNER JOIN device_road b ON a.id = b.device_id 
-    WHERE b.stock &lt;= b.warning_num
+    WHERE b.stock &lt;= b.warning_num AND a.device_status=1
     GROUP BY a.id 
   </select>
   

@@ -118,7 +118,7 @@
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
-      height: 'full-100'
+      height: 'full-46'
     });
 
     var $ = layui.$, active = {

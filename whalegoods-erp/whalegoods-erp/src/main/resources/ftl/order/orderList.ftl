@@ -97,7 +97,7 @@
         {field: 'orderType',minWidth:0,width:0,type:'space',style:'display:none'}
       ]],
       page: true,
-      height: 'full-83'
+      height: 'full-46'
     });
 
     var $ = layui.$, active = {

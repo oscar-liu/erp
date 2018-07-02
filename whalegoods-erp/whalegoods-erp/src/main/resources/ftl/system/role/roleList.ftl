@@ -54,7 +54,7 @@
         , {field: 'right', title: '操作',toolbar: "#toolBar",align:'center'}
       ]]
       , page: true
-      ,  height: 'full-83'
+      ,  height: 'full-46'
     });
 
     var $ = layui.$, active = {

@@ -35,7 +35,7 @@
         {field: 'pathNum', title: '最大货道数', align:'center',sort: true}
       ]],
       page: true,
-      height: 'full-83'
+      height: 'full-50'
     });
 
     var $ = layui.$, active = {

@@ -15,8 +15,9 @@
 <body>
 <div class="erp-search">
   <div class="select">
-           商品编号： <div class="layui-inline"><input class="layui-input" height="20px" id="goodsCode" autocomplete="off"></div>
-    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>模糊查询</button>
+           商品名称： <div class="layui-inline"><input class="layui-input" height="20px" id="iptGoodsName" autocomplete="off"></div>
+           商品编号： <div class="layui-inline"><input class="layui-input" height="20px" id="iptGoodsCode" autocomplete="off"></div>
+    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
     <@shiro.hasPermission name="goods:sku:add"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="goods:sku:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
@@ -52,43 +53,39 @@
       url: 'showGoodsSkuList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'goodsCode',title: '商品编号',align:'center'}, 
-        {field: 'goodsName', title: '中文品名', align:'center'},
-        {field: 'picUrl', title: '图片', align:'center',templet: '#tplPicUrl'},
-        {field: 'goodsNameEn',title: '英文品名',align:'center'},
-        {field: 'spec', title: '规格', align:'center'},
-        {field: 'boxNum', title: '箱包装数', align:'center',sort: true},
-        {field: 'oneCost', title: '单个成本价', align:'center',sort: true},
-        {field: 'boxCost', title: '单箱成本价', align:'center',sort: true},
-        {field: 'marketPrice', title: '建议零售价', align:'center',sort: true},
-        {field: 'profit', title: '利润率', align:'center',sort: true},
-/*         {field: 'suppName', title: '供应商', align:'center'},
-        {field: 'className', title: '所属分类', align:'center'}, */
-        {field: 'productDate', title: '生产日期', align:'center'},
-        {field: 'shelfLife', title: '保质期', align:'center'},
-        {field: 'madeIn', title: '产地', align:'center'},
+        {field: 'goodsCode',title: '商品编号',align:'center',width:165}, 
+        {field: 'goodsName', title: '中文品名', align:'center',width:200},
+        {field: 'picUrl', title: '图片', align:'center',templet: '#tplPicUrl',width:60},
+        {field: 'goodsNameEn',title: '英文品名',align:'center',width:160},
+        {field: 'spec', title: '规格', align:'center',width:84},
+        {field: 'shelfLife', title: '保质期（月）', align:'center',width:115},
+        {field: 'madeIn', title: '产地', align:'center',width:90},
         {field: 'goodsDetail', title: '中文介绍', align:'center'},
         {field: 'goodsDetailEn', title: '英文介绍', align:'center'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
-      height: 'full-83'
+      height: 'full-46'
     });
 
     var $ = layui.$, active = {
       select: function () {
-        var goodsCode = $('#goodsCode').val();
+        var goodsCode = $('#iptGoodsCode').val();
+        var goodsName = $('#iptGoodsName').val();
         table.reload('skuList', {
           where: {
         	  goodsCode: goodsCode,
+        	  goodsName: goodsName,
           }
         });
       },
       reload:function(){
-        $('#goodsCode').val('');
+        $('#iptGoodsCode').val('');
+        $('#iptGoodsName').val('');
         table.reload('skuList', {
           where: {
         	  goodsCode: null,
+        	  goodsName: null
           }
         });
       },

@@ -43,9 +43,13 @@
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
-    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button><span>&nbsp;&nbsp;&nbsp;总销量：<span style="color:red;" id="spnSalesCount">${total.salesCount?c}</span>&nbsp;&nbsp;总销售额：<span style="color:red;"  id="spnSalesAmount">${total.salesAmount?c}</span></span>
+    <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <@shiro.hasPermission name="order:reportDetail:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出EXCEL</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
    </div>
+</div>
+<div class="layui-col-md12" style="height:26px;margin-top:2px;vertical-align:middle;text-align:center">
+<span style="font-size:16px">总销量：<span style="color:red;" id="spnSalesCount">${total.salesCount?c}</span>&nbsp;&nbsp;总销售额：<span style="color:red;"  id="spnSalesAmount">${total.salesAmount?c}</span></span>
 </div>
 <table id="reportBaseDetailList" class="layui-hide" lay-filter="reportBaseDetail"></table>
 <script>
@@ -108,7 +112,7 @@
             });
       },
       page: true,
-      height: 'full-46'
+      height: 'full-69'
     });
 
     var active = {
@@ -138,7 +142,17 @@
         $("#sltDeviceList").val('');
         $("#select2-sltGoodsCode-container").text($("#sltGoodsCode").find("option[value = '']").text());
         $("#sltGoodsCode").val('');
-      }
+      },
+      excel: function () {
+      	var deviceId = $('#sltDeviceList').val();
+    	var goodsCode = $('#sltGoodsCode').val();
+    	var dayRange = $('#iptDayRange').val();
+          if(dayRange==null||dayRange==''){
+              layer.msg('请选择一个日期范围', {icon: 5,time:1000});
+              return false;
+          }
+      	window.location.href="reportDetailExcel?deviceId="+deviceId+"&goodsCode="+goodsCode+"&dayRange="+dayRange;
+        }
     };
 
     $('.select .layui-btn').on('click', function () {

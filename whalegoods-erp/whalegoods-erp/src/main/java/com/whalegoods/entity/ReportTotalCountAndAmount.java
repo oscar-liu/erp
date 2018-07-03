@@ -2,6 +2,7 @@ package com.whalegoods.entity;
 
 import java.io.Serializable;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,8 +19,10 @@ public class ReportTotalCountAndAmount  extends BaseEntity implements Serializab
 
 	private static final long serialVersionUID = 1L;
 
+	@Excel(name = "销量",orderNum = "4")
 	private Integer salesCount;
 	
+	@Excel(name = "销售额",orderNum = "5")
     private Double salesAmount;
 
 }

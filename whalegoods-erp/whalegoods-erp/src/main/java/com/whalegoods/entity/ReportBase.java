@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,11 +25,14 @@ public class ReportBase extends ReportTotalCountAndAmount {
     
     private String goodsCode;
     
+    @Excel(name = "订单日期",orderNum = "1", exportFormat = "yyyy-MM-dd")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date orderDay;
     
+    @Excel(name = "商品名称",orderNum = "3")
     private String goodsName;
     
+    @Excel(name = "点位",orderNum = "2")
     private String shortName;
     
     private String dayRange;

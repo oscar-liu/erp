@@ -85,24 +85,24 @@
       url: 'showRoadList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'shortName', title: '点位短名', align:'center'},
-        {field: 'ctn', title: '柜号', align:'center'},
-        {field: 'floor', title: '层级', align:'center'},
-        {field: 'pathCode', title: '货道号', align:'center'},        
-        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;'},
-        {field: 'salePrice', title: '售价', align:'center'},
-        {field: 'goodsCode',title: '商品编号',align:'center'},
-        {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel'},
-        {field: 'stock', title: '库存', align:'center',sort: true},        
-        {field: 'deviceIdJp',title: '设备编号(鲸品)',align:'center'}, 
-        {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center'},
-        {field: 'capacity', title: '最大容量', align:'center',sort: true},
-        {field: 'warningNum', title: '报警临界值', align:'center',sort: true},
+        {field: 'shortName', title: '点位短名', align:'center',width:120},
+        {field: 'ctn', title: '柜号', align:'center',width:60},
+        {field: 'floor', title: '层级', align:'center',width:60},
+        {field: 'pathCode', title: '货道号', align:'center',width:76},        
+        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;',width:165},
+        {field: 'salePrice', title: '售价', align:'center',width:60},
+        {field: 'goodsCode',title: '商品编号',align:'center',width:165},
+        {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel',width:110},
+        {field: 'stock', title: '库存', align:'center',sort: true,width:80},        
+        {field: 'deviceIdJp',title: '设备编号(鲸品)',align:'center',width:125}, 
+        {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center',width:140},
+        {field: 'capacity', title: '最大容量', align:'center',sort: true,width:100},
+        {field: 'warningNum', title: '报警临界值', align:'center',sort: true,width:110},
         {field: 'deviceId',minWidth:0,width:0,type:'space',style:'display:none'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
-      height: 'full-83'
+      height: 'full-46'
     });
 
     var $ = layui.$, active = {

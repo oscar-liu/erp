@@ -123,10 +123,12 @@ public class V1DeviceController {
    */
   @PostMapping(value="/uploadExLog")
   public ResBody uploadExLog(@Valid ReqUploadLog model,HttpServletRequest request,HttpSession session) throws SystemException {
+	  logger.info("收到uploadExLog请求：{}",model.toString());
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	  String childFolder="ex_log";
 	  String newFileName=childFolder+"_"+model.getOrder();
-	  fileUtil.uploadFile(request,childFolder,newFileName);
+	  String fileUrl=fileUtil.uploadFile(request,childFolder,newFileName);
+	  logger.info("返回结果：{}",resBody.toString());
 	  return resBody;
 	}
   

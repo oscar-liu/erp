@@ -61,7 +61,7 @@
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
-      height: 'full-83'
+      height: 'full-46'
     });
     
     form.on('switch(radioApkStatus)', function(obj){

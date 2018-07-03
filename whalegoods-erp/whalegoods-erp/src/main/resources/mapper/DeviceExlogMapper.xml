@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.DeviceExlogMapper">
+
+ <resultMap id="BaseResultMap" type="com.whalegoods.entity.DeviceModel">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="model_name" jdbcType="VARCHAR" property="modelName" /> 	
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+    a.id,
+    a.model_name,
+    a.create_by,
+    a.create_date,
+    a.update_by,
+    a.update_date,
+    a.remark
+  </sql>
+
+  <insert id="insert" parameterType="com.whalegoods.entity.DeviceModel">
+    INSERT INTO device_model (
+    id,
+    model_name, 
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{modelName}, 
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+  
+  <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceModel" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM device_model a
+  </select>
+  
+</mapper>

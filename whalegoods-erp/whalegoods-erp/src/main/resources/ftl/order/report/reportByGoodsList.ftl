@@ -94,7 +94,7 @@
             });
       },
       page: true,
-      height: 'full-83'
+      height: 'full-46'
     });
 
     var active = {

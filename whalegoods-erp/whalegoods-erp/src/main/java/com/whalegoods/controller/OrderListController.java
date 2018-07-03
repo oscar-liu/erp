@@ -3,6 +3,7 @@ package com.whalegoods.controller;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.ReportBase;
@@ -161,6 +162,20 @@ public class OrderListController {
 		}
 		return reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
+	  
+	  /**
+	   * 导出销售统计>明细 列表
+	   * @author henrysun
+	   * 2018年7月3日 下午1:09:24
+	   */
+	  @GetMapping(value="/reportDetailExcel")
+	  void reportDetailExcel(ReportBase reportBase,HttpServletResponse response) throws SystemException  {
+		if(!StringUtil.isEmpty(reportBase.getDayRange())){
+				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
+				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
+			}
+		  FileUtil.exportExcel(reportBaseService.selectListByObjCdt(reportBase),"明细列表","明细列表",ReportBase.class,"明细列表.xls",response);
+		}
 	  
 	  /**
 	   * 获取总销量和总销售额

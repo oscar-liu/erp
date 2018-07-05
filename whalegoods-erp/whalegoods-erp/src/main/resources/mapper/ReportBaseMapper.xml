@@ -16,8 +16,11 @@
     <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
     <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="device_id_jp" jdbcType="VARCHAR" property="deviceCodeWg" />
+    <result column="device_id_supp" jdbcType="VARCHAR" property="deviceCodeSup" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
     <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
   </resultMap>
   
    <resultMap id="BaseResultMap3" type="com.whalegoods.entity.ReportByGoods">
@@ -35,8 +38,11 @@
   
   <sql id="Base_Column_List">
   a.id,
+  b.device_id_jp,
+  b.device_id_supp,
   b.short_name,
   c.goods_name,
+  c.goods_code,
   a.order_day,
   a.sales_count,
   a.sales_amount 

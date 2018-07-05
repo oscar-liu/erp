@@ -60,8 +60,8 @@
         {field: 'spec', title: '规格', align:'center',width:84},
         {field: 'shelfLife', title: '保质期（月）', align:'center',width:115},
         {field: 'madeIn', title: '产地', align:'center',width:90},
-        {field: 'goodsDetail', title: '中文介绍', align:'center'},
-        {field: 'goodsDetailEn', title: '英文介绍', align:'center'},
+        {field: 'goodsDetail', title: '中文介绍', align:'center',width:120},
+        {field: 'goodsDetailEn', title: '英文介绍', align:'center',width:120},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,

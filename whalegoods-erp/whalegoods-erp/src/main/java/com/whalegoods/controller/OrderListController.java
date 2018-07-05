@@ -3,7 +3,6 @@ package com.whalegoods.controller;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
-import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.ReportBase;

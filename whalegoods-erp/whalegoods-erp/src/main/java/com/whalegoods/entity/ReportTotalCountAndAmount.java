@@ -19,10 +19,10 @@ public class ReportTotalCountAndAmount  extends BaseEntity implements Serializab
 
 	private static final long serialVersionUID = 1L;
 
-	@Excel(name = "销量",orderNum = "4")
+	@Excel(name = "销量",orderNum = "7")
 	private Integer salesCount;
 	
-	@Excel(name = "销售额",orderNum = "5")
+	@Excel(name = "销售额",orderNum = "8")
     private Double salesAmount;
 
 }

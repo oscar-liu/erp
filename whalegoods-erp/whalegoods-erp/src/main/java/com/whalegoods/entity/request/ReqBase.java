@@ -13,8 +13,8 @@ import lombok.ToString;
 
 /**
  * API请求映射实体类 基类
- * @author chencong
- * 2018年4月9日 下午5:15:12
+ * @author henrysun
+ * 2018年4月9日 上午10:28:32
  */
 @Getter
 @Setter

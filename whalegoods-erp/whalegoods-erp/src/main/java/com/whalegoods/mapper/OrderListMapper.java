@@ -18,4 +18,6 @@ public interface OrderListMapper extends BaseMapper<OrderList,String> {
 	String selectDeviceByOrderId(Map<String,Object> mapCdt);
 	
 	List<ReportBase> selectReportBaseList(Map<String,Object> mapCdt);
+	
+	int updateBatch(List<OrderList> orderLists);
 }

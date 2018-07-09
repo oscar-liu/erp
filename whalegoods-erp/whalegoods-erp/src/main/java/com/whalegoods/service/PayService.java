@@ -1,6 +1,6 @@
 package com.whalegoods.service;
 
-
+import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.request.ReqRefund;
@@ -40,4 +40,12 @@ public interface PayService {
 	 * 2018年6月9日 下午3:28:06
 	 */
 	void refundNotify(ReqRefund model);
+	
+	/**
+	 * 关闭订单
+	 * @author henrysun
+	 * 2018年7月9日 上午10:30:17
+	 * @throws SystemException 
+	 */
+	ResBody closeOrder(ErpOrderList model) throws SystemException;
 }

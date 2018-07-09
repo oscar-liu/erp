@@ -33,4 +33,6 @@ public interface OrderListService extends BaseService<OrderList,String>{
 	 * 2018年6月21日 上午11:46:03
 	 */
 	List<ReportBase> selectReportBaseList(Map<String,Object> mapCdt);
+	
+	int updateBatch(List<OrderList> orderLists);
 }

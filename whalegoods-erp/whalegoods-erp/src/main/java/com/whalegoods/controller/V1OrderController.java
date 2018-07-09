@@ -94,7 +94,7 @@ public class V1OrderController {
    */
   @PostMapping(value="/refund")
   ResBody refund(@RequestBody @Valid ReqRefund model) throws SystemException  {
-	  logger.info("收到refund请求："+model.toString());
+	  logger.info("收到refund请求：{}",model.toString());
 	  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	  //异步执行
 	  payService.refund(model);
@@ -112,4 +112,5 @@ public class V1OrderController {
   ResBody erpRefund(@RequestBody @Valid ReqRefund model) throws SystemException  {
 	  return payService.refund(model);
 	}
+  
 }

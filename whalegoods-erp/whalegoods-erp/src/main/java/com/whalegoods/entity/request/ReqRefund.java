@@ -11,8 +11,8 @@ import lombok.ToString;
 
 /**
  * 退款API 请求映射实体类 
- * @author chencong
- *
+ * @author henrysun
+ * 2018年5月9日 上午10:27:42
  */
 @Getter
 @Setter

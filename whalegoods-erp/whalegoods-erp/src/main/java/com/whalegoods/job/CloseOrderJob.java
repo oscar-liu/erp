@@ -2,12 +2,14 @@ package com.whalegoods.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.fastjson.JSON;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstOrderStatus;
 import com.whalegoods.constant.ConstSysParamName;
@@ -59,6 +61,7 @@ public class CloseOrderJob implements BaseJob{
 			List<OrderList> listOrder2=new ArrayList<>();
 			for (ErpOrderList erpOrderList : listOrder) {
 				try {
+					erpOrderList.setPrefix(objCdt.getPrefix());
 					OrderList orderList=new OrderList();
 					orderList.setOrderId(erpOrderList.getOrderId());
 					ResBody resBody=payService.closeOrder(erpOrderList);
@@ -68,8 +71,15 @@ public class CloseOrderJob implements BaseJob{
 					else{
 						ReqRefund refund=new ReqRefund();
 						refund.setOrder(erpOrderList.getOrderId());
-						if(payService.refund(refund).getResultCode()==ConstApiResCode.SUCCESS){
-							orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);	
+						try {
+							int orderStatus=Integer.parseInt((String) JSON.parseObject(payService.getOrderStatus(erpOrderList.getOrderId()).getData().toString(),Map.class).get("order_status"));
+							if(orderStatus==2){
+								if(payService.refund(refund).getResultCode()==ConstApiResCode.SUCCESS){
+									orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);	
+								}
+							}
+						} catch (Exception e) {
+							continue;
 						}
 					}
 					orderList.setPrefix(objCdt.getPrefix().toString());

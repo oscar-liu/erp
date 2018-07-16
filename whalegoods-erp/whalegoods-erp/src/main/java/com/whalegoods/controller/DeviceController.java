@@ -109,6 +109,21 @@ public class DeviceController {
 		model.addAttribute("modelList",modelService.selectListByObjCdt(new DeviceModel()));
 	    return "/device/update-device";
 	  }
+	  
+	  /**
+	   * 跳转到更新设备管理密码界面
+	   * @author henrysun
+	   * 2018年7月16日 下午4:18:49
+	   */
+	  @GetMapping(value = "showUpdateDevicePwd")
+	  public String showUpdateDevicePwd(String id, Model model){
+		Device device=deviceService.selectById(id);
+		if(device==null){
+			throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+		}
+		model.addAttribute("device", device);
+	    return "/device/update-pwd";
+	  }
 
 
 	  /**
@@ -120,6 +135,24 @@ public class DeviceController {
 	  @ResponseBody
 	  public ResBody updateDevice(@RequestBody Device device) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  deviceService.updateByObjCdt(device);
+		  return resBody;
+	  }
+	  
+	  /**
+	   * 更新设备管理密码
+	   * @author henrysun
+	   * 2018年7月16日 下午4:26:43
+	 * @throws SystemException 
+	   */
+	  @PostMapping(value = "updateDevicePwd")
+	  @ResponseBody
+	  public ResBody updateDevicePwd(@RequestBody Device device) throws SystemException {
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	      if(device.getDevicePwd().length()!=8){
+	    		throw new BizApiException(ConstApiResCode.DEVICE_PWD_ILLEGAL);
+	      }
+	      device.setDevicePwd(Md5Util.getMd532(device.getDevicePwd()).toUpperCase());
 		  deviceService.updateByObjCdt(device);
 		  return resBody;
 	  }

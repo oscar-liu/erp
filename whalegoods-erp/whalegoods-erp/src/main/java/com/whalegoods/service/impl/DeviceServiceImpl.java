@@ -37,4 +37,9 @@ public class DeviceServiceImpl extends BaseServiceImpl<Device,String>  implement
 		return deviceMapper.selectOosDevice();
 	}
 
+	@Override
+	public String getDevicePwd(Device objCdt) {
+		return deviceMapper.selectByObjCdt(objCdt).getDevicePwd();
+	}
+
 }

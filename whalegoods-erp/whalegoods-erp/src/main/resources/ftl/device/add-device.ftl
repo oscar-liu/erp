@@ -55,8 +55,8 @@
       <div class="layui-input-inline"><input type="text"  id="signCode" name="signCode"  lay-verify="required" autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-form-item">
-      <label for="signCode" class="layui-form-label"><span class="x-red">*</span>设备密码</label>
-      <div class="layui-input-inline"><input type="text"  id="devicePwd" name="devicePwd"  lay-verify="required|eightlength" autocomplete="off" class="layui-input"></div>
+      <label for="devicePwd" class="layui-form-label"><span class="x-red">*</span>管理密码</label>
+      <div class="layui-input-inline"><input type="password"  id="devicePwd" name="devicePwd"  lay-verify="required|eightlength" autocomplete="off" class="layui-input"></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -83,7 +83,7 @@ $(function(){
    //自定义验证规则
    form.verify({
 	  eightlength: function(value){
-       if((value.length!=8){
+       if(value.length!=8){
          return "密码必须是八位数";
        }
    }});

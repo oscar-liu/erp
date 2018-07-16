@@ -12,4 +12,6 @@ public interface DeviceService extends BaseService<Device,String> {
 	int updateBatch(List<Device> listDevice);
 	
 	List<String> selectOosDevice();
+	
+	String getDevicePwd(Device objCdt);
 }

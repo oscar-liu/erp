@@ -17,7 +17,6 @@
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
-    <result column="adsMiddleType" jdbcType="TINYINT" property="adsMiddleType" />
     <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="start_hms" jdbcType="VARCHAR" property="startHms" />
@@ -111,7 +110,8 @@
     a.sale_price,
     a.capacity,
     a.stock,
-    b.goods_name
+    b.goods_name,
+    b.goods_code
   </sql>
   
       <select id="selectById" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">

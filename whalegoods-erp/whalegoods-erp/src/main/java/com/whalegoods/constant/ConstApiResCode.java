@@ -49,6 +49,7 @@ public abstract class ConstApiResCode {
     public final static Integer STANDARD_NOT_EXIST= 8005;
     public final static Integer ROADLIST_EMPTY= 8006;
     public final static Integer SALE_PRICE_MUST_SAME= 8007;
+    public final static Integer DEVICE_PWD_ILLEGAL= 8008;
     
     /**
      * 订单相关 9开头

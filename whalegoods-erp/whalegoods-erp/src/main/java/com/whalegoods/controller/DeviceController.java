@@ -5,8 +5,11 @@ import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceModel;
 import com.whalegoods.entity.response.ResBody;
+import com.whalegoods.exception.BizApiException;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceModelService;
 import com.whalegoods.service.DeviceService;
+import com.whalegoods.util.Md5Util;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -75,16 +78,21 @@ public class DeviceController {
 	   * 添加设备接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:30:25
+	 * @throws SystemException 
 	   */
 	  @PostMapping(value = "addDevice")
 	  @ResponseBody
-	  public ResBody addDevice(Device device) {
+	  public ResBody addDevice(Device device) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		device.setId(StringUtil.getUUID());
 		device.setDeviceIdJp(ConstSysParamName.DEVICE_PREFIX+StringUtil.getNumberRadom());
     	String currentUserId=ShiroUtil.getCurrentUserId();
     	device.setCreateBy(currentUserId);
     	device.setUpdateBy(currentUserId);
+    	if(device.getDevicePwd().length()!=8){
+    		throw new BizApiException(ConstApiResCode.DEVICE_PWD_ILLEGAL);
+    	}
+    	device.setDevicePwd(Md5Util.getMd532(device.getDevicePwd()).toUpperCase());
 		deviceService.insert(device);
 	    return resBody;
 	  }

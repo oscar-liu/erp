@@ -62,7 +62,7 @@ public class Md5Util {
 		 * @author henrysun
 		 * 2018年5月4日 下午1:09:57
 		 */
-	  private static String getMd532(String values) throws SystemException {
+	  public static String getMd532(String values) throws SystemException {
 			StringBuffer buf = new StringBuffer("");
 			try {
 				MessageDigest md = MessageDigest.getInstance("MD5");

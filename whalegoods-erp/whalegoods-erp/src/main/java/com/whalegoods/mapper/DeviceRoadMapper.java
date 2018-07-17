@@ -23,4 +23,6 @@ public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
     
     int updateSalePrice(Map<String,Object> mapCdt);
     
+    double selectMaxPriceByGoodsCode(Map<String,Object> mapCdt);
+    
 }

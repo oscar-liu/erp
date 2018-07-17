@@ -381,6 +381,16 @@
     </where>
   </select>
   
+  	<select id="selectMaxPriceByGoodsCode" parameterType="java.util.Map" resultType="java.lang.Double">
+   SELECT MAX(a.sale_price) FROM device_road a 
+   INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+   <where>
+     <if test="goodsCode !=null and goodsCode !=''"> 
+     AND b.goods_code=#{goodsCode}
+     </if>
+    </where>
+  </select>
+  
      <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM device_road  WHERE id = #{_parameter}
   </delete>

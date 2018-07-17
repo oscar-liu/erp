@@ -27,5 +27,7 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
   List<DeviceRoad> selectListByDeviceIdForExcel(String deviceId);
   
 	int updateSalePrice(Map<String,Object> mapCdt);
+	
+  double selectMaxPriceByGoodsCode(Map<String,Object> mapCdt);
  
 }

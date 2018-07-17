@@ -2,6 +2,7 @@ package com.whalegoods.controller;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,24 +11,29 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqBase;
+import com.whalegoods.entity.request.ReqChangePath;
 import com.whalegoods.entity.request.ReqUpDeviceStatus;
 import com.whalegoods.entity.request.ReqUploadLog;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.ApkVersionService;
+import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
+import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.util.CommonValidateUtil;
 import com.whalegoods.util.FileUtil;
 
@@ -42,12 +48,17 @@ public class V1DeviceController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	  @Autowired
+	  DeviceRoadService deviceRoadService;
 	
 	  @Autowired
 	  DeviceService deviceService;
 	  
 	  @Autowired
 	  ApkVersionService apkVersionService;
+	  
+	  @Autowired
+	  GoodsSkuService goodsSkuService;
 	  
 	  @Autowired
 	  FileUtil fileUtil;
@@ -147,6 +158,38 @@ public class V1DeviceController {
 		  String childFolder="ex_log";
 		  String newFileName=childFolder+"_"+model.getOrder();
 		  String fileUrl=fileUtil.uploadFile(request,childFolder,newFileName);
+		  logger.info("返回结果：{}",resBody.toString());
+		  return resBody;
+		}
+	  
+	  /**
+	   * 更换货道商品接口
+	   * @author henrysun
+	   * 2018年7月17日 下午2:24:08
+	   */
+	  @PostMapping(value="/changePath")
+	  ResBody changePath(@RequestBody ReqChangePath model) throws SystemException {
+		  logger.info("收到changePath请求：{}",model.toString());
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  CommonValidateUtil.validateDeviceExist(model.getDevice_code_wg(),model.getDevice_code_sup());
+		  GoodsSku objCdt=new GoodsSku();
+		  objCdt.setGoodsCode(model.getGoodsCode());
+		  List<GoodsSku> lstGoodsSku=goodsSkuService.selectListByObjCdt(objCdt);
+		  if(lstGoodsSku.size()==0){
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+		  }
+		  if(lstGoodsSku.size()>1){
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_ONLY_ONE);
+		  }
+		  DeviceRoad objCdt2=new DeviceRoad();
+		  BeanUtils.copyProperties(model,objCdt2);
+		  objCdt2.setGoodsSkuId(lstGoodsSku.get(0).getId());
+		  objCdt2.setDeviceIdJp(model.getDevice_code_wg());
+		  objCdt2.setDeviceIdSupp(model.getDevice_code_sup());
+		  Map<String,Object> mapCdt=new HashMap<>();
+		  mapCdt.put("goodsCode",model.getGoodsCode());
+		  objCdt2.setSalePrice(deviceRoadService.selectMaxPriceByGoodsCode(mapCdt));
+		  deviceRoadService.updateByObjCdt(objCdt2);
 		  logger.info("返回结果：{}",resBody.toString());
 		  return resBody;
 		}

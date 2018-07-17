@@ -147,7 +147,7 @@
             layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
             return false;
           }
-          pwd('设置管理密码', 'showUpdateDevicePwd?id=' + data[0].id,300,300);
+          pwd('设置管理密码', 'showUpdateDevicePwd?id=' + data[0].id,300,180);
         },
       map: function () {
           var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;

@@ -38,6 +38,7 @@ public abstract class ConstApiResCode {
     public final static Integer STOCK_NOT_ENOUGH= 7004;
     public final static Integer GOODS_CODE_EXIST= 7005;
     public final static Integer GOODS_CODE_NOT_EXIST= 7006;
+    public final static Integer GOODS_CODE_NOT_ONLY_ONE= 7007;
     
     /**
      * 设备和货道相关 8开头
@@ -94,6 +95,7 @@ public abstract class ConstApiResCode {
 		resMap.put(STOCK_NOT_ENOUGH,"该商品所在货道库存不足");
 		resMap.put(GOODS_CODE_EXIST,"商品编号已存在");
 		resMap.put(GOODS_CODE_NOT_EXIST,"商品编号不存在");
+		resMap.put(GOODS_CODE_NOT_ONLY_ONE,"根据该商品编号查找到多条记录");
 		
 		resMap.put(PATH_NOT_EXIST,"货道不存在或未上架商品");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");

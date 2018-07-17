@@ -23,9 +23,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
+import com.alipay.api.response.AlipayTradeCloseResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
@@ -34,6 +36,7 @@ import com.whalegoods.constant.ConstOrderStatus;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.constant.ConstSysParamValue;
 import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.OrderList;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
@@ -322,6 +325,53 @@ public class PayServiceImpl implements PayService{
 		SmsUtil.sendSms(jobName,templateId,content);
 	}
 	
+
+	@Override
+	public ResBody closeOrder(ErpOrderList model) throws SystemException {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		//根据订单号查找预支付记录
+		Map<String,Object> mapCdt=new HashMap<>();
+		mapCdt.put("order",model.getOrderId());
+		mapCdt.put("prefix",model.getPrefix());
+		OrderList orderList=orderListService.selectByMapCdt(mapCdt);
+		if(orderList==null){
+			logger.error("预支付订单不存在，查询数据：{}",mapCdt.toString());
+			throw new BizServiceException(ConstApiResCode.ORDER_PREPAY_NOT_EXIST);
+		}
+		//微信
+		if(orderList.getPayType()==1){
+			Map<String, String> mapRst=this.wxCloseOrder(orderList.getOrderId());
+			if(mapRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX)){
+				if(mapRst.get("result_code").equals(ConstSysParamName.SUCCESS_WX)){
+					return resBody;
+				}
+				else{
+					//如果订单已支付
+					if(mapRst.get("err_code").equals("ORDERPAID")){
+						resBody.setResultCode(ConstApiResCode.ORDER_PAID);
+						return resBody;
+					}
+				}
+			}
+			else{
+				logger.error("微信关闭订单API通信失败：{}",mapRst.get("return_msg"));
+				resBody.setResultCode(ConstApiResCode.SYSTEM_ERROR);
+				return resBody;
+			}
+		}
+		//支付宝
+		else if(orderList.getPayType()==2){
+			if(this.alipayCloseOrder(orderList.getOrderId())){
+				return resBody;
+			}
+			else{
+				resBody.setResultCode(ConstApiResCode.SYSTEM_ERROR);
+				return resBody;
+			}
+		}
+		return null;
+	}
+	
 	private OrderList wxOrderQueryDoor(OrderList orderList) throws SystemException{
 		Map<String,String>	mapQrRst=this.wxOrderQuery(orderList.getOrderId());
 		if(mapQrRst.get("return_code").equals(ConstSysParamName.SUCCESS_WX))
@@ -339,7 +389,7 @@ public class PayServiceImpl implements PayService{
 						orderList.setOrderStatus(ConstOrderStatus.NOT_PAY);
 					}
 					else if (mapQrRst.get("trade_state").equals(ConstSysParamName.WX_REFUND)) {
-						orderList.setOrderStatus(ConstOrderStatus.REFUND);
+						orderList.setOrderStatus(ConstOrderStatus.CLOSED);
 					}
 					else {
 						orderList.setOrderStatus(ConstOrderStatus.PAY_FAILED);
@@ -361,7 +411,7 @@ public class PayServiceImpl implements PayService{
 	
 	/**
 	 * 调用微信查询订单API
-	 * @author chencong
+	 * @author henrysun
 	 * 2018年4月11日 下午3:29:30
 	 * @throws SystemException 
 	 */
@@ -466,6 +516,29 @@ public class PayServiceImpl implements PayService{
 	}
 	
 	/**
+	 * 调用微信关闭订单API
+	 * @author henrysun
+	 * 2018年7月9日 下午3:34:22
+	 */
+	private  Map<String,String> wxCloseOrder(String orderId) throws  SystemException {
+		//定义请求数据集合
+		Map<String,Object> map=new HashMap<>();
+		map.put("appid",ConstSysParamValue.WX_APPID);
+		map.put("mch_id",ConstSysParamValue.WX_MCHID);
+		map.put("out_trade_no",orderId);
+		map.put("nonce_str",StringUtil.randomString(32));
+		//生成签名值
+		JSONObject json=JSONObject.parseObject(JSON.toJSONString(map));
+		String sign=Md5Util.getSign(json,ConstSysParamValue.WX_KEY);
+		map.put("sign",sign);
+		String xmlData=XmlUtil.mapToXml(map);
+		logger.info("wxCloseOrder请求数据：{}",xmlData);
+		String xmlResult=HttpUtils.sendPost(ConstSysParamValue.WX_CLOSE_ORDER_URL,xmlData,null);
+		logger.info("结果：{}",xmlResult);
+		return XmlUtil.xmlToMap(xmlResult);
+	}
+	
+	/**
 	 * 调用支付宝预支付API
 	 * @author chencong
 	 * 2018年4月11日 下午3:29:30
@@ -501,6 +574,39 @@ public class PayServiceImpl implements PayService{
 			logger.error("调用支付宝预支付API失败："+response.getMsg());
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
+	}
+	
+	/**
+	 * 调用支付宝关闭订单API
+	 * @author henrysun
+	 * 2018年7月9日 下午3:52:25
+	 */
+	private boolean alipayCloseOrder(String orderId) throws SystemException {
+		//实例化客户端
+		AlipayClient alipayClient = new DefaultAlipayClient(
+				ConstSysParamValue.ALIPAY_URL,
+				ConstSysParamValue.ALIPAY_APPID,
+				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","GBK", 
+				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
+		AlipayTradeCloseRequest   request = new AlipayTradeCloseRequest();
+		JSONObject sonJson=new JSONObject();
+		sonJson.put("out_trade_no",orderId);
+		request.setBizContent(sonJson.toJSONString());
+		AlipayTradeCloseResponse   response;
+		try {
+			response = alipayClient.execute(request);
+		} catch (AlipayApiException e) {
+			logger.error("发送支付宝关闭订单API请求失败："+e.getMessage());
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		} 
+		//调用成功
+		if(response.getCode().equals(ConstSysParamName.SUCCESS_ALIPAY)){
+			return true;
+		}
+		else if(response.getSubCode().equals("ACQ.TRADE_STATUS_ERROR")){
+			return false;
+		}
+		return false;
 	}
 	
 	/**

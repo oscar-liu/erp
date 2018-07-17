@@ -25,6 +25,7 @@
     <@shiro.hasPermission name="device:add"> <button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:map"><button class="layui-btn  layui-btn-sm" data-type="map"><i class="layui-icon">&#xe715;</i>查看地图</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:pwd"><button class="layui-btn  layui-btn-sm layui-btn-warm" data-type="pwd"><i class="layui-icon">&#xe614;</i>设置管理密码</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
@@ -140,6 +141,14 @@
         }
         update('更新设备', 'showUpdateDevice?id=' + data[0].id, 400, 450);
       },
+      pwd: function () {
+          var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
+          if (data.length != 1) {
+            layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
+            return false;
+          }
+          pwd('设置管理密码', 'showUpdateDevicePwd?id=' + data[0].id,300,180);
+        },
       map: function () {
           var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
           if (data.length == 0) {
@@ -246,6 +255,32 @@
       content: url
     });
   }
+  
+  function pwd(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    layer.open({
+	      id: 'device-update',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
 
   /*弹出层*/
   /*

@@ -163,4 +163,9 @@ public  class OrderListServiceImpl extends BaseServiceImpl<OrderList,String> imp
 		return orderListMapper.selectReportBaseList(mapCdt);
 	}
 
+	@Override
+	public int updateBatch(List<OrderList> orderLists) {
+		return orderListMapper.updateBatch(orderLists);
+	}
+
 }

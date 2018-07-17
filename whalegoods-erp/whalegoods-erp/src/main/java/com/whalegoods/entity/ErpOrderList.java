@@ -34,7 +34,7 @@ public class ErpOrderList extends BaseEntity implements Serializable {
 	
 	private String deviceId;
 	
-	@Excel(name = "订单状态",replace = {"未支付_1", "已支付_2","交易失败_3","申请退款成功_4"},orderNum = "5")
+	@Excel(name = "订单状态",replace = {"未支付_1", "已支付_2","交易失败_3","申请退款成功_4","已关闭_5"},orderNum = "5")
 	private Byte orderStatus;
 	
 	@Excel(name = "商品名称",orderNum = "3")

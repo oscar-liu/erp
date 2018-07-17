@@ -30,9 +30,10 @@ public class DeviceRoad extends BaseEntity implements Serializable {
     
     private String goodsSkuId;
     
+    @Excel(name = "商品编号",orderNum = "5")
     private String goodsCode;
 	
-    @Excel(name = "商品名称",orderNum = "5")
+    @Excel(name = "商品名称",orderNum = "6")
 	private String goodsName;
 	
     @Excel(name = "柜号",orderNum = "2")
@@ -46,13 +47,13 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	@Excel(name = "层号",orderNum = "3")
 	private Byte floor;
 	
-	@Excel(name = "价格",orderNum = "6")
+	@Excel(name = "价格",orderNum = "7")
 	private Double salePrice;
 	
-	@Excel(name = "最大容量",orderNum = "8")
+	@Excel(name = "最大容量",orderNum = "9")
 	private Byte capacity;
 	
-	@Excel(name = "库存",orderNum = "7")
+	@Excel(name = "库存",orderNum = "8")
 	private Integer stock;
 	
 	private Byte warningNum;

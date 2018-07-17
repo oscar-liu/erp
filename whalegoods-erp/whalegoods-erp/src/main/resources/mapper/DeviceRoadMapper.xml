@@ -17,7 +17,6 @@
     <result column="floor" jdbcType="TINYINT" property="floor" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
-    <result column="adsMiddleType" jdbcType="TINYINT" property="adsMiddleType" />
     <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="start_hms" jdbcType="VARCHAR" property="startHms" />
@@ -111,7 +110,8 @@
     a.sale_price,
     a.capacity,
     a.stock,
-    b.goods_name
+    b.goods_name,
+    b.goods_code
   </sql>
   
       <select id="selectById" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
@@ -377,6 +377,16 @@
      </if>
      <if test="pathCode !=null and pathCode !=''"> 
      AND c.path_code = #{pathCode} 
+     </if>
+    </where>
+  </select>
+  
+  	<select id="selectMaxPriceByGoodsCode" parameterType="java.util.Map" resultType="java.lang.Double">
+   SELECT MAX(a.sale_price) FROM device_road a 
+   INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+   <where>
+     <if test="goodsCode !=null and goodsCode !=''"> 
+     AND b.goods_code=#{goodsCode}
      </if>
     </where>
   </select>

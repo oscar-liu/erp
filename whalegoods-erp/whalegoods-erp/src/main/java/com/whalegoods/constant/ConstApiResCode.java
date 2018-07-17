@@ -38,6 +38,7 @@ public abstract class ConstApiResCode {
     public final static Integer STOCK_NOT_ENOUGH= 7004;
     public final static Integer GOODS_CODE_EXIST= 7005;
     public final static Integer GOODS_CODE_NOT_EXIST= 7006;
+    public final static Integer GOODS_CODE_NOT_ONLY_ONE= 7007;
     
     /**
      * 设备和货道相关 8开头
@@ -49,6 +50,7 @@ public abstract class ConstApiResCode {
     public final static Integer STANDARD_NOT_EXIST= 8005;
     public final static Integer ROADLIST_EMPTY= 8006;
     public final static Integer SALE_PRICE_MUST_SAME= 8007;
+    public final static Integer DEVICE_PWD_ILLEGAL= 8008;
     
     /**
      * 订单相关 9开头
@@ -69,6 +71,8 @@ public abstract class ConstApiResCode {
     public final static Integer ORDERID_EMPTY= 9014;
     public final static Integer CANNOT_TWELEVE= 9015;
     public final static Integer SDLIST_EMPTY= 9016;
+    public final static Integer WX_CLOSE_ORDER_ONE_FAILED= 9017;
+    public final static Integer ORDER_PAID= 9018;
     
     
 	static {
@@ -91,6 +95,7 @@ public abstract class ConstApiResCode {
 		resMap.put(STOCK_NOT_ENOUGH,"该商品所在货道库存不足");
 		resMap.put(GOODS_CODE_EXIST,"商品编号已存在");
 		resMap.put(GOODS_CODE_NOT_EXIST,"商品编号不存在");
+		resMap.put(GOODS_CODE_NOT_ONLY_ONE,"根据该商品编号查找到多条记录");
 		
 		resMap.put(PATH_NOT_EXIST,"货道不存在或未上架商品");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");
@@ -116,6 +121,8 @@ public abstract class ConstApiResCode {
 		resMap.put(ORDERID_EMPTY,"订单号不能为空");
 		resMap.put(CANNOT_TWELEVE,"不能超过12个月");
 		resMap.put(SDLIST_EMPTY,"当前用户无刷单记录");
+		resMap.put(WX_CLOSE_ORDER_ONE_FAILED,"微信关闭订单API通信失败");
+		resMap.put(ORDER_PAID,"订单已支付");
 		
 	}
 	

@@ -50,6 +50,7 @@
      <if test="orderId !=null and orderId !=''"> AND a.order_id LIKE "%" #{orderId} "%"</if>
      <if test="deviceId !=null and deviceId !='' "> AND b.id =#{deviceId}</if>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> AND a.device_id_jp =#{deviceIdJp}</if>
+     <if test="orderStatus !=null and orderStatus !=''"> AND a.order_status =#{orderStatus}</if>
      <if test="orderType !=null and orderType !=''"> AND a.order_type =#{orderType}</if>
      <if test="createBy !=null and createBy !=''"> AND a.create_by =#{createBy}</if>
     </where>
@@ -172,4 +173,22 @@
 		WHERE  a.order_id='${orderId}'
 	</update>
   
+  
+  <update id="updateBatch" parameterType="java.util.List">
+   <foreach collection="list" item="item" index="index" 
+        separator=" " open="case ID" close="end">
+        UPDATE ${item.prefix}_order_list a 
+    </foreach>
+    
+    SET  a.order_status=
+    <foreach collection="list" item="item" index="index" 
+        separator=" " open="case ID" close="end">
+        WHEN ${item.orderId} THEN ${item.orderStatus}
+    </foreach>
+    WHERE order_id IN
+    <foreach collection="list" index="index" item="item" 
+        separator="," open="(" close=")">
+        ${item.orderId}
+    </foreach>
+ </update>
 </mapper>

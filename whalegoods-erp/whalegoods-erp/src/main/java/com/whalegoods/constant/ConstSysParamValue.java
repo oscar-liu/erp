@@ -6,6 +6,8 @@ public class ConstSysParamValue {
 	public static String WX_API="https://api.mch.weixin.qq.com";
 	//微信统一下单API地址
 	public static String WX_PREPAY_URL=WX_API+"/pay/unifiedorder";
+	//微信关闭订单API地址
+	public static String WX_CLOSE_ORDER_URL=WX_API+"/pay/closeorder";
 	//支付宝统一网关地址
 	public static String ALIPAY_URL="https://openapi.alipay.com/gateway.do";
 	//微信公众账号ID
@@ -28,5 +30,9 @@ public class ConstSysParamValue {
 	public static String WX_APPLY_REFUND=WX_API+"/secapi/pay/refund";
 	//判断设备是否下线间隔时间
 	public static Long DEVICE_OFFLINE_TIME=5*60*1000L;
+	//倒退十分钟
+	public static Long BACK_TEN_MIN=10*60*1000L;
+	//倒退四十分钟
+	public static Long BACK_FOURTY_MIN=40*60*1000L;
 	
 }

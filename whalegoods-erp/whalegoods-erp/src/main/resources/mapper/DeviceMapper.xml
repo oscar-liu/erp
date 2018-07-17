@@ -6,6 +6,7 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="device_id_jp" jdbcType="VARCHAR" property="deviceIdJp" /> 	
     <result column="device_id_supp" jdbcType="VARCHAR" property="deviceIdSupp" />
+    <result column="device_pwd" jdbcType="VARCHAR" property="devicePwd" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
     <result column="location" jdbcType="VARCHAR" property="location" />
     <result column="device_status" jdbcType="VARCHAR" property="deviceStatus" />
@@ -19,6 +20,7 @@
     a.id,
     a.device_id_jp,
     a.device_id_supp,
+    a.device_pwd,
     a.short_name,
     a.location, 
     a.device_status,
@@ -74,6 +76,7 @@
     id,
     device_id_jp, 
     device_id_supp, 
+    device_pwd,
     short_name, 
     location, 
     sign_code,
@@ -87,6 +90,7 @@
     #{id},
     #{deviceIdJp}, 
     #{deviceIdSupp}, 
+    #{devicePwd},
     #{shortName}, 
     #{location},
     #{signCode},
@@ -113,6 +117,7 @@
 	   <set>
       <if test="shortName != null and shortName != ''">a.short_name=#{shortName},</if>
       <if test="location != null and location != ''">a.location=#{location},</if>
+      <if test="devicePwd != null and devicePwd != ''">a.device_pwd=#{devicePwd},</if>
       <if test="deviceStatus != null and deviceStatus != ''">a.device_status=#{deviceStatus},</if>
       <if test="upTime != null and upTime != ''">a.up_time=#{upTime},</if>
       <if test="signCode != null and signCode != ''">a.sign_code=#{signCode},</if>

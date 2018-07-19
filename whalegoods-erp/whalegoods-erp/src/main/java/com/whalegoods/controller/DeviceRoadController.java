@@ -88,6 +88,7 @@ public class DeviceRoadController  {
 	  @RequiresPermissions("device:road:list")
 	  public String showRoad(Model model) {
 		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	    return "/device/road/roadList";
 	  }
 

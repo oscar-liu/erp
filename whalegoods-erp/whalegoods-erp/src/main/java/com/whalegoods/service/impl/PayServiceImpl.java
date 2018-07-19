@@ -366,6 +366,7 @@ public class PayServiceImpl implements PayService{
 			}
 			else{
 				resBody.setResultCode(ConstApiResCode.SYSTEM_ERROR);
+				resBody.setResultMsg(null);
 				return resBody;
 			}
 		}

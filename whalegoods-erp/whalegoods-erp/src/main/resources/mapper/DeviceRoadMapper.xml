@@ -165,6 +165,9 @@
      <if test="shortName !=null and shortName !=''"> 
      AND c.short_name LIKE  "%" #{shortName} "%"
      </if>
+     <if test="goodsSkuId !=null and goodsSkuId !=''"> 
+     AND a.goods_sku_id=#{goodsSkuId}
+     </if>
     </where>
     ORDER BY c.short_name,a.ctn,a.floor,a.path_code
   </select>

@@ -30,6 +30,17 @@
     </select>
    </div>
    </div>
+   &nbsp;商品：
+   <div class="layui-inline">
+       <div class="layui-input-inline">
+     <select id="sltGoodsList" name="sltGoodsList" >
+     <option value="">直接选择或搜索选择</option>
+  	<#list goodsList as goods>
+          <option value="${goods.id}">${goods.goodsName}${goods.spec}</option>
+    </#list>
+    </select>
+   </div>
+   </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
     <@shiro.hasPermission name="device:road:init"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="init"><i class="layui-icon">&#xe614;</i>初始化货道</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
@@ -73,6 +84,7 @@
   }
   $(function(){
 	  $('#sltDeviceList').select2();
+	  $('#sltGoodsList').select2();
 	  $('#sltPayWay').select2();
 	  $('#sltPayWay + span').css('width','80px');
   });
@@ -108,20 +120,25 @@
     var $ = layui.$, active = {
       select: function () {
         var deviceId = $('#sltDeviceList').val();
+        var goodsSkuId = $('#sltGoodsList').val();
         table.reload('roadList', {
           where: {
-        	  deviceId: deviceId
+        	  deviceId: deviceId,
+        	  goodsSkuId: goodsSkuId
           }
         });
       },
       reload:function(){       
        table.reload('roadList', {
           where: {
-        	  deviceId: null
+        	  deviceId: null,
+        	  goodsSkuId: null
           }
         });
        $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
        $("#sltDeviceList").val('');
+       $("#select2-sltGoodsList-container").text($("#sltGoodsList").find("option[value = '']").text());
+       $("#sltGoodsList").val('');
       },
       add: function () {
         add('添加货道', 'showAddRoad', 800, 500);

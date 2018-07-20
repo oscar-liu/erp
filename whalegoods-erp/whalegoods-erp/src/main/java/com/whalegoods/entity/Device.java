@@ -22,6 +22,8 @@ public class Device extends BaseEntity implements Serializable {
     
     private String deviceIdSupp;
     
+    private String devicePwdClear;
+    
     private String devicePwd;
     
     private String shortName;

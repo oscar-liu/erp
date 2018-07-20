@@ -17,7 +17,7 @@
   <input value="${device.id}" type="hidden" name="id">
     <div class="layui-form-item">
       <label for="devicePwd" class="layui-form-label"><span class="x-red">*</span>管理密码</label>
-      <div class="layui-input-inline"><input type="password"  id="devicePwd" name="devicePwd"  lay-verify="required|eightlength" autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="password"  id="devicePwd" name="devicePwd"  lay-verify="required|number|eightlength" autocomplete="off" class="layui-input"></div>
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">

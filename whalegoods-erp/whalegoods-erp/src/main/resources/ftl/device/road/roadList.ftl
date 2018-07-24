@@ -74,7 +74,6 @@
   
 </script>
 <script>
-
   document.onkeydown = function (e) {
     var theEvent = window.event || e;
     var code = theEvent.keyCode || theEvent.which;

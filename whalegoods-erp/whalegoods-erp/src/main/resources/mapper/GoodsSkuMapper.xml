@@ -75,7 +75,7 @@
   <select id="selectByMapCdt" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM goods_sku
    <where>
-     <if test="goodsCode !=null and goodsCode !=''"> AND goods_code LIKE  #{goodsCode} "%"</if>
+     <if test="goodsCode !=null and goodsCode !=''"> AND goods_code=#{goodsCode}</if>
     </where>
   </select>
   

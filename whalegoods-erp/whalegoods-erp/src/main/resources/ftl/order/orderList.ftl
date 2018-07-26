@@ -28,18 +28,35 @@
     </#list>
     </select>
    </div>
-   </div>&nbsp;
+   </div>
+             订单状态：
+       <div class="layui-inline">
+       <div class="layui-input-inline">
+     <select id="sltOrderStatus" name="sltOrderStatus" lay-ignore>
+        <option value="" selected="">请选择</option>
+        <option value="1" >未支付</option>
+        <option value="2" >已支付</option>
+        <option value="3" >交易失败</option>
+        <option value="4" >已退款</option>
+        <option value="5" >已关闭</option>
+      </select>
+      </div>
+  </div>
 订单号： <div class="layui-inline"><div class="layui-input-inline"><input class="layui-input" height="20px" style="width: 162px;" id="iptOrderId" autocomplete="off"></div></div>
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptTimeRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
+    <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
+   </div>
+</div>
+<div id="divSecond" class="layui-col-md12" style="height: 33px;margin-top: 4px;vertical-align:middle;border-bottom-width:-2;">
+    <div class="select">
     <@shiro.hasPermission name="order:sd:show"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdQuery"><i class="layui-icon">&#xe615;</i>刷单查询</button></@shiro.hasPermission>
     <@shiro.hasPermission name="order:sd:confirm"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdConfirm"><i class="layui-icon">&#x1005;</i>刷单确认</button></@shiro.hasPermission>
     <@shiro.hasPermission name="order:sd:excel"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="sdExcel"><i class="layui-icon">&#xe601;</i>导出刷单记录</button></@shiro.hasPermission>
     <@shiro.hasPermission name="order:refund"><button class="layui-btn layui-btn-sm" data-type="orderRefund"><i class="layui-icon">&#xe602;</i>手动退款</button></@shiro.hasPermission>
-    <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
-   </div>
+    </div>
 </div>
 <table id="orderList" class="layui-hide" lay-filter="order"></table>
 <script type="text/html" id="tplPayType">
@@ -52,13 +69,15 @@
 
 <script type="text/html" id="tplOrderStatus">
   {{#  if(d.orderStatus==1){ }}
-    <span style="color:#FF6EB4;">未支付</span>
+    <span style="color:#CD5C5C;">未支付</span>
   {{#  } if (d.orderStatus==2) { }}
 <span style="color:green;">已支付</span>
 {{#  } if (d.orderStatus==3) { }}
 <span style="color:red;">交易失败</span>
 {{#  } if (d.orderStatus==4) { }}
 <span style="color:#FFC0CB;">已退款</span>
+{{#  } if (d.orderStatus==5) { }}
+<span style="color:#FF6EB4;">已关闭</span>
   {{#  } }}
 </script>
 <script>
@@ -71,8 +90,18 @@
     }
   }
   
+  if($('#divSecond').children().length==0){
+	  var tableHeight='full-46';
+	  $('#divSecond').remove();
+	  }
+  else {
+	  var tableHeight='full-80';
+  }
+  
+  
   $(function(){
-	  $('#sltDeviceList').select2();
+	$('#sltDeviceList').select2();
+    $('#sltOrderStatus').select2();
   });
   
   layui.use(['table','layer','laydate'], function () {
@@ -87,27 +116,29 @@
       url: 'showOrderList',
       cols: [[
     	{checkbox: true, fixed: true},
-    	{field: 'shortName',title: '点位短名',align:'center' }, 
-        {field: 'orderTime',title: '订单时间',align:'center' },
-        {field: 'goodsName', title: '商品名称', align:'center'},
-        {field: 'orderStatus', title: '订单状态', align:'center',templet:'#tplOrderStatus'},
-        {field: 'salePrice',title: '价格',align:'center', unresize: true},
-        {field: 'payType', title: '支付方式', align:'center',templet: '#tplPayType'},        
-        {field: 'orderId', title: '订单号', align:'center'},
+    	{field: 'shortName',title: '点位短名',align:'center',width:110}, 
+        {field: 'orderTime',title: '订单时间',align:'center',width:160 },
+        {field: 'goodsName', title: '商品名称', align:'center',width:200},
+        {field: 'orderStatus', title: '订单状态', align:'center',templet:'#tplOrderStatus',width:90},
+        {field: 'salePrice',title: '价格',align:'center',width:70},
+        {field: 'payType', title: '支付方式', align:'center',templet: '#tplPayType',width:90},        
+        {field: 'orderId', title: '订单号', align:'center',width:300},
         {field: 'orderType',minWidth:0,width:0,type:'space',style:'display:none'}
       ]],
       page: true,
-      height: 'full-46'
+      height:tableHeight
     });
 
     var $ = layui.$, active = {
       select: function () {
     	var deviceId = $('#sltDeviceList').val();
+    	var orderStatus = $('#sltOrderStatus').val();
     	var timeRange = $('#iptTimeRange').val();
     	var orderId = $('#iptOrderId').val();
         table.reload('orderList', {
           where: {
         	  deviceId: deviceId,
+        	  orderStatus: orderStatus,
         	  timeRange: timeRange,
         	  orderId: orderId
         	  
@@ -116,11 +147,13 @@
       },
       sdQuery: function () {
       	var deviceId = $('#sltDeviceList').val();
+      	var orderStatus = $('#sltOrderStatus').val();
       	var timeRange = $('#iptTimeRange').val();
       	var orderId = $('#iptOrderId').val();
           table.reload('orderList', {
             where: {
           	  deviceId: deviceId,
+          	  orderStatus: orderStatus,
           	  timeRange: timeRange,
           	  orderId: orderId,
           	  orderType:2
@@ -156,6 +189,7 @@
         table.reload('orderList', {
           where: {
         	  deviceId: null,
+        	  orderStatus: null,
         	  timeRange: null,
         	  orderId:null,
           }
@@ -164,6 +198,8 @@
         $("#iptTimeRange").val('');
         $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
         $("#sltDeviceList").val('');
+        $("#select2-sltOrderStatus-container").text($("#sltOrderStatus").find("option[value = '']").text());
+        $("#sltOrderStatus").val('');
       }
     };
 

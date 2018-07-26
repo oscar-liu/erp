@@ -72,8 +72,8 @@
       url: 'showAdsMiddleList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'shortName', title: '点位短名', align:'center'},
-        {field: 'goodsName', title: '促销商品', align:'center'},
+        {field: 'shortName', title: '点位短名', align:'center',width:130},
+        {field: 'goodsName', title: '促销商品', align:'center',width:234},
         {field: 'salePrice', title: '促销价', align:'center'},
         {field: 'marketPrice',title: '原价',align:'center',templet: '#tplMarketPrice'},
         {field: 'timeRange', title: '时间范围', align:'center',sort: true},

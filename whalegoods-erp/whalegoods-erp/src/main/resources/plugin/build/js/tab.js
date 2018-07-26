@@ -1,11 +1,3 @@
-/** kit_admin-v1.1.0 MIT License By http://kit/zhengjinfan.cn e-mail:zheng_jinfan@126.com */
- ;/**
- * Name:tab.js
- * Author:Van
- * E-mail:zheng_jinfan@126.com
- * Website:http://kit.zhengjinfan.cn/
- * LICENSE:MIT
- */
 layui.define(['jquery', 'element', 'nprogress', 'utils'], function(exports) {
     var $ = layui.jquery,
         _modName = 'tab',
@@ -20,7 +12,7 @@ layui.define(['jquery', 'element', 'nprogress', 'utils'], function(exports) {
     var Tab = function() {
         this.config = {
             elem: undefined,
-            mainUrl: 'druid/index.html',
+            mainUrl: '/order/showOrder',
             renderType: 'iframe',
             openWait: true
         };
@@ -91,7 +83,7 @@ layui.define(['jquery', 'element', 'nprogress', 'utils'], function(exports) {
             var tpl = [
                     '<div class="layui-tab layui-tab-card kit-tab" lay-filter="' + that._filter + '">',
                     '<ul class="layui-tab-title">',
-                    '<li class="layui-this" lay-id="-1" data-url="' + _config.mainUrl + '"><i class="layui-icon">&#xe68e;</i> 控制面板</li>',
+                    '<li class="layui-this" lay-id="-1" data-url="' + _config.mainUrl + '"><i class="layui-icon">&#xe68e;</i> 首页</li>',
                     '</ul>',
                     '<div class="kit-tab-tool">操作&nbsp;<i class="fa fa-caret-down"></i></div>',
                     '<div class="kit-tab-tool-body layui-anim layui-anim-upbit">',

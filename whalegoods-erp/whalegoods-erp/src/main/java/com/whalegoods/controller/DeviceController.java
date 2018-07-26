@@ -14,6 +14,9 @@ import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,6 +95,7 @@ public class DeviceController {
     	if(device.getDevicePwd().length()!=8){
     		throw new BizApiException(ConstApiResCode.DEVICE_PWD_ILLEGAL);
     	}
+    	device.setDevicePwdClear(device.getDevicePwd());
     	device.setDevicePwd(Md5Util.getMd532(device.getDevicePwd()).toUpperCase());
 		deviceService.insert(device);
 	    return resBody;
@@ -124,6 +128,24 @@ public class DeviceController {
 		model.addAttribute("device", device);
 	    return "/device/update-pwd";
 	  }
+	  
+	  /**
+	   * 获取设备管理密码
+	   * @author henrysun
+	   * 2018年7月16日 下午4:02:30
+	   */
+	  @GetMapping(value = "checkoutDevicePwd")
+	  public ResBody checkoutDevicePwd(@RequestParam String id) {
+	    ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	    Device device=deviceService.selectById(id);
+	    if(device==null){
+	    	throw new BizApiException(ConstApiResCode.DEVICE_NOT_EXIST);
+	    }
+	    Map<String,Object> mapRst=new HashMap<>();
+	    mapRst.put("pwd",device.getDevicePwdClear());
+	    resBody.setData(mapRst);
+	    return resBody;
+	  }
 
 
 	  /**
@@ -152,6 +174,7 @@ public class DeviceController {
 	      if(device.getDevicePwd().length()!=8){
 	    		throw new BizApiException(ConstApiResCode.DEVICE_PWD_ILLEGAL);
 	      }
+	      device.setDevicePwdClear(device.getDevicePwd());
 	      device.setDevicePwd(Md5Util.getMd532(device.getDevicePwd()).toUpperCase());
 		  deviceService.updateByObjCdt(device);
 		  return resBody;

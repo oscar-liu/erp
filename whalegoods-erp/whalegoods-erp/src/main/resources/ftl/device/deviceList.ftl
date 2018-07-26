@@ -26,6 +26,7 @@
     <@shiro.hasPermission name="device:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:map"><button class="layui-btn  layui-btn-sm" data-type="map"><i class="layui-icon">&#xe715;</i>查看地图</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:pwd"><button class="layui-btn  layui-btn-sm layui-btn-warm" data-type="pwd"><i class="layui-icon">&#xe614;</i>设置管理密码</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="device:checkout"><button class="layui-btn  layui-btn-sm layui-btn-danger" data-type="checkout"><i class="layui-icon">&#xe673;</i>查看管理密码</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
@@ -149,6 +150,14 @@
           }
           pwd('设置管理密码', 'showUpdateDevicePwd?id=' + data[0].id,300,180);
         },
+        checkout: function () {
+            var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
+            if (data.length != 1) {
+              layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
+              return false;
+            }
+            checkout('查看管理密码', 'checkoutDevicePwd?id=' + data[0].id,120,120);
+          },
       map: function () {
           var checkStatus = table.checkStatus('deviceList'), data = checkStatus.data;
           if (data.length == 0) {
@@ -210,6 +219,23 @@
     });
 
   });
+  
+  function checkoutDevicePwd(id) {
+	    $.ajax({
+	      url:"checkoutDevicePwd?id="+id,
+	      type:"get",
+	      async:false,
+	      success:function(d){
+	        if(d.result_code==0){
+	          window.top.layer.msg(d.data.pwd,{icon:6,time:3000});
+	        }else{ 
+	          window.top.layer.msg(d.result_msg);
+	        }},
+	        error:function(){
+	          window.top.layer.msg("查看失败,请联系管理员",{icon:5,time:1000});
+	      }
+	    });
+	  }
 
   function del(id) {
     $.ajax({

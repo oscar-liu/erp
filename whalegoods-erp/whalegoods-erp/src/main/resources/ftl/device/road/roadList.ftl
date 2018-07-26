@@ -30,13 +30,28 @@
     </select>
    </div>
    </div>
+   &nbsp;商品：
+   <div class="layui-inline">
+       <div class="layui-input-inline">
+     <select id="sltGoodsList" name="sltGoodsList" >
+     <option value="">直接选择或搜索选择</option>
+  	<#list goodsList as goods>
+          <option value="${goods.id}">${goods.goodsName}${goods.spec}</option>
+    </#list>
+    </select>
+   </div>
+   </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
-    <@shiro.hasPermission name="device:road:init"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="init"><i class="layui-icon">&#xe614;</i>初始化货道</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>新增</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:update"><button class="layui-btn  layui-btn-sm" data-type="update"><i class="layui-icon">&#xe642;</i>编辑</button></@shiro.hasPermission>
     <@shiro.hasPermission name="device:road:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出货道清单</button></@shiro.hasPermission>
-     &nbsp;&nbsp;&nbsp;
-    <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe65e;</i>生成支付二维码</button>&nbsp;
+    <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
+  </div>
+</div>
+<div id="divSecond" class="layui-col-md12" style="height: 33px;margin-top: 4px;vertical-align:middle;border-bottom-width:-2;">
+     <div class="select">
+           <@shiro.hasPermission name="device:road:init"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="init"><i class="layui-icon">&#xe614;</i>初始化货道</button></@shiro.hasPermission>
+      <@shiro.hasPermission name="device:road:prepay"><button class="layui-btn layui-btn-sm layui-btn-normal" data-type="prepay"><i class="layui-icon">&#xe65e;</i>生成支付二维码</button>&nbsp;
           支付类型：
        <div class="layui-inline">
        <div class="layui-input-inline">
@@ -47,8 +62,7 @@
       </div>
   </div>
     </@shiro.hasPermission>
-    <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
-  </div>
+     </div>
 </div>
 <table id="roadList" class="layui-hide" lay-filter="road"></table>
 <script type="text/html" id="rightToolBar">
@@ -63,7 +77,6 @@
   
 </script>
 <script>
-
   document.onkeydown = function (e) {
     var theEvent = window.event || e;
     var code = theEvent.keyCode || theEvent.which;
@@ -71,10 +84,19 @@
       $(".select .select-on").click();
     }
   }
+  if($('#divSecond').children().length==0){
+	  var tableHeight='full-46';
+	  $('#divSecond').remove();
+	  }
+  else {
+	  var tableHeight='full-80';
+  }
+  
   $(function(){
 	  $('#sltDeviceList').select2();
-	  $('#sltPayWay').select2();
-	  $('#sltPayWay + span').css('width','80px');
+	  $('#sltGoodsList').select2();
+	  $('#sltPayType').select2();
+	  $('#sltPayType + span').css('width','80px');
   });
   
   layui.use('table', function () {
@@ -102,26 +124,31 @@
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
-      height: 'full-46'
+      height: tableHeight
     });
 
     var $ = layui.$, active = {
       select: function () {
         var deviceId = $('#sltDeviceList').val();
+        var goodsSkuId = $('#sltGoodsList').val();
         table.reload('roadList', {
           where: {
-        	  deviceId: deviceId
+        	  deviceId: deviceId,
+        	  goodsSkuId: goodsSkuId
           }
         });
       },
       reload:function(){       
        table.reload('roadList', {
           where: {
-        	  deviceId: null
+        	  deviceId: null,
+        	  goodsSkuId: null
           }
         });
        $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
        $("#sltDeviceList").val('');
+       $("#select2-sltGoodsList-container").text($("#sltGoodsList").find("option[value = '']").text());
+       $("#sltGoodsList").val('');
       },
       add: function () {
         add('添加货道', 'showAddRoad', 800, 500);

@@ -20,13 +20,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqGetInfoByGoodsCode;
 import com.whalegoods.entity.request.ReqGetInfoByPathCode;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.entity.response.ResDeviceGoodsInfo;
+import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceRoadService;
+import com.whalegoods.service.GoodsSkuService;
+import com.whalegoods.util.CommonValidateUtil;
 
 /**
  * 货道商品信息API
@@ -41,6 +45,9 @@ public class V1GoodsController {
 
 	  @Autowired
 	  DeviceRoadService deviceRoadService;
+	  
+	  @Autowired
+	  GoodsSkuService goodsSkuService;
 	  
 	  @Autowired
 	  HttpServletRequest request;
@@ -70,12 +77,20 @@ public class V1GoodsController {
 	  @GetMapping(value="/getInfoByGoodsCode")
 	  ResBody getInfoByCode(@Valid ReqGetInfoByGoodsCode model) {
 		  logger.info("收到getInfoByGoodsCode请求：{}",model.toString());
+		  CommonValidateUtil.validateDeviceExist(model.getDevice_code_wg(),model.getDevice_code_sup());
 		  Map<String,Object> mapCdt=new HashMap<>();
-		  mapCdt.put("deviceIdJp",model.getDevice_code_wg());
-		  mapCdt.put("deviceIdSupp",model.getDevice_code_sup());
 		  mapCdt.put("goodsCode",model.getGoods_code());
-		  List<ResDeviceGoodsInfo> info=deviceRoadService.selectByGoodsOrPathCode(mapCdt);
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS),info.get(0));
+		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
+		  if(goodsSku==null){
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+		  }
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  Map<String,Object> mapRst=new HashMap<>();
+		  mapRst.put("goods_code", goodsSku.getGoodsCode());
+		  mapRst.put("goods_name", goodsSku.getGoodsName());
+		  mapRst.put("spec", goodsSku.getSpec());
+		  mapRst.put("pic_url", goodsSku.getPicUrl());
+		  resBody.setData(mapRst);
 		  logger.info("结果：{}",resBody.toString());
 		  return resBody;
 		}
@@ -109,6 +124,7 @@ public class V1GoodsController {
 	  @SuppressWarnings("rawtypes")
 	  @PostMapping(value="/upStock")
 	  ResBody upStock(@RequestBody String json) throws SystemException {
+		  logger.info("收到upStock请求：{}",json);
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  JSONObject jsonObject=JSONObject.parseObject(json);	  
 		  List<Map> mapList=JSON.parseArray(jsonObject.getString("data"),Map.class);

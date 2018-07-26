@@ -123,7 +123,7 @@ public class V1DeviceController {
 	   * 2018年7月16日 下午4:02:30
 	   */
 	  @GetMapping(value = "getDevicePwd")
-	  public ResBody showDeviceList(@Valid ReqBase reqBase) {
+	  public ResBody getDevicePwd(@Valid ReqBase reqBase) {
 	    ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	    Device objCdt=new Device();
 	    objCdt.setDeviceIdJp(reqBase.getDevice_code_wg());

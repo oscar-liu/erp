@@ -23,10 +23,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradeCancelRequest;
 import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
+import com.alipay.api.response.AlipayTradeCancelResponse;
 import com.alipay.api.response.AlipayTradeCloseResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
@@ -589,11 +591,11 @@ public class PayServiceImpl implements PayService{
 				ConstSysParamValue.ALIPAY_APPID,
 				ConstSysParamValue.ALIPAY_PRIVATE_KEY, "json","GBK", 
 				ConstSysParamValue.ALIPAY_PUBLIC_KEY, "RSA2");
-		AlipayTradeCloseRequest   request = new AlipayTradeCloseRequest();
-		JSONObject sonJson=new JSONObject();
-		sonJson.put("out_trade_no",orderId);
-		request.setBizContent(sonJson.toJSONString());
-		AlipayTradeCloseResponse   response;
+		AlipayTradeCancelRequest    request = new AlipayTradeCancelRequest();
+		request.setBizContent("{" +
+				"\"out_trade_no\":\""+orderId+"\"" +
+				"}");
+		AlipayTradeCancelResponse    response;
 		try {
 			response = alipayClient.execute(request);
 		} catch (AlipayApiException e) {

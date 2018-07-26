@@ -139,7 +139,8 @@ public class V1OrderController {
 	  if(payService.closeOrder(objCdt).getResultCode()==ConstApiResCode.SUCCESS){
 		  OrderList objCdt2=new OrderList();
 		  objCdt2.setOrderId(model.getOrder());
-		  objCdt.setOrderStatus(ConstOrderStatus.CLOSED);
+		  objCdt2.setPrefix(objCdt.getPrefix().toString());
+		  objCdt2.setOrderStatus(ConstOrderStatus.CLOSED);
 		  orderListService.updateByObjCdt(objCdt2);
 	  }
 	  return resBody;

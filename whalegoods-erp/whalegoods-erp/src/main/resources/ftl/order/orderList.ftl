@@ -52,7 +52,7 @@
 
 <script type="text/html" id="tplOrderStatus">
   {{#  if(d.orderStatus==1){ }}
-    <span style="color:#FF6EB4;">未支付</span>
+    <span style="color:#CD5C5C;">未支付</span>
   {{#  } if (d.orderStatus==2) { }}
 <span style="color:green;">已支付</span>
 {{#  } if (d.orderStatus==3) { }}
@@ -60,7 +60,7 @@
 {{#  } if (d.orderStatus==4) { }}
 <span style="color:#FFC0CB;">已退款</span>
 {{#  } if (d.orderStatus==5) { }}
-<span style="color:#CD5C5C;">已关闭</span>
+<span style="color:#FF6EB4;">已关闭</span>
   {{#  } }}
 </script>
 <script>

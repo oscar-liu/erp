@@ -43,8 +43,7 @@ public class CloseOrderJob implements BaseJob{
     public void execute(JobExecutionContext context) {
     	String startTime=null,endTime=null;
     	try {
-    		/*endTime =DateUtil.formatDateTime(DateUtil.timestampToDate(System.currentTimeMillis()-ConstSysParamValue.BACK_TEN_MIN));*/
-    	endTime =DateUtil.formatDateTime(DateUtil.timestampToDate(System.currentTimeMillis()-10*1000L));
+    		endTime =DateUtil.formatDateTime(DateUtil.timestampToDate(System.currentTimeMillis()-ConstSysParamValue.BACK_TEN_MIN));
     		startTime =DateUtil.formatDateTime(DateUtil.timestampToDate(System.currentTimeMillis()-ConstSysParamValue.BACK_FOURTY_MIN));
 		} catch (SystemException e) {
 			logger.info("CloseOrderJob日期转换错误：{}",e.getMessage());
@@ -76,7 +75,7 @@ public class CloseOrderJob implements BaseJob{
 							int orderStatus=Integer.parseInt((String) JSON.parseObject(payService.getOrderStatus(erpOrderList.getOrderId()).getData().toString(),Map.class).get("order_status"));
 							if(orderStatus==2){
 								if(payService.refund(refund).getResultCode()==ConstApiResCode.SUCCESS){
-									orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);	
+									orderList.setOrderStatus(ConstOrderStatus.APPLY_REFUND_SUCCESS);
 								}
 							}
 						} catch (Exception e) {

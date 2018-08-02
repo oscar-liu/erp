@@ -35,4 +35,6 @@ public interface OrderListService extends BaseService<OrderList,String>{
 	List<ReportBase> selectReportBaseList(Map<String,Object> mapCdt);
 	
 	int updateBatch(List<OrderList> orderLists);
+	
+	int insertBatch(List<OrderList> orderLists);
 }

@@ -191,7 +191,14 @@
       </if>
       update_date = now(),
     </set>
-    WHERE id = #{id}
+    <where>
+		    <if test="goodsCode !=null and goodsCode !=''">
+				AND goods_code=#{goodsCode}
+			</if>
+			<if test="id !=null and id !=''">
+				AND id= #{id}
+			</if>
+		 </where>
   </update>
   
   <delete id="deleteById" parameterType="java.lang.String">

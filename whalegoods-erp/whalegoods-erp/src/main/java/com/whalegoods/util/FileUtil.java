@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,9 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.exception.SystemException;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 
 /**
  * 文件处理工具类
@@ -131,4 +134,28 @@ public class FileUtil {
             throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
         }
     }
+    
+    /**
+     * 导入excel
+     * @author henrysun
+     * 2018年8月2日 下午3:19:14
+     */
+    public static <T> List<T> importExcel(String filePath,Integer titleRows,Integer headerRows, Class<T> pojoClass) throws SystemException{
+        if (StringUtil.isEmpty(filePath)){
+            return null;
+        }
+        ImportParams params = new ImportParams();
+        params.setTitleRows(titleRows);
+        params.setHeadRows(headerRows);
+        List<T> list = null;
+        try {
+            list = ExcelImportUtil.importExcel(new File(filePath), pojoClass, params);
+        }catch (NoSuchElementException e){
+        	throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+        } catch (Exception e) {
+        	throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+        }
+        return list;
+    }
+
 }

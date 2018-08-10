@@ -312,16 +312,16 @@ public class PayServiceImpl implements PayService{
 	public void refundNotify(ReqRefund model){
 		//任务名称必须和后台配置的一样，否则无法获取收件人列表
 		String jobName="设备退款报警";
-		//邮件模板
-		String templateId="SMS_136856409";
+		//短信模板
+		String templateId="SMS_142015178";
 		//根据订单号查询点位名称
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("orderId",model.getOrder());
 		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
 		String shortName=orderListService.selectDeviceByOrderId(mapCdt);
-		//邮件内容
+		//模板内容
 		String content="{\"short_name\":\""+shortName+"\"}";
-		//发送邮件
+		//发送短信
 		SmsUtil.sendSms(jobName,templateId,content);
 	}
 	

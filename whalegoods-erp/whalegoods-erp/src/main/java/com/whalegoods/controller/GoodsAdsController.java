@@ -206,9 +206,11 @@ public class GoodsAdsController  {
 	  @PostMapping(value = "delAdsMiddle")
 	  @ResponseBody
 	  @RequiresPermissions("ads:middle:del") 
-	  public ResBody delAdsMiddle(@RequestParam String id) {
+	  public ResBody delAdsMiddle(@RequestParam String[] ids) {
        ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-       adsMiddleService.deleteById(id);
+       for (String id : ids){
+    	   adsMiddleService.deleteById(id);
+       }
 	   return resBody;
 	  }
 	  

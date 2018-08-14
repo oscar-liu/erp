@@ -25,7 +25,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.whalegoods.constant.ConstApiResCode;
-import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.GoodsAdsTop;
@@ -163,35 +162,31 @@ public class GoodsAdsController  {
 	  }
 	  
 	  /**
-	   * 更新促销商品
-	   * @author henrysun
-	   * 2018年6月13日 下午10:21:19
+	   * 跳转到设置促销商品页面
 	   */
-	  @PostMapping(value = "updateAdsMiddleGoods")
+	  @GetMapping(value = "showUpdateMiddleAdsGoods")
+	  public String showUpdateMiddleAdsGoods(@RequestParam String id, Model model) {
+		GoodsAdsMiddle goodsAdsMiddle= adsMiddleService.selectById(id);
+		model.addAttribute("goodsAdsMiddle",goodsAdsMiddle);
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	    return "/ads/middle/set-goods";
+	  }
+	  
+	  /**
+	   * 更新促销商品接口
+	   * @author henrysun
+	   * 2018年8月6日 下午3:30:49
+	   */
+	  @PostMapping(value = "updateMiddleAdsGoods")
 	  @ResponseBody
-	  public ResBody updateAdsMiddleGoods(@RequestBody GoodsAdsMiddle goodsAdsMiddle) throws SystemException {
-		  if(StringUtil.isEmpty(goodsAdsMiddle.getHmsRange())&&StringUtil.isEmpty(goodsAdsMiddle.getDateRange())){
-			  throw new BizApiException(ConstApiResCode.TIME_RANGE_NOT_EMPTY);
-		  }
-		  if(goodsAdsMiddle.getType()==1){
-			  goodsAdsMiddle.setStartHms(goodsAdsMiddle.getHmsRange().split(ConstSysParamName.KGANG)[0]);
-			  goodsAdsMiddle.setEndHms(goodsAdsMiddle.getHmsRange().split(ConstSysParamName.KGANG)[1]);
-			  goodsAdsMiddle.setStartDate(null);
-			  goodsAdsMiddle.setEndDate(null);
-		  }
-		  if(goodsAdsMiddle.getType()==2){
-			  goodsAdsMiddle.setStartDate(DateUtil.stringToDate(goodsAdsMiddle.getDateRange().split(ConstSysParamName.KGANG)[0]+ConstSysParamName.START_HMS));
-			  goodsAdsMiddle.setEndDate(DateUtil.stringToDate(goodsAdsMiddle.getDateRange().split(ConstSysParamName.KGANG)[1]+ConstSysParamName.START_HMS));
-			  goodsAdsMiddle.setStartHms(null);
-			  goodsAdsMiddle.setEndHms(null);
-		  }
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	  public ResBody updateMiddleAdsGoods(@RequestBody GoodsAdsMiddle goodsAdsMiddle) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  //查询商品是否存在
 		  Map<String,Object> mapCdt=new HashMap<>();
-		  mapCdt.put("deviceId", goodsAdsMiddle.getDeviceId());
-		  mapCdt.put("goodsCode", goodsAdsMiddle.getGoodsCode());
-		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>=1)
-		  {
-			  goodsAdsMiddle.setGoodsCode(null);
+		  mapCdt.put("goodsCode",goodsAdsMiddle.getGoodsCode());
+		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
+		  if(goodsSku==null){
+			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
 		  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  adsMiddleService.updateByObjCdt(goodsAdsMiddle);

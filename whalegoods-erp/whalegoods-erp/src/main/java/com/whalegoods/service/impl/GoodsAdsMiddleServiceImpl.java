@@ -40,4 +40,14 @@ public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,St
 		return GoodsAdsMiddleMapper.insertBatch(list);
 	}
 
+	@Override
+	public List<String> selectNotUpDevice() {
+		return GoodsAdsMiddleMapper.selectNotUpDevice();
+	}
+
+	@Override
+	public List<Double> selectLastSalePrice(String goodsCode) {
+		return GoodsAdsMiddleMapper.selectLastSalePrice(goodsCode);
+	}
+
 }

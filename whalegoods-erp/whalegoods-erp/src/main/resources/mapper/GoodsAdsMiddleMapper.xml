@@ -64,9 +64,13 @@
   </select>
   
    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> FROM goods_ads_middle a 
+    SELECT  
+    a.id,
+    a.sale_price,
+    a.goods_code,
+    a.device_id
+    FROM goods_ads_middle a 
     INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
-    INNER JOIN device_road c ON c.goods_sku_id=b.id
     INNER JOIN device d ON  d.id=a.device_id
     WHERE a.id= #{_parameter}
   </select>
@@ -85,6 +89,16 @@
      GROUP BY a.goods_code,a.start_hms,a.start_date
   </select>
   
+      <!--查询未上架商品的设备-->
+    <select id="selectNotUpDevice" resultType="java.lang.String">
+    SELECT  d.short_name  FROM goods_ads_middle a 
+	    INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
+	    INNER JOIN device d ON  d.id=a.device_id
+	    LEFT JOIN device_road c ON c.device_id=a.device_id AND c.goods_sku_id = b.id
+	  WHERE c.sale_price IS NULL
+	       GROUP BY d.short_name
+  </select>
+  
       <!-- 查询促销商品列表(ERP)-->
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsAdsMiddle" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  FROM goods_ads_middle a 
@@ -94,8 +108,16 @@
     <where>
      <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
     </where>
-    GROUP BY a.goods_code,a.start_hms,a.start_date
+    GROUP BY a.goods_code,a.device_id,a.start_hms,a.start_date
     ORDER BY d.short_name,a.start_hms,a.start_date 
+  </select>
+  
+        <!-- 查询最新的促销的价格-->
+    <select id="selectLastSalePrice" parameterType="java.lang.String" resultType="java.lang.Double">
+    SELECT a.sale_price FROM goods_ads_middle a 
+    INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
+    INNER JOIN device d ON  d.id=a.device_id
+    WHERE a.goods_code= #{_parameter} GROUP BY a.sale_price LIMIT 3 
   </select>
   
   <!-- 插入新记录 -->
@@ -168,20 +190,18 @@
   
   	<update id="updateByObjCdt" parameterType="com.whalegoods.entity.GoodsAdsMiddle">
 		UPDATE goods_ads_middle a 
+		INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
+        INNER JOIN device d ON  d.id=a.device_id
 	   <set>
       <if test="goodsCode != null and goodsCode != ''">a.goods_code=#{goodsCode},</if>
       <if test="salePrice != null and salePrice != ''">a.sale_price=#{salePrice},</if>
-      a.start_date=#{startDate},
-      a.end_date=#{endDate},
-      a.start_hms=#{startHms},
-      a.end_hms=#{endHms},
-      <if test="type != null and type!='' ">a.type=#{type},</if>
-      <if test="deviceId != null and deviceId != ''">a.device_id=#{deviceId},</if>
       <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
-      update_date = now(),
+      a.update_date = now(),
       </set>
         <where>
         <if test="id !=null and id !=''"> AND a.id =#{id}</if>
+        <if test="goodsCode !=null and goodsCode !=''"> AND a.goods_code =#{goodsCode}</if>
+        <if test="deviceId !=null and deviceId !=''"> AND a.device_id =#{deviceId}</if>
     </where>
 	</update>
 	

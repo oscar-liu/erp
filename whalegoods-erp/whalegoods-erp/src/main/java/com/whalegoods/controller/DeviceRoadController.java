@@ -341,9 +341,11 @@ public class DeviceRoadController  {
 		  objCdt.setDeviceId(deviceRoad.getDeviceId());
 		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
 		  List<GoodsAdsMiddle> listAdsMiddle=goodsAdsMiddleService.selectListByObjCdt(objCdt);
-		  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
-		  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
-			  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+		  if(listAdsMiddle.size()>0){
+			  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
+			  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
+				  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+			  }
 		  }
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());

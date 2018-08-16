@@ -50,4 +50,9 @@ public class GoodsAdsMiddleServiceImpl extends BaseServiceImpl<GoodsAdsMiddle,St
 		return GoodsAdsMiddleMapper.selectLastSalePrice(goodsCode);
 	}
 
+	@Override
+	public int updateKeepSamePrice(GoodsAdsMiddle objCdt) {
+		return GoodsAdsMiddleMapper.updateKeepSamePrice(objCdt);
+	}
+
 }

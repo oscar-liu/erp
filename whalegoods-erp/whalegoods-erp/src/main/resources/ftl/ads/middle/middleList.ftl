@@ -115,7 +115,7 @@
               layer.msg('必须是同一个设备的商品', {icon: 5,time:1000});
               return false;
           }
-          if(data[0].timeRange!=data[1].timeRange||data[1].timeRange!=data[2].timeRange||data[0].timeRange!=data[3].timeRange){
+          if(data[0].timeRange!=data[1].timeRange||data[1].timeRange!=data[2].timeRange||data[0].timeRange!=data[2].timeRange){
               layer.msg('必须是同一个时间范围', {icon: 5,time:1000});
               return false;
           }
@@ -143,8 +143,9 @@
     $.ajax({
       url:"delAdsMiddle",
       type:"post",
-      data:ids,
+      data:{ids:ids},
       async:false,
+      traditional: true,
       success:function(d){
         if(d.result_code==0){
           window.top.layer.msg(d.result_msg,{icon:6,time:1000});

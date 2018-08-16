@@ -68,7 +68,11 @@
     a.id,
     a.sale_price,
     a.goods_code,
-    a.device_id
+    a.device_id,
+    a.start_date,
+    a.end_date,
+    a.start_hms,
+    a.end_hms
     FROM goods_ads_middle a 
     INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
     INNER JOIN device d ON  d.id=a.device_id
@@ -107,6 +111,7 @@
     LEFT JOIN device_road c ON c.device_id=a.device_id AND c.goods_sku_id = b.id
     <where>
      <if test="deviceId !=null and deviceId !=''"> AND d.id=#{deviceId}</if>
+     <if test="goodsCode !=null and goodsCode !=''"> AND a.goods_code=#{goodsCode}</if>
     </where>
     GROUP BY a.goods_code,a.device_id,a.start_hms,a.start_date
     ORDER BY d.short_name,a.start_hms,a.start_date 
@@ -200,8 +205,6 @@
       </set>
         <where>
         <if test="id !=null and id !=''"> AND a.id =#{id}</if>
-        <if test="goodsCode !=null and goodsCode !=''"> AND a.goods_code =#{goodsCode}</if>
-        <if test="deviceId !=null and deviceId !=''"> AND a.device_id =#{deviceId}</if>
     </where>
 	</update>
 	
@@ -210,6 +213,9 @@
     <where>
      <if test="deviceId !=null and deviceId !=''"> AND device_id=#{deviceId}</if>
      <if test="goodsCode !=null and goodsCode !=''"> AND goods_code=#{goodsCode}</if>
+     <if test="startHms !=null and startHms !=''"> AND start_hms=#{startHms}</if>
+     <if test="endHms !=null and endHms !=''"> AND end_hms=#{endHms}</if>
+     <if test="id !=null and id !=''"> AND id!=#{id}</if>
     </where>
   </select>
   

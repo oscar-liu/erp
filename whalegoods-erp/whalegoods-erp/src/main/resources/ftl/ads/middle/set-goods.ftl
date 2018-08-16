@@ -25,6 +25,8 @@
   <form class="layui-form layui-form-pane" style="margin: 20px;">
    <input value="${goodsAdsMiddle.id}" type="hidden" name="id" >  
    <input value="${goodsAdsMiddle.deviceId}" type="hidden" name="deviceId" >
+   <input value="${goodsAdsMiddle.startHms}" type="hidden" name="startHms" >  
+   <input value="${goodsAdsMiddle.endHms}" type="hidden" name="endHms" >  
      <div class="layui-form-item">
         <!--商品编号-->
      <label for="sltGoodsCode" class="layui-form-label"><span class="x-red">*</span>商品</label>
@@ -42,6 +44,9 @@
      <label for="salePrice" class="layui-form-label"><span class="x-red">*</span>促销价</label>
       <div class="layui-input-inline"><input type="text"  id="salePrice" name="salePrice" value="${goodsAdsMiddle.salePrice}" lay-verify="required|number|FFS"  autocomplete="off" class="layui-input"></div>
     </div>
+    <div class="layui-form-item">
+    <div id="ms" class="layui-form-mid layui-word-aux"></div>
+    </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="confirm" lay-submit="">确定</button>
@@ -55,6 +60,23 @@ $(function(){
 	$('#sltGoodsCode').select2();
 	$("#select2-sltGoodsCode-container").text($("#sltGoodsCode").find("option[value = "+'${goodsAdsMiddle.goodsCode}'+"]").text());
 	$('#sltGoodsCode').val('${goodsAdsMiddle.goodsCode}');
+	$('#sltGoodsCode').change(function(){
+		$('#ms').find('span').remove();
+	    $.ajax({
+	        url:'getRecommendSalePrice?goodsCode='+$('#sltGoodsCode').val(),
+	        type:'get',
+	        async:false,
+	        success:function(d){
+	          if(d.result_code==0){
+	        	  $('#ms').append("<span style='color: red;'>"+"参考促销价："+d.data+"</span>");
+	          }else{
+	            layer.msg(d.result_msg,{icon:5,time:1000});
+	          }},
+	          error:function(){
+	            window.top.layer.msg('请求失败',{icon:5,time:1000});
+	        }
+	      });
+	});
 });
 
 layui.use(['form','layer'], function(){

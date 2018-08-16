@@ -26,12 +26,14 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.GoodsAdsTop;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
+import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
@@ -64,6 +66,9 @@ public class GoodsAdsController  {
 	  
 	  @Autowired
 	  GoodsSkuService goodsSkuService;
+	  
+	  @Autowired
+	  DeviceRoadService deviceRoadService;
 	  
 	  @Autowired
 	  FileUtil fileUtil;
@@ -162,7 +167,29 @@ public class GoodsAdsController  {
 	  }
 	  
 	  /**
-	   * 跳转到设置促销商品页面
+	   * 获取商品参考促销价
+	   */
+	  @GetMapping(value = "getRecommendSalePrice")
+	  @ResponseBody
+	  public ResBody getRecommendSalePrice(@RequestParam String goodsCode, Model model) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		List<Double> listSalePrice=adsMiddleService.selectLastSalePrice(goodsCode);
+		StringBuffer sb=new StringBuffer();
+		if(listSalePrice.size()==0){
+			sb.append("无,");
+		}
+		else{
+			for (Double item : listSalePrice) {
+				sb.append(item.toString()+"元");
+				sb.append(",");
+			}
+		}
+		resBody.setData(sb.toString().substring(0,sb.toString().length()-1));
+		return resBody;
+	  }
+	  
+	  /**
+	   * 跳出设置促销商品的弹出框
 	   */
 	  @GetMapping(value = "showUpdateMiddleAdsGoods")
 	  public String showUpdateMiddleAdsGoods(@RequestParam String id, Model model) {
@@ -173,7 +200,7 @@ public class GoodsAdsController  {
 	  }
 	  
 	  /**
-	   * 更新促销商品接口
+	   * 设置促销商品接口
 	   * @author henrysun
 	   * 2018年8月6日 下午3:30:49
 	   */
@@ -188,6 +215,25 @@ public class GoodsAdsController  {
 		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
+		  //判断该设备相同的时间段是否已存在相同的商品
+		  mapCdt.put("deviceId",goodsAdsMiddle.getDeviceId());
+		  mapCdt.put("startHms",goodsAdsMiddle.getStartHms());
+		  mapCdt.put("endHms",goodsAdsMiddle.getEndHms());
+		  mapCdt.put("id",goodsAdsMiddle.getId());
+		  if(adsMiddleService.selectCountByMapCdt(mapCdt)>0){
+			  throw new BizApiException(ConstApiResCode.SAME_TIME_HAS_SAME_GOODS);
+		  }
+		  //促销价不能大于等于原价
+		  DeviceRoad objCdt=new DeviceRoad();
+		  objCdt.setDeviceId(goodsAdsMiddle.getDeviceId());
+		  objCdt.setGoodsSkuId(goodsSku.getId());
+		  List<DeviceRoad> listDeviceRoad=deviceRoadService.selectListByObjCdt(objCdt);
+		  if(listDeviceRoad.size()>0&&listDeviceRoad.get(0).getSalePrice()!=null){
+			  if(goodsAdsMiddle.getSalePrice()>=listDeviceRoad.get(0).getSalePrice()){
+				  throw new BizApiException(ConstApiResCode.SALE_PRICE_CANNOT_BIGGER_OR_EQUALS_MARKET_PRICE);
+			  }
+		  }
+		  //更新促销商品 
 		  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  adsMiddleService.updateByObjCdt(goodsAdsMiddle);
 		  return resBody;
@@ -201,7 +247,7 @@ public class GoodsAdsController  {
 	  @PostMapping(value = "delAdsMiddle")
 	  @ResponseBody
 	  @RequiresPermissions("ads:middle:del") 
-	  public ResBody delAdsMiddle(@RequestParam String[] ids) {
+	  public ResBody delAdsMiddle(String[] ids) {
        ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
        for (String id : ids){
     	   adsMiddleService.deleteById(id);

@@ -31,9 +31,9 @@ public class MiddleAdsNotUpJob implements BaseJob{
     	if(deviceList.size()>0){
 			//任务名称必须和后台配置的一样，否则无法获取收件人列表
 			String jobName="促销商品未上架通知";
-			//邮件模板
+			//短信模板
 			String templateId="SMS_142010180";
-			//邮件内容
+			//短信内容
 			StringBuffer sb=new StringBuffer();
 			for (String shortName : deviceList) {
 				sb.append(shortName);
@@ -41,7 +41,7 @@ public class MiddleAdsNotUpJob implements BaseJob{
 			}
 			String shortNameArr = sb.toString().substring(0,sb.toString().length() - 1);
 			String content="{\"short_name\":\""+shortNameArr+"\"}";
-			//发送邮件
+			//短信邮件
 			SmsUtil.sendSms(jobName,templateId,content);
     	}
     }

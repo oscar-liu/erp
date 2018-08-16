@@ -20,4 +20,8 @@ public interface GoodsAdsMiddleService  extends BaseService<GoodsAdsMiddle,Strin
 	List<GoodsAdsMiddle> selectTimeRangeByDeviceId(Map<String,Object> mapCdt);
 	
 	int insertBatch(List<GoodsAdsMiddle> list);
+	
+	List<String> selectNotUpDevice();
+	
+	List<Double> selectLastSalePrice(String goodsCode);
 }

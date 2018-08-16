@@ -159,6 +159,50 @@
 			)
 	</insert>
 	
+	   <insert id="insertBatch" parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index" open="" close="" separator="" >
+   		INSERT INTO ${item.prefix}_order_list (
+			id,
+			device_id_jp,
+			device_id_supp,
+			goods_code,
+			order_id,
+			order_time,
+			order_status,
+			goods_name,
+			sale_price,
+			ctn,
+			path_code,
+			floor,
+			order_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+			) 
+       VALUES
+			(
+				'${item.id}',
+				'${item.deviceIdJp}',
+				'${item.deviceIdSupp}',
+				'${item.goodsCode}',
+				'${item.orderId}',
+				'${item.orderTime}',
+				${item.orderStatus},
+				'${item.goodsName}',
+				${item.salePrice},
+				${item.ctn},
+				${item.pathCode},
+				${item.floor},
+				${item.orderType},
+			    '${item.createBy}',
+				now(),
+				'${item.updateBy}',
+				now()
+			);
+    </foreach>
+ </insert>
+	
 		<!-- 根据条件更新订单信息 -->
 		<update id="updateByObjCdt" parameterType="com.whalegoods.entity.OrderList" statementType="STATEMENT">
 		UPDATE ${prefix}_order_list a 

@@ -2,10 +2,7 @@ package com.whalegoods.entity;
 
 import java.util.Date;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import lombok.Getter;

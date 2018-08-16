@@ -24,4 +24,16 @@ public interface GoodsAdsMiddleMapper extends BaseMapper<GoodsAdsMiddle,String> 
     List<GoodsAdsMiddle> selectTimeRangeByDeviceId(Map<String,Object> mapCdt);
     
     int insertBatch(List<GoodsAdsMiddle> list);
+    
+    /**
+     * 查询未上架商品的设备
+     * @return
+     */
+    List<String> selectNotUpDevice();
+    
+    /**
+     * 根据商品编号找到最新的三个促销价格
+     * @return
+     */
+    List<Double> selectLastSalePrice(String goodsCode);
 }

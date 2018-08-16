@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * 更换货道商品API请求映射实体类
@@ -17,7 +16,6 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
 public class ReqChangePath extends ReqBase{
 
 	private static final long serialVersionUID = 1L;
@@ -36,5 +34,11 @@ public class ReqChangePath extends ReqBase{
 	@JsonProperty("goods_code")
 	@NotEmpty(message="goods_code必填")
 	private String goodsCode;
+
+	@Override
+	public String toString() {
+		return "ReqChangePath [ctn=" + ctn + ", floor=" + floor + ", pathCode=" + pathCode + ", goodsCode=" + goodsCode
+				+", device_code_sup=" + super.getDevice_code_sup() +", device_code_wg=" + super.getDevice_code_wg() + "]";
+	}
 	
 }

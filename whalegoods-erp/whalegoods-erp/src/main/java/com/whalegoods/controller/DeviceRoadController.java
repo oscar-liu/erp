@@ -27,6 +27,7 @@ import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.entity.Device;
 import com.whalegoods.entity.DeviceModelStandard;
 import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
@@ -149,6 +150,15 @@ public class DeviceRoadController  {
 		  if(deviceRoadService.selectCountByMapCdt(mapCdt2)>0){
 			  throw new BizApiException(ConstApiResCode.PATH_EXIST);
 		  }
+		  //原价不能小于等于促销价
+		  GoodsAdsMiddle objCdt=new GoodsAdsMiddle();
+		  objCdt.setDeviceId(deviceRoad.getDeviceId());
+		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		  List<GoodsAdsMiddle> listAdsMiddle=goodsAdsMiddleService.selectListByObjCdt(objCdt);
+		  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
+		  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
+			  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+		  }
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setDeviceId(device.getId());
@@ -260,6 +270,15 @@ public class DeviceRoadController  {
 		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
 		  }
+		  //原价不能小于等于促销价
+		  GoodsAdsMiddle objCdt=new GoodsAdsMiddle();
+		  objCdt.setDeviceId(deviceRoad.getDeviceId());
+		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		  List<GoodsAdsMiddle> listAdsMiddle=goodsAdsMiddleService.selectListByObjCdt(objCdt);
+		  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
+		  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
+			  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+		  }
 		  //查询货道是否已存在
 		  Map<String,Object> mapCdt2=new HashMap<>();
 		  mapCdt2.put("deviceIdJp",deviceRoad.getDeviceIdJp());
@@ -316,6 +335,15 @@ public class DeviceRoadController  {
 		  GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
 		  if(goodsSku==null){
 			  throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+		  }
+		  //原价不能小于等于促销价
+		  GoodsAdsMiddle objCdt=new GoodsAdsMiddle();
+		  objCdt.setDeviceId(deviceRoad.getDeviceId());
+		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		  List<GoodsAdsMiddle> listAdsMiddle=goodsAdsMiddleService.selectListByObjCdt(objCdt);
+		  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
+		  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
+			  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
 		  }
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
 		  deviceRoad.setUpdateBy(ShiroUtil.getCurrentUserId());

@@ -73,7 +73,7 @@
       cols: [[
         {checkbox: true, fixed: true},
         {field: 'shortName', title: '点位短名', align:'center',width:130},
-        {field: 'goodsName', title: '促销商品', align:'center',width:234},
+        {field: 'goodsName', title: '促销商品', align:'center',event: 'setGoods', style:'cursor: pointer;',width:234},
         {field: 'salePrice', title: '促销价', align:'center'},
         {field: 'marketPrice',title: '原价',align:'center',templet: '#tplMarketPrice'},
         {field: 'timeRange', title: '时间范围', align:'center',sort: true},
@@ -111,11 +111,11 @@
             layer.msg('请选择3行删除,已选['+data.length+']行', {icon: 5,time:1000});
             return false;
           }
-          if(data[0].deviceId!=data[1].deviceId||data[1].deviceId!=data[2].deviceId||data[0].deviceId!=data[3].deviceId){
+          if(data[0].deviceId!=data[1].deviceId||data[1].deviceId!=data[2].deviceId||data[0].deviceId!=data[2].deviceId){
               layer.msg('必须是同一个设备的商品', {icon: 5,time:1000});
               return false;
           }
-          if(data[0].timeRange!=data[1].timeRange||data[1].timeRange!=data[2].timeRange||data[0].timeRange!=data[3].timeRange){
+          if(data[0].timeRange!=data[1].timeRange||data[1].timeRange!=data[2].timeRange||data[0].timeRange!=data[2].timeRange){
               layer.msg('必须是同一个时间范围', {icon: 5,time:1000});
               return false;
           }
@@ -123,6 +123,14 @@
           del(ids);
         }
     };
+    
+    //监听工具条
+    table.on('tool(adsMiddle)', function (obj) {
+      var data = obj.data;
+      if(obj.event === 'setGoods'){
+    	  setGoods('设置促销商品', 'showUpdateMiddleAdsGoods?id='+data.id, 500, 300);
+      }
+    });
     
     $('.select .layui-btn').on('click', function () {
       var type = $(this).data('type');
@@ -135,8 +143,9 @@
     $.ajax({
       url:"delAdsMiddle",
       type:"post",
-      data:ids,
+      data:{ids:ids},
       async:false,
+      traditional: true,
       success:function(d){
         if(d.result_code==0){
           window.top.layer.msg(d.result_msg,{icon:6,time:1000});
@@ -188,6 +197,31 @@
       content: url
     });
   }
+  function setGoods(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    layer.open({
+	      id: 'adsMiddle-setGoods',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
 </script>
 </body>
 

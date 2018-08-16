@@ -168,4 +168,9 @@ public  class OrderListServiceImpl extends BaseServiceImpl<OrderList,String> imp
 		return orderListMapper.updateBatch(orderLists);
 	}
 
+	@Override
+	public int insertBatch(List<OrderList> orderLists) {
+		return orderListMapper.insertBatch(orderLists);
+	}
+
 }

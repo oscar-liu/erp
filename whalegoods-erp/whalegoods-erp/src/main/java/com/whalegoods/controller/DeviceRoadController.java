@@ -155,9 +155,11 @@ public class DeviceRoadController  {
 		  objCdt.setDeviceId(deviceRoad.getDeviceId());
 		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
 		  List<GoodsAdsMiddle> listAdsMiddle=goodsAdsMiddleService.selectListByObjCdt(objCdt);
-		  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
-		  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
-			  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+		  if(listAdsMiddle.size()>0){
+			  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
+			  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
+				  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+			  }
 		  }
 		  deviceRoad.setId(StringUtil.getUUID());
 		  deviceRoad.setGoodsSkuId(goodsSku.getId());
@@ -275,9 +277,11 @@ public class DeviceRoadController  {
 		  objCdt.setDeviceId(deviceRoad.getDeviceId());
 		  objCdt.setGoodsCode(deviceRoad.getGoodsCode());
 		  List<GoodsAdsMiddle> listAdsMiddle=goodsAdsMiddleService.selectListByObjCdt(objCdt);
-		  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
-		  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
-			  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+		  if(listAdsMiddle.size()>0){
+			  listAdsMiddle.sort((GoodsAdsMiddle a,GoodsAdsMiddle b)->a.getSalePrice().compareTo(b.getSalePrice()));
+			  if(deviceRoad.getSalePrice()<=listAdsMiddle.get(listAdsMiddle.size()-1).getSalePrice()){
+				  throw new BizApiException(ConstApiResCode.MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE);
+			  }
 		  }
 		  //查询货道是否已存在
 		  Map<String,Object> mapCdt2=new HashMap<>();

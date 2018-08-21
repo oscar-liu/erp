@@ -15,7 +15,7 @@ public interface OrderListMapper extends BaseMapper<OrderList,String> {
 
 	Integer getCountByErpObjCdt(ErpOrderList orderList);
 	
-	String selectDeviceByOrderId(Map<String,Object> mapCdt);
+	ErpOrderList selectDeviceByOrderId(Map<String,Object> mapCdt);
 	
 	List<ReportBase> selectReportBaseList(Map<String,Object> mapCdt);
 	

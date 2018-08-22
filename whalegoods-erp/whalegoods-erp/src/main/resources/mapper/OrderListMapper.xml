@@ -34,7 +34,7 @@
   </sql>
   
       <select id="selectDeviceByOrderId" statementType="STATEMENT" resultType="com.whalegoods.entity.ErpOrderList">
-   SELECT b.short_name shortName,a.goods_name goodsName FROM ${prefix}_order_list a 
+   SELECT b.short_name shortName,a.goods_name goodsName,b.id deviceId FROM ${prefix}_order_list a 
    INNER JOIN device b ON a.device_id_jp= b.device_id_jp
    <where>
      <if test="orderId !=null and orderId !=''"> AND a.order_id= '${orderId}'</if>

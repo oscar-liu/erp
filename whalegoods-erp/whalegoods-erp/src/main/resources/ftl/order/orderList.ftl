@@ -116,7 +116,7 @@
       url: 'showOrderList',
       cols: [[
     	{checkbox: true, fixed: true},
-    	{field: 'shortName',title: '点位短名',align:'center',width:110}, 
+    	{field: 'shortName',title: '点位',align:'center',width:110}, 
         {field: 'orderTime',title: '订单时间',align:'center',width:160 },
         {field: 'goodsName', title: '商品名称', align:'center',width:200},
         {field: 'orderStatus', title: '订单状态', align:'center',templet:'#tplOrderStatus',width:90},

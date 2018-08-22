@@ -67,4 +67,5 @@ public class StringUtil {
 	public static int getNumberRadom(){
 		return (int) ((Math.random()*9+1)*10000);
 	}
+	
 }

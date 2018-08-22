@@ -76,6 +76,7 @@ public abstract class ConstApiResCode {
     public final static Integer SDLIST_EMPTY= 9016;
     public final static Integer WX_CLOSE_ORDER_ONE_FAILED= 9017;
     public final static Integer ORDER_PAID= 9018;
+    public final static Integer ORDER_NOT_EXIST= 9019;
     
     
 	static {
@@ -129,6 +130,7 @@ public abstract class ConstApiResCode {
 		resMap.put(SDLIST_EMPTY,"当前用户无刷单记录");
 		resMap.put(WX_CLOSE_ORDER_ONE_FAILED,"微信关闭订单API通信失败");
 		resMap.put(ORDER_PAID,"订单已支付");
+		resMap.put(ORDER_NOT_EXIST,"订单不存在");
 		
 	}
 	

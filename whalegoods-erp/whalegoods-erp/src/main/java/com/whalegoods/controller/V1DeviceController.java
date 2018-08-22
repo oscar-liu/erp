@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceExLog;
 import com.whalegoods.entity.DeviceRoad;
+import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.request.ReqBase;
 import com.whalegoods.entity.request.ReqChangePath;
@@ -31,11 +34,15 @@ import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.ApkVersionService;
+import com.whalegoods.service.DeviceExlogService;
 import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
+import com.whalegoods.service.OrderListService;
 import com.whalegoods.util.CommonValidateUtil;
+import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.FileUtil;
+import com.whalegoods.util.StringUtil;
 
 /**
  * 设备管理API
@@ -59,6 +66,12 @@ public class V1DeviceController {
 	  
 	  @Autowired
 	  GoodsSkuService goodsSkuService;
+	  
+	  @Autowired
+	  OrderListService orderListService;
+	  
+	  @Autowired
+	  DeviceExlogService deviceExlogService;
 	  
 	  @Autowired
 	  FileUtil fileUtil;
@@ -158,6 +171,21 @@ public class V1DeviceController {
 		  String childFolder="ex_log";
 		  String newFileName=childFolder+"_"+model.getOrder();
 		  String fileUrl=fileUtil.uploadFile(request,childFolder,newFileName);
+		  Map<String,Object> mapCdt=new HashMap<>();
+		  mapCdt.put("prefix",Integer.valueOf(DateUtil.formatDateTime(DateUtil.timestampToDate(System.currentTimeMillis())).substring(0,7).replace(ConstSysParamName.GANG,"")));
+		  mapCdt.put("orderId",model.getOrder());
+		  ErpOrderList order=orderListService.selectDeviceByOrderId(mapCdt);
+		  if(order==null){
+			  throw new BizApiException(ConstApiResCode.ORDER_NOT_EXIST);
+		  }
+		  DeviceExLog exlog=new DeviceExLog();
+		  exlog.setId(StringUtil.getUUID());
+		  exlog.setErrorMessage(model.getError_message());
+		  exlog.setDeviceId(order.getDeviceId());
+		  exlog.setGoodsName(order.getGoodsName());
+		  exlog.setFileUrl(fileUrl);
+		  exlog.setOrderId(model.getOrder());
+		  deviceExlogService.insert(exlog);
 		  logger.info("返回结果：{}",resBody.toString());
 		  return resBody;
 		}

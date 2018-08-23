@@ -4,12 +4,12 @@
 
  <resultMap id="BaseResultMap" type="com.whalegoods.entity.DeviceExLog">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="orderId" jdbcType="VARCHAR" property="order_id" /> 	
-    <result column="errorMessage" jdbcType="VARCHAR" property="error_message" />
-    <result column="deviceId" jdbcType="VARCHAR" property="device_id" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" /> 	
+    <result column="error_message" jdbcType="VARCHAR" property="errorMessage" />
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
-    <result column="goodsName" jdbcType="VARCHAR" property="goods_name" />
-    <result column="fileUrl" jdbcType="VARCHAR" property="file_url" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="file_url" jdbcType="VARCHAR" property="fileUrl" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />    
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
@@ -46,11 +46,11 @@
     update_date)
     VALUES (
     #{id},
-    #{order_id}, 
-    #{error_message}, 
-    #{device_id}, 
-    #{goods_name}, 
-    #{file_url}, 
+    #{orderId}, 
+    #{errorMessage}, 
+    #{deviceId}, 
+    #{goodsName}, 
+    #{fileUrl}, 
     #{createBy}, 
     now(),
     #{updateBy},

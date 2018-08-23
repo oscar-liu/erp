@@ -35,7 +35,7 @@
   </div>
 </div>
 <table id="deviceExLogList" class="layui-hide" lay-filter="deviceExLog"></table>
-<script type="text/html" id="tplPicUrl">
+<script type="text/html" id="tplFileUrl">
   {{#  if(d.fileUrl==null||d.fileUrl==undefined||d.fileUrl==""){ }}
     <span style="color: #F581B1;">无</span>
   {{#  } else { }}
@@ -60,16 +60,16 @@
     table.render({
       id: 'deviceExLogList',
       elem: '#deviceExLogList', 
-      url: 'showDeviceExLog',
+      url: 'showDeviceExLogList',
       cols: [[
-        {field: 'orderId', title: '订单号', align:'center',width:290},
+        {field: 'orderId', title: '订单号', align:'center',width:300},
         {field: 'shortName', title: '点位', align:'center',width:120},
         {field: 'goodsName', title: '商品名称', align:'center',width:200},
-        {field: 'errorMessage', title: '异常信息', align:'center',width:180},
-        {field: 'fileUrl', title: '详情文件', align:'center',width:60,templet:'#tplFileUrl'}
+        {field: 'errorMessage', title: '异常信息', align:'center',width:220},
+        {field: 'fileUrl', title: '详情文件', align:'center',width:80,templet:'#tplFileUrl'}
       ]],
       page: true,
-      height: tableHeight
+      height: 'full-63'
     });
 
     var $ = layui.$, active = {

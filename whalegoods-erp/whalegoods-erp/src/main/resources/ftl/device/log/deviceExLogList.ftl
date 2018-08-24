@@ -65,11 +65,11 @@
         {field: 'orderId', title: '订单号', align:'center',width:300},
         {field: 'shortName', title: '点位', align:'center',width:120},
         {field: 'goodsName', title: '商品名称', align:'center',width:200},
-        {field: 'errorMessage', title: '异常信息', align:'center',width:220},
-        {field: 'fileUrl', title: '详情文件', align:'center',width:80,templet:'#tplFileUrl'}
+        {field: 'errorMessage', title: '异常信息', align:'center',width:330},
+        {field: 'fileUrl', title: '详情文件', align:'center',width:100,templet:'#tplFileUrl'}
       ]],
       page: true,
-      height: 'full-63'
+      height: 'full-43'
     });
 
     var $ = layui.$, active = {

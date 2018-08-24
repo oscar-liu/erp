@@ -170,8 +170,7 @@ public class V1DeviceController {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		  String childFolder="ex_log";
 		  String newFileName=childFolder+"_"+model.getOrder();
-//		  String fileUrl=fileUtil.uploadFile(request,childFolder,newFileName);
-		  String fileUrl="https://www.baidu.com";
+		  String fileUrl=fileUtil.uploadFile(request,childFolder,newFileName);
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("prefix",Integer.valueOf(DateUtil.formatDateTime(DateUtil.timestampToDate(System.currentTimeMillis())).substring(0,7).replace(ConstSysParamName.GANG,"")));
 		  mapCdt.put("orderId",model.getOrder());

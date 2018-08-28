@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whalegoods.mapper.GoodsStorageInMapper">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageIn">
+  <id column="id" jdbcType="VARCHAR" property="id" />
+  <result column="in_date" jdbcType="DATE" property="inDate" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="product_date" jdbcType="DATE" property="productDate" />
+    <result column="expiring_date" jdbcType="DATE" property="expiringDate" />   
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
+    <result column="in_count" jdbcType="INTEGER" property="inCount" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+  a.id,
+  a.in_date,
+  b.goods_code,
+  b.goods_name,
+  a.product_date,
+  a.expiring_date,
+  a.cost_price,
+  a.market_price,
+  a.in_count 
+  </sql>
+ 
+      <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List3" />
+    FROM device_road a 
+    LEFT JOIN goods_sku b ON a.goods_sku_id=b.id
+    INNER JOIN device c  ON c.id=a.device_id 
+    WHERE a.id=#{id}
+  </select>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM device_road a 
+    LEFT JOIN goods_sku b ON a.goods_sku_id=b.id 
+    INNER JOIN device c  ON c.id=a.device_id 
+   <where>
+     <if test="deviceIdJp !=null and deviceIdJp !=''"> 
+     AND c.device_id_jp=#{deviceIdJp}
+     </if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''"> 
+     AND c.device_id_supp=#{deviceIdSupp}
+     </if>
+     <if test="deviceId !=null and deviceId !='' "> 
+     AND c.id=#{deviceId}
+     </if>
+     <if test="shortName !=null and shortName !=''"> 
+     AND c.short_name LIKE  "%" #{shortName} "%"
+     </if>
+     <if test="goodsSkuId !=null and goodsSkuId !=''"> 
+     AND a.goods_sku_id=#{goodsSkuId}
+     </if>
+    </where>
+    ORDER BY c.short_name,a.ctn,a.floor,a.path_code
+  </select>
+  
+  <insert id="insert" parameterType="com.whalegoods.entity.DeviceRoad">
+    INSERT INTO device_road (
+    id,
+    device_id, 
+    ctn, 
+    path_code, 
+    floor, 
+    goods_sku_id, 
+    sale_price,
+    capacity,
+    stock,
+    warning_num,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{deviceId}, 
+    #{ctn}, 
+    #{pathCode},
+    #{floor}, 
+    #{goodsSkuId},
+    #{salePrice},
+    #{capacity},
+    #{stock},
+    #{warningNum},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+  
+     <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM device_road  WHERE id = #{_parameter}
+  </delete>
+
+</mapper>

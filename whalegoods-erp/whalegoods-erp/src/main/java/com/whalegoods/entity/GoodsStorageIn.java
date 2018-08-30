@@ -41,5 +41,8 @@ public class GoodsStorageIn extends BaseEntity implements Serializable {
     private String goodsCode;
     
     private String goodsName;
+    
+    //入库批次名称，由多个字段组合而成
+    private String goodsStorageInName;
   
 }

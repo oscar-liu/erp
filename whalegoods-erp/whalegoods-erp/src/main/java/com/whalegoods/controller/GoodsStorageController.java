@@ -216,42 +216,17 @@ public class GoodsStorageController  {
 	   model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
 	   return "/storage/Out/add-goodsStorageOut";
 	  }
-
+	  
 	  /**
-	   * 添加商品出库接口
+	   * 根据商品编号查询对应的入库批次
 	   * @author henrysun
-	   * 2018年8月30日 下午3:08:12
+	   * 2018年8月30日 下午5:15:11
 	   */
-	  @PostMapping(value = "addGoodsStorageOut")
-	  @ResponseBody
-	  public ResBody addGoodsStorageOut(@RequestBody GoodsStorageOut goodsStorageOut) {
-		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-		  if(goodsStorageIn.getCostPrice()>goodsStorageIn.getMarketPrice()){
-			  throw new BizApiException(ConstApiResCode.COST_CANNOT_BIGGER_THAN_MARKET);
-		  }
-		  if(goodsStorageIn.getExpiringDate().before(goodsStorageIn.getProductDate())){
-			  throw new BizApiException(ConstApiResCode.PRODUCTION_DATE_AFTER_EXPIRING_DATE);
-		  }
-		  //如果库存表没有该商品该到期日期的库存记录，则新增一条，否则更新库存
-		  GoodsStorage objCdt=new GoodsStorage();
-		  objCdt.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
-		  objCdt.setExpiringDate(goodsStorageIn.getExpiringDate());
-		  objCdt.setCurrCount(goodsStorageIn.getInCount());
-		  List<GoodsStorage> liStorage=goodsStorageService.selectListByObjCdt(objCdt);
-		  if(liStorage.size()>0){
-			  goodsStorageService.updateByObjCdt(objCdt);
-		  }
-		  else{
-			  objCdt.setId(StringUtil.getUUID());
-			  objCdt.setCreateBy(ShiroUtil.getCurrentUserId());
-			  objCdt.setUpdateBy(ShiroUtil.getCurrentUserId());
-			  goodsStorageService.insert(objCdt);
-		  }
-		  goodsStorageIn.setId(StringUtil.getUUID());
-		  goodsStorageIn.setCreateBy(ShiroUtil.getCurrentUserId());
-		  goodsStorageIn.setUpdateBy(ShiroUtil.getCurrentUserId());
-		  goodsStorageInService.insert(goodsStorageIn);
-		  return resBody;
+	  @GetMapping(value = "getStorageInListByGoodsSkuId")
+	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId) {
+	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	   return resBody;
 	  }
+
 	
 }

@@ -1,5 +1,7 @@
 package com.whalegoods.service;
 
+import java.util.List;
+
 import com.whalegoods.entity.GoodsStorageIn;
 
 
@@ -10,4 +12,5 @@ import com.whalegoods.entity.GoodsStorageIn;
  */
 public interface GoodsStorageInService extends BaseService<GoodsStorageIn,String> {
 	
+	List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId);
 }

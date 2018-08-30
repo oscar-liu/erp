@@ -48,7 +48,7 @@ public class GoodsStorageOut extends BaseEntity implements Serializable {
     
     private String timeRange;
     
-    //进货批次名称，由多个字段组合而成
+    //入库批次名称，由多个字段组合而成
     private String goodsStorageInName;
    
 }

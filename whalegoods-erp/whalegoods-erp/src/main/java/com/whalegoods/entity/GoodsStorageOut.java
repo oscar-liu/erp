@@ -23,13 +23,32 @@ public class GoodsStorageOut extends BaseEntity implements Serializable {
 	
     private String goodsSkuId;
     
+    private String goodsStorageInId;
+    
+    private String goodsCode;
+    
+    private String goodsName;
+    
     private Integer applyNum;
     
     private String applyBy;
+    
+    private String userName;
     
     private String deviceId;
 	
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date applyDate;
+    
+    private String shortName;
+    
+    private String startApplyDate;
+    
+    private String endApplyDate;
+    
+    private String timeRange;
+    
+    //进货批次名称，由多个字段组合而成
+    private String goodsStorageInName;
    
 }

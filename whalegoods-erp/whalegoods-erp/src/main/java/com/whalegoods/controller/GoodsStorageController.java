@@ -14,15 +14,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.whalegoods.constant.ConstApiResCode;
+import com.whalegoods.constant.ConstSysParamName;
+import com.whalegoods.entity.Device;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.GoodsStorage;
 import com.whalegoods.entity.GoodsStorageIn;
+import com.whalegoods.entity.GoodsStorageOut;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
+import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageService;
+import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -38,6 +43,9 @@ public class GoodsStorageController  {
 	
 	 @Autowired
 	 GoodsStorageInService goodsStorageInService; 
+	 
+	 @Autowired
+	 GoodsStorageOutService goodsStorageOutService; 
 	 
 	 @Autowired
 	 GoodsStorageService goodsStorageService;
@@ -164,6 +172,86 @@ public class GoodsStorageController  {
 	  @RequiresPermissions("storage:list")
 	  public ReType showGoodsStorageList(Model model, GoodsStorage goodsStorage , String page, String limit) {
 		  return goodsStorageService.selectByPage(goodsStorage,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 跳转到仓库出库列表页面
+	   * @author henrysun
+	   * 2018年8月30日 上午10:18:40
+	   */
+	  @GetMapping(value = "showGoodsStorageOut")
+	  @RequiresPermissions("storage:out:list")
+	  public String showGoodsStorageOut(Model model) {
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	    return "/storage/out/storageOutList";
+	  }
+
+	  /**
+	   * 查询仓库出库列表接口
+	   * @author henrysun
+	   * 2018年8月30日 上午10:19:57
+	   */
+	  @GetMapping(value = "showGoodsStorageOutList")
+	  @ResponseBody
+	  @RequiresPermissions("storage:out:list")
+	  public ReType showGoodsStorageOutList(Model model, GoodsStorageOut goodsStorageOut , String page, String limit) {
+		 if(!StringUtil.isEmpty(goodsStorageOut.getTimeRange())){
+				String startApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[0];
+				String endApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[1];
+				goodsStorageOut.setStartApplyDate(startApplyDate);
+				goodsStorageOut.setEndApplyDate(endApplyDate);
+		 }
+		 return goodsStorageOutService.selectByPage(goodsStorageOut,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 跳转到添加商品出库页面
+	   * @author henrysun
+	   * 2018年8月30日 上午10:21:58
+	   */
+	  @GetMapping(value = "showAddGoodsStorageOut")
+	  public String showAddGoodsStorageOut(Model model) {
+	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	   model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	   return "/storage/Out/add-goodsStorageOut";
+	  }
+
+	  /**
+	   * 添加商品出库接口
+	   * @author henrysun
+	   * 2018年8月30日 下午3:08:12
+	   */
+	  @PostMapping(value = "addGoodsStorageOut")
+	  @ResponseBody
+	  public ResBody addGoodsStorageOut(@RequestBody GoodsStorageOut goodsStorageOut) {
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  if(goodsStorageIn.getCostPrice()>goodsStorageIn.getMarketPrice()){
+			  throw new BizApiException(ConstApiResCode.COST_CANNOT_BIGGER_THAN_MARKET);
+		  }
+		  if(goodsStorageIn.getExpiringDate().before(goodsStorageIn.getProductDate())){
+			  throw new BizApiException(ConstApiResCode.PRODUCTION_DATE_AFTER_EXPIRING_DATE);
+		  }
+		  //如果库存表没有该商品该到期日期的库存记录，则新增一条，否则更新库存
+		  GoodsStorage objCdt=new GoodsStorage();
+		  objCdt.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
+		  objCdt.setExpiringDate(goodsStorageIn.getExpiringDate());
+		  objCdt.setCurrCount(goodsStorageIn.getInCount());
+		  List<GoodsStorage> liStorage=goodsStorageService.selectListByObjCdt(objCdt);
+		  if(liStorage.size()>0){
+			  goodsStorageService.updateByObjCdt(objCdt);
+		  }
+		  else{
+			  objCdt.setId(StringUtil.getUUID());
+			  objCdt.setCreateBy(ShiroUtil.getCurrentUserId());
+			  objCdt.setUpdateBy(ShiroUtil.getCurrentUserId());
+			  goodsStorageService.insert(objCdt);
+		  }
+		  goodsStorageIn.setId(StringUtil.getUUID());
+		  goodsStorageIn.setCreateBy(ShiroUtil.getCurrentUserId());
+		  goodsStorageIn.setUpdateBy(ShiroUtil.getCurrentUserId());
+		  goodsStorageInService.insert(goodsStorageIn);
+		  return resBody;
 	  }
 	
 }

@@ -19,7 +19,7 @@
 <body>
 <div class="erp-search">
   <div class="select">
-   &nbsp;商品：
+   商品：
    <div class="layui-inline">
        <div class="layui-input-inline">
      <select id="sltGoodsList" name="sltGoodsList" >

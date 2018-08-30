@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whalegoods.mapper.GoodsStorageOutMapper">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageOut">
+  <id column="id" jdbcType="VARCHAR" property="id" />
+  <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="apply_num" jdbcType="INTEGER" property="applyNum" />
+    <result column="apply_by" jdbcType="VARCHAR" property="applyBy" />
+    <result column="username" jdbcType="VARCHAR" property="userName" />
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="apply_date" jdbcType="DATE" property="applyDate" />
+    <result column="goodsStorageInName" jdbcType="VARCHAR" property="goodsStorageInName" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+  a.apply_date,
+  d.username,
+  c.short_name,
+  b.goods_name,
+  b.goods_code 
+  CONCAT(DATE_FORMAT(e.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(e.expiring_date, '%Y-%m-%d'),'到期',e.cost_price,'元成本价') goodsStorageInName
+  </sql>
+  
+  <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageOut" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM goods_storage_in a   
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+    WHERE a.id=#{id}
+  </select>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageOut" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+   FROM goods_storage_out a 
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+    INNER JOIN device c ON c.id = a.device_id 
+    INNER JOIN sys_user d ON d.id=a.apply_by
+    INNER JOIN goods_storage_in e ON e.id=a.goods_storage_in_id 
+   <where>
+     <if test="goodsSkuId !=null and goodsSkuId !=''"> 
+     AND b.goods_sku_id=#{goodsSkuId}
+     </if>
+     <if test="deviceId !=null and deviceId !=''">
+     AND c.device_id=#{deviceId}
+     </if>
+     <if test="startApplyDate !=null "> AND applyDate &gt;=#{startApplyDate}</if>
+     <if test="endApplyDate !=null "> AND applyDate &lt;#{endApplyDate}</if>
+    </where>
+    ORDER BY a.apply_date DESC
+  </select>
+  
+  <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageOut">
+    INSERT INTO goods_storage_in (
+    id,
+    in_date, 
+    goods_sku_id, 
+    product_date, 
+    expiring_date, 
+    cost_price, 
+    market_price,
+    in_count,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{inDate}, 
+    #{goodsSkuId}, 
+    #{productDate},
+    #{expiringDate}, 
+    #{costPrice},
+    #{marketPrice},
+    #{inCount},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+  
+     <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM goods_storage_in  WHERE id = #{_parameter}
+  </delete>
+
+</mapper>

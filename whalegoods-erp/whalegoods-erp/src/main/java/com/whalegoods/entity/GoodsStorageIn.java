@@ -38,6 +38,8 @@ public class GoodsStorageIn extends BaseEntity implements Serializable {
   
     private Integer inCount;
     
+    private Integer currCount;
+    
     private String goodsCode;
     
     private String goodsName;

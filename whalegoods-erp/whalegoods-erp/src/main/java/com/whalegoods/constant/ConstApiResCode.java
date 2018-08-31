@@ -43,6 +43,7 @@ public abstract class ConstApiResCode {
     public final static Integer GOODS_CODE_NOT_ONLY_ONE= 7007;
     public final static Integer COST_CANNOT_BIGGER_THAN_MARKET= 7008;
     public final static Integer PRODUCTION_DATE_AFTER_EXPIRING_DATE= 7009;
+    public final static Integer NO_AVALIBALE_GOODS_STORAGE_IN= 7010;
     
     /**
      * 设备和货道相关 8开头
@@ -106,6 +107,7 @@ public abstract class ConstApiResCode {
 		resMap.put(GOODS_CODE_NOT_ONLY_ONE,"根据该商品编号查找到多条记录");
 		resMap.put(COST_CANNOT_BIGGER_THAN_MARKET,"成本价不能大于建议零售价");
 		resMap.put(PRODUCTION_DATE_AFTER_EXPIRING_DATE,"到期日期不能早于生产日期");
+		resMap.put(NO_AVALIBALE_GOODS_STORAGE_IN,"该商品没有可用的入库批次");
 		
 		resMap.put(PATH_NOT_EXIST,"货道不存在或未上架商品");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");

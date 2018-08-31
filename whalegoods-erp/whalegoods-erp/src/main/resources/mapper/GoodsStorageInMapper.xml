@@ -13,6 +13,7 @@
     <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
     <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
     <result column="in_count" jdbcType="INTEGER" property="inCount" />
+    <result column="curr_count" jdbcType="INTEGER" property="currCount" />
   </resultMap>
   
    <sql id="Base_Column_List">
@@ -25,7 +26,8 @@
   a.expiring_date,
   a.cost_price,
   a.market_price,
-  a.in_count 
+  a.in_count,
+  a.curr_count
   </sql>
   
         <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">
@@ -49,9 +51,9 @@
   
       <select id="getStorageInListByGoodsSkuId" parameterType="java.lang.String" resultType="com.whalegoods.entity.GoodsStorageIn">
     SELECT a.id,CONCAT(DATE_FORMAT(a.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(a.expiring_date, '%Y-%m-%d'),'到期',a.cost_price,'元成本价') goodsStorageInName 
-    FROM goods_storage_in a   
+    FROM goods_storage_in a  
     INNER JOIN goods_sku b ON a.goods_sku_id = b.id
-    WHERE a.goods_sku_id=#{_parameter} AND 
+    WHERE a.goods_sku_id=#{_parameter} AND a.curr_count>0
     ORDER BY a.in_date DESC
   </select>
   

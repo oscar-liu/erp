@@ -27,7 +27,6 @@ import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
 import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageService;
-import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -122,6 +121,7 @@ public class GoodsStorageController  {
 			  goodsStorageService.insert(objCdt);
 		  }
 		  goodsStorageIn.setId(StringUtil.getUUID());
+		  goodsStorageIn.setCurrCount(goodsStorageIn.getInCount());
 		  goodsStorageIn.setCreateBy(ShiroUtil.getCurrentUserId());
 		  goodsStorageIn.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  goodsStorageInService.insert(goodsStorageIn);
@@ -225,6 +225,13 @@ public class GoodsStorageController  {
 	  @GetMapping(value = "getStorageInListByGoodsSkuId")
 	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId) {
 	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	   List<GoodsStorageIn> liGoodsStorageIn=goodsStorageInService.getStorageInListByGoodsSkuId(goodsSkuId);
+	   if(liGoodsStorageIn.size()>0){
+		   resBody.setData(liGoodsStorageIn);
+	   }
+	   else{
+		   throw new BizApiException(ConstApiResCode.NO_AVALIBALE_GOODS_STORAGE_IN);
+	   }
 	   return resBody;
 	  }
 

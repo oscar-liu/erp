@@ -57,7 +57,7 @@
      <label for="sltGoodsStorageIn" class="layui-form-label"><span class="x-red">*</span>入库批次</label>
       <div class="layui-input-inline">
        <select id="sltGoodsStorageIn" name="sltGoodsStorageIn" lay-verify="required"  lay-ignore>
-     <option value="">请先选择出库商品</option>
+     <option value="">请先选择一个商品</option>
     </select>
     </div>
      </div>
@@ -90,13 +90,21 @@
 	  $('#sltGoodsStorageIn').select2();
 	  $('#sltGoodsCode').change(function(){ 
 	      $.ajax({
-	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+this.val(),
+	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val(),
 	          type:'get',
 	          async:false,
 	          success:function(d){
 	            if(d.result_code==0){
+	            	$('#sltGoodsStorageIn').empty();
+	            	$("#sltGoodsStorageIn").prepend("<option value=''>直接选择或搜索选择</option>");
+	            	var arr=d.data;
+	            	for(var i=0;i<arr.length;i++){
+	            		$("#sltGoodsStorageIn").append("<option value='"+arr[i].id+"'>"+arr[i].goodsStorageInName+"</option>");
+	            		}
 	            }else{
 	              layer.msg(d.result_msg,{icon:5,time:1000});
+	              $('#sltGoodsStorageIn').empty();
+	              $("#sltGoodsStorageIn").prepend("<option value=''>请先选择一个商品</option>");
 	            }},
 	            error:function(){
 	              var index = parent.layer.getFrameIndex(window.name);

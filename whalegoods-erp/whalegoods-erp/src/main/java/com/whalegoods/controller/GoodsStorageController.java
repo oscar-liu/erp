@@ -223,6 +223,7 @@ public class GoodsStorageController  {
 	   * 2018年8月30日 下午5:15:11
 	   */
 	  @GetMapping(value = "getStorageInListByGoodsSkuId")
+	  @ResponseBody
 	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId) {
 	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 	   List<GoodsStorageIn> liGoodsStorageIn=goodsStorageInService.getStorageInListByGoodsSkuId(goodsSkuId);

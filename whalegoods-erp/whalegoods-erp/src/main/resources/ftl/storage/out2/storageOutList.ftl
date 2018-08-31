@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>仓库入库信息列表</title>
+  <title>仓库出库信息列表</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
@@ -19,7 +19,18 @@
 <body>
 <div class="erp-search">
   <div class="select">
-   商品：
+    设备：
+   <div class="layui-inline">
+       <div class="layui-input-inline">
+     <select id="sltDeviceList" name="sltDeviceList" >
+     <option value="">直接选择或搜索选择</option>
+  	<#list deviceList as device>
+          <option value="${device.id}">${device.shortName}</option>
+    </#list>
+    </select>
+   </div>
+   </div>
+   &nbsp;商品：
    <div class="layui-inline">
        <div class="layui-input-inline">
      <select id="sltGoodsList" name="sltGoodsList" >
@@ -29,15 +40,19 @@
     </#list>
     </select>
    </div>
-   </div>
+   </div>&nbsp;
+     出库日期：  <div class="layui-inline">
+              <div class="layui-input-inline"><input type="text" class="layui-input" id="iptTimeRange" placeholder="开始 到 结束" style="width:177px;"></div>
+  </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
-    <@shiro.hasPermission name="storage:in:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>入库</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="storage:out:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>出库</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="storage:out:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出出库清单</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
-<table id="storageInList" class="layui-hide" lay-filter="storageIn"></table>
+<table id="storageOutList" class="layui-hide" lay-filter="storageOut"></table>
 <script type="text/html" id="rightToolBar">
-<@shiro.hasPermission name="storage:in:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
+<@shiro.hasPermission name="storage:out:del"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a></@shiro.hasPermission>
 </script>
 <script>
   document.onkeydown = function (e) {
@@ -49,25 +64,28 @@
   }
   
   $(function(){
+	  $('#sltDeviceList').select2();
 	  $('#sltGoodsList').select2();
   });
   
   layui.use('table', function () {
-    var table = layui.table;
+    var table = layui.table,laydate = layui.laydate;
+    laydate.render({
+        elem: '#iptTimeRange'
+        ,range: true
+      });
     table.render({
-      id: 'storageInList',
-      elem: '#storageInList', 
-      url: 'showGoodsStorageInList',
+      id: 'storageOutList',
+      elem: '#storageOutList', 
+      url: 'showGoodsStorageOutList',
       cols: [[
-        {field: 'inDate', title: '入库日期', align:'center',width:145},
+        {field: 'applyDate', title: '出库日期', align:'center',width:145},
+        {field: 'shortName', title: '点位', align:'center',width:120},
         {field: 'goodsName', title: '商品名称', align:'center',width:250},
         {field: 'goodsCode',title: '商品编号',align:'center',width:155},
-        {field: 'productDate',title: '生产日期',align:'center',width:145},
-        {field: 'expiringDate',title: '到期日期',align:'center',width:145},
-        {field: 'costPrice', title: '成本价', align:'center',width:100},
-        {field: 'marketPrice', title: '建议零售价', align:'center',width:120},
-        {field: 'inCount', title: '入库数量（个）', align:'center',width:150},
-        {field: 'currCount', title: '当前批次库存', align:'center',width:150},
+        {field: 'goodsStorageInName',title: '所属入库批次',align:'center',width:250},
+        {field: 'applyNum', title: '出库数量（个）', align:'center',width:150},
+        {field: 'applyBy', title: '申请人', align:'center',width:120}, 
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
       page: true,
@@ -77,31 +95,41 @@
     var $ = layui.$, active = {
       select: function () {
         var goodsSkuId = $('#sltGoodsList').val();
-        table.reload('storageInList', {
+        var deviceId = $('#sltDeviceList').val();
+        var timeRange = $('#iptTimeRange').val();
+        table.reload('storageOutList', {
           where: {
-        	  goodsSkuId: goodsSkuId
+        	  goodsSkuId: goodsSkuId,
+        	  deviceId: deviceId,
+        	  timeRange:timeRange
           }
         });
       },
       reload:function(){       
-       table.reload('storageInList', {
+       table.reload('storageOutList', {
           where: {
-        	  goodsSkuId: null
+        	  goodsSkuId: null,
+        	  deviceId: null,
+        	  timeRange:null
           }
         });
+       $("#iptTimeRange").attr("placeholder","开始 到 结束");
+       $("#iptTimeRange").val('');
        $("#select2-sltGoodsList-container").text($("#sltGoodsList").find("option[value = '']").text());
        $("#sltGoodsList").val('');
+       $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
+       $("#sltDeviceList").val('');
       },
       add: function () {
-        add('商品入库', 'showAddGoodsStorageIn', 700, 400);
+        add('商品出库', 'showAddGoodsStorageOut', 700, 400);
       }
     };
     
     //监听工具条
-    table.on('tool(storageIn)', function (obj) {
+    table.on('tool(storageOut)', function (obj) {
       var data = obj.data;
       if (obj.event === 'del') {
-        layer.confirm('确定删除该入库记录?',{ title:'提示'},
+        layer.confirm('确定删除该出库记录?',{ title:'提示'},
         function (index) {
           del(data.id);
           layer.close(index);
@@ -118,14 +146,14 @@
 
   function del(id) {
     $.ajax({
-      url:"delGoodsStorageIn",
+      url:"delGoodsStorageOut",
       type:"post",
       data:{id:id},
       async:false,
       success:function(d){
         if(d.result_code==0){
           window.top.layer.msg(d.result_msg,{icon:6,time:1000});
-          layui.table.reload('storageInList');
+          layui.table.reload('storageOutList');
         }else{
           window.top.layer.msg(d.result_msg);
         }},
@@ -153,7 +181,7 @@
     }
     ;
     layer.open({
-      id: 'storageIn-add',
+      id: 'storageOut-add',
       type: 2,
       area: [w + 'px', h + 'px'],
       fix: false,

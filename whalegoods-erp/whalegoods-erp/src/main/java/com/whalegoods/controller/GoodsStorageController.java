@@ -184,7 +184,7 @@ public class GoodsStorageController  {
 	  public String showGoodsStorageOut(Model model) {
 		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
-	    return "/storage/out/storageOutList";
+	    return "/storage/s_out/storageOutList";
 	  }
 
 	  /**
@@ -214,7 +214,7 @@ public class GoodsStorageController  {
 	  public String showAddGoodsStorageOut(Model model) {
 	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	   model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
-	   return "/storage/Out/add-goodsStorageOut";
+	   return "/storage/s_out/add-goodsStorageOut";
 	  }
 	  
 	  /**

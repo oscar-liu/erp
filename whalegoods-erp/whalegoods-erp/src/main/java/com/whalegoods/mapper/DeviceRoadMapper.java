@@ -25,4 +25,11 @@ public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
     
     double selectMaxPriceByGoodsCode(Map<String,Object> mapCdt);
     
+    /**
+     * 根据商品编号找到最新的从高到低的三个价格
+     * @author henrysun
+     * 2018年9月3日 上午4:44:34
+     */
+    List<Double> selectLastSalePrice(String goodsCode);
+    
 }

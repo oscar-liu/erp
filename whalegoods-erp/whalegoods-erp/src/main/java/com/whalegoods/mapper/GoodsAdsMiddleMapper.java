@@ -36,4 +36,11 @@ public interface GoodsAdsMiddleMapper extends BaseMapper<GoodsAdsMiddle,String> 
      * @return
      */
     List<Double> selectLastSalePrice(String goodsCode);
+    
+    /**
+     * 保持相同设备相同的促销商品价格一致
+     * @author henrysun
+     * 2018年8月16日 下午6:41:28
+     */
+    int updateKeepSamePrice(GoodsAdsMiddle objCdt);
 }

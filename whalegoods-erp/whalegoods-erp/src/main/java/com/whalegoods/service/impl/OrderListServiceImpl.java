@@ -154,7 +154,7 @@ public  class OrderListServiceImpl extends BaseServiceImpl<OrderList,String> imp
 	  }
 
 	@Override
-	public String selectDeviceByOrderId(Map<String, Object> mapCdt) {
+	public ErpOrderList selectDeviceByOrderId(Map<String, Object> mapCdt) {
 		return orderListMapper.selectDeviceByOrderId(mapCdt);
 	}
 

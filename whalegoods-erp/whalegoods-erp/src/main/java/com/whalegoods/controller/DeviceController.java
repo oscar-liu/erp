@@ -3,10 +3,12 @@ package com.whalegoods.controller;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceExLog;
 import com.whalegoods.entity.DeviceModel;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
+import com.whalegoods.service.DeviceExlogService;
 import com.whalegoods.service.DeviceModelService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.util.Md5Util;
@@ -42,6 +44,9 @@ public class DeviceController {
 	  
 	  @Autowired
 	  DeviceModelService modelService;
+	  
+	  @Autowired
+	  DeviceExlogService deviceExlogService;
 
 	  /**
 	   * 跳转到设备列表页面
@@ -237,6 +242,30 @@ public class DeviceController {
 		}
 		deviceService.updateByObjCdt(device);
 	    return resBody;
+	  }
+	  
+	  /**
+	   * 跳转到设备异常信息列表页面
+	   * @author henrysun
+	   * 2018年8月22日 下午3:23:13
+	   */
+	  @GetMapping(value = "showDeviceExLog")
+	  @RequiresPermissions("device:exlog:show")
+	  public String showDeviceExLog(Model model) {
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	    return "/device/log/deviceExLogList";
+	  }
+
+	  /**
+	   * 设备异常信息列表接口
+	   * @author henrysun
+	   * 2018年8月22日 下午3:36:57
+	   */
+	  @GetMapping(value = "showDeviceExLogList")
+	  @ResponseBody
+	  @RequiresPermissions("device:exlog:show")
+	  public ReType showDeviceExLogList(Model model, DeviceExLog deviceExLog, String page, String limit) {
+	    return deviceExlogService.selectByPage(deviceExLog,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 
 }

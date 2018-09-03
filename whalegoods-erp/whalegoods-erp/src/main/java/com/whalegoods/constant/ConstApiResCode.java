@@ -41,6 +41,14 @@ public abstract class ConstApiResCode {
     public final static Integer GOODS_CODE_EXIST= 7005;
     public final static Integer GOODS_CODE_NOT_EXIST= 7006;
     public final static Integer GOODS_CODE_NOT_ONLY_ONE= 7007;
+    public final static Integer COST_CANNOT_BIGGER_THAN_MARKET= 7008;
+    public final static Integer PRODUCTION_DATE_AFTER_EXPIRING_DATE= 7009;
+    public final static Integer NO_AVALIBALE_GOODS_STORAGE_IN= 7010;
+    public final static Integer GOODS_STORAGE_IN_NOT_EXIST= 7011;
+    public final static Integer CURR_STORAGE_IN_INAVALIBLE_COUNT=7012;
+    public final static Integer OUT_DATE_CANNOT_BEFORE_IN_DATE=7013;
+    public final static Integer GOODS_STORAGE_OUT_NOT_EXIST=7014;
+    public final static Integer NO_AVALIBALE_GOODS_STORAGE_OUT=7015;
     
     /**
      * 设备和货道相关 8开头
@@ -54,6 +62,7 @@ public abstract class ConstApiResCode {
     public final static Integer SALE_PRICE_MUST_SAME= 8007;
     public final static Integer DEVICE_PWD_ILLEGAL= 8008;
     public final static Integer MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE= 8009;
+    public final static Integer HAVE_TO_SET_GOODS= 8010;
     
     /**
      * 订单相关 9开头
@@ -76,6 +85,7 @@ public abstract class ConstApiResCode {
     public final static Integer SDLIST_EMPTY= 9016;
     public final static Integer WX_CLOSE_ORDER_ONE_FAILED= 9017;
     public final static Integer ORDER_PAID= 9018;
+    public final static Integer ORDER_NOT_EXIST= 9019;
     
     
 	static {
@@ -101,6 +111,14 @@ public abstract class ConstApiResCode {
 		resMap.put(GOODS_CODE_EXIST,"商品编号已存在");
 		resMap.put(GOODS_CODE_NOT_EXIST,"商品编号不存在");
 		resMap.put(GOODS_CODE_NOT_ONLY_ONE,"根据该商品编号查找到多条记录");
+		resMap.put(COST_CANNOT_BIGGER_THAN_MARKET,"成本价不能大于建议零售价");
+		resMap.put(PRODUCTION_DATE_AFTER_EXPIRING_DATE,"到期日期不能早于生产日期");
+		resMap.put(NO_AVALIBALE_GOODS_STORAGE_IN,"该商品没有可用的入库批次");
+		resMap.put(GOODS_STORAGE_IN_NOT_EXIST,"该入库批次已不存在");
+		resMap.put(CURR_STORAGE_IN_INAVALIBLE_COUNT,"当前入库批次可出库数量不足");
+		resMap.put(OUT_DATE_CANNOT_BEFORE_IN_DATE,"同一批次出库日期不能早于入库日期");
+		resMap.put(GOODS_STORAGE_OUT_NOT_EXIST,"该出库批次已不存在");
+		resMap.put(NO_AVALIBALE_GOODS_STORAGE_OUT,"该商品没有可用的出库批次");
 		
 		resMap.put(PATH_NOT_EXIST,"货道不存在或未上架商品");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");
@@ -110,6 +128,7 @@ public abstract class ConstApiResCode {
 		resMap.put(ROADLIST_EMPTY,"货道清单为空");
 		resMap.put(SALE_PRICE_MUST_SAME,"同一个设备相同的商品价格必须一样");
 		resMap.put(MARKET_PRICE_CANNOT_SAMLLER_OR_EQUALS_SALE_PRICE,"原价不能小于等于促销价");
+		resMap.put(HAVE_TO_SET_GOODS,"请先为该货道上架商品");
 		
 		resMap.put(WX_PREPAY_ONE_FAILED,"微信预支付-一级失败");
 		resMap.put(WX_PREPAY_TWO_FAILED,"微信预支付-二级失败");
@@ -129,6 +148,7 @@ public abstract class ConstApiResCode {
 		resMap.put(SDLIST_EMPTY,"当前用户无刷单记录");
 		resMap.put(WX_CLOSE_ORDER_ONE_FAILED,"微信关闭订单API通信失败");
 		resMap.put(ORDER_PAID,"订单已支付");
+		resMap.put(ORDER_NOT_EXIST,"订单不存在");
 		
 	}
 	

@@ -25,7 +25,7 @@ public interface OrderListService extends BaseService<OrderList,String>{
 
 	int getCountByErpObjCdt(ErpOrderList orderList) throws SystemException;
 	
-	String selectDeviceByOrderId(Map<String,Object> mapCdt);
+	ErpOrderList selectDeviceByOrderId(Map<String,Object> mapCdt);
 	
 	/**
 	 * 统计昨天的数据报表

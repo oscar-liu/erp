@@ -21,5 +21,13 @@ public class DeviceExLog extends BaseEntity implements Serializable {
     private String orderId;
     
     private String errorMessage;
+    
+    private String deviceId;
+    
+    private String shortName;
+    
+    private String goodsName;
+    
+    private String fileUrl;
 
 }

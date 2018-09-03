@@ -31,7 +31,12 @@ public class Application {
 	  SpringApplication.run(Application.class,args);
   }
   
-  @Bean(name = "multipartResolver")
+  /**
+   * 给com.whalegoods.temp包下的类使用
+   * @author henrysun
+   * 2018年8月22日 下午5:23:33
+   */
+ /* @Bean(name = "multipartResolver")
   public MultipartResolver multipartResolver(){
    CommonsMultipartResolver resolver = new CommonsMultipartResolver();
    resolver.setDefaultEncoding("UTF-8");
@@ -39,7 +44,7 @@ public class Application {
    resolver.setMaxInMemorySize(40960);
    resolver.setMaxUploadSize(50*1024*1024);//上传文件大小 50M 50*1024*1024
    return resolver;
-} 
+} */
   
   @Bean
   public JobRunner jobRunner(){

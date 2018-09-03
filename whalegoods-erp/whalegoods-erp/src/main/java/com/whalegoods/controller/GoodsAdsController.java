@@ -168,6 +168,8 @@ public class GoodsAdsController  {
 	  
 	  /**
 	   * 获取商品参考促销价
+	   * @author henrysun
+	   * 2018年9月3日 上午4:40:58
 	   */
 	  @GetMapping(value = "getRecommendSalePrice")
 	  @ResponseBody
@@ -236,6 +238,12 @@ public class GoodsAdsController  {
 		  //更新促销商品 
 		  goodsAdsMiddle.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  adsMiddleService.updateByObjCdt(goodsAdsMiddle);
+		  //保持相同设备相同商品促销价一致
+		  GoodsAdsMiddle objCdt2=new GoodsAdsMiddle();
+		  objCdt2.setSalePrice(goodsAdsMiddle.getSalePrice());
+		  objCdt2.setDeviceId(goodsAdsMiddle.getDeviceId());
+		  objCdt2.setGoodsCode(goodsAdsMiddle.getGoodsCode());
+		  adsMiddleService.updateKeepSamePrice(objCdt2);
 		  return resBody;
 	  }
 

@@ -24,4 +24,6 @@ public interface GoodsAdsMiddleService  extends BaseService<GoodsAdsMiddle,Strin
 	List<String> selectNotUpDevice();
 	
 	List<Double> selectLastSalePrice(String goodsCode);
+	
+	int updateKeepSamePrice(GoodsAdsMiddle objCdt);
 }

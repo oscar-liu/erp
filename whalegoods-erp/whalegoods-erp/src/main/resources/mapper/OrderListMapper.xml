@@ -33,8 +33,8 @@
     a.order_type
   </sql>
   
-      <select id="selectDeviceByOrderId" statementType="STATEMENT" resultType="java.lang.String">
-   SELECT b.short_name FROM ${prefix}_order_list a 
+      <select id="selectDeviceByOrderId" statementType="STATEMENT" resultType="com.whalegoods.entity.ErpOrderList">
+   SELECT b.short_name shortName,a.goods_name goodsName,b.id deviceId FROM ${prefix}_order_list a 
    INNER JOIN device b ON a.device_id_jp= b.device_id_jp
    <where>
      <if test="orderId !=null and orderId !=''"> AND a.order_id= '${orderId}'</if>
@@ -127,6 +127,7 @@
 			order_time,
 			order_status,
 			goods_name,
+			<if test="costPrice != null ">cost_price,</if>			
 			sale_price,
 			ctn,
 			path_code,
@@ -147,6 +148,7 @@
 				'${orderTime}',
 				${orderStatus},
 				'${goodsName}',
+				<if test="costPrice != null ">${costPrice},</if>
 				${salePrice},
 				${ctn},
 				${pathCode},

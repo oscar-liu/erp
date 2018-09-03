@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whalegoods.mapper.GoodsStorageInMapper">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageIn">
+  <id column="id" jdbcType="VARCHAR" property="id" />
+  <result column="in_date" jdbcType="DATE" property="inDate" />
+  <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="product_date" jdbcType="DATE" property="productDate" />
+    <result column="expiring_date" jdbcType="DATE" property="expiringDate" />   
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="market_price" jdbcType="DECIMAL" property="marketPrice" />
+    <result column="in_count" jdbcType="INTEGER" property="inCount" />
+    <result column="curr_count" jdbcType="INTEGER" property="currCount" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+  a.id,
+  a.in_date,
+  a.goods_sku_id,
+  b.goods_code,
+  b.goods_name,
+  a.product_date,
+  a.expiring_date,
+  a.cost_price,
+  a.market_price,
+  a.in_count,
+  a.curr_count
+  </sql>
+  
+        <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM goods_storage_in a   
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+    WHERE a.id=#{id}
+  </select>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM goods_storage_in a   
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+   <where>
+     <if test="goodsSkuId !=null and goodsSkuId !=''">
+     AND a.goods_sku_id=#{goodsSkuId}
+     </if>
+    </where>
+    ORDER BY a.in_date DESC
+  </select>
+  
+      <select id="getStorageInListByGoodsSkuId" parameterType="java.lang.String" resultType="com.whalegoods.entity.GoodsStorageIn">
+    SELECT a.id,CONCAT(DATE_FORMAT(a.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(a.expiring_date, '%Y-%m-%d'),'到期',a.cost_price,'元成本价') goodsStorageInName 
+    FROM goods_storage_in a  
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id
+    WHERE a.goods_sku_id=#{_parameter} AND a.curr_count>0
+    ORDER BY a.in_date DESC
+  </select>
+  
+     <!-- 查询最新的销售价格-->
+    <select id="selectLastMarketPrice" parameterType="java.lang.String" resultType="java.lang.Double">
+    SELECT a.market_price FROM goods_storage_in a 
+    INNER JOIN  goods_sku b ON b.id=a.goods_sku_id
+    WHERE b.goods_code= #{_parameter} GROUP BY a.market_price LIMIT 3 
+  </select>
+  
+  <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageIn">
+    INSERT INTO goods_storage_in (
+    id,
+    in_date, 
+    goods_sku_id, 
+    product_date, 
+    expiring_date, 
+    cost_price, 
+    market_price,
+    in_count,
+    curr_count,
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{inDate}, 
+    #{goodsSkuId}, 
+    #{productDate},
+    #{expiringDate}, 
+    #{costPrice},
+    #{marketPrice},
+    #{inCount},
+    #{currCount},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+  
+     <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM goods_storage_in  WHERE id = #{_parameter}
+  </delete>
+  
+  		<update id="updateByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageIn">
+		UPDATE goods_storage_in a INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+	   <set>
+      <if test="currCount != null and currCount != ''">a.curr_count=a.curr_count+#{currCount},</if>
+      a.update_date=now(),
+      </set>
+    		<where>
+    		<if test="id !=null and id !=''">
+				AND a.id=#{id}
+			</if>
+		 </where>
+	</update>
+
+</mapper>

@@ -208,6 +208,20 @@
     </where>
 	</update>
 	
+	 <update id="updateKeepSamePrice" parameterType="com.whalegoods.entity.GoodsAdsMiddle">
+		UPDATE goods_ads_middle a 
+		INNER JOIN  goods_sku b ON b.goods_code=a.goods_code
+        INNER JOIN device d ON  d.id=a.device_id
+	   <set>
+      <if test="salePrice != null and salePrice != ''">a.sale_price=#{salePrice},</if>
+      a.update_date = now(),
+      </set>
+        <where>
+        <if test="goodsCode !=null and goodsCode !=''"> AND a.goods_code =#{goodsCode}</if>
+        <if test="deviceId !=null and deviceId !=''"> AND a.device_id =#{deviceId}</if>
+    </where>
+	</update>
+	
 	 <select id="selectCountByMapCdt" parameterType="java.util.Map" resultType="java.lang.Integer">
     SELECT COUNT(id) FROM goods_ads_middle
     <where>

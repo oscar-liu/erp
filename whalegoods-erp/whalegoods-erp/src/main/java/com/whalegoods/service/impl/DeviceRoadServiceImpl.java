@@ -117,4 +117,9 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		return deviceRoadMapper.selectMaxPriceByGoodsCode(mapCdt);
 	}
 
+	@Override
+	public List<Double> selectLastSalePrice(String goodsCode) {
+		return deviceRoadMapper.selectLastSalePrice(goodsCode);
+	}
+
 }

@@ -29,5 +29,7 @@ public interface DeviceRoadService extends BaseService<DeviceRoad,String> {
 	int updateSalePrice(Map<String,Object> mapCdt);
 	
   double selectMaxPriceByGoodsCode(Map<String,Object> mapCdt);
+  
+  List<Double> selectLastSalePrice(String goodsCode);
  
 }

@@ -318,9 +318,9 @@ public class PayServiceImpl implements PayService{
 		Map<String,Object> mapCdt=new HashMap<>();
 		mapCdt.put("orderId",model.getOrder());
 		mapCdt.put("prefix", DateUtil.getCurrentMonth().replace(ConstSysParamName.UNDERLINE,""));
-		String shortName=orderListService.selectDeviceByOrderId(mapCdt);
+		ErpOrderList order=orderListService.selectDeviceByOrderId(mapCdt);
 		//模板内容
-		String content="{\"short_name\":\""+shortName+"\"}";
+		String content="{\"short_name\":\""+order.getShortName()+"\", \"goods_name\":\""+order.getGoodsName()+"\"}";
 		//发送短信
 		SmsUtil.sendSms(jobName,templateId,content);
 	}

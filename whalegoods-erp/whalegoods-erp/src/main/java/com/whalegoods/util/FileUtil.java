@@ -46,10 +46,10 @@ public class FileUtil {
 	 */
 	public  String uploadFile(HttpServletRequest request,String sonFolder,String newFileName) throws SystemException{
 		//如果不是multipart/form-data类型
-		 if(!ServletFileUpload.isMultipartContent(request)){  
+		/* if(!ServletFileUpload.isMultipartContent(request)){  
 			logger.error("请求类型不是multipart/form-data");
 	        throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
-	    }
+	    }*/
 	    //创建上传所需要的两个对象
 	    DiskFileItemFactory factory = new DiskFileItemFactory();
 	    //解析器依赖于工厂

@@ -88,6 +88,7 @@
 	  $('#sltGoodsCode').select2();
 	  $('#sltDeviceId').select2();
 	  $('#sltGoodsStorageIn').select2();
+	  $('#sltGoodsStorageIn + span').css('width','300px');
 	  $('#sltGoodsCode').change(function(){ 
 	      $.ajax({
 	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val(),

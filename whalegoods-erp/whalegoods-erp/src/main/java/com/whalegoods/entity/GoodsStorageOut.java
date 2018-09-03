@@ -50,5 +50,7 @@ public class GoodsStorageOut extends BaseEntity implements Serializable {
     
     //入库批次名称，由多个字段组合而成
     private String goodsStorageInName;
+    
+    private String goodsStorageOutName;
    
 }

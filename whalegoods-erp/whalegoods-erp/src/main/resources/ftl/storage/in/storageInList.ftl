@@ -67,7 +67,7 @@
         {field: 'costPrice', title: '成本价', align:'center',width:80},
         {field: 'marketPrice', title: '建议零售价', align:'center',width:100},
         {field: 'inCount', title: '入库数量（个）', align:'center',width:130},
-        {field: 'currCount', title: '当前批次库存', align:'center',width:120},
+        {field: 'currCount', title: '当前批次库存（个）', align:'center',width:160},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
       page: true,

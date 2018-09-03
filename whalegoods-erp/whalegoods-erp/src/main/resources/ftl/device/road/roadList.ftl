@@ -74,7 +74,27 @@
   {{#  } else { }}
 <span style="color:#76EE00;font-weight:bold;">充足</span>
   {{#  } }}
-  
+</script>
+<script type="text/html" id="tplAdsMiddleType">
+  {{#  if(d.adsMiddleType!=3){ }}
+    <span>{{d.goodsName}}<span style="color:red;">（促销中）</span></span>
+  {{#  } else { }}
+<span>{{d.goodsName}}</span>
+  {{#  } }}
+</script>
+<script type="text/html" id="tplGoodsStorageOut">
+  {{#  if(d.goodsStorageOutName==null||d.goodsStorageOutName==undefined||d.goodsStorageOutName==""){ }}
+    <span style="color: #F581B1;">无</span>
+  {{#  } else { }}
+<span>{{d.goodsStorageOutName}}</span>
+  {{#  } }}
+</script>
+<script type="text/html" id="tplGoodsStorageIn">
+  {{#  if(d.goodsStorageInName==null||d.goodsStorageInName==undefined||d.goodsStorageInName==""){ }}
+    <span style="color: #F581B1;">无</span>
+  {{#  } else { }}
+<span>{{d.goodsStorageInName}}</span>
+  {{#  } }}
 </script>
 <script>
   document.onkeydown = function (e) {
@@ -111,16 +131,19 @@
         {field: 'ctn', title: '柜号', align:'center',width:60},
         {field: 'floor', title: '层级', align:'center',width:60},
         {field: 'pathCode', title: '货道号', align:'center',width:76},        
-        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;',width:165},
+        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;',width:200},
         {field: 'salePrice', title: '售价', align:'center',width:60},
         {field: 'goodsCode',title: '商品编号',align:'center',width:165},
         {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel',width:110},
-        {field: 'stock', title: '库存', align:'center',sort: true,width:80},        
+        {field: 'stock', title: '库存', align:'center',sort: true,width:80},     
+        {field: 'goodsStorageOutName',title: '所属出库批次',align:'center',event: 'setGoodsStorageOut',width:320,templet: '#tplGoodsStorageOut'},
+        {field: 'goodsStorageInName',title: '所属入库批次',align:'center',width:320,templet: '#tplGoodsStorageIn'},
         {field: 'deviceIdJp',title: '设备编号(鲸品)',align:'center',width:125}, 
         {field: 'deviceIdSupp', title: '设备编号(供应商)', align:'center',width:140},
         {field: 'capacity', title: '最大容量', align:'center',sort: true,width:100},
         {field: 'warningNum', title: '报警临界值', align:'center',sort: true,width:110},
         {field: 'deviceId',minWidth:0,width:0,type:'space',style:'display:none'},
+        {field: 'adsMiddleType',minWidth:0,width:0,type:'space',style:'display:none'},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
       ]],
       page: true,
@@ -202,6 +225,9 @@
       }
       if(obj.event === 'setGoods'){
     	  setGoods('设置商品', 'showUpdateGoods?id='+data.id, 500, 300);
+      }
+      if(obj.event === 'setGoodsStorageOut'){
+    	  setGoods('设置所属出库批次', 'showUpdateGoodsStorageOut?id='+data.id, 500, 200);
       }
     });
 

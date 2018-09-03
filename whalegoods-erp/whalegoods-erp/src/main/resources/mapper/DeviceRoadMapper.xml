@@ -81,6 +81,10 @@
     <result column="warning_num" jdbcType="TINYINT" property="warningNum" />
     <result column="lack_level" jdbcType="TINYINT" property="lackLevel" />
     <result column="lock_status" jdbcType="TINYINT" property="lockStatus" />
+    <result column="goodsStorageOutName" jdbcType="VARCHAR" property="goodsStorageOutName" />
+    <result column="goodsStorageInName" jdbcType="VARCHAR" property="goodsStorageInName" />
+    <result column="goods_storage_out_id" jdbcType="VARCHAR" property="goodsStorageOutId" />
+    <result column="adsMiddleType" jdbcType="TINYINT" property="adsMiddleType" />
   </resultMap>
   
   <sql id="Base_Column_List3">
@@ -99,7 +103,8 @@
     a.stock,
     a.warning_num,
     a.lack_level,
-    c.lock_status
+    c.lock_status,
+    a.goods_storage_out_id
   </sql>
   
     <sql id="Base_Column_List4">
@@ -114,11 +119,37 @@
     b.goods_code
   </sql>
   
+    <sql id="Base_Column_List5">
+    c.device_id_jp,
+    c.device_id_supp,
+    c.short_name,
+    b.goods_code,
+    b.goods_name,
+    a.id,
+    a.device_id,
+    a.ctn,
+    a.floor,
+    a.path_code,
+    a.sale_price,
+    a.capacity,
+    a.stock,
+    a.warning_num,
+    a.lack_level,
+    c.lock_status,
+    CONCAT(DATE_FORMAT(d.apply_date, '%Y-%m-%d'),'出库') goodsStorageOutName,
+    CONCAT(DATE_FORMAT(e.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(e.expiring_date, '%Y-%m-%d'),'到期',e.cost_price,'元成本价') goodsStorageInName,
+    CASE WHEN f.type IS NULL THEN 3 
+    WHEN f.type=1 THEN 1
+    WHEN f.type=2 THEN 2
+    ELSE NULL END adsMiddleType
+  </sql>
+  
       <select id="selectById" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
     SELECT <include refid="Base_Column_List3" />
     FROM device_road a 
     LEFT JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
+    LEFT JOIN goods_storage_out d ON d.id=a.goods_storage_out_id
     WHERE a.id=#{id}
   </select>
   
@@ -127,6 +158,7 @@
     FROM device_road a 
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
+    LEFT JOIN goods_storage_out d ON d.id=a.goods_storage_out_id
      <where>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> 
      AND c.device_id_jp=#{deviceIdJp}
@@ -148,10 +180,13 @@
   </select>
   
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.DeviceRoad" resultMap="BaseResultMap2">
-    SELECT <include refid="Base_Column_List3" />
+    SELECT <include refid="Base_Column_List5" />
     FROM device_road a 
     LEFT JOIN goods_sku b ON a.goods_sku_id=b.id 
-    INNER JOIN device c  ON c.id=a.device_id 
+    INNER JOIN device c  ON c.id=a.device_id
+    LEFT  JOIN goods_ads_middle f ON f.goods_code = b.goods_code AND f.device_id=c.id 
+    LEFT JOIN goods_storage_out d ON d.id=a.goods_storage_out_id
+    LEFT JOIN goods_storage_in e ON e.id=d.goods_storage_in_id
    <where>
      <if test="deviceIdJp !=null and deviceIdJp !=''"> 
      AND c.device_id_jp=#{deviceIdJp}
@@ -338,6 +373,7 @@
       <if test="salePrice != null ">a.sale_price=#{salePrice},</if>
       <if test="capacity != null ">a.capacity=#{capacity},</if>
       <if test="warningNum != null ">a.warning_num=#{warningNum},</if>
+      <if test="goodsStorageOutId != null ">a.goods_storage_out_id=#{goodsStorageOutId},</if>
       a.update_date=now(),
       </set>
     		<where>
@@ -392,6 +428,14 @@
      AND b.goods_code=#{goodsCode}
      </if>
     </where>
+  </select>
+  
+   <!-- 查询最新的销售价格-->
+    <select id="selectLastSalePrice" parameterType="java.lang.String" resultType="java.lang.Double">
+    SELECT a.sale_price FROM device_road a 
+    INNER JOIN  goods_sku b ON b.id=a.goods_sku_id
+    INNER JOIN device d ON  d.id=a.device_id
+    WHERE b.goods_code= #{_parameter} GROUP BY a.sale_price LIMIT 3 
   </select>
   
      <delete id="deleteById" parameterType="java.lang.String">

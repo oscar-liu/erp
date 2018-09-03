@@ -13,4 +13,6 @@ import com.whalegoods.entity.GoodsStorageIn;
 public interface GoodsStorageInService extends BaseService<GoodsStorageIn,String> {
 	
 	List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId);
+	
+	List<Double> selectLastMarketPrice(String goodsCode);
 }

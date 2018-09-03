@@ -1,6 +1,8 @@
 package com.whalegoods.service.impl;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,10 @@ public class GoodsStorageOutServiceImpl extends BaseServiceImpl<GoodsStorageOut,
 	  public BaseMapper<GoodsStorageOut, String> getMapper() {
 	    return goodsStorageOutMapper;
 	  }
+
+	@Override
+	public List<GoodsStorageOut> selectListByObjCdtForSetDeviceRoad(GoodsStorageOut objCdt) {
+		return goodsStorageOutMapper.selectListByObjCdtForSetDeviceRoad(objCdt);
+	}
 	  
 }

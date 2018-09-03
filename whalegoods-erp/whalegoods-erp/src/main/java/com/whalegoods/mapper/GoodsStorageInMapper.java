@@ -13,4 +13,6 @@ public interface GoodsStorageInMapper extends BaseMapper<GoodsStorageIn, String>
 	 * 2018年8月30日 下午5:21:48
 	 */
 	List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId);
+	
+	List<Double> selectLastMarketPrice(String goodsCode);
 }

@@ -1,5 +1,7 @@
 package com.whalegoods.service;
 
+import java.util.List;
+
 import com.whalegoods.entity.GoodsStorageOut;
 
 
@@ -10,4 +12,5 @@ import com.whalegoods.entity.GoodsStorageOut;
  */
 public interface GoodsStorageOutService extends BaseService<GoodsStorageOut,String> {
 	
+	List<GoodsStorageOut> selectListByObjCdtForSetDeviceRoad(GoodsStorageOut objCdt);
 }

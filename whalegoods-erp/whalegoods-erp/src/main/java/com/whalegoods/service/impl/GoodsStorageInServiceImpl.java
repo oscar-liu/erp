@@ -26,5 +26,10 @@ public class GoodsStorageInServiceImpl extends BaseServiceImpl<GoodsStorageIn,St
 	public List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId) {
 		 return goodsStorageInMapper.getStorageInListByGoodsSkuId(goodsSkuId);
 	}
+
+	@Override
+	public List<Double> selectLastMarketPrice(String goodsCode) {
+		 return goodsStorageInMapper.selectLastMarketPrice(goodsCode);
+	}
 	  
 }

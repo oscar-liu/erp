@@ -9,8 +9,8 @@ import lombok.ToString;
 
 /**
  * 货道信息表device_road实体类
- * @author henry-sun
- *
+ * @author henrysun
+ * 2018年9月3日 上午4:27:45
  */
 @Getter
 @Setter
@@ -61,12 +61,20 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	private Byte lackLevel;
 	
 	private Byte lockStatus;
+	
+	private Byte adsMiddleType;
+	
+	private String goodsStorageOutName;
+	
+	private String goodsStorageInName;
+	
+	private String goodsStorageOutId;
 
 	public DeviceRoad(){}
 	
 	public DeviceRoad(String deviceId, String deviceIdJp, String deviceIdSupp, String shortName, String goodsSkuId,
 			String goodsCode, String goodsName, Byte ctn, String stockOrderId, Byte pathCode, Byte floor,
-			Double salePrice, Byte capacity, Integer stock, Byte warningNum, Byte lackLevel, Byte lockStatus) {
+			Double salePrice, Byte capacity, Integer stock, Byte warningNum, Byte lackLevel, Byte lockStatus,String goodsStorageOutName,String goodsStorageInName,String goodsStorageOutId, Byte adsMiddleType) {
 		super();
 		this.deviceId = deviceId;
 		this.deviceIdJp = deviceIdJp;
@@ -85,6 +93,10 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 		this.warningNum = warningNum;
 		this.lackLevel = lackLevel;
 		this.lockStatus = lockStatus;
+		this.goodsStorageOutName = goodsStorageOutName;
+		this.goodsStorageInName = goodsStorageInName;
+		this.goodsStorageOutId = goodsStorageOutId;
+		this.adsMiddleType = adsMiddleType;
 	}	
 
 }

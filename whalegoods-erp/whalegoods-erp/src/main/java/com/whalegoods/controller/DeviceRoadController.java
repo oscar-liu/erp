@@ -29,6 +29,7 @@ import com.whalegoods.entity.DeviceModelStandard;
 import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.GoodsAdsMiddle;
 import com.whalegoods.entity.GoodsSku;
+import com.whalegoods.entity.GoodsStorageOut;
 import com.whalegoods.entity.request.ReqCreatePrepay;
 import com.whalegoods.entity.request.ReqCreateQrCode;
 import com.whalegoods.entity.request.ReqInitRoad;
@@ -41,6 +42,8 @@ import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsAdsMiddleService;
 import com.whalegoods.service.GoodsAdsTopService;
 import com.whalegoods.service.GoodsSkuService;
+import com.whalegoods.service.GoodsStorageInService;
+import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.PayService;
 import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.ReType;
@@ -79,6 +82,12 @@ public class DeviceRoadController  {
 	  
 	  @Autowired
 	  DeviceModelStandardService standardService;
+	  
+	  @Autowired
+	  GoodsStorageInService goodsStorageInService;
+	  
+	  @Autowired
+	  GoodsStorageOutService goodsStorageOutService; 
 
 	  /**
 	   * 跳转到货道列表页面
@@ -323,7 +332,6 @@ public class DeviceRoadController  {
 	    return "/device/road/set-goods";
 	  }
 
-
 	  /**
 	   * 更新货道商品接口
 	   * @author henrysun
@@ -360,6 +368,45 @@ public class DeviceRoadController  {
 		  mapCdt2.put("deviceId",deviceRoad.getDeviceId());
 		  mapCdt2.put("goodsSkuId",goodsSku.getId());
 		  deviceRoadService.updateSalePrice(mapCdt2);
+		  return resBody;
+	  }
+	  
+	  /**
+	   * 跳转到设置所属出库批次
+	   * @author henrysun
+	   * 2018年5月7日 上午11:54:54
+	   */
+	  @GetMapping(value = "showUpdateGoodsStorageOut")
+	  public String showUpdateGoodsStorageOut(@RequestParam String id, Model model) {
+		DeviceRoad deviceRoad= deviceRoadService.selectById(id);
+		if(StringUtil.isEmpty(deviceRoad.getGoodsCode())){
+			throw new BizApiException(ConstApiResCode.HAVE_TO_SET_GOODS);
+		}
+		GoodsStorageOut objCdt=new GoodsStorageOut();
+		objCdt.setDeviceId(deviceRoad.getDeviceId());
+		objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		model.addAttribute("road",deviceRoad);
+		model.addAttribute("goodsStorageOutList",goodsStorageOutService.selectListByObjCdtForSetDeviceRoad(objCdt));
+	    return "/device/road/set-goodsStorageOut";
+	  }
+	  
+	  /**
+	   * 设置所属出库批次接口
+	   * @author henrysun
+	   * 2018年9月3日 上午5:26:36
+	   */
+	  @PostMapping(value = "updateGoodsStorageOut")
+	  @ResponseBody
+	  public ResBody updateGoodsStorageOut(@RequestBody DeviceRoad deviceRoad) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		  //查询所属出库批次是否存在
+		GoodsStorageOut goodsStorageOut=goodsStorageOutService.selectById(deviceRoad.getGoodsStorageOutId());
+		if(goodsStorageOut!=null){
+			deviceRoadService.updateByObjCdtForErp(deviceRoad);
+		}
+		else{
+			throw new BizApiException(ConstApiResCode.GOODS_STORAGE_OUT_NOT_EXIST);
+		}
 		  return resBody;
 	  }
 
@@ -411,5 +458,39 @@ public class DeviceRoadController  {
 		  String shortName=resultList.get(0).getShortName();
 		  FileUtil.exportExcel(resultList,shortName+"-货道清单",shortName+"-货道清单",DeviceRoad.class,shortName+"-货道清单.xls",response);
 		}
+	  
+	  /**
+	   * 获取商品参考销售价
+	   * @author henrysun
+	   * 2018年9月3日 上午4:40:58
+	   */
+	  @GetMapping(value = "getRecommendPrice")
+	  @ResponseBody
+	  public ResBody getRecommendPrice(@RequestParam String goodsCode, Model model) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		List<Double> listPrice=deviceRoadService.selectLastSalePrice(goodsCode);
+		StringBuffer sb=new StringBuffer();
+		if(listPrice.size()==0){
+			//再从入库批次里找到最新的三个建议零售价
+			List<Double> listMarketPrice=goodsStorageInService.selectLastMarketPrice(goodsCode);
+			if(listMarketPrice.size()==0){
+				sb.append("无,");
+			}
+			else{
+				for (Double item : listMarketPrice) {
+					sb.append(item.toString()+"元");
+					sb.append(",");
+				}
+			}
+		}
+		else{
+			for (Double item : listPrice) {
+				sb.append(item.toString()+"元");
+				sb.append(",");
+			}
+		}
+		resBody.setData(sb.toString().substring(0,sb.toString().length()-1));
+		return resBody;
+	  }
 	
 }

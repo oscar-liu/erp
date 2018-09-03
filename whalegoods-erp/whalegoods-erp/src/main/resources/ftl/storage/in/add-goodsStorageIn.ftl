@@ -92,9 +92,12 @@
     var form = layui.form,layer = layui.layer,laydate = layui.laydate;
     
     laydate.render({
-        elem: '#iptInDate,#iptProductDate,#iptExpiringDate'
+        elem: '#iptInDate,#iptProductDate'
         ,max:0
-      });    
+      });   
+    laydate.render({
+        elem: '#iptExpiringDate'
+      }); 
     form.verify({
   	  FFS: function(value){
   	  var reg = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;

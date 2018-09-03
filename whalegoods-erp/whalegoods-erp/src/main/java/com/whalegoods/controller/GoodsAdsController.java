@@ -168,6 +168,8 @@ public class GoodsAdsController  {
 	  
 	  /**
 	   * 获取商品参考促销价
+	   * @author henrysun
+	   * 2018年9月3日 上午4:40:58
 	   */
 	  @GetMapping(value = "getRecommendSalePrice")
 	  @ResponseBody

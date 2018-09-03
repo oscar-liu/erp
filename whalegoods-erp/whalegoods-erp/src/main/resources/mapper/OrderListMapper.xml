@@ -127,6 +127,7 @@
 			order_time,
 			order_status,
 			goods_name,
+			<if test="costPrice != null ">cost_price,</if>			
 			sale_price,
 			ctn,
 			path_code,
@@ -147,6 +148,7 @@
 				'${orderTime}',
 				${orderStatus},
 				'${goodsName}',
+				<if test="costPrice != null ">${costPrice},</if>
 				${salePrice},
 				${ctn},
 				${pathCode},

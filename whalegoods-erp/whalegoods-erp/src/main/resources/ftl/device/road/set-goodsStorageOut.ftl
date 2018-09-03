@@ -30,7 +30,7 @@
       <div class="layui-input-inline">
        <select id="sltGoodsStorageOut" name="sltGoodsStorageOut" lay-verify="required" lay-ignore>
      <option value="">直接选择或搜索选择</option>
-  	<#list storageOut as goodsStorageOutList>
+  	<#list goodsStorageOutList as storageOut>
           <option value="${storageOut.id}">${storageOut.goodsStorageOutName}</option>
     </#list>
     </select>
@@ -48,7 +48,8 @@
 $(function(){
 	$('#sltGoodsStorageOut').select2();
 	$("#select2-sltGoodsStorageOut-container").text($("#sltGoodsStorageOut").find("option[value = "+'${road.goodsStorageOutId}'+"]").text());
-	$('#sltGoodsCode').val('${road.goodsStorageOutId}');
+	$('#sltGoodsStorageOut').val('${road.goodsStorageOutId}');
+	$('#sltGoodsStorageOut + span').css('width','300px');
 });
 
 layui.use(['form','layer'], function(){

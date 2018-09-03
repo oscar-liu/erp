@@ -372,6 +372,29 @@ public class DeviceRoadController  {
 	  }
 	  
 	  /**
+	   * 校验是否可以设置出库批次
+	   * @author henrysun
+	   * 2018年9月3日 上午11:52:28
+	   */
+	  @GetMapping(value = "validateCanSetGoodsStorageOut")
+	  @ResponseBody
+	  public ResBody validateCanSetGoodsStorageOut(@RequestParam String id, Model model) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		DeviceRoad deviceRoad= deviceRoadService.selectById(id);
+		if(StringUtil.isEmpty(deviceRoad.getGoodsCode())){
+			throw new BizApiException(ConstApiResCode.HAVE_TO_SET_GOODS);
+		}
+		GoodsStorageOut objCdt=new GoodsStorageOut();
+		objCdt.setDeviceId(deviceRoad.getDeviceId());
+		objCdt.setGoodsCode(deviceRoad.getGoodsCode());
+		List<GoodsStorageOut> listGoodsStorageOut=goodsStorageOutService.selectListByObjCdtForSetDeviceRoad(objCdt);
+		if(listGoodsStorageOut.size()==0){
+			throw new BizApiException(ConstApiResCode.NO_AVALIBALE_GOODS_STORAGE_OUT);
+		}
+	    return resBody;
+	  }
+	  
+	  /**
 	   * 跳转到设置所属出库批次
 	   * @author henrysun
 	   * 2018年5月7日 上午11:54:54
@@ -379,9 +402,6 @@ public class DeviceRoadController  {
 	  @GetMapping(value = "showUpdateGoodsStorageOut")
 	  public String showUpdateGoodsStorageOut(@RequestParam String id, Model model) {
 		DeviceRoad deviceRoad= deviceRoadService.selectById(id);
-		if(StringUtil.isEmpty(deviceRoad.getGoodsCode())){
-			throw new BizApiException(ConstApiResCode.HAVE_TO_SET_GOODS);
-		}
 		GoodsStorageOut objCdt=new GoodsStorageOut();
 		objCdt.setDeviceId(deviceRoad.getDeviceId());
 		objCdt.setGoodsCode(deviceRoad.getGoodsCode());

@@ -22,6 +22,7 @@
     <result column="start_hms" jdbcType="VARCHAR" property="startHms" />
     <result column="end_hms" jdbcType="VARCHAR" property="endHms" />
     <result column="m_sale_price" jdbcType="DECIMAL" property="mSalePrice" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
   </resultMap>
   
    <sql id="Base_Column_List1">
@@ -61,7 +62,8 @@
     d.end_date,
     d.start_hms,
     d.end_hms,
-    d.sale_price m_sale_price
+    d.sale_price m_sale_price,
+    f.cost_price
   </sql>
   
   <resultMap id="BaseResultMap2" type="com.whalegoods.entity.DeviceRoad">
@@ -204,6 +206,7 @@
      AND a.goods_sku_id=#{goodsSkuId}
      </if>
     </where>
+    GROUP BY c.short_name, a.ctn, a.floor, a.path_code 
     ORDER BY c.short_name,a.ctn,a.floor,a.path_code
   </select>
   
@@ -224,6 +227,8 @@
     INNER JOIN goods_sku b ON a.goods_sku_id=b.id
     INNER JOIN device c  ON c.id=a.device_id 
     LEFT JOIN goods_ads_middle d ON d.goods_code=b.goods_code AND d.device_id=c.id
+    LEFT JOIN goods_storage_out e ON e.id=a.goods_storage_out_id
+    LEFT JOIN goods_storage_in f ON f.id=e.goods_storage_in_id
     <where>
 			<if test="deviceIdJp !=null and deviceIdJp !=''">
 				AND c.device_id_jp=#{deviceIdJp}

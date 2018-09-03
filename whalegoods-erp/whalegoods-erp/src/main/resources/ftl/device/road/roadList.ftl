@@ -77,7 +77,7 @@
 </script>
 <script type="text/html" id="tplAdsMiddleType">
   {{#  if(d.adsMiddleType!=3){ }}
-    <span>{{d.goodsName}}<span style="color:red;">（促销中）</span></span>
+    <span>{{d.goodsName}}<span style="color:red;">（促销）</span></span>
   {{#  } else { }}
 <span>{{d.goodsName}}</span>
   {{#  } }}
@@ -131,7 +131,7 @@
         {field: 'ctn', title: '柜号', align:'center',width:60},
         {field: 'floor', title: '层级', align:'center',width:60},
         {field: 'pathCode', title: '货道号', align:'center',width:76},        
-        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;',width:200},
+        {field: 'goodsName', title: '商品名称', align:'center',event: 'setGoods', style:'cursor: pointer;',width:250,templet: '#tplAdsMiddleType'},
         {field: 'salePrice', title: '售价', align:'center',width:60},
         {field: 'goodsCode',title: '商品编号',align:'center',width:165},
         {field: 'lackLevel', title: '缺货紧急度', align:'center',templet: '#tpllackLevel',width:110},
@@ -227,7 +227,21 @@
     	  setGoods('设置商品', 'showUpdateGoods?id='+data.id, 500, 300);
       }
       if(obj.event === 'setGoodsStorageOut'){
-    	  setGoods('设置所属出库批次', 'showUpdateGoodsStorageOut?id='+data.id, 500, 200);
+  	    $.ajax({
+	        url:'validateCanSetGoodsStorageOut?id='+data.id,
+	        type:'get',
+	        async:false,
+	        success:function(d){
+	          if(d.result_code==0){
+	        	  setGoodsStorageOut('设置所属出库批次', 'showUpdateGoodsStorageOut?id='+data.id, 500, 200);
+	          }else{
+	            layer.msg(d.result_msg,{icon:5,time:1000});
+	          }},
+	          error:function(){
+	            window.top.layer.msg('请求失败',{icon:5,time:1000});
+	        }
+	      });
+    	  
       }
     });
 
@@ -298,6 +312,32 @@
 	    }
 	    layer.open({
 	      id: 'road-setGoods',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
+  
+  function setGoodsStorageOut(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    layer.open({
+	      id: 'road-setGoodsStorageOut',
 	      type: 2,
 	      area: [w + 'px', h + 'px'],
 	      fix: false,

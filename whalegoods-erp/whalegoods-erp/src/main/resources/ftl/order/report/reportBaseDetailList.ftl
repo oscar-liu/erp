@@ -112,7 +112,7 @@
             });
       },
       page: true,
-      height: 'full-69'
+      height: 'full-43'
     });
 
     var active = {

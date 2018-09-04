@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whalegoods.mapper.GoodsStorageLocationMapper">
+ <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageLocation">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="location_name" jdbcType="VARCHAR" property="locationName" />	
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="VARCHAR" property="update_by" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+    a.id,
+    a.location_name,
+    a.create_by,
+    a.create_date,
+    a.update_by,
+    a.update_date
+  </sql>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageLocation" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM goods_storage_location a 
+   <where>
+     <if test="locationName !=null and locationName !=''"> AND a.location_name LIKE "%" #{locationName} "%"</if>
+    </where>
+  </select>
+  
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />  FROM goods_storage_location a 
+    WHERE a.id = #{_parameter}
+  </select>
+  
+   <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM goods_storage_location  WHERE id = #{_parameter}
+  </delete>
+
+  <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageLocation">
+    INSERT INTO goods_storage_location (
+    id,
+    location_name, 
+    create_by,
+    create_date,
+    update_by,
+    update_date)
+    VALUES (
+    #{id},
+    #{locationName}, 
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now()
+    )
+  </insert>
+    
+	<update id="updateByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageLocation">
+		UPDATE goods_storage_location a 
+	   <set>
+      <if test="locationName != null and locationName != ''">a.location_name=#{locationName},</if>
+      <if test="updateBy != null and updateBy != '' ">a.update_by = #{updateBy}, </if>
+      update_date = now(),
+      </set>
+        <where>
+        <if test="id !=null and id !=''"> AND a.id =#{id}</if>
+    </where>
+	</update>
+
+</mapper>

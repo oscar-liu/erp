@@ -105,7 +105,7 @@
     #{applyNum},
     #{applyBy}, 
     #{deviceId},
-    curdate(),
+    #{applyDate},
     #{createBy}, 
     now(),
     #{updateBy},

@@ -19,12 +19,14 @@ import com.whalegoods.entity.Device;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.GoodsStorage;
 import com.whalegoods.entity.GoodsStorageIn;
+import com.whalegoods.entity.GoodsStorageLocation;
 import com.whalegoods.entity.GoodsStorageOut;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
+import com.whalegoods.service.GoodsStorageLocationService;
 import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageService;
 import com.whalegoods.util.ReType;
@@ -54,6 +56,9 @@ public class GoodsStorageController  {
 	 
 	 @Autowired
 	 GoodsSkuService goodsSkuService;
+	 
+	 @Autowired
+	 GoodsStorageLocationService goodsStorageLocationService;
 
 	  /**
 	   * 跳转到仓库入库列表页面
@@ -76,6 +81,12 @@ public class GoodsStorageController  {
 	  @ResponseBody
 	  @RequiresPermissions("storage:in:list")
 	  public ReType showGoodsStorageInList(Model model, GoodsStorageIn goodsStorageIn , String page, String limit) {
+			 if(!StringUtil.isEmpty(goodsStorageIn.getTimeRange())){
+					String startExpiringDate=goodsStorageIn.getTimeRange().split(ConstSysParamName.KGANG)[0];
+					String endExpiringDate=goodsStorageIn.getTimeRange().split(ConstSysParamName.KGANG)[1];
+					goodsStorageIn.setStartExpiringDate(startExpiringDate);
+					goodsStorageIn.setEndExpiringDate(endExpiringDate);
+			 }
 		  return goodsStorageInService.selectByPage(goodsStorageIn,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
@@ -86,6 +97,8 @@ public class GoodsStorageController  {
 	   */
 	  @GetMapping(value = "showAddGoodsStorageIn")
 	  public String showAddGoodsStorageIn(Model model) {
+	   model.addAttribute("inId","WGRK"+System.currentTimeMillis());
+	   model.addAttribute("locationList",goodsStorageLocationService.selectListByObjCdt(new GoodsStorageLocation()));
 	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	   return "/storage/in/add-goodsStorageIn";
 	  }

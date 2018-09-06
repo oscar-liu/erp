@@ -30,6 +30,10 @@
     </select>
    </div>
    </div>
+   &nbsp;
+     商品到期日期：  <div class="layui-inline">
+              <div class="layui-input-inline"><input type="text" class="layui-input" id="iptTimeRange" placeholder="开始 到 结束" style="width:177px;"></div>
+  </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
     <@shiro.hasPermission name="storage:in:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>入库</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
@@ -53,12 +57,17 @@
   });
   
   layui.use('table', function () {
-    var table = layui.table;
+    var table = layui.table,laydate = layui.laydate;
+    laydate.render({
+        elem: '#iptTimeRange'
+        ,range: true
+      });
     table.render({
       id: 'storageInList',
       elem: '#storageInList', 
       url: 'showGoodsStorageInList',
       cols: [[
+        {field: 'inId', title: '入库编号', align:'center',width:110},
         {field: 'inDate', title: '入库日期', align:'center',width:120},
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
@@ -68,6 +77,8 @@
         {field: 'marketPrice', title: '建议零售价', align:'center',width:100},
         {field: 'inCount', title: '入库数量（个）', align:'center',width:130},
         {field: 'currCount', title: '当前批次库存（个）', align:'center',width:160,sort: true},
+        {field: 'locationName', title: '库位', align:'center',width:150},
+        {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
       page: true,
@@ -77,23 +88,28 @@
     var $ = layui.$, active = {
       select: function () {
         var goodsSkuId = $('#sltGoodsList').val();
+        var timeRange = $('#iptTimeRange').val();
         table.reload('storageInList', {
           where: {
-        	  goodsSkuId: goodsSkuId
+        	  goodsSkuId: goodsSkuId,
+        	  timeRange:timeRange
           }
         });
       },
       reload:function(){       
        table.reload('storageInList', {
           where: {
-        	  goodsSkuId: null
+        	  goodsSkuId: null,
+        	  timeRange:null
           }
         });
+       $("#iptTimeRange").attr("placeholder","开始 到 结束");
+       $("#iptTimeRange").val('');
        $("#select2-sltGoodsList-container").text($("#sltGoodsList").find("option[value = '']").text());
        $("#sltGoodsList").val('');
       },
       add: function () {
-        add('商品入库', 'showAddGoodsStorageIn', 700, 400);
+        add('商品入库', 'showAddGoodsStorageIn', 700, 900);
       }
     };
     

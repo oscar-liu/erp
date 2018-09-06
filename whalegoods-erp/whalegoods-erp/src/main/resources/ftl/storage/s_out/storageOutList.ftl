@@ -76,7 +76,7 @@
       });
     table.render({
       id: 'storageOutList',
-      elem: '#storageOutList', 
+      elem: '#storageOutList',
       url: 'showGoodsStorageOutList',
       cols: [[
         {field: 'applyDate', title: '出库日期', align:'center',width:110},
@@ -85,7 +85,7 @@
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
         {field: 'goodsStorageInName',title: '所属入库批次',align:'center',width:320},
         {field: 'applyNum', title: '出库数量（个）', align:'center',width:130},
-        {field: 'userName', title: '申请人', align:'center',width:120}, 
+        {field: 'userName', title: '申请人', align:'center',width:120},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
       page: true,

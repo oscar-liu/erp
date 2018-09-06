@@ -28,55 +28,26 @@
   </form>
 </div>
 <script>
-  var flag,msg;
-  $(function(){
-      $('#warningNum').on("change",function(){
-        var capacity=parseInt($('#capacity').val());
-        var warningNum=parseInt($('#warningNum').val());
-        $('#ms').find('span').text('');
-        if(warningNum>=capacity)
-        	{        	
-        	$('#ms').find('span').css('color','red').text('临界值不能大于或等于货道容量值');
-        	}
-        else{
-        	$('#ms').find('span').css('color','green').text('临界值可用');
-        }
-      });
-  });
-  
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
     var form = layui.form,layer = layui.layer;
-    
-    //自定义验证规则
-    form.verify({
-    	ZZS: function(value){
-        if(!/^[0-9]+$/.test(value)){
-          return "货道容量必须为正整数";
-        }
-    	}
-    });
-
    $('#close').click(function(){
      var index = parent.layer.getFrameIndex(window.name);
      parent.layer.close(index);
    });
     //监听提交
     form.on('submit(add)', function(data){
-     data.field.deviceId=$("#sltDeviceId").val();
-     data.field.goodsCode=$("#sltGoodsCode").val();
       $.ajax({
-        url:'addRoad',
+        url:'addStorageLocation',
         type:'post',
-       contentType : 'application/json',  
-        data:JSON.stringify(data.field),
+        data:data.field,
         async:false,
         traditional: true,
         success:function(d){
           if(d.result_code==0){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.parent.layui.table.reload('roadList');
+            window.parent.layui.table.reload('goodsStorageLocationList');
             window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});

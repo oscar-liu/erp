@@ -4,23 +4,27 @@
  <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageLocation">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="location_name" jdbcType="VARCHAR" property="locationName" />	
+    <result column="createName" jdbcType="VARCHAR" property="createName" />
+    <result column="updateName" jdbcType="VARCHAR" property="updateName" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="update_by" jdbcType="VARCHAR" property="update_by" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   
    <sql id="Base_Column_List">
-    a.id,
-    a.location_name,
-    a.create_by,
-    a.create_date,
-    a.update_by,
-    a.update_date
+  a.id,
+a.location_name,
+b.username createName,
+a.create_date,
+c.username updateName,
+a.update_date 
   </sql>
   
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageLocation" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM goods_storage_location a 
+      INNER JOIN sys_user b  ON a.create_by = b.id 
+      INNER JOIN sys_user c ON c.id=a.update_by
    <where>
      <if test="locationName !=null and locationName !=''"> AND a.location_name LIKE "%" #{locationName} "%"</if>
     </where>
@@ -28,6 +32,8 @@
   
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  FROM goods_storage_location a 
+      INNER JOIN sys_user b  ON a.create_by = b.id 
+      INNER JOIN sys_user c ON c.id=a.update_by
     WHERE a.id = #{_parameter}
   </select>
   

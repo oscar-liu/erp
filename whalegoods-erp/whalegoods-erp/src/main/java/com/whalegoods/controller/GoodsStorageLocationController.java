@@ -72,7 +72,7 @@ public class GoodsStorageLocationController {
 	   */
 	  @PostMapping(value = "addStorageLocation")
 	  @ResponseBody
-	  public ResBody addDevice(GoodsStorageLocation goodsStorageLocation) throws SystemException {
+	  public ResBody addStorageLocation(GoodsStorageLocation goodsStorageLocation) throws SystemException {
 		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
 		goodsStorageLocation.setId(StringUtil.getUUID());
     	goodsStorageLocation.setCreateBy(ShiroUtil.getCurrentUserId());

@@ -19,5 +19,9 @@ public class GoodsStorageLocation extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private String locationName;
+    
+    private String createName;
+
+    private String updateName;
 
 }

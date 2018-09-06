@@ -43,12 +43,12 @@
       url: 'showGoodsStorageLocationList',
       cols: [[
         {checkbox: true, fixed: true},
-        {field: 'locationName',title: '商品编号',align:'center',width:165}, 
-        {field: 'createBy',title: '创建人',align:'center',width:120},
+        {field: 'locationName',title: '库位名称',align:'center',width:165}, 
+        {field: 'createName',title: '创建人',align:'center',width:120},
         {field: 'createDate',title: '创建日期',align:'center',width:160},
-        {field: 'updateBy',title: '修改人',align:'center',width:120},
+        {field: 'updateName',title: '修改人',align:'center',width:120},
         {field: 'updateDate',title: '修改日期',align:'center',width:160},
-        {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar"}
+        {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:125}
       ]],
       page: true,
       height: 'full-46'
@@ -72,7 +72,7 @@
         });
       },
       add: function () {
-        add('添加库位', 'showAddStorageLocation',350,150);
+        add('添加库位', 'showAddStorageLocation',350,200);
       },
       update: function () {
         var checkStatus = table.checkStatus('goodsStorageLocationList'), data = checkStatus.data;
@@ -80,7 +80,7 @@
           layer.msg('请选择一行编辑,已选['+data.length+']行', {icon: 5,time:1000});
           return false;
         }
-        update('编辑库位', 'showUpdateStorageLocation?id=' + data[0].id,350,150);
+        update('编辑库位', 'showUpdateStorageLocation?id=' + data[0].id,350,200);
       }
     };
     //监听工具条
@@ -94,7 +94,7 @@
         });
       } 
       else if (obj.event === 'edit') {
-        update('编辑库位', 'showUpdateStorageLocation?id=' + data.id,350,150);
+        update('编辑库位', 'showUpdateStorageLocation?id=' + data.id,350,200);
       }
     });
 

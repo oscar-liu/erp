@@ -1,6 +1,11 @@
 package com.whalegoods.controller;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +28,14 @@ import com.whalegoods.entity.GoodsStorageLocation;
 import com.whalegoods.entity.GoodsStorageOut;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
 import com.whalegoods.service.GoodsStorageLocationService;
 import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageService;
+import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -160,6 +167,31 @@ public class GoodsStorageController  {
     	   objCdt.setExpiringDate(goodsStorageIn.getExpiringDate());
     	   goodsStorageService.updateByObjCdt(objCdt);
        }
+	   return resBody;
+	  }
+	  
+	  /**
+	   * 根据商品编号查询过期日期
+	   * @author henrysun
+	   * 2018年9月7日 上午10:50:15
+	 * @throws SystemException 
+	   */
+	  @GetMapping(value = "getExpiringDateByGoodsSkuId")
+	  @ResponseBody
+	  public ResBody getExpiringDateByGoodsSkuId(Model model,@RequestParam String goodsSkuId,@RequestParam String productDate) throws SystemException {
+	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	   Map<String,Object> mapCdt=new HashMap<>();
+	   mapCdt.put("goodsSkuId",goodsSkuId);
+	   GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
+	   if(goodsSku==null){
+		   throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+	   }
+	   else{
+		   Calendar calendar = new GregorianCalendar();
+		   @SuppressWarnings("static-access")
+		   String expiringDate=DateUtil.getMoveDate(DateUtil.stringToDateYmd(productDate),calendar.DATE,goodsSku.getShelfLife()*30);
+		   resBody.setData(expiringDate);
+	   }
 	   return resBody;
 	  }
 	  

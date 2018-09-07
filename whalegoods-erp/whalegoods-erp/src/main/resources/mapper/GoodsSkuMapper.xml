@@ -76,6 +76,7 @@
     SELECT <include refid="Base_Column_List"/> FROM goods_sku
    <where>
      <if test="goodsCode !=null and goodsCode !=''"> AND goods_code=#{goodsCode}</if>
+     <if test="goodsSkuId !=null and goodsSkuId !=''"> AND id=#{goodsSkuId}</if>
     </where>
   </select>
   

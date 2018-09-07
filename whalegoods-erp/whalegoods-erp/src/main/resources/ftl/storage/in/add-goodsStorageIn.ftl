@@ -66,7 +66,7 @@
      </div>
      <div class="layui-inline">
      <label for="iptExpiringDate" class="layui-form-label"><span class="x-red">*</span>到期日期</label>
-      <div class="layui-input-inline"><input type="text"  id="iptExpiringDate" name="expiringDate"  readonly="readonly" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="iptExpiringDate" name="expiringDate"  disabled="disabled" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
      </div>
     </div>
  
@@ -113,6 +113,33 @@
   $(function(){
 	  $('#sltGoodsCode').select2();
       $('#sltGoodsStorageLocation').select2();
+      $('#iptProductDate').on("input",function(){
+    	  var gid=$('#sltGoodsCode').val();
+    	  if(gid==null||gid==''){
+    		  window.top.layer.msg('请先选择一个入库商品',{icon:5,time:1000});
+    		  return;
+    	  }
+    	  else{
+    	      $('#iptProductDate').on("blur",function(){
+    	          var goodsSkuId=$('#sltGoodsCode').val();
+    	          var productDate=$('#iptProductDate').val();
+    	          if(goodsSkuId!='') {
+    	            $.ajax({
+    	              url: 'getExpiringDateByGoodsSkuId?goodsSkuId=' + goodsSkuId+"&productDate="+productDate,
+    	              async: false, 
+    	              type: 'get', 
+    	              success: function (d) {
+    	                  if(d.result_code==0){
+    	                	  $('#iptExpiringDate').attr("value",d.data);
+    	                    }else{
+    	                      layer.msg(d.result_msg,{icon:5});
+    	                    }
+    	                }
+    	            });
+    	          }
+    	        });
+    	  }
+      });
   });
   
   layui.use(['form','layer'], function(){

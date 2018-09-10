@@ -141,6 +141,9 @@ public class ImportOrderController {
 				case "退款成功":
 					orderList.setOrderStatus((byte) 4);
 					break;
+				case "退款失败":
+					orderList.setOrderStatus((byte) 2);
+					break;
 				default:
 					break;
 				}
@@ -152,7 +155,7 @@ public class ImportOrderController {
 				orderList.setPayTime(DateUtil.formatDateTime(tempEntity.getOrderTime()));
 				orderList.setCreateBy("henry易丰导入");
 				orderList.setUpdateBy("henry易丰导入");
-				orderList.setPrefix("201805");
+				orderList.setPrefix("201801");
 				listOrderList.add(orderList);
 			}
 			orderListService.insertBatch(listOrderList);

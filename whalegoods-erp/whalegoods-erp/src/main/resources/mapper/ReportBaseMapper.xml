@@ -19,6 +19,7 @@
     <result column="profit" jdbcType="DECIMAL" property="profit" />
     <result column="costProfit" jdbcType="DECIMAL" property="costProfit" />
     <result column="salesProfit" jdbcType="DECIMAL" property="salesProfit" />
+    <result column="averageSalePrice" jdbcType="DECIMAL" property="averageSalePrice" />
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
     <result column="device_id_jp" jdbcType="VARCHAR" property="deviceCodeWg" />
     <result column="device_id_supp" jdbcType="VARCHAR" property="deviceCodeSup" />
@@ -51,6 +52,7 @@
   a.sales_count,
   a.sales_amount,
   a.costs_amount,
+  ROUND(a.sales_amount/a.sales_count,2) averageSalePrice,
   a.sales_amount-a.costs_amount profit,
   ROUND((a.sales_amount-a.costs_amount)/a.costs_amount,2) costProfit,
  ROUND((a.sales_amount-a.costs_amount)/a.sales_amount,2) salesProfit 
@@ -105,7 +107,7 @@
      <if test="endOrderDay !=null and endOrderDay !=''"> AND a.order_day&lt;=#{endOrderDay}</if>
     </where>
     GROUP BY a.goods_code,a.device_id
-   ORDER BY b.short_name,a.sales_count DESC 
+   ORDER BY b.short_name,sales_count DESC 
   </select>
 
 <!-- 按照设备ID分组查询基本统计报表 -->

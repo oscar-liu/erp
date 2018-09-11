@@ -44,15 +44,24 @@
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
-    <@shiro.hasPermission name="order:reportDetail:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出明细EXCEL</button></@shiro.hasPermission>
-    <@shiro.hasPermission name="order:reportDetail:excelReport"><button class="layui-btn  layui-btn-sm" data-type="excelReport"><i class="layui-icon">&#xe601;</i>导出统计报表EXCEL</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
    </div>
+</div>
+<div id="divSecond" class="layui-col-md12" style="height: 33px;margin-top: 4px;vertical-align:middle;border-bottom-width:-2;">
+     <div class="select">
+    <@shiro.hasPermission name="order:reportDetail:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出明细报表</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="order:reportDetail:excelReport"><button class="layui-btn  layui-btn-sm" data-type="excelReport"><i class="layui-icon">&#xe601;</i>导出统计报表</button></@shiro.hasPermission>
+     </div>
 </div>
 <div class="layui-col-md12" style="height:26px;margin-top:2px;vertical-align:middle;text-align:center">
 <span style="font-size:16px">总销量：<span style="color:red;" id="spnSalesCount">${total.salesCount?c}</span>&nbsp;&nbsp;总销售额：<span style="color:red;"  id="spnSalesAmount">${total.salesAmount?c}</span></span>
 </div>
 <table id="reportBaseDetailList" class="layui-hide" lay-filter="reportBaseDetail"></table>
+<script type="text/html" id="tplSalesProfit">
+  {{#  if(1==1){ }}
+    <span>{{d.salesProfit}}*100%</span>
+  {{#  } }}
+</script>
 <script>
   document.onkeydown = function (e) {
     var theEvent = window.event || e;
@@ -78,15 +87,15 @@
       elem: '#reportBaseDetailList', 
       url: 'showReportBaseDetailList',
       cols: [[
-        {field: 'orderDay',title: '订单日期',align:'center' },
-    	{field: 'shortName',title: '点位短名',align:'center' }, 
-        {field: 'goodsName',title: '商品名称',align:'center' },
+        {field: 'orderDay',title: '订单日期',align:'center',width:125 },
+    	{field: 'shortName',title: '点位',align:'center' ,width:150},
+        {field: 'goodsName',title: '商品名称',align:'center' ,width:250},
         {field: 'salesCount', title: '销量', align:'center',sort: true,width:80},
         {field: 'salesAmount', title: '销售额', align:'center',sort: true,width:95},
         {field: 'costsAmount', title: '成本', align:'center',sort: true,width:100},
-        {field: 'profit', title: '毛利', align:'center',sort: true,width:100},
-        {field: 'costProfit', title: '成本利润率', align:'center',sort: true,width:120},
-        {field: 'salesProfit', title: '销售利润率', align:'center',sort: true,width:120}
+        {field: 'averageSalePrice', title: '平均零售价', align:'center',sort: true,width:120},
+        {field: 'salesProfit', title: '毛利率', align:'center',sort: true,width:120,templet: '#tplSalesProfit'},
+        {field: 'profit', title: '毛利额', align:'center',sort: true,width:100},
       ]],
       done:function(res, curr, count){
     	  var obj=new Object();
@@ -117,7 +126,7 @@
             });
       },
       page: true,
-      height: 'full-53'
+      height: 'full-100'
     });
 
     var active = {

@@ -21,26 +21,27 @@ public class ReportBase extends ReportTotalCountAndAmount {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Excel(name = "设备编号（供应商）",orderNum = "3")
+	@Excel(name = "设备编号",orderNum = "3")
 	private String deviceCodeSup;
-	
-	@Excel(name = "设备编号（鲸品）",orderNum = "4")
+
 	private String deviceCodeWg;
 	
     private String deviceId;
     
-    @Excel(name = "商品编号",orderNum = "5")
+    @Excel(name = "商品编号",orderNum = "4")
     private String goodsCode;
     
     @Excel(name = "订单日期",orderNum = "1", exportFormat = "yyyy-MM-dd")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date orderDay;
     
-    @Excel(name = "商品名称",orderNum = "6")
+    @Excel(name = "商品名称",orderNum = "5")
     private String goodsName;
     
     @Excel(name = "点位",orderNum = "2")
     private String shortName;
+
+    private Double averageSalePrice;
     
     private String dayRange;
     

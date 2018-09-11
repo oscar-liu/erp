@@ -81,12 +81,12 @@
         {field: 'orderDay',title: '订单日期',align:'center' },
     	{field: 'shortName',title: '点位短名',align:'center' }, 
         {field: 'goodsName',title: '商品名称',align:'center' },
-        {field: 'salesCount', title: '销量', align:'center',sort: true},
-        {field: 'salesAmount', title: '销售额', align:'center',sort: true}
-        {field: 'costsAmount', title: '成本', align:'center',sort: true}
-        {field: 'profit', title: '毛利', align:'center',sort: true}
-        {field: 'costProfit', title: '成本利润率', align:'center',sort: true}
-        {field: 'salesProfit', title: '销售利润率', align:'center',sort: true}
+        {field: 'salesCount', title: '销量', align:'center',sort: true,width:80},
+        {field: 'salesAmount', title: '销售额', align:'center',sort: true,width:95},
+        {field: 'costsAmount', title: '成本', align:'center',sort: true,width:100},
+        {field: 'profit', title: '毛利', align:'center',sort: true,width:100},
+        {field: 'costProfit', title: '成本利润率', align:'center',sort: true,width:120},
+        {field: 'salesProfit', title: '销售利润率', align:'center',sort: true,width:120}
       ]],
       done:function(res, curr, count){
     	  var obj=new Object();
@@ -117,7 +117,7 @@
             });
       },
       page: true,
-      height: 'full-43'
+      height: 'full-53'
     });
 
     var active = {

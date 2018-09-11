@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.whalegoods.entity.ReportBase;
+import com.whalegoods.entity.ReportBaseExcel;
 import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.ReportByGoods;
 import com.whalegoods.entity.ReportTotalCountAndAmount;
@@ -43,6 +44,11 @@ public  class ReportBaseServiceImpl extends BaseServiceImpl<ReportBase,String> i
 	@Override
 	public ReportTotalCountAndAmount selectTotalSalesCountAndAmount(ReportBase objCdt) {
 		return reportBaseMapper.selectTotalSalesCountAndAmount(objCdt);
+	}
+
+	@Override
+	public List<ReportBaseExcel> selectReportListByObjCdt(ReportBase objCdt) {
+		return reportBaseMapper.selectReportListByObjCdt(objCdt);
 	}
 	
 }

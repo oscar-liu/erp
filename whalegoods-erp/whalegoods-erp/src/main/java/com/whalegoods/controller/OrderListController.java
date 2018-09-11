@@ -6,6 +6,7 @@ import com.whalegoods.entity.Device;
 import com.whalegoods.entity.ErpOrderList;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.ReportBase;
+import com.whalegoods.entity.ReportBaseExcel;
 import com.whalegoods.entity.ReportByDevice;
 import com.whalegoods.entity.ReportByGoods;
 import com.whalegoods.entity.ReportTotalCountAndAmount;
@@ -187,7 +188,7 @@ public class OrderListController {
 				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
 			}
-		  FileUtil.exportExcel(reportBaseService.selectListByObjCdt(reportBase),"明细列表","明细列表",ReportBase.class,"明细列表.xls",response);
+		  FileUtil.exportExcel(reportBaseService.selectReportListByObjCdt(reportBase),"统计明细列表","统计明细列表",ReportBaseExcel.class,"明细列表.xls",response);
 		}
 	  
 	  /**

@@ -21,6 +21,8 @@ public class GoodsStorageIn extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+    private String inId;
+	
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date inDate;
 	
@@ -43,6 +45,16 @@ public class GoodsStorageIn extends BaseEntity implements Serializable {
     private String goodsCode;
     
     private String goodsName;
+    
+    private String locationName;
+    
+    private String goodsStorageLocationId;
+    
+    private String startExpiringDate;
+    
+    private String endExpiringDate;
+    
+    private String timeRange;
     
     //入库批次名称，由多个字段组合而成
     private String goodsStorageInName;

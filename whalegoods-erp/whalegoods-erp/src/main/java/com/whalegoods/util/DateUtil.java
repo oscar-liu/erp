@@ -80,6 +80,15 @@ public class DateUtil {
 			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
 		}
 	}
+	
+	public static Date stringToDateYmd(String date) throws SystemException {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			throw new SystemException(ConstApiResCode.SYSTEM_ERROR);
+		}
+	}
 
 	
 	/** 

@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+/*import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;*/
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.whalegoods.exception.SystemException;
@@ -36,7 +36,7 @@ public class Application {
    * @author henrysun
    * 2018年8月22日 下午5:23:33
    */
- /* @Bean(name = "multipartResolver")
+/*  @Bean(name = "multipartResolver")
   public MultipartResolver multipartResolver(){
    CommonsMultipartResolver resolver = new CommonsMultipartResolver();
    resolver.setDefaultEncoding("UTF-8");

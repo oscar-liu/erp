@@ -17,6 +17,7 @@
     <result column="id" jdbcType="VARCHAR" property="id" />
     <result column="order_day" jdbcType="DATE" property="orderDay" />
     <result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+    <result column="costs_amount" jdbcType="DECIMAL" property="costsAmount" />
     <result column="sales_amount" jdbcType="DECIMAL" property="salesAmount" />
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
@@ -61,6 +62,7 @@
   SELECT  REPLACE(UUID(), '-', '') id,
   DATE_FORMAT(a.order_time, '%Y-%m-%d') order_day,
   COUNT(a.id) sales_count,
+  SUM(a.cost_price) costs_amount,
   SUM(a.sale_price) sales_amount,
   a.goods_code,
   c.id device_id 

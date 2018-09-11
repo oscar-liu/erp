@@ -1,6 +1,11 @@
 package com.whalegoods.controller;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +24,18 @@ import com.whalegoods.entity.Device;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.GoodsStorage;
 import com.whalegoods.entity.GoodsStorageIn;
+import com.whalegoods.entity.GoodsStorageLocation;
 import com.whalegoods.entity.GoodsStorageOut;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
+import com.whalegoods.exception.SystemException;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
+import com.whalegoods.service.GoodsStorageLocationService;
 import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageService;
+import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -54,6 +63,9 @@ public class GoodsStorageController  {
 	 
 	 @Autowired
 	 GoodsSkuService goodsSkuService;
+	 
+	 @Autowired
+	 GoodsStorageLocationService goodsStorageLocationService;
 
 	  /**
 	   * 跳转到仓库入库列表页面
@@ -76,6 +88,12 @@ public class GoodsStorageController  {
 	  @ResponseBody
 	  @RequiresPermissions("storage:in:list")
 	  public ReType showGoodsStorageInList(Model model, GoodsStorageIn goodsStorageIn , String page, String limit) {
+			 if(!StringUtil.isEmpty(goodsStorageIn.getTimeRange())){
+					String startExpiringDate=goodsStorageIn.getTimeRange().split(ConstSysParamName.KGANG)[0];
+					String endExpiringDate=goodsStorageIn.getTimeRange().split(ConstSysParamName.KGANG)[1];
+					goodsStorageIn.setStartExpiringDate(startExpiringDate);
+					goodsStorageIn.setEndExpiringDate(endExpiringDate);
+			 }
 		  return goodsStorageInService.selectByPage(goodsStorageIn,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
@@ -86,6 +104,8 @@ public class GoodsStorageController  {
 	   */
 	  @GetMapping(value = "showAddGoodsStorageIn")
 	  public String showAddGoodsStorageIn(Model model) {
+	   model.addAttribute("inId","WGRK"+System.currentTimeMillis());
+	   model.addAttribute("locationList",goodsStorageLocationService.selectListByObjCdt(new GoodsStorageLocation()));
 	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	   return "/storage/in/add-goodsStorageIn";
 	  }
@@ -147,6 +167,31 @@ public class GoodsStorageController  {
     	   objCdt.setExpiringDate(goodsStorageIn.getExpiringDate());
     	   goodsStorageService.updateByObjCdt(objCdt);
        }
+	   return resBody;
+	  }
+	  
+	  /**
+	   * 根据商品编号查询过期日期
+	   * @author henrysun
+	   * 2018年9月7日 上午10:50:15
+	 * @throws SystemException 
+	   */
+	  @GetMapping(value = "getExpiringDateByGoodsSkuId")
+	  @ResponseBody
+	  public ResBody getExpiringDateByGoodsSkuId(Model model,@RequestParam String goodsSkuId,@RequestParam String productDate) throws SystemException {
+	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	   Map<String,Object> mapCdt=new HashMap<>();
+	   mapCdt.put("goodsSkuId",goodsSkuId);
+	   GoodsSku goodsSku=goodsSkuService.selectByMapCdt(mapCdt);
+	   if(goodsSku==null){
+		   throw new BizApiException(ConstApiResCode.GOODS_CODE_NOT_EXIST);
+	   }
+	   else{
+		   Calendar calendar = new GregorianCalendar();
+		   @SuppressWarnings("static-access")
+		   String expiringDate=DateUtil.getMoveDate(DateUtil.stringToDateYmd(productDate),calendar.DATE,goodsSku.getShelfLife()*30);
+		   resBody.setData(expiringDate);
+	   }
 	   return resBody;
 	  }
 	  

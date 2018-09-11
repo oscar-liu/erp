@@ -44,7 +44,8 @@
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
-    <@shiro.hasPermission name="order:reportDetail:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出EXCEL</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="order:reportDetail:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出明细EXCEL</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="order:reportDetail:excelReport"><button class="layui-btn  layui-btn-sm" data-type="excelReport"><i class="layui-icon">&#xe601;</i>导出统计报表EXCEL</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
    </div>
 </div>
@@ -80,8 +81,12 @@
         {field: 'orderDay',title: '订单日期',align:'center' },
     	{field: 'shortName',title: '点位短名',align:'center' }, 
         {field: 'goodsName',title: '商品名称',align:'center' },
-        {field: 'salesCount', title: '销量', align:'center',sort: true},
-        {field: 'salesAmount', title: '销售额', align:'center',sort: true}
+        {field: 'salesCount', title: '销量', align:'center',sort: true,width:80},
+        {field: 'salesAmount', title: '销售额', align:'center',sort: true,width:95},
+        {field: 'costsAmount', title: '成本', align:'center',sort: true,width:100},
+        {field: 'profit', title: '毛利', align:'center',sort: true,width:100},
+        {field: 'costProfit', title: '成本利润率', align:'center',sort: true,width:120},
+        {field: 'salesProfit', title: '销售利润率', align:'center',sort: true,width:120}
       ]],
       done:function(res, curr, count){
     	  var obj=new Object();
@@ -112,7 +117,7 @@
             });
       },
       page: true,
-      height: 'full-69'
+      height: 'full-53'
     });
 
     var active = {
@@ -152,7 +157,17 @@
               return false;
           }
       	window.location.href="reportDetailExcel?deviceId="+deviceId+"&goodsCode="+goodsCode+"&dayRange="+dayRange;
-        }
+        },
+        excelReport: function () {
+          	var deviceId = $('#sltDeviceList').val();
+        	var goodsCode = $('#sltGoodsCode').val();
+        	var dayRange = $('#iptDayRange').val();
+              if(dayRange==null||dayRange==''){
+                  layer.msg('请选择一个日期范围', {icon: 5,time:1000});
+                  return false;
+              }
+          	window.location.href="reportReportExcel?deviceId="+deviceId+"&goodsCode="+goodsCode+"&dayRange="+dayRange;
+            }
     };
 
     $('.select .layui-btn').on('click', function () {

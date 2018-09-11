@@ -1,8 +1,6 @@
 package com.whalegoods.temp;
 
-import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.OrderList;
-import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.OrderListService;
 import com.whalegoods.temp.TempEntity;
 import com.whalegoods.util.DateUtil;
@@ -35,10 +33,7 @@ public class ImportOrderController {
 	@Autowired
 	private OrderListService orderListService;
 	
-	@Autowired
-	private GoodsSkuService goodsSkuService;
-	
-		/*@PostMapping("excelImport.do")
+		@PostMapping("excelImport.do")
 		public void excelImport(@RequestParam("file") MultipartFile file) throws IOException, Exception {
 			ImportParams importParams = new ImportParams();
 			// 数据处理
@@ -146,6 +141,9 @@ public class ImportOrderController {
 				case "退款成功":
 					orderList.setOrderStatus((byte) 4);
 					break;
+				case "退款失败":
+					orderList.setOrderStatus((byte) 2);
+					break;
 				default:
 					break;
 				}
@@ -157,14 +155,14 @@ public class ImportOrderController {
 				orderList.setPayTime(DateUtil.formatDateTime(tempEntity.getOrderTime()));
 				orderList.setCreateBy("henry易丰导入");
 				orderList.setUpdateBy("henry易丰导入");
-				orderList.setPrefix("201807");
+				orderList.setPrefix("201801");
 				listOrderList.add(orderList);
 			}
 			orderListService.insertBatch(listOrderList);
 			logger.info("数量：{}",successList.size());
-		}*/
+		}
 		
-		@PostMapping("changeCost.do")
+/*		@PostMapping("changeCost.do")
 		public void changeCost(@RequestParam("file") MultipartFile file) throws IOException, Exception {
 			ImportParams importParams = new ImportParams();
 			// 数据处理
@@ -183,6 +181,6 @@ public class ImportOrderController {
 				goodsSku.setOneCost(Double.valueOf(tempEntityCost.getSalePrice()));
 				goodsSkuService.updateByObjCdt(goodsSku);
 			}
-		}
+		}*/
 
 }

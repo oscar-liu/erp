@@ -23,6 +23,13 @@
 <body>
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
+  <!-- 入库单号 -->
+    <div class="layui-form-item">
+    <div class="layui-inline">
+     <label for="iptInId" class="layui-form-label"><span class="x-red">*</span>入库单号</label>
+      <div class="layui-input-inline"><input type="text"  id="iptInId" name="inId" value="${inId}" readonly="readonly"  lay-verify="required|number|FFS"  autocomplete="off" class="layui-input"></div>
+    </div>
+    </div>
   <!-- 商品、入库日期 -->
     <div class="layui-form-item">
      <div class="layui-inline">
@@ -37,7 +44,20 @@
       </div>
     </div>
     </div>
-    
+     <!-- 库位 -->
+    <div class="layui-form-item">
+     <div class="layui-inline">
+     <label for="sltGoodsStorageLocation" class="layui-form-label"><span class="x-red">*</span>库位</label>
+      <div class="layui-input-inline">
+       <select id="sltGoodsStorageLocation" name="goodsStorageLocation" lay-verify="required"  lay-ignore>
+     <option value="">直接选择或搜索选择</option>
+  	<#list locationList as location>
+          <option value="${location.id}">${location.locationName}</option>
+    </#list>
+    </select>
+      </div>
+    </div>
+    </div>
 <!--     生产日期、到期日期 -->
     <div class="layui-form-item">
      <div class="layui-inline">
@@ -46,7 +66,7 @@
      </div>
      <div class="layui-inline">
      <label for="iptExpiringDate" class="layui-form-label"><span class="x-red">*</span>到期日期</label>
-      <div class="layui-input-inline"><input type="text"  id="iptExpiringDate" name="expiringDate" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="iptExpiringDate" name="expiringDate"  disabled="disabled" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
      </div>
     </div>
  
@@ -73,6 +93,13 @@
       <div class="layui-input-inline"><input type="text"  id="iptInDate" name="inDate" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
     </div>
     </div>
+    <!-- 备注 -->
+    <div class="layui-form-item layui-form-text">
+      <label for="txtRemark" class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+      <textarea placeholder="此处选填" class="layui-textarea" id="txtRemark" name="remark" ></textarea>
+    </div>
+    </div>
    
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
@@ -85,12 +112,39 @@
 <script>
   $(function(){
 	  $('#sltGoodsCode').select2();
+      $('#sltGoodsStorageLocation').select2();
+      $('#iptProductDate').on("input",function(){
+    	  var gid=$('#sltGoodsCode').val();
+    	  if(gid==null||gid==''){
+    		  window.top.layer.msg('请先选择一个入库商品',{icon:5,time:1000});
+    		  return;
+    	  }
+    	  else{
+    	      $('#iptProductDate').on("blur",function(){
+    	          var goodsSkuId=$('#sltGoodsCode').val();
+    	          var productDate=$('#iptProductDate').val();
+    	          if(goodsSkuId!='') {
+    	            $.ajax({
+    	              url: 'getExpiringDateByGoodsSkuId?goodsSkuId=' + goodsSkuId+"&productDate="+productDate,
+    	              async: false, 
+    	              type: 'get', 
+    	              success: function (d) {
+    	                  if(d.result_code==0){
+    	                	  $('#iptExpiringDate').attr("value",d.data);
+    	                    }else{
+    	                      layer.msg(d.result_msg,{icon:5});
+    	                    }
+    	                }
+    	            });
+    	          }
+    	        });
+    	  }
+      });
   });
   
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
     var form = layui.form,layer = layui.layer,laydate = layui.laydate;
-    
     laydate.render({
         elem: '#iptInDate,#iptProductDate'
         ,max:0
@@ -119,6 +173,7 @@
     //监听提交
     form.on('submit(add)', function(data){
      data.field.goodsSkuId=$("#sltGoodsCode").val();
+     data.field.goodsStorageLocationId=$("#sltGoodsStorageLocation").val();
       $.ajax({
         url:'addGoodsStorageIn',
         type:'post',

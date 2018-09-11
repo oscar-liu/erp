@@ -177,6 +177,20 @@ public class OrderListController {
 		}
 	  
 	  /**
+	   * 导出销售统计>统计报表
+	   * @author henrysun
+	   * 2018年9月11日 上午8:56:44
+	   */
+	  @GetMapping(value="/reportReportExcel")
+	  void reportReportExcel(ReportBase reportBase,HttpServletResponse response) throws SystemException  {
+		if(!StringUtil.isEmpty(reportBase.getDayRange())){
+				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
+				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
+			}
+		  FileUtil.exportExcel(reportBaseService.selectListByObjCdt(reportBase),"明细列表","明细列表",ReportBase.class,"明细列表.xls",response);
+		}
+	  
+	  /**
 	   * 获取总销量和总销售额
 	   * @author henrysun
 	   * 2018年6月27日 下午2:35:56

@@ -28,12 +28,18 @@ public class ReportTotalCountAndAmount  extends BaseEntity implements Serializab
 	@Excel(name = "成本",orderNum = "8")
     private Double costsAmount;
 	
-	@Excel(name = "毛利额",orderNum = "10")
+	@Excel(name = "毛利额",orderNum = "12")
     private Double profit;
 	
-    private Double costProfit;
+    private String costProfit;
+    
+    @Excel(name = "平均销售价",orderNum = "9")
+    private Double averageSalePrice;
+    
+    @Excel(name = "平均成本价",orderNum = "10")
+    private Double averageCostPrice;
 	
-	@Excel(name = "毛利率",orderNum = "9")
-    private Double salesProfit;
+	@Excel(name = "毛利率",orderNum = "11")
+    private String salesProfit;
 
 }

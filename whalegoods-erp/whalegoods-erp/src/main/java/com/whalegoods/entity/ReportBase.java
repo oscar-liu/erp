@@ -40,8 +40,6 @@ public class ReportBase extends ReportTotalCountAndAmount {
     
     @Excel(name = "点位",orderNum = "2")
     private String shortName;
-
-    private Double averageSalePrice;
     
     private String dayRange;
     

@@ -57,11 +57,6 @@
 <span style="font-size:16px">总销量：<span style="color:red;" id="spnSalesCount">${total.salesCount?c}</span>&nbsp;&nbsp;总销售额：<span style="color:red;"  id="spnSalesAmount">${total.salesAmount?c}</span></span>
 </div>
 <table id="reportBaseDetailList" class="layui-hide" lay-filter="reportBaseDetail"></table>
-<script type="text/html" id="tplSalesProfit">
-  {{#  if(1==1){ }}
-    <span>{{d.salesProfit}}*100%</span>
-  {{#  } }}
-</script>
 <script>
   document.onkeydown = function (e) {
     var theEvent = window.event || e;
@@ -93,8 +88,9 @@
         {field: 'salesCount', title: '销量', align:'center',sort: true,width:80},
         {field: 'salesAmount', title: '销售额', align:'center',sort: true,width:95},
         {field: 'costsAmount', title: '成本', align:'center',sort: true,width:100},
-        {field: 'averageSalePrice', title: '平均零售价', align:'center',sort: true,width:120},
-        {field: 'salesProfit', title: '毛利率', align:'center',sort: true,width:120,templet: '#tplSalesProfit'},
+        {field: 'averageSalePrice', title: '平均销售价', align:'center',sort: true,width:120},
+        {field: 'averageCostPrice', title: '平均成本价', align:'center',sort: true,width:120},
+        {field: 'salesProfit', title: '毛利率', align:'center',sort: true,width:120},
         {field: 'profit', title: '毛利额', align:'center',sort: true,width:100},
       ]],
       done:function(res, curr, count){
@@ -126,7 +122,7 @@
             });
       },
       page: true,
-      height: 'full-100'
+      height: 'full-110'
     });
 
     var active = {

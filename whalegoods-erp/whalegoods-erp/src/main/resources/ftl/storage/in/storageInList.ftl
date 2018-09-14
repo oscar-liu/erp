@@ -67,8 +67,8 @@
       elem: '#storageInList', 
       url: 'showGoodsStorageInList',
       cols: [[
-        {field: 'inId', title: '入库编号', align:'center',width:110},
         {field: 'inDate', title: '入库日期', align:'center',width:120},
+        {field: 'inId', title: '入库编号', align:'center',width:180},
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
         {field: 'productDate',title: '生产日期',align:'center',width:110},
@@ -76,7 +76,7 @@
         {field: 'costPrice', title: '成本价', align:'center',width:80},
         {field: 'marketPrice', title: '建议零售价', align:'center',width:100},
         {field: 'inCount', title: '入库数量（个）', align:'center',width:130},
-        {field: 'currCount', title: '当前批次库存（个）', align:'center',width:160,sort: true},
+        {field: 'currCount', title: '当前批次库存（个）', align:'center',width:168,sort: true},
         {field: 'locationName', title: '库位', align:'center',width:150},
         {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
@@ -109,7 +109,7 @@
        $("#sltGoodsList").val('');
       },
       add: function () {
-        add('商品入库', 'showAddGoodsStorageIn', 700, 900);
+        add('商品入库', 'showAddGoodsStorageIn', 700,620);
       }
     };
     

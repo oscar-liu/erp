@@ -60,12 +60,12 @@
   
       <select id="selectReportBaseList"  parameterType="java.util.Map" resultMap="BaseResultMap2">
   SELECT  REPLACE(UUID(), '-', '') id,
-  DATE_FORMAT(a.order_time, '%Y-%m-%d') order_day,
-  COUNT(a.id) sales_count,
-  SUM(a.cost_price) costs_amount,
-  SUM(a.sale_price) sales_amount,
-  a.goods_code,
-  c.id device_id 
+     c.id device_id,
+     a.goods_code,
+     COUNT(a.id) sales_count,
+     SUM(a.cost_price) costs_amount,
+     SUM(a.sale_price) sales_amount,
+     DATE_FORMAT(a.order_time, '%Y-%m-%d') order_day,
   FROM #{prefix}_order_list a  
   INNER JOIN goods_sku b ON b.goods_code = a.goods_code 
   INNER JOIN device c ON c.device_id_jp = a.device_id_jp 

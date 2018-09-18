@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,7 @@ import com.whalegoods.service.GoodsStorageLocationService;
 import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageService;
 import com.whalegoods.util.DateUtil;
+import com.whalegoods.util.FileUtil;
 import com.whalegoods.util.ReType;
 import com.whalegoods.util.ShiroUtil;
 import com.whalegoods.util.StringUtil;
@@ -145,6 +148,48 @@ public class GoodsStorageController  {
 		  goodsStorageIn.setUpdateBy(ShiroUtil.getCurrentUserId());
 		  goodsStorageInService.insert(goodsStorageIn);
 		  return resBody;
+	  }
+	  
+	  /**
+	   * 导出商品入库单
+	   * @author henrysun
+	   * 2018年9月18日 下午3:10:49
+	   */
+	  @GetMapping(value="/storageInExcel")
+	  void storageInExcel(GoodsStorageIn goodsStorageIn,HttpServletResponse response) throws SystemException  {
+			 if(!StringUtil.isEmpty(goodsStorageIn.getTimeRange())){
+					String startExpiringDate=goodsStorageIn.getTimeRange().split(ConstSysParamName.KGANG)[0];
+					String endExpiringDate=goodsStorageIn.getTimeRange().split(ConstSysParamName.KGANG)[1];
+					goodsStorageIn.setStartExpiringDate(startExpiringDate);
+					goodsStorageIn.setEndExpiringDate(endExpiringDate);
+			 }
+		  FileUtil.exportExcel(goodsStorageInService.selectListByObjCdt(goodsStorageIn),"商品入库清单","入库清单",GoodsStorageIn.class,"商品入库清单.xls",response);
+		}
+	  
+	  /**
+	   * 跳转到设置商品库位
+	   * @author henrysun
+	   * 2018年9月18日 下午3:56:54
+	   */
+	  @GetMapping(value = "showSetLocation")
+	  public String showSetLocation(@RequestParam String id, Model model) {
+		GoodsStorageIn goodsStorageIn= goodsStorageInService.selectById(id);
+		model.addAttribute("goodsStorageIn",goodsStorageIn);
+		model.addAttribute("locationList",goodsStorageLocationService.selectListByObjCdt(new GoodsStorageLocation()));
+	    return "/storage/in/set-location";
+	  }
+	  
+	  /**
+	   * 设置商品库位接口
+	   * @author henrysun
+	   * 2018年9月18日 下午4:09:46
+	   */
+	  @PostMapping(value = "setLocation")
+	  @ResponseBody
+	  public ResBody setLocation(@RequestBody GoodsStorageIn goodsStorageIn) {
+		ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+		goodsStorageInService.updateByObjCdt(goodsStorageIn);
+		return resBody;
 	  }
 	  
 	  /**
@@ -353,6 +398,37 @@ public class GoodsStorageController  {
 	       }
        }
 	   return resBody;
+	  }
+	  
+	  /**
+	   * 跳转到报损列表页面
+	   * @author henrysun
+	   * 2018年9月18日 下午6:38:13
+	   */
+	  @GetMapping(value = "showGoodsStorageRd")
+	  @RequiresPermissions("storage:rd:list")
+	  public String showGoodsStorageRd(Model model) {
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	    return "/storage/s_out/storageOutList";
+	  }
+
+	  /**
+	   * 查询报损列表接口
+	   * @author henrysun
+	   * 2018年8月30日 上午10:19:57
+	   */
+	  @GetMapping(value = "showGoodsStorageRdList")
+	  @ResponseBody
+	  @RequiresPermissions("storage:rd:list")
+	  public ReType showGoodsStorageRdList(Model model, GoodsStorageOut goodsStorageOut , String page, String limit) {
+		 if(!StringUtil.isEmpty(goodsStorageOut.getTimeRange())){
+				String startApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[0];
+				String endApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[1];
+				goodsStorageOut.setStartApplyDate(startApplyDate);
+				goodsStorageOut.setEndApplyDate(endApplyDate);
+		 }
+		 return goodsStorageOutService.selectByPage(goodsStorageOut,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	
 }

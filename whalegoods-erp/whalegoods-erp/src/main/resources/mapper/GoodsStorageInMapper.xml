@@ -16,6 +16,7 @@
     <result column="in_count" jdbcType="INTEGER" property="inCount" />
     <result column="curr_count" jdbcType="INTEGER" property="currCount" />
     <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="goods_storage_location_id" jdbcType="VARCHAR" property="goodsStorageLocationId" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   
@@ -31,6 +32,7 @@
   a.cost_price,
   a.market_price,
   a.in_count,
+  a.goods_storage_location_id,
   a.curr_count,
   c.location_name,
   a.remark
@@ -118,6 +120,7 @@
 		UPDATE goods_storage_in a INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
 	   <set>
       <if test="currCount != null and currCount != ''">a.curr_count=a.curr_count+#{currCount},</if>
+      <if test="goodsStorageLocationId != null and goodsStorageLocationId != ''">a.goods_storage_location_id=#{goodsStorageLocationId},</if>
       a.update_date=now(),
       </set>
     		<where>

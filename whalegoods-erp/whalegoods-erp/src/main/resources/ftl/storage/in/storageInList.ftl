@@ -36,6 +36,7 @@
   </div>
     <button class="select-on layui-btn layui-btn-sm layui-btn-primary" data-type="select"><i class="layui-icon">&#xe615;</i>查询</button>
     <@shiro.hasPermission name="storage:in:add"><button class="layui-btn layui-btn-normal layui-btn-sm" data-type="add"><i class="layui-icon">&#xe608;</i>入库</button></@shiro.hasPermission>
+    <@shiro.hasPermission name="storage:in:excel"><button class="layui-btn  layui-btn-sm" data-type="excel"><i class="layui-icon">&#xe601;</i>导出入库单</button></@shiro.hasPermission>
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;" data-type="reload"><i class="layui-icon">&#x1002;</i></button>
   </div>
 </div>
@@ -68,7 +69,7 @@
       url: 'showGoodsStorageInList',
       cols: [[
         {field: 'inDate', title: '入库日期', align:'center',width:120},
-        {field: 'inId', title: '入库编号', align:'center',width:180},
+        {field: 'inId', title: '入库单号', align:'center',width:180},
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
         {field: 'productDate',title: '生产日期',align:'center',width:110},
@@ -77,7 +78,7 @@
         {field: 'marketPrice', title: '建议零售价', align:'center',width:100},
         {field: 'inCount', title: '入库数量（个）', align:'center',width:130},
         {field: 'currCount', title: '当前批次库存（个）', align:'center',width:168,sort: true},
-        {field: 'locationName', title: '库位', align:'center',width:150},
+        {field: 'locationName', title: '库位', align:'center',width:150,event: 'setLocation', style:'cursor: pointer;'},
         {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
@@ -108,6 +109,15 @@
        $("#select2-sltGoodsList-container").text($("#sltGoodsList").find("option[value = '']").text());
        $("#sltGoodsList").val('');
       },
+      excel: function () {
+      	var goodsSkuId = $('#sltGoodsList').val();
+      	var timeRange = $('#iptTimeRange').val();
+            if(timeRange==null||timeRange==''){
+                layer.msg('请选择一个到期日期范围', {icon:5,time:1000});
+                return false;
+            }
+        	window.location.href="storageInExcel?goodsSkuId="+goodsSkuId+"&timeRange="+timeRange;
+          },
       add: function () {
         add('商品入库', 'showAddGoodsStorageIn', 700,620);
       }
@@ -116,6 +126,9 @@
     //监听工具条
     table.on('tool(storageIn)', function (obj) {
       var data = obj.data;
+      if(obj.event === 'setLocation'){
+    	  setLocation('设置库位','showSetLocation?id='+data.id,350,200);
+      }
       if (obj.event === 'del') {
         layer.confirm('确定删除该入库记录?',{ title:'提示'},
         function (index) {
@@ -150,6 +163,32 @@
       }
     });
   }
+  
+  function setLocation(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    layer.open({
+	      id: 'storage-setLocation',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
   
   function add(title, url, w, h) {
     if (title == null || title == '') {

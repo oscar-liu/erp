@@ -35,7 +35,7 @@
   a.goods_storage_location_id,
   a.curr_count,
   c.location_name,
-  a.remark
+  a.remark 
   </sql>
   
         <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">

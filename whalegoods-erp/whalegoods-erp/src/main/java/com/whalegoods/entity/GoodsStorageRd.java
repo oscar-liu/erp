@@ -23,6 +23,8 @@ public class GoodsStorageRd extends BaseEntity implements Serializable {
 	
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date rdDay;
+    
+    private Integer rdNum;
 	
     private String goodsSkuId;
     
@@ -31,8 +33,6 @@ public class GoodsStorageRd extends BaseEntity implements Serializable {
     private String goodsCode;
     
     private String goodsName;
-    
-    private Integer rdNum;
     
     //入库批次名称，由多个字段组合而成
     private String goodsStorageInName;

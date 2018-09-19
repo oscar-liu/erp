@@ -120,10 +120,10 @@ CONCAT(ROUND(ROUND((a.sales_amount-a.costs_amount)/a.sales_amount,2)*100,0),'%')
     <select id="selectListGroupByDevice"  parameterType="java.util.Map" resultMap="BaseResultMap">
 SELECT 
   REPLACE(UUID(), '-', '') id,
+  a.device_id,
   SUM(a.sales_count) sales_count,
   SUM(a.sales_amount) sales_amount,
   a.order_day,
-  a.device_id
 FROM report_base a 
     WHERE a.order_day=#{orderDay}
     GROUP BY a.device_id
@@ -133,10 +133,10 @@ FROM report_base a
     <select id="selectListGroupByGoods"  parameterType="java.util.Map" resultMap="BaseResultMap3">
 SELECT 
   REPLACE(UUID(), '-', '') id,
+  a.goods_code,
   SUM(a.sales_count) sales_count,
   SUM(a.sales_amount) sales_amount,
-  a.order_day,
-  a.goods_code
+  a.order_day
 FROM report_base a 
     WHERE a.order_day=#{orderDay}
     GROUP BY a.goods_code

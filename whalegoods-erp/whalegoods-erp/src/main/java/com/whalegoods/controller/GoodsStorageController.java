@@ -27,6 +27,7 @@ import com.whalegoods.entity.GoodsStorage;
 import com.whalegoods.entity.GoodsStorageIn;
 import com.whalegoods.entity.GoodsStorageLocation;
 import com.whalegoods.entity.GoodsStorageOut;
+import com.whalegoods.entity.GoodsStorageRd;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
@@ -35,6 +36,7 @@ import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
 import com.whalegoods.service.GoodsStorageLocationService;
 import com.whalegoods.service.GoodsStorageOutService;
+import com.whalegoods.service.GoodsStorageRdService;
 import com.whalegoods.service.GoodsStorageService;
 import com.whalegoods.util.DateUtil;
 import com.whalegoods.util.FileUtil;
@@ -68,6 +70,9 @@ public class GoodsStorageController  {
 	 
 	 @Autowired
 	 GoodsStorageLocationService goodsStorageLocationService;
+	 
+	 @Autowired
+	 GoodsStorageRdService goodsStorageRdService;
 
 	  /**
 	   * 跳转到仓库入库列表页面
@@ -389,9 +394,9 @@ public class GoodsStorageController  {
 				  //增加库存表的总库存
 	    	   GoodsStorage objCdt2=new GoodsStorage();
 	    	   objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
-	    	   objCdt2.setCurrCount(goodsStorageIn.getCurrCount());
+	    	   objCdt2.setCurrCount(goodsStorageOut.getApplyNum());
 	    	   objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
-	 	       goodsStorageService.updateByObjCdt(objCdt2);   
+	 	       goodsStorageService.updateByObjCdt(objCdt2);
 	       }
 	       else{
 	    	   throw new BizApiException(ConstApiResCode.GOODS_STORAGE_IN_NOT_EXIST);
@@ -409,8 +414,7 @@ public class GoodsStorageController  {
 	  @RequiresPermissions("storage:rd:list")
 	  public String showGoodsStorageRd(Model model) {
 		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
-		model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
-	    return "/storage/s_out/storageOutList";
+	    return "/storage/rd/storageRdList";
 	  }
 
 	  /**
@@ -421,14 +425,92 @@ public class GoodsStorageController  {
 	  @GetMapping(value = "showGoodsStorageRdList")
 	  @ResponseBody
 	  @RequiresPermissions("storage:rd:list")
-	  public ReType showGoodsStorageRdList(Model model, GoodsStorageOut goodsStorageOut , String page, String limit) {
-		 if(!StringUtil.isEmpty(goodsStorageOut.getTimeRange())){
-				String startApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[0];
-				String endApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[1];
-				goodsStorageOut.setStartApplyDate(startApplyDate);
-				goodsStorageOut.setEndApplyDate(endApplyDate);
-		 }
-		 return goodsStorageOutService.selectByPage(goodsStorageOut,Integer.valueOf(page),Integer.valueOf(limit));
+	  public ReType showGoodsStorageRdList(Model model, GoodsStorageRd goodsStorageRd , String page, String limit) {
+		 return goodsStorageRdService.selectByPage(goodsStorageRd,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+	  
+	  /**
+	   * 跳转到添加商品报损页面
+	   * @author henrysun
+	   * 2018年9月19日 下午3:12:19
+	   */
+	  @GetMapping(value = "showAddGoodsStorageRd")
+	  public String showAddGoodsStorageRd(Model model) {
+	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	   return "/storage/rd/add-goodsStorageRd";
+	  }
+	  
+	  /**
+	   * 添加商品报损接口
+	   * @author henrysun
+	   * 2018年9月19日 下午3:12:45
+	   */
+	  @PostMapping(value = "addGoodsStorageRd")
+	  @ResponseBody
+	  public ResBody addGoodsStorageRd(@RequestBody GoodsStorageRd goodsStorageRd) {
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageRd.getGoodsStorageInId());
+	       if(goodsStorageIn!=null){
+	 		  if(goodsStorageRd.getRdDay().before(goodsStorageIn.getInDate())){
+				  throw new BizApiException(ConstApiResCode.RD_DATE_CANNOT_BEFORE_IN_DATE);
+			  }
+	    	   if(goodsStorageRd.getRdNum()>goodsStorageIn.getCurrCount()){
+	    		   resBody.setResultMsg("当前入库批次最大可报损数量为："+goodsStorageIn.getCurrCount());
+	    		   resBody.setResultCode(ConstApiResCode.CURR_STORAGE_RD_INAVALIBLE_COUNT);
+	    		   return resBody;
+	    	   }
+	    	   else{
+	    		   goodsStorageRd.setId(StringUtil.getUUID());
+	    		   goodsStorageRd.setCreateBy(ShiroUtil.getCurrentUserId());
+	    		   goodsStorageRd.setUpdateBy(ShiroUtil.getCurrentUserId());
+	    		   goodsStorageRdService.insert(goodsStorageRd);
+	    			  //扣除当前入库批次的库存
+	    			  goodsStorageIn.setCurrCount(-goodsStorageRd.getRdNum());
+	    			  goodsStorageInService.updateByObjCdt(goodsStorageIn);
+	    			  //扣除库存表的总库存
+	   	    	GoodsStorage objCdt2=new GoodsStorage();
+	   	    	objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
+	   	    	objCdt2.setCurrCount(-goodsStorageRd.getRdNum());
+	   	    	objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
+		    	goodsStorageService.updateByObjCdt(objCdt2);
+	    	   }
+	       }
+	       else{
+	    	   throw new BizApiException(ConstApiResCode.GOODS_STORAGE_IN_NOT_EXIST);
+	       }
+		  return resBody;
+	  }
+	  
+	  /**
+	   * 删除商品报损记录
+	   * @author henrysun
+	   * 2018年9月19日 下午4:22:47
+	   */
+	  @PostMapping(value = "delGoodsStorageRd")
+	  @ResponseBody
+	  @RequiresPermissions("storage:rd:del")
+	  public ResBody delGoodsStorageRd(@RequestParam String id) {
+       ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+       GoodsStorageRd goodsStorageRd=goodsStorageRdService.selectById(id);
+       if(goodsStorageRd!=null){
+	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageRd.getGoodsStorageInId());
+	       if(goodsStorageIn!=null){
+	    	   goodsStorageRdService.deleteById(id);
+				  //增加当前入库批次的库存
+				  goodsStorageIn.setCurrCount(goodsStorageRd.getRdNum());
+				  goodsStorageInService.updateByObjCdt(goodsStorageIn);
+				  //增加库存表的总库存
+	    	   GoodsStorage objCdt2=new GoodsStorage();
+	    	   objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
+	    	   objCdt2.setCurrCount(goodsStorageRd.getRdNum());
+	    	   objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
+	 	       goodsStorageService.updateByObjCdt(objCdt2);
+	       }
+	       else{
+	    	   throw new BizApiException(ConstApiResCode.GOODS_STORAGE_IN_NOT_EXIST);
+	       }
+       }
+	   return resBody;
 	  }
 	
 }

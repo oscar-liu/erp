@@ -123,8 +123,8 @@ SELECT
   a.device_id,
   SUM(a.sales_count) sales_count,
   SUM(a.sales_amount) sales_amount,
-  a.order_day,
-FROM report_base a 
+  a.order_day 
+  FROM report_base a 
     WHERE a.order_day=#{orderDay}
     GROUP BY a.device_id
   </select>
@@ -136,7 +136,7 @@ SELECT
   a.goods_code,
   SUM(a.sales_count) sales_count,
   SUM(a.sales_amount) sales_amount,
-  a.order_day
+  a.order_day 
 FROM report_base a 
     WHERE a.order_day=#{orderDay}
     GROUP BY a.goods_code

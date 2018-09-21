@@ -16,6 +16,7 @@
     <result column="in_count" jdbcType="INTEGER" property="inCount" />
     <result column="curr_count" jdbcType="INTEGER" property="currCount" />
     <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="goodsStorageInName" jdbcType="VARCHAR" property="goodsStorageInName" />
     <result column="goods_storage_location_id" jdbcType="VARCHAR" property="goodsStorageLocationId" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
@@ -35,7 +36,8 @@
   a.goods_storage_location_id,
   a.curr_count,
   c.location_name,
-  a.remark 
+  a.remark,
+  CONCAT(DATE_FORMAT(a.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(a.expiring_date, '%Y-%m-%d'),'到期',a.cost_price,'元成本价') goodsStorageInName
   </sql>
   
         <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">

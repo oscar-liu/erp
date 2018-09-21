@@ -1,6 +1,7 @@
 package com.whalegoods.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.whalegoods.entity.GoodsStorageIn;
 
@@ -12,7 +13,7 @@ import com.whalegoods.entity.GoodsStorageIn;
  */
 public interface GoodsStorageInService extends BaseService<GoodsStorageIn,String> {
 	
-	List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId);
+	List<GoodsStorageIn> getStorageInListByGoodsSkuId(Map<String,Object> mapCdt);
 	
 	List<Double> selectLastMarketPrice(String goodsCode);
 }

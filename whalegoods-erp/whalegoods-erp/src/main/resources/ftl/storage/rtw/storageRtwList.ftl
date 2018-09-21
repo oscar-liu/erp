@@ -89,7 +89,7 @@
        $("#sltGoodsList").val('');
       },
       add: function () {
-        add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
+        add('商品返仓', 'showAddGoodsStorageRtw', 700,350);
       }
     };
     

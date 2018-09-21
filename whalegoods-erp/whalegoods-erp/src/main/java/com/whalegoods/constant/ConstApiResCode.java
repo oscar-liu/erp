@@ -51,6 +51,7 @@ public abstract class ConstApiResCode {
     public final static Integer NO_AVALIBALE_GOODS_STORAGE_OUT=7015;
     public final static Integer RD_DATE_CANNOT_BEFORE_IN_DATE=7016;
     public final static Integer CURR_STORAGE_RD_INAVALIBLE_COUNT=7017;
+    public final static Integer RTW_DATE_CANNOT_BEFORE_IN_DATE=7018;
     
     /**
      * 设备和货道相关 8开头
@@ -123,6 +124,7 @@ public abstract class ConstApiResCode {
 		resMap.put(NO_AVALIBALE_GOODS_STORAGE_OUT,"该商品没有可用的出库批次");
 		resMap.put(RD_DATE_CANNOT_BEFORE_IN_DATE,"报损日期不能早于入库日期");
 		resMap.put(CURR_STORAGE_RD_INAVALIBLE_COUNT,"当前入库批次可报损数量不足");
+		resMap.put(RTW_DATE_CANNOT_BEFORE_IN_DATE,"返仓日期不能早于入库日期");
 		
 		resMap.put(PATH_NOT_EXIST,"货道不存在或未上架商品");
 		resMap.put(DEVICE_NOT_EXIST,"设备不存在");

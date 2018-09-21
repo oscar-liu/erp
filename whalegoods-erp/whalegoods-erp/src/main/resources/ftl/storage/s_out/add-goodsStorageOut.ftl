@@ -91,7 +91,7 @@
 	  $('#sltGoodsStorageIn + span').css('width','300px');
 	  $('#sltGoodsCode').change(function(){ 
 	      $.ajax({
-	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val(),
+	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val()+'&currCountFlag=1',
 	          type:'get',
 	          async:false,
 	          success:function(d){

@@ -57,10 +57,7 @@
      <label for="sltGoodsStorageIn" class="layui-form-label"><span class="x-red">*</span>入库批次</label>
       <div class="layui-input-inline">
        <select id="sltGoodsStorageIn" name="sltGoodsStorageIn" lay-verify="required"  lay-ignore>
-             <option value="">直接选择或搜索选择</option>
-  	<#list goodsStorageInList as storageIn>
-          <option value="${storageIn.id}">${storageIn.goodsStorageInName}</option>
-    </#list>
+ <option value="">请先选择一个商品</option>
     </select>
     </div>
      </div>
@@ -92,7 +89,7 @@
 	  $('#sltGoodsStorageIn').select2();
 	  $('#sltDeviceId').select2();
 	  $('#sltGoodsStorageIn + span').css('width','300px');
-	  $('#sltGoodsCode').change(function(){ 
+	  $('#sltGoodsCode').change(function(){
 	      $.ajax({
 	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val(),
 	          type:'get',
@@ -142,10 +139,12 @@
      data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
      layer.confirm('想要继续添加返仓记录吗?',{ title:'提示'},
     	        function (index) {
-    	          del(data.id);
-    	          layer.close(index);
+    	 add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
+    	 layer.close(index);
     	        },function(index){
     	        	addGoodsStorageRtw(data);
+    	        	layer.close(index);
+    	        	return false;
     	        });
       return false;
     });
@@ -176,6 +175,36 @@
           }
         });
   }
+  
+  function add(title, url, w, h) {
+	    if (title == null || title == '') {
+	      title = false;
+	    }
+	    ;
+	    if (url == null || url == '') {
+	      url = "404.html";
+	    }
+	    ;
+	    if (w == null || w == '') {
+	      w = ($(window).width() * 0.9);
+	    }
+	    ;
+	    if (h == null || h == '') {
+	      h = ($(window).height() - 50);
+	    }
+	    ;
+	    layer.open({
+	      id: 'storageRtw-add',
+	      type: 2,
+	      area: [w + 'px', h + 'px'],
+	      fix: false,
+	      maxmin: true,
+	      shadeClose: false,
+	      shade: 0.4,
+	      title: title,
+	      content: url
+	    });
+	  }
 </script>
 </body>
 

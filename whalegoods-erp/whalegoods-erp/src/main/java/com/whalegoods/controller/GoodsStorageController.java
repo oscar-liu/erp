@@ -323,9 +323,12 @@ public class GoodsStorageController  {
 	   */
 	  @GetMapping(value = "getStorageInListByGoodsSkuId")
 	  @ResponseBody
-	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId) {
+	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId,String currCountFlag) {
 	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-	   List<GoodsStorageIn> liGoodsStorageIn=goodsStorageInService.getStorageInListByGoodsSkuId(goodsSkuId);
+	   Map<String,Object> mapCdt=new HashMap<>();
+	   mapCdt.put("goodsSkuId", goodsSkuId);
+	   mapCdt.put("currCountFlag", currCountFlag);
+	   List<GoodsStorageIn> liGoodsStorageIn=goodsStorageInService.getStorageInListByGoodsSkuId(mapCdt);
 	   if(liGoodsStorageIn.size()>0){
 		   resBody.setData(liGoodsStorageIn);
 	   }
@@ -562,33 +565,26 @@ public class GoodsStorageController  {
 	   */
 	  @PostMapping(value = "addGoodsStorageRtw")
 	  @ResponseBody
-	  public ResBody addGoodsStorageRtw(@RequestBody GoodsStorageRd goodsStorageRd) {
+	  public ResBody addGoodsStorageRtw(@RequestBody GoodsStorageRtw goodsStorageRtw) {
 		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageRd.getGoodsStorageInId());
+	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageRtw.getGoodsStorageInId());
 	       if(goodsStorageIn!=null){
-	 		  if(goodsStorageRd.getRdDay().before(goodsStorageIn.getInDate())){
-				  throw new BizApiException(ConstApiResCode.RD_DATE_CANNOT_BEFORE_IN_DATE);
+	 		  if(goodsStorageRtw.getRtwDay().before(goodsStorageIn.getInDate())){
+				  throw new BizApiException(ConstApiResCode.RTW_DATE_CANNOT_BEFORE_IN_DATE);
 			  }
-	    	   if(goodsStorageRd.getRdNum()>goodsStorageIn.getCurrCount()){
-	    		   resBody.setResultMsg("当前入库批次最大可报损数量为："+goodsStorageIn.getCurrCount());
-	    		   resBody.setResultCode(ConstApiResCode.CURR_STORAGE_RD_INAVALIBLE_COUNT);
-	    		   return resBody;
-	    	   }
-	    	   else{
-	    		   goodsStorageRd.setId(StringUtil.getUUID());
-	    		   goodsStorageRd.setCreateBy(ShiroUtil.getCurrentUserId());
-	    		   goodsStorageRd.setUpdateBy(ShiroUtil.getCurrentUserId());
-	    		   goodsStorageRdService.insert(goodsStorageRd);
-	    			  //扣除当前入库批次的库存
-	    			  goodsStorageIn.setCurrCount(-goodsStorageRd.getRdNum());
-	    			  goodsStorageInService.updateByObjCdt(goodsStorageIn);
-	    			  //扣除库存表的总库存
-	   	    	GoodsStorage objCdt2=new GoodsStorage();
-	   	    	objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
-	   	    	objCdt2.setCurrCount(-goodsStorageRd.getRdNum());
-	   	    	objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
-		    	goodsStorageService.updateByObjCdt(objCdt2);
-	    	   }
+	 		 goodsStorageRtw.setId(StringUtil.getUUID());
+	 		goodsStorageRtw.setCreateBy(ShiroUtil.getCurrentUserId());
+	 		goodsStorageRtw.setUpdateBy(ShiroUtil.getCurrentUserId());
+   		   goodsStorageRtwService.insert(goodsStorageRtw);
+   			  //增加当前入库批次的库存
+   			  goodsStorageIn.setCurrCount(goodsStorageRtw.getRtwNum());
+   			  goodsStorageInService.updateByObjCdt(goodsStorageIn);
+   			  //增加库存表的总库存
+  	    	GoodsStorage objCdt2=new GoodsStorage();
+  	    	objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
+  	    	objCdt2.setCurrCount(goodsStorageRtw.getRtwNum());
+  	    	objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
+	    	goodsStorageService.updateByObjCdt(objCdt2);
 	       }
 	       else{
 	    	   throw new BizApiException(ConstApiResCode.GOODS_STORAGE_IN_NOT_EXIST);
@@ -606,18 +602,18 @@ public class GoodsStorageController  {
 	  @RequiresPermissions("storage:rtw:del")
 	  public ResBody delGoodsStorageRtw(@RequestParam String id) {
        ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-       GoodsStorageRd goodsStorageRd=goodsStorageRdService.selectById(id);
-       if(goodsStorageRd!=null){
-	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageRd.getGoodsStorageInId());
+       GoodsStorageRtw goodsStorageRtw=goodsStorageRtwService.selectById(id);
+       if(goodsStorageRtw!=null){
+	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageRtw.getGoodsStorageInId());
 	       if(goodsStorageIn!=null){
-	    	   goodsStorageRdService.deleteById(id);
-				  //增加当前入库批次的库存
-				  goodsStorageIn.setCurrCount(goodsStorageRd.getRdNum());
+	    	   goodsStorageRtwService.deleteById(id);
+				  //减去当前入库批次的库存
+				  goodsStorageIn.setCurrCount(-goodsStorageRtw.getRtwNum());
 				  goodsStorageInService.updateByObjCdt(goodsStorageIn);
-				  //增加库存表的总库存
+				  //减去库存表的总库存
 	    	   GoodsStorage objCdt2=new GoodsStorage();
 	    	   objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
-	    	   objCdt2.setCurrCount(goodsStorageRd.getRdNum());
+	    	   objCdt2.setCurrCount(-goodsStorageRtw.getRtwNum());
 	    	   objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
 	 	       goodsStorageService.updateByObjCdt(objCdt2);
 	       }

@@ -77,7 +77,8 @@
    
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
-      <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 确定</button>
+      <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 单次入库</button>
+      <button  class="layui-btn layui-btn-normal" lay-filter="addMore" lay-submit=""> 继续入库</button>
       <button  class="layui-btn layui-btn-primary" id="close">取消</button>
     </div>
   </div>
@@ -137,15 +138,17 @@
     form.on('submit(add)', function(data){
      data.field.goodsSkuId=$("#sltGoodsCode").val();
      data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
-     layer.confirm('想要继续添加返仓记录吗?',{ title:'提示'},
-    	        function (index) {
+     layer.msg('需要继续添加返仓记录吗?',{
+    	 btn: ['需要', '不需要'],
+    	 yes:function (index) {
     	 add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
     	 layer.close(index);
-    	        },function(index){
+    	 },
+    	 no:function(index){ 
     	        	addGoodsStorageRtw(data);
     	        	layer.close(index);
-    	        	return false;
-    	        });
+    	        }
+    	 });
       return false;
     });
     form.render();

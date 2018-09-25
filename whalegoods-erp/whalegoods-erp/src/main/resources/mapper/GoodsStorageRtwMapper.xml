@@ -48,6 +48,34 @@ a.remark
     ORDER BY a.rtw_day DESC 
   </select>
   
+    <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageRtw">
+    INSERT INTO goods_storage_rtw (
+    id,
+    rtw_day,
+    rtw_num,
+    device_id,
+    goods_sku_id, 
+    goods_storage_in_id, 
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remark)
+    VALUES (
+    #{id},
+    #{rtwDay},
+    #{rtwNum}, 
+    #{deviceId},
+    #{goodsSkuId}, 
+    #{goodsStorageInId},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now(),
+    #{remark}
+    )
+  </insert>
+  
      <delete id="deleteById" parameterType="java.lang.String">
     DELETE FROM goods_storage_rtw  WHERE id = #{_parameter}
   </delete>

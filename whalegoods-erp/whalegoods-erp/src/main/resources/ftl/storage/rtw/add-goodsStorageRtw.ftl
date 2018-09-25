@@ -67,14 +67,20 @@
     <div class="layui-form-item">
     <div class="layui-inline">
      <label for="iptRtwNum" class="layui-form-label"><span class="x-red">*</span>数量（个）</label>
-      <div class="layui-input-inline"><input type="text"  id="iptRtwNum" name="iptRtwNum"  lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="iptRtwNum" name="rtwNum"  lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-inline">
-     <label for="iptRdDay" class="layui-form-label"><span class="x-red">*</span>返仓日期</label>
-      <div class="layui-input-inline"><input type="text"  id="iptRdDay" name="rdDay" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
+     <label for="iptRtwDay" class="layui-form-label"><span class="x-red">*</span>返仓日期</label>
+      <div class="layui-input-inline"><input type="text"  id="iptRtwDay" name="rtwDay" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
     </div>
     </div>
-   
+       <!-- 备注 -->
+    <div class="layui-form-item layui-form-text">
+      <label for="txtRemark" class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+      <textarea placeholder="此处选填" class="layui-textarea" id="txtRemark" name="remark" ></textarea>
+    </div>
+    </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 单次入库</button>
@@ -120,7 +126,7 @@
     $ = layui.jquery;
     var form = layui.form,layer = layui.layer,laydate = layui.laydate;
     laydate.render({
-        elem: '#iptRdDay'
+        elem: '#iptRtwDay'
         ,max:0
       });
     form.verify({
@@ -137,48 +143,67 @@
     //监听提交
     form.on('submit(add)', function(data){
      data.field.goodsSkuId=$("#sltGoodsCode").val();
+    data.field.deviceId=$("#sltDeviceId").val();
      data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
-     layer.msg('需要继续添加返仓记录吗?',{
-    	 btn: ['需要', '不需要'],
-    	 yes:function (index) {
-    	 add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
-    	 layer.close(index);
-    	 },
-    	 no:function(index){ 
-    	        	addGoodsStorageRtw(data);
-    	        	layer.close(index);
-    	        }
-    	 });
+     $.ajax({
+         url:'addGoodsStorageRtw',
+         type:'post',
+        contentType : 'application/json',
+         data:JSON.stringify(data.field),
+         async:false,
+         traditional: true,
+         success:function(d){
+           if(d.result_code==0){
+             var index = parent.layer.getFrameIndex(window.name);
+             parent.layer.close(index);
+             window.parent.layui.table.reload('storageRtwList');
+             window.top.layer.msg(d.result_msg,{icon:6,time:1000});
+           }else{
+             layer.msg(d.result_msg,{icon:5});
+           }},
+           error:function(){
+             var index = parent.layer.getFrameIndex(window.name);
+             parent.layer.close(index);
+             window.top.layer.msg('请求失败',{icon:5,time:1000});
+         }
+       });
       return false;
     });
+    form.on('submit(addMore)', function(data){
+        data.field.goodsSkuId=$("#sltGoodsCode").val();
+        data.field.rtwDay=$("#iptRtwDay").val();
+        data.field.deviceId=$("#sltDeviceId").val();
+        data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+        add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
+/*        $.ajax({
+            url:'addGoodsStorageRtw',
+            type:'post',
+           contentType : 'application/json',
+            data:JSON.stringify(data.field),
+            async:false,
+            traditional: true,
+            success:function(d){
+              if(d.result_code==0){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+                window.parent.layui.table.reload('storageRtwList');
+                
+              }else{
+                layer.msg(d.result_msg,{icon:5});
+              }},
+              error:function(){
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+                window.top.layer.msg('请求失败',{icon:5,time:1000});
+            }
+          }); */
+         return false;
+       });
     form.render();
   });
-  
-  function addGoodsStorageRtw(data){
-      $.ajax({
-          url:'addGoodsStorageRtw',
-          type:'post',
-         contentType : 'application/json',
-          data:JSON.stringify(data.field),
-          async:false,
-          traditional: true,
-          success:function(d){
-            if(d.result_code==0){
-              var index = parent.layer.getFrameIndex(window.name);
-              parent.layer.close(index);
-              window.parent.layui.table.reload('storageRtwList');
-              window.top.layer.msg(d.result_msg,{icon:6,time:1000});
-            }else{
-              layer.msg(d.result_msg,{icon:5});
-            }},
-            error:function(){
-              var index = parent.layer.getFrameIndex(window.name);
-              parent.layer.close(index);
-              window.top.layer.msg('请求失败',{icon:5,time:1000});
-          }
-        });
-  }
-  
+
   function add(title, url, w, h) {
 	    if (title == null || title == '') {
 	      title = false;

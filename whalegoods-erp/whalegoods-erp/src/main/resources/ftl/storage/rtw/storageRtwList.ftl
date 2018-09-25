@@ -58,11 +58,11 @@
       url: 'showGoodsStorageRtwList',
       cols: [[
         {field: 'rtwDay', title: '返仓日期', align:'center',width:120},
-        {field: 'shortName', title: '点位', align:'center',width:120},
+        {field: 'shortName', title: '点位', align:'center',width:115},
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
-        {field: 'rtwNum', title: '数量（个）', align:'center',width:168,sort: true},
-        {field: 'goodsStorageInName', title: '所属入库批次', align:'center',width:300},
+        {field: 'rtwNum', title: '数量（个）', align:'center',width:115,sort: true},
+        {field: 'goodsStorageInName', title: '所属入库批次', align:'center',width:315},
         {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
@@ -89,7 +89,7 @@
        $("#sltGoodsList").val('');
       },
       add: function () {
-        add('商品返仓', 'showAddGoodsStorageRtw', 700,350);
+        add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
       }
     };
     

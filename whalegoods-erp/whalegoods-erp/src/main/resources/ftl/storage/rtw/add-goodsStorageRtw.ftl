@@ -83,8 +83,7 @@
     </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
-      <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 单次入库</button>
-      <button  class="layui-btn layui-btn-normal" lay-filter="addMore" lay-submit=""> 继续入库</button>
+      <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 确定</button>
       <button  class="layui-btn layui-btn-primary" id="close">取消</button>
     </div>
   </div>
@@ -121,6 +120,10 @@
 	          }
 	        });
 		 });
+		$("#select2-sltDeviceId-container").text($("#sltDeviceId").find("option[value = "+'${deviceId}'+"]").text());
+		$('#sltDeviceId').val('${deviceId}');
+		$('#iptRtwDay').val('${rtwDay}');
+		$('#txtRemark').val('${remark}');
   });
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
@@ -145,6 +148,9 @@
      data.field.goodsSkuId=$("#sltGoodsCode").val();
     data.field.deviceId=$("#sltDeviceId").val();
      data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
+     window.parent.document.getElementById("iptPhdDeviceId").value =$("#sltDeviceId").val();
+     window.parent.document.getElementById("iptPhdRtwDay").value =$("#iptRtwDay").val();
+     window.parent.document.getElementById("iptPhdRemark").value =$("#txtRemark").val();
      $.ajax({
          url:'addGoodsStorageRtw',
          type:'post',
@@ -169,70 +175,8 @@
        });
       return false;
     });
-    form.on('submit(addMore)', function(data){
-        data.field.goodsSkuId=$("#sltGoodsCode").val();
-        data.field.rtwDay=$("#iptRtwDay").val();
-        data.field.deviceId=$("#sltDeviceId").val();
-        data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
-        var index = parent.layer.getFrameIndex(window.name);
-        parent.layer.close(index);
-        add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
-/*        $.ajax({
-            url:'addGoodsStorageRtw',
-            type:'post',
-           contentType : 'application/json',
-            data:JSON.stringify(data.field),
-            async:false,
-            traditional: true,
-            success:function(d){
-              if(d.result_code==0){
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-                window.parent.layui.table.reload('storageRtwList');
-                
-              }else{
-                layer.msg(d.result_msg,{icon:5});
-              }},
-              error:function(){
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-                window.top.layer.msg('请求失败',{icon:5,time:1000});
-            }
-          }); */
-         return false;
-       });
     form.render();
   });
-
-  function add(title, url, w, h) {
-	    if (title == null || title == '') {
-	      title = false;
-	    }
-	    ;
-	    if (url == null || url == '') {
-	      url = "404.html";
-	    }
-	    ;
-	    if (w == null || w == '') {
-	      w = ($(window).width() * 0.9);
-	    }
-	    ;
-	    if (h == null || h == '') {
-	      h = ($(window).height() - 50);
-	    }
-	    ;
-	    layer.open({
-	      id: 'storageRtw-add',
-	      type: 2,
-	      area: [w + 'px', h + 'px'],
-	      fix: false,
-	      maxmin: true,
-	      shadeClose: false,
-	      shade: 0.4,
-	      title: title,
-	      content: url
-	    });
-	  }
 </script>
 </body>
 

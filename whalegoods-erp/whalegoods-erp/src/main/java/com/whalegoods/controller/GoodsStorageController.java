@@ -541,7 +541,7 @@ public class GoodsStorageController  {
 	  @GetMapping(value = "showGoodsStorageRtwList")
 	  @ResponseBody
 	  @RequiresPermissions("storage:rtw:list")
-	  public ReType showGoodsStorageRtwList(Model model, GoodsStorageRtw goodsStorageRtw , String page, String limit) {
+	  public ReType showGoodsStorageRtwList(Model model,GoodsStorageRtw goodsStorageRtw,String page, String limit) {
 		 return goodsStorageRtwService.selectByPage(goodsStorageRtw,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
@@ -551,10 +551,13 @@ public class GoodsStorageController  {
 	   * 2018年9月21日 上午4:36:05
 	   */
 	  @GetMapping(value = "showAddGoodsStorageRtw")
-	  public String showAddGoodsStorageRtw(Model model) {
+	  public String showAddGoodsStorageRtw(Model model,@RequestParam(value = "rtwDay", required = false) String rtwDay,@RequestParam(value = "deviceId", required = false) String deviceId,@RequestParam(value = "remark", required = false) String remark) {
 	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	   model.addAttribute("goodsStorageInList",goodsStorageInService.selectListByObjCdt(new GoodsStorageIn()));
 	   model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	   model.addAttribute("deviceId",deviceId);
+	   model.addAttribute("rtwDay",rtwDay);
+	   model.addAttribute("remark",remark);
 	   return "/storage/rtw/add-goodsStorageRtw";
 	  }
 	  

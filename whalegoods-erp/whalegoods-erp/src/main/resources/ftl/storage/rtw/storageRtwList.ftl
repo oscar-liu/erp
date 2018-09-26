@@ -18,6 +18,9 @@
 
 <body>
 <div class="erp-search">
+<input id="iptPhdDeviceId" type="hidden" name="iptPhdDeviceId">
+<input id="iptPhdRtwDay" type="hidden" name="iptPhdRtwDay">
+<input id="iptPhdRemark" type="hidden" name="iptPhdRemark">
   <div class="select">
    商品：
    <div class="layui-inline">
@@ -89,7 +92,15 @@
        $("#sltGoodsList").val('');
       },
       add: function () {
-        add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
+    	var deviceId=$("#iptPhdDeviceId").val();
+    	var rtwDay=$("#iptPhdRtwDay").val();
+    	var remark=$("#iptPhdRemark").val();
+    	if((deviceId!=''&&deviceId!=null)&&rtwDay!=null){
+    		add('商品返仓', 'showAddGoodsStorageRtw?deviceId='+deviceId+'&rtwDay='+rtwDay+'&remark='+remark, 700,500);	
+    	}
+    	else{
+    		add('商品返仓', 'showAddGoodsStorageRtw', 700,500);
+    	}
       }
     };
     
@@ -156,7 +167,10 @@
       shadeClose: false,
       shade: 0.4,
       title: title,
-      content: url
+      content: url,
+      yes : function(index , layero){
+          layer.close(index);
+      }
     });
   }
 </script>

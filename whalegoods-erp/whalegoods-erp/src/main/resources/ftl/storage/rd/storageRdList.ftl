@@ -60,8 +60,8 @@
         {field: 'rdDay', title: '报损日期', align:'center',width:120},
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
-        {field: 'rdNum', title: '数量（个）', align:'center',width:168,sort: true},
-        {field: 'goodsStorageInName', title: '所属入库批次', align:'center',width:300},
+        {field: 'rdNum', title: '数量（个）', align:'center',width:115,sort: true},
+        {field: 'goodsStorageInName', title: '所属入库批次', align:'center',width:315},
         {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
@@ -88,7 +88,7 @@
        $("#sltGoodsList").val('');
       },
       add: function () {
-        add('商品报损', 'showAddGoodsStorageRd', 700,500);
+        add('商品报损', 'showAddGoodsStorageRd', 700,450);
       }
     };
     

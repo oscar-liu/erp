@@ -125,7 +125,7 @@
 
   function del(id) {
     $.ajax({
-      url:"delGoodsStorageRd",
+      url:"delGoodsStorageRtw",
       type:"post",
       data:{id:id},
       async:false,

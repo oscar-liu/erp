@@ -20,7 +20,8 @@
     a.rd_num,
     b.goods_code,
     b.goods_name,
-    CONCAT(DATE_FORMAT(e.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(e.expiring_date, '%Y-%m-%d'),'到期',e.cost_price,'元成本价') goodsStorageInName,
+    a.goods_storage_in_id,
+    CONCAT(DATE_FORMAT(c.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(c.expiring_date, '%Y-%m-%d'),'到期',c.cost_price,'元成本价') goodsStorageInName,
     a.remark
   </sql>
   
@@ -55,7 +56,8 @@
     create_by,
     create_date,
     update_by,
-    update_date)
+    update_date,
+    remark)
     VALUES (
     #{id},
     #{rdDay},
@@ -65,7 +67,8 @@
     #{createBy}, 
     now(),
     #{updateBy},
-    now()
+    now(),
+    #{remark}
     )
   </insert>
   

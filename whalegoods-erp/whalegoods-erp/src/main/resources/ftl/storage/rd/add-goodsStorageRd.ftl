@@ -48,19 +48,24 @@
     </div>
      </div>
     </div>
-        
      <!-- 报损数量 -->
     <div class="layui-form-item">
     <div class="layui-inline">
      <label for="iptRdNum" class="layui-form-label"><span class="x-red">*</span>数量（个）</label>
-      <div class="layui-input-inline"><input type="text"  id="iptRdNum" name="iptRdNum"  lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+      <div class="layui-input-inline"><input type="text"  id="iptRdNum" name="rdNum"  lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-inline">
      <label for="iptRdDay" class="layui-form-label"><span class="x-red">*</span>报损日期</label>
       <div class="layui-input-inline"><input type="text"  id="iptRdDay" name="rdDay" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
     </div>
     </div>
-   
+    <!-- 备注 -->
+    <div class="layui-form-item layui-form-text">
+      <label for="txtRemark" class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+      <textarea placeholder="此处选填" class="layui-textarea" id="txtRemark" name="remark" ></textarea>
+    </div>
+    </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 确定</button>

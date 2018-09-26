@@ -21,6 +21,7 @@ d.short_name,
 b.goods_name,
 b.goods_code,
 a.rtw_num,
+a.goods_storage_in_id,
 CONCAT(DATE_FORMAT(c.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(c.expiring_date, '%Y-%m-%d'),'到期',c.cost_price,'元成本价') goodsStorageInName,
 a.remark
   </sql>

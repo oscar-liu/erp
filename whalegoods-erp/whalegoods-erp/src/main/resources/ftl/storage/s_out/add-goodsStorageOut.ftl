@@ -23,9 +23,16 @@
 <body>
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
+    <!-- 出库单号 -->
+    <div class="layui-form-item">
+    <div class="layui-inline">
+     <label for="iptOutId" class="layui-form-label"><span class="x-red">*</span>入库单号</label>
+      <div class="layui-input-inline"><input type="text"  id="iptOutId" name="outId" value="${outId}" lay-verify="required"  autocomplete="off" class="layui-input layui-disabled" disabled></div>
+    </div>
+    </div>
+  <!-- 设备 -->
       <div class="layui-form-item">
       <div class="layui-inline">
-     <!--设备-->
      <label for="sltDeviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
       <div class="layui-input-inline">
        <select id="sltDeviceId" name="sltDeviceId" lay-verify="required"  lay-ignore>
@@ -61,8 +68,7 @@
     </select>
     </div>
      </div>
-    </div>
-        
+    </div>  
      <!-- 出库数量 -->
     <div class="layui-form-item">
     <div class="layui-inline">
@@ -74,7 +80,13 @@
       <div class="layui-input-inline"><input type="text"  id="iptApplyDate" name="applyDate" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
     </div>
     </div>
-   
+    <!-- 备注 -->
+    <div class="layui-form-item layui-form-text">
+      <label for="txtRemark" class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+      <textarea placeholder="此处选填" class="layui-textarea" id="txtRemark" name="remark" ></textarea>
+    </div>
+    </div>
   <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6; position: fixed;bottom: 1px;margin-left:-20px;">
     <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
       <button  class="layui-btn layui-btn-normal" lay-filter="add" lay-submit=""> 确定</button>
@@ -114,6 +126,10 @@
 	          }
 	        });
 		 });
+		$("#select2-sltDeviceId-container").text($("#sltDeviceId").find("option[value = "+'${deviceId}'+"]").text());
+		$('#sltDeviceId').val('${deviceId}');
+		$('#iptApplyDate').val('${applyDate}');
+		$('#txtRemark').val('${remark}');
   });
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
@@ -138,6 +154,9 @@
      data.field.goodsSkuId=$("#sltGoodsCode").val();
      data.field.deviceId=$("#sltDeviceId").val();
      data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
+     window.parent.document.getElementById("iptPhdDeviceId").value =$("#sltDeviceId").val();
+     window.parent.document.getElementById("iptPhdApplyDate").value =$("#iptApplyDate").val();
+     window.parent.document.getElementById("iptPhdRemark").value =$("#txtRemark").val();
       $.ajax({
         url:'addGoodsStorageOut',
         type:'post',

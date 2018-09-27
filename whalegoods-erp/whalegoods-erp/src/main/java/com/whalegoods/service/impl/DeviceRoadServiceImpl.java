@@ -122,4 +122,9 @@ public class DeviceRoadServiceImpl extends BaseServiceImpl<DeviceRoad,String> im
 		return deviceRoadMapper.selectLastSalePrice(goodsCode);
 	}
 
+	@Override
+	public int updateBindingStorageOut(DeviceRoad objCdt) {
+		return deviceRoadMapper.updateBindingStorageOut(objCdt);
+	}
+
 }

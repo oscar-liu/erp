@@ -32,4 +32,11 @@ public interface DeviceRoadMapper extends BaseMapper<DeviceRoad,String>  {
      */
     List<Double> selectLastSalePrice(String goodsCode);
     
+    /**
+     * 将设备货道绑定出库批次
+     * @author henrysun
+     * 2018年9月27日 下午6:32:48
+     */
+    int updateBindingStorageOut(DeviceRoad objCdt);
+    
 }

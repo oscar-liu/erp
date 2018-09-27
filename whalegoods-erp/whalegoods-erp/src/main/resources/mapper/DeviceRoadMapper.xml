@@ -451,5 +451,23 @@
     DELETE FROM device_road  WHERE device_id = #{_parameter}
   </delete>
  
+ 
+ 		  	<!-- 将对应的设备货道绑定出库批次 -->
+		<update id="updateBindingStorageOut" parameterType="com.whalegoods.entity.DeviceRoad">
+		UPDATE device_road a LEFT JOIN goods_sku b ON a.goods_sku_id=b.id
+        INNER JOIN device c ON c.id=a.device_id
+	   <set>
+<if test="goodsStorageOutId != null and goodsStorageOutId!='' ">a.goods_storage_out_id=#{goodsStorageOutId},</if>
+      a.update_date=now(),
+      </set>
+    		<where>
+    		<if test="deviceId !=null and deviceId !=''">
+				AND a.device_id=#{deviceId}
+			</if>
+			<if test="goodsSkuId !=null and goodsSkuId !=''">
+				AND a.goods_sku_id=#{goodsSkuId}
+			</if>
+		 </where>
+	</update>
 
 </mapper>

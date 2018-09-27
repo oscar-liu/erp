@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.whalegoods.constant.ConstApiResCode;
 import com.whalegoods.constant.ConstSysParamName;
 import com.whalegoods.entity.Device;
+import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.GoodsStorage;
 import com.whalegoods.entity.GoodsStorageIn;
@@ -32,6 +33,7 @@ import com.whalegoods.entity.GoodsStorageRtw;
 import com.whalegoods.entity.response.ResBody;
 import com.whalegoods.exception.BizApiException;
 import com.whalegoods.exception.SystemException;
+import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
@@ -78,6 +80,9 @@ public class GoodsStorageController  {
 	 
 	 @Autowired
 	 GoodsStorageRtwService goodsStorageRtwService;
+	 
+	 @Autowired
+	 DeviceRoadService deviceRoadService;
 
 	  /**
 	   * 跳转到仓库入库列表页面
@@ -305,37 +310,35 @@ public class GoodsStorageController  {
 	  }
 	  
 	  /**
+	   * 导出商品出库单
+	   * @author henrysun
+	   * 2018年9月18日 下午3:10:49
+	   */
+	  @GetMapping(value="/storageOutExcel")
+	  void storageOutExcel(GoodsStorageOut goodsStorageOut,HttpServletResponse response) throws SystemException {
+			 if(!StringUtil.isEmpty(goodsStorageOut.getTimeRange())){
+					String startApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[0];
+					String endApplyDate=goodsStorageOut.getTimeRange().split(ConstSysParamName.KGANG)[1];
+					goodsStorageOut.setStartApplyDate(startApplyDate);
+					goodsStorageOut.setEndApplyDate(endApplyDate);
+			 }
+		  FileUtil.exportExcel(goodsStorageOutService.selectListByObjCdt(goodsStorageOut),"商品出库清单","出库清单",GoodsStorageOut.class,"商品出库清单.xls",response);
+		}
+	  
+	  /**
 	   * 跳转到添加商品出库页面
 	   * @author henrysun
 	   * 2018年8月30日 上午10:21:58
 	   */
 	  @GetMapping(value = "showAddGoodsStorageOut")
-	  public String showAddGoodsStorageOut(Model model) {
+	  public String showAddGoodsStorageOut(Model model,@RequestParam(value = "applyDate", required = false) String applyDate,@RequestParam(value = "deviceId", required = false) String deviceId,@RequestParam(value = "remark", required = false) String remark) {
+	   model.addAttribute("outId","WGCK"+System.currentTimeMillis());
 	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
 	   model.addAttribute("deviceList",deviceService.selectListByObjCdt(new Device()));
+	   model.addAttribute("deviceId",deviceId);
+	   model.addAttribute("applyDate",applyDate);
+	   model.addAttribute("remark",remark);
 	   return "/storage/s_out/add-goodsStorageOut";
-	  }
-	  
-	  /**
-	   * 根据商品编号查询对应的入库批次
-	   * @author henrysun
-	   * 2018年8月30日 下午5:15:11
-	   */
-	  @GetMapping(value = "getStorageInListByGoodsSkuId")
-	  @ResponseBody
-	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId,String currCountFlag) {
-	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
-	   Map<String,Object> mapCdt=new HashMap<>();
-	   mapCdt.put("goodsSkuId", goodsSkuId);
-	   mapCdt.put("currCountFlag", currCountFlag);
-	   List<GoodsStorageIn> liGoodsStorageIn=goodsStorageInService.getStorageInListByGoodsSkuId(mapCdt);
-	   if(liGoodsStorageIn.size()>0){
-		   resBody.setData(liGoodsStorageIn);
-	   }
-	   else{
-		   throw new BizApiException(ConstApiResCode.NO_AVALIBALE_GOODS_STORAGE_IN);
-	   }
-	   return resBody;
 	  }
 	  
 	  /**
@@ -358,7 +361,8 @@ public class GoodsStorageController  {
 	    		   return resBody;
 	    	   }
 	    	   else{
-	    			  goodsStorageOut.setId(StringUtil.getUUID());
+	    		   String id=StringUtil.getUUID();
+	    			  goodsStorageOut.setId(id);
 	    			  goodsStorageOut.setApplyBy(ShiroUtil.getCurrentUserId());
 	    			  goodsStorageOut.setCreateBy(ShiroUtil.getCurrentUserId());
 	    			  goodsStorageOut.setUpdateBy(ShiroUtil.getCurrentUserId());
@@ -372,6 +376,12 @@ public class GoodsStorageController  {
 	   	    	objCdt2.setCurrCount(-goodsStorageOut.getApplyNum());
 	   	    	objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
 		    	goodsStorageService.updateByObjCdt(objCdt2);
+		    	//将该出库批次和对应的设备货道绑定
+		    	DeviceRoad objCdt=new DeviceRoad();
+		    	objCdt.setGoodsStorageOutId(id);
+		    	objCdt.setDeviceId(goodsStorageOut.getDeviceId());
+		    	objCdt.setGoodsSkuId(goodsStorageOut.getGoodsSkuId());
+		    	deviceRoadService.updateBindingStorageOut(objCdt);
 	    	   }
 	       }
 	       else{
@@ -379,6 +389,28 @@ public class GoodsStorageController  {
 	       }
 
 		  return resBody;
+	  }
+	  
+	  /**
+	   * 根据商品编号查询对应的入库批次
+	   * @author henrysun
+	   * 2018年8月30日 下午5:15:11
+	   */
+	  @GetMapping(value = "getStorageInListByGoodsSkuId")
+	  @ResponseBody
+	  public ResBody getStorageInListByGoodsSkuId(Model model,@RequestParam String goodsSkuId,String currCountFlag) {
+	   ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	   Map<String,Object> mapCdt=new HashMap<>();
+	   mapCdt.put("goodsSkuId", goodsSkuId);
+	   mapCdt.put("currCountFlag", currCountFlag);
+	   List<GoodsStorageIn> liGoodsStorageIn=goodsStorageInService.getStorageInListByGoodsSkuId(mapCdt);
+	   if(liGoodsStorageIn.size()>0){
+		   resBody.setData(liGoodsStorageIn);
+	   }
+	   else{
+		   throw new BizApiException(ConstApiResCode.NO_AVALIBALE_GOODS_STORAGE_IN);
+	   }
+	   return resBody;
 	  }
 
 	  /**

@@ -4,6 +4,7 @@
 <mapper namespace="com.whalegoods.mapper.GoodsStorageOutMapper">
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageOut">
   <id column="id" jdbcType="VARCHAR" property="id" />
+  <result column="out_id" jdbcType="VARCHAR" property="outId" />
   <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
   <result column="goods_storage_in_id" jdbcType="VARCHAR" property="goodsStorageInId" />
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
@@ -20,6 +21,7 @@
   
    <sql id="Base_Column_List">
   a.id,
+  a.out_id,
   a.apply_date,
   a.goods_storage_in_id,
   a.apply_num,
@@ -88,6 +90,7 @@
   <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageOut">
     INSERT INTO goods_storage_out (
     id,
+    out_id,
     goods_sku_id, 
     goods_storage_in_id, 
     apply_num, 
@@ -97,9 +100,11 @@
     create_by,
     create_date,
     update_by,
-    update_date)
+    update_date,
+    remark)
     VALUES (
     #{id},
+    #{outId},
     #{goodsSkuId}, 
     #{goodsStorageInId}, 
     #{applyNum},
@@ -109,7 +114,8 @@
     #{createBy}, 
     now(),
     #{updateBy},
-    now()
+    now(),
+    #{remark}
     )
   </insert>
   

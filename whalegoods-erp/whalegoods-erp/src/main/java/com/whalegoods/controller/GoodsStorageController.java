@@ -26,6 +26,7 @@ import com.whalegoods.entity.DeviceRoad;
 import com.whalegoods.entity.GoodsSku;
 import com.whalegoods.entity.GoodsStorage;
 import com.whalegoods.entity.GoodsStorageIn;
+import com.whalegoods.entity.GoodsStorageIr;
 import com.whalegoods.entity.GoodsStorageLocation;
 import com.whalegoods.entity.GoodsStorageOut;
 import com.whalegoods.entity.GoodsStorageRd;
@@ -37,6 +38,7 @@ import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
 import com.whalegoods.service.GoodsStorageInService;
+import com.whalegoods.service.GoodsStorageIrService;
 import com.whalegoods.service.GoodsStorageLocationService;
 import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.GoodsStorageRdService;
@@ -83,6 +85,9 @@ public class GoodsStorageController  {
 	 
 	 @Autowired
 	 DeviceRoadService deviceRoadService;
+	 
+	 @Autowired
+	 GoodsStorageIrService goodsStorageIrService;
 
 	  /**
 	   * 跳转到仓库入库列表页面
@@ -658,5 +663,120 @@ public class GoodsStorageController  {
        }
 	   return resBody;
 	  }
+	  
+	  /**
+	   * 跳转到内部购买登记页面
+	   * @author henrysun
+	   * 2018年9月28日 下午5:05:22
+	   */
+	  @GetMapping(value = "showGoodsStorageIr")
+	  @RequiresPermissions("storage:ir:list")
+	  public String showGoodsStorageIr(Model model) {
+		model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	    return "/storage/ir/storageIrList";
+	  }
+
+	  /**
+	   * 查询内部购买登记列表接口
+	   * @author henrysun
+	   * 2018年9月28日 下午5:05:55
+	   */
+	  @GetMapping(value = "showGoodsStorageIrList")
+	  @ResponseBody
+	  @RequiresPermissions("storage:ir:list")
+	  public ReType showGoodsStorageIrList(Model model, GoodsStorageIr goodsStorageIr , String page, String limit) {
+		 if(!StringUtil.isEmpty(goodsStorageIr.getTimeRange())){
+				String startSaleDate=goodsStorageIr.getTimeRange().split(ConstSysParamName.KGANG)[0];
+				String endSaleDate=goodsStorageIr.getTimeRange().split(ConstSysParamName.KGANG)[1];
+				goodsStorageIr.setStartSaleDate(startSaleDate);
+				goodsStorageIr.setEndSaleDate(endSaleDate);
+		 }
+		 return goodsStorageIrService.selectByPage(goodsStorageIr,Integer.valueOf(page),Integer.valueOf(limit));
+	  }
+
+	  /**
+	   * 跳转到添加内部购买登记页面
+	   * @author henrysun
+	   * 2018年9月28日 下午5:09:14
+	   */
+	  @GetMapping(value = "showAddGoodsStorageIr")
+	  public String showAddGoodsStorageIr(Model model) {
+	   model.addAttribute("goodsList",goodsSkuService.selectListByObjCdt(new GoodsSku()));
+	   return "/storage/ir/add-goodsStorageIr";
+	  }
+	  
+	  /**
+	   * 添加内部购买登记接口
+	   * @author henrysun
+	   * 2018年9月28日 下午5:10:17
+	   */
+	  @PostMapping(value = "addGoodsStorageIr")
+	  @ResponseBody
+	  public ResBody addGoodsStorageIr(@RequestBody GoodsStorageIr goodsStorageIr) {
+		  ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageIr.getGoodsStorageInId());
+	       if(goodsStorageIn!=null){
+	 		  if(goodsStorageIr.getSaleDate().before(goodsStorageIn.getInDate())){
+				  throw new BizApiException(ConstApiResCode.IR_DATE_CANNOT_BEFORE_IN_DATE);
+			  }
+	    	   if(goodsStorageIr.getSaleCount()>goodsStorageIn.getCurrCount()){
+	    		   resBody.setResultMsg("当前入库批次最大可购买数量为："+goodsStorageIn.getCurrCount());
+	    		   resBody.setResultCode(ConstApiResCode.CURR_STORAGE_IN_INAVALIBLE_COUNT);
+	    		   return resBody;
+	    	   }
+	    	   else{
+	    		   String id=StringUtil.getUUID();
+	    		   goodsStorageIr.setId(id);
+	    		   goodsStorageIr.setCreateBy(ShiroUtil.getCurrentUserId());
+	    		   goodsStorageIr.setUpdateBy(ShiroUtil.getCurrentUserId());
+	    			  goodsStorageIrService.insert(goodsStorageIr);
+	    			  //扣除当前入库批次的库存
+	    			  goodsStorageIn.setCurrCount(-goodsStorageIr.getSaleCount());
+	    			  goodsStorageInService.updateByObjCdt(goodsStorageIn);
+	    			  //扣除库存表的总库存
+	   	    	GoodsStorage objCdt2=new GoodsStorage();
+	   	    	objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
+	   	    	objCdt2.setCurrCount(-goodsStorageIr.getSaleCount());
+	   	    	objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
+		    	goodsStorageService.updateByObjCdt(objCdt2);
+	    	   }
+	       }
+	       else{
+	    	   throw new BizApiException(ConstApiResCode.GOODS_STORAGE_IN_NOT_EXIST);
+	       }
+
+		  return resBody;
+	  }
 	
+	  /**
+	   * 删除内部购买登记记录
+	   * @author henrysun
+	   * 2018年9月28日 下午5:14:47
+	   */
+	  @PostMapping(value = "delGoodsStorageIr")
+	  @ResponseBody
+	  @RequiresPermissions("storage:ir:del")
+	  public ResBody delGoodsStorageIr(@RequestParam String id) {
+       ResBody resBody=new ResBody(ConstApiResCode.SUCCESS,ConstApiResCode.getResultMsg(ConstApiResCode.SUCCESS));
+       GoodsStorageIr goodsStorageIr=goodsStorageIrService.selectById(id);
+       if(goodsStorageIr!=null){
+	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageIr.getGoodsStorageInId());
+	       if(goodsStorageIn!=null){
+	    	   goodsStorageOutService.deleteById(id);
+				  //增加当前入库批次的库存
+				  goodsStorageIn.setCurrCount(goodsStorageIr.getSaleCount());
+				  goodsStorageInService.updateByObjCdt(goodsStorageIn);
+				  //增加库存表的总库存
+	    	   GoodsStorage objCdt2=new GoodsStorage();
+	    	   objCdt2.setGoodsSkuId(goodsStorageIn.getGoodsSkuId());
+	    	   objCdt2.setCurrCount(goodsStorageIr.getSaleCount());
+	    	   objCdt2.setExpiringDate(goodsStorageIn.getExpiringDate());
+	 	       goodsStorageService.updateByObjCdt(objCdt2);
+	       }
+	       else{
+	    	   throw new BizApiException(ConstApiResCode.GOODS_STORAGE_IN_NOT_EXIST);
+	       }
+       }
+	   return resBody;
+	  }
 }

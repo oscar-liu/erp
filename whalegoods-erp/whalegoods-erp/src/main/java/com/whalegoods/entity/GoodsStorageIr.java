@@ -26,6 +26,8 @@ public class GoodsStorageIr extends BaseEntity implements Serializable {
 	
     private String goodsSkuId;
     
+    private String goodsCode;
+    
     private String goodsName;
     
     private Integer saleCount;

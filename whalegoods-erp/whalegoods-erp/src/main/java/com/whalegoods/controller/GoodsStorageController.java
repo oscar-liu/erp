@@ -762,7 +762,7 @@ public class GoodsStorageController  {
        if(goodsStorageIr!=null){
 	       GoodsStorageIn goodsStorageIn=goodsStorageInService.selectById(goodsStorageIr.getGoodsStorageInId());
 	       if(goodsStorageIn!=null){
-	    	   goodsStorageOutService.deleteById(id);
+	    	   goodsStorageIrService.deleteById(id);
 				  //增加当前入库批次的库存
 				  goodsStorageIn.setCurrCount(goodsStorageIr.getSaleCount());
 				  goodsStorageInService.updateByObjCdt(goodsStorageIn);

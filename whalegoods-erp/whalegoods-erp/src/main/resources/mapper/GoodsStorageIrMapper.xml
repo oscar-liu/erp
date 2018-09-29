@@ -10,6 +10,7 @@
   <result column="totalSalePrice" jdbcType="DECIMAL" property="totalSalePrice" />
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_storage_in_id" jdbcType="VARCHAR" property="goodsStorageInId" />
     <result column="goodsStorageInName" jdbcType="VARCHAR" property="goodsStorageInName" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
@@ -19,6 +20,7 @@
   a.sale_date,
   a.sale_count,
   a.sale_price,
+  a.goods_storage_in_id,
   b.goods_code,
   b.goods_name,
   a.remark,

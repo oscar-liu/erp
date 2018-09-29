@@ -70,9 +70,9 @@
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
         {field: 'goodsStorageInName',title: '所属入库批次',align:'center',width:320},
-        {field: 'saleCount', title: '数量（个）', align:'center',width:130},
+        {field: 'saleCount', title: '数量（个）', align:'center',width:100},
         {field: 'salePrice',title: '价格',align:'center',width:70},
-        {field: 'totalSalePrice',title: '总金额',align:'center',width:70},
+        {field: 'totalSalePrice',title: '总金额',align:'center',width:85},
         {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
@@ -104,7 +104,7 @@
        $("#sltGoodsList").val('');
       },
       add: function () {
-    	  add('内部购买登记', 'showAddGoodsStorageIr',700,560);
+    	  add('内部购买登记', 'showAddGoodsStorageIr',700,500);
       }
     };
     

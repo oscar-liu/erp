@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whalegoods.mapper.GoodsStorageRdMapper">
+  <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageRd">
+  <id column="id" jdbcType="VARCHAR" property="id" />
+  <result column="rd_day" jdbcType="DATE" property="rdDay" />
+  <result column="rd_num" jdbcType="INTEGER" property="rdNum" />
+  <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_storage_in_id" jdbcType="VARCHAR" property="goodsStorageInId" />
+    <result column="goodsStorageInName" jdbcType="VARCHAR" property="goodsStorageInName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+   <sql id="Base_Column_List">
+    a.id,
+    a.rd_day,
+    a.rd_num,
+    b.goods_code,
+    b.goods_name,
+    a.goods_storage_in_id,
+    CONCAT(DATE_FORMAT(c.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(c.expiring_date, '%Y-%m-%d'),'到期',c.cost_price,'元成本价') goodsStorageInName,
+    a.remark
+  </sql>
+  
+        <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageRd" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM goods_storage_rd a  
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+    INNER JOIN goods_storage_in c ON c.id=a.goods_storage_in_id
+    WHERE a.id=#{id}
+  </select>
+  
+    <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageRd" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM goods_storage_rd a   
+    INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
+    INNER JOIN goods_storage_in c ON c.id=a.goods_storage_in_id
+   <where>
+     <if test="goodsSkuId !=null and goodsSkuId !=''">
+     AND a.goods_sku_id=#{goodsSkuId}
+     </if>
+    </where>
+    ORDER BY a.rd_day DESC 
+  </select>
+  
+  <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageRd">
+    INSERT INTO goods_storage_rd (
+    id,
+    rd_day,
+    rd_num, 
+    goods_sku_id, 
+    goods_storage_in_id, 
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remark)
+    VALUES (
+    #{id},
+    #{rdDay},
+    #{rdNum}, 
+    #{goodsSkuId}, 
+    #{goodsStorageInId},
+    #{createBy}, 
+    now(),
+    #{updateBy},
+    now(),
+    #{remark}
+    )
+  </insert>
+  
+     <delete id="deleteById" parameterType="java.lang.String">
+    DELETE FROM goods_storage_rd  WHERE id = #{_parameter}
+  </delete>
+
+</mapper>

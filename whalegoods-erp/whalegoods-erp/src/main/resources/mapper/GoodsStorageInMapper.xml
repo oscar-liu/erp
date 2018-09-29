@@ -4,6 +4,7 @@
 <mapper namespace="com.whalegoods.mapper.GoodsStorageInMapper">
   <resultMap id="BaseResultMap" type="com.whalegoods.entity.GoodsStorageIn">
   <id column="id" jdbcType="VARCHAR" property="id" />
+  <result column="in_id" jdbcType="VARCHAR" property="inId" />
   <result column="in_date" jdbcType="DATE" property="inDate" />
   <result column="goods_sku_id" jdbcType="VARCHAR" property="goodsSkuId" />
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
@@ -15,11 +16,14 @@
     <result column="in_count" jdbcType="INTEGER" property="inCount" />
     <result column="curr_count" jdbcType="INTEGER" property="currCount" />
     <result column="location_name" jdbcType="VARCHAR" property="locationName" />
+    <result column="goodsStorageInName" jdbcType="VARCHAR" property="goodsStorageInName" />
+    <result column="goods_storage_location_id" jdbcType="VARCHAR" property="goodsStorageLocationId" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   
    <sql id="Base_Column_List">
   a.id,
+  a.in_id,
   a.in_date,
   a.goods_sku_id,
   b.goods_code,
@@ -29,16 +33,18 @@
   a.cost_price,
   a.market_price,
   a.in_count,
+  a.goods_storage_location_id,
   a.curr_count,
-  b.location_name,
-  a.remark
+  c.location_name,
+  a.remark,
+  CONCAT(DATE_FORMAT(a.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(a.expiring_date, '%Y-%m-%d'),'到期',a.cost_price,'元成本价') goodsStorageInName
   </sql>
   
         <select id="selectById" parameterType="com.whalegoods.entity.GoodsStorageIn" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" />
     FROM goods_storage_in a   
     INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
-    INNER JOIN goods_storage_location c ON c.id=a.goods_storage_location_id
+    LEFT JOIN goods_storage_location c ON c.id=a.goods_storage_location_id
     WHERE a.id=#{id}
   </select>
   
@@ -46,22 +52,25 @@
     SELECT <include refid="Base_Column_List" />
     FROM goods_storage_in a   
     INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
-    INNER JOIN goods_storage_location c ON c.id=a.goods_storage_location_id
+    LEFT JOIN goods_storage_location c ON c.id=a.goods_storage_location_id
    <where>
      <if test="goodsSkuId !=null and goodsSkuId !=''">
      AND a.goods_sku_id=#{goodsSkuId}
      </if>
-     <if test="startApplyDate !=null "> AND a.expiring_date &gt;=#{startExpiringDate}</if>
-     <if test="endApplyDate !=null "> AND a.expiring_date &lt;#{endExpiringDate}</if>
+     <if test="startExpiringDate !=null "> AND a.expiring_date &gt;=#{startExpiringDate}</if>
+     <if test="endExpiringDate !=null "> AND a.expiring_date &lt;#{endExpiringDate}</if>
     </where>
     ORDER BY a.in_date DESC
   </select>
   
-      <select id="getStorageInListByGoodsSkuId" parameterType="java.lang.String" resultType="com.whalegoods.entity.GoodsStorageIn">
+      <select id="getStorageInListByGoodsSkuId" parameterType="java.util.Map" resultType="com.whalegoods.entity.GoodsStorageIn">
     SELECT a.id,CONCAT(DATE_FORMAT(a.in_date, '%Y-%m-%d'),'入库',DATE_FORMAT(a.expiring_date, '%Y-%m-%d'),'到期',a.cost_price,'元成本价') goodsStorageInName 
     FROM goods_storage_in a  
     INNER JOIN goods_sku b ON a.goods_sku_id = b.id
-    WHERE a.goods_sku_id=#{_parameter} AND a.curr_count>0
+       <where>
+     <if test="goodsSkuId !=null and goodsSkuId !=''">AND a.goods_sku_id=#{goodsSkuId} </if>
+     <if test="currCountFlag !=null "> AND a.curr_count >0</if>
+    </where>
     ORDER BY a.in_date DESC
   </select>
   
@@ -75,6 +84,7 @@
   <insert id="insert" parameterType="com.whalegoods.entity.GoodsStorageIn">
     INSERT INTO goods_storage_in (
     id,
+    in_id,
     in_date, 
     goods_sku_id, 
     product_date, 
@@ -90,6 +100,7 @@
     update_date)
     VALUES (
     #{id},
+    #{inId},
     #{inDate}, 
     #{goodsSkuId}, 
     #{productDate},
@@ -114,6 +125,7 @@
 		UPDATE goods_storage_in a INNER JOIN goods_sku b ON a.goods_sku_id = b.id 
 	   <set>
       <if test="currCount != null and currCount != ''">a.curr_count=a.curr_count+#{currCount},</if>
+      <if test="goodsStorageLocationId != null and goodsStorageLocationId != ''">a.goods_storage_location_id=#{goodsStorageLocationId},</if>
       a.update_date=now(),
       </set>
     		<where>

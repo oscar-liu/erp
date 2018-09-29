@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>添加商品出库</title>
+  <title>添加商品报损</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -23,27 +23,6 @@
 <body>
 <div class="x-body">
   <form class="layui-form layui-form-pane" style="margin: 20px;">
-    <!-- 出库单号 -->
-    <div class="layui-form-item">
-    <div class="layui-inline">
-     <label for="iptOutId" class="layui-form-label"><span class="x-red">*</span>入库单号</label>
-      <div class="layui-input-inline"><input type="text"  id="iptOutId" name="outId" value="${outId}" lay-verify="required"  autocomplete="off" class="layui-input layui-disabled" disabled></div>
-    </div>
-    </div>
-  <!-- 设备 -->
-      <div class="layui-form-item">
-      <div class="layui-inline">
-     <label for="sltDeviceId" class="layui-form-label"><span class="x-red">*</span>设备</label>
-      <div class="layui-input-inline">
-       <select id="sltDeviceId" name="sltDeviceId" lay-verify="required"  lay-ignore>
-     <option value="">直接选择或搜索选择</option>
-  	<#list deviceList as device>
-          <option value="${device.id}">${device.shortName}</option>
-    </#list>
-    </select>
-      </div>
-    </div>
-    </div>
   <!-- 商品-->
     <div class="layui-form-item">
      <div class="layui-inline">
@@ -64,20 +43,20 @@
      <label for="sltGoodsStorageIn" class="layui-form-label"><span class="x-red">*</span>入库批次</label>
       <div class="layui-input-inline">
        <select id="sltGoodsStorageIn" name="sltGoodsStorageIn" lay-verify="required"  lay-ignore>
-     <option value="">请先选择一个商品</option>
+        <option value="">请先选择一个商品</option>
     </select>
     </div>
      </div>
-    </div>  
-     <!-- 出库数量 -->
+    </div>
+     <!-- 报损数量 -->
     <div class="layui-form-item">
     <div class="layui-inline">
-     <label for="iptApplyNum" class="layui-form-label"><span class="x-red">*</span>数量（个）</label>
-      <div class="layui-input-inline"><input type="text"  id="iptApplyNum" name="applyNum"  lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
+     <label for="iptRdNum" class="layui-form-label"><span class="x-red">*</span>数量（个）</label>
+      <div class="layui-input-inline"><input type="text"  id="iptRdNum" name="rdNum"  lay-verify="required|number|ZZS"  autocomplete="off" class="layui-input"></div>
     </div>
     <div class="layui-inline">
-     <label for="iptApplyDate" class="layui-form-label"><span class="x-red">*</span>出库日期</label>
-      <div class="layui-input-inline"><input type="text"  id="iptApplyDate" name="applyDate" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
+     <label for="iptRdDay" class="layui-form-label"><span class="x-red">*</span>报损日期</label>
+      <div class="layui-input-inline"><input type="text"  id="iptRdDay" name="rdDay" placeholder="年-月-日" lay-verify="required|date"  autocomplete="off" class="layui-input"></div>
     </div>
     </div>
     <!-- 备注 -->
@@ -98,12 +77,11 @@
 <script>
   $(function(){
 	  $('#sltGoodsCode').select2();
-	  $('#sltDeviceId').select2();
 	  $('#sltGoodsStorageIn').select2();
 	  $('#sltGoodsStorageIn + span').css('width','300px');
 	  $('#sltGoodsCode').change(function(){ 
 	      $.ajax({
-	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val()+'&currCountFlag=1',
+	          url:'getStorageInListByGoodsSkuId?goodsSkuId='+$("#sltGoodsCode").val(),
 	          type:'get',
 	          async:false,
 	          success:function(d){
@@ -126,16 +104,12 @@
 	          }
 	        });
 		 });
-		$("#select2-sltDeviceId-container").text($("#sltDeviceId").find("option[value = "+'${deviceId}'+"]").text());
-		$('#sltDeviceId').val('${deviceId}');
-		$('#iptApplyDate').val('${applyDate}');
-		$('#txtRemark').val('${remark}');
   });
   layui.use(['form','layer'], function(){
     $ = layui.jquery;
     var form = layui.form,layer = layui.layer,laydate = layui.laydate;
     laydate.render({
-        elem: '#iptApplyDate'
+        elem: '#iptRdDay'
         ,max:0
       });
     form.verify({
@@ -152,13 +126,9 @@
     //监听提交
     form.on('submit(add)', function(data){
      data.field.goodsSkuId=$("#sltGoodsCode").val();
-     data.field.deviceId=$("#sltDeviceId").val();
      data.field.goodsStorageInId=$("#sltGoodsStorageIn").val();
-     window.parent.document.getElementById("iptPhdDeviceId").value =$("#sltDeviceId").val();
-     window.parent.document.getElementById("iptPhdApplyDate").value =$("#iptApplyDate").val();
-     window.parent.document.getElementById("iptPhdRemark").value =$("#txtRemark").val();
       $.ajax({
-        url:'addGoodsStorageOut',
+        url:'addGoodsStorageRd',
         type:'post',
        contentType : 'application/json',
         data:JSON.stringify(data.field),
@@ -168,7 +138,7 @@
           if(d.result_code==0){
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
-            window.parent.layui.table.reload('storageOutList');
+            window.parent.layui.table.reload('storageRdList');
             window.top.layer.msg(d.result_msg,{icon:6,time:1000});
           }else{
             layer.msg(d.result_msg,{icon:5});

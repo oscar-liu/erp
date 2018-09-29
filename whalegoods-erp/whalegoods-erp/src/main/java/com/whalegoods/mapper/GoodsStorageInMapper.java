@@ -1,6 +1,7 @@
 package com.whalegoods.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.whalegoods.entity.GoodsStorageIn;
 
@@ -12,7 +13,7 @@ public interface GoodsStorageInMapper extends BaseMapper<GoodsStorageIn, String>
 	 * @author henrysun
 	 * 2018年8月30日 下午5:21:48
 	 */
-	List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId);
+	List<GoodsStorageIn> getStorageInListByGoodsSkuId(Map<String,Object> mapCdt);
 	
 	List<Double> selectLastMarketPrice(String goodsCode);
 }

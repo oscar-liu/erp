@@ -18,6 +18,9 @@
 
 <body>
 <div class="erp-search">
+<input id="iptPhdDeviceId" type="hidden" name="iptPhdDeviceId">
+<input id="iptPhdApplyDate" type="hidden" name="iptPhdApplyDate">
+<input id="iptPhdRemark" type="hidden" name="iptPhdRemark">
   <div class="select">
     设备：
    <div class="layui-inline">
@@ -80,16 +83,18 @@
       url: 'showGoodsStorageOutList',
       cols: [[
         {field: 'applyDate', title: '出库日期', align:'center',width:110},
+        {field: 'outId', title: '出库单号', align:'center',width:180},
         {field: 'shortName', title: '点位', align:'center',width:110},
         {field: 'goodsName', title: '商品名称', align:'center',width:220},
         {field: 'goodsCode',title: '商品编号',align:'center',width:150},
         {field: 'goodsStorageInName',title: '所属入库批次',align:'center',width:320},
         {field: 'applyNum', title: '出库数量（个）', align:'center',width:130},
         {field: 'userName', title: '申请人', align:'center',width:120},
+        {field: 'remark', title: '备注', align:'center',width:200},
         {field: 'right', title: '操作',align:'center', toolbar: "#rightToolBar",width:70}
       ]],
       page: true,
-      height:  'full-43'
+      height:  'full-80'
     });
 
     var $ = layui.$, active = {
@@ -120,8 +125,26 @@
        $("#select2-sltDeviceList-container").text($("#sltDeviceList").find("option[value = '']").text());
        $("#sltDeviceList").val('');
       },
+      excel: function () {
+        	var goodsSkuId = $('#sltGoodsList').val();
+        	var timeRange = $('#iptTimeRange').val();
+        	var deviceId = $('#sltDeviceList').val();
+              if(timeRange==null||timeRange==''){
+                  layer.msg('请选择一个出库日期范围', {icon:5,time:1000});
+                  return false;
+              }
+          	window.location.href="storageOutExcel?goodsSkuId="+goodsSkuId+"&timeRange="+timeRange+"&deviceId="+deviceId;
+            },
       add: function () {
-        add('商品出库', 'showAddGoodsStorageOut', 700, 400);
+      	var deviceId=$("#iptPhdDeviceId").val();
+    	var applyDate=$("#iptPhdApplyDate").val();
+    	var remark=$("#iptPhdRemark").val();
+    	if((deviceId!=''&&deviceId!=null)&&applyDate!=null){
+    		add('商品返仓', 'showAddGoodsStorageOut?deviceId='+deviceId+'&applyDate='+applyDate+'&remark='+remark, 700,560);	
+    	}
+    	else{
+    		add('商品出库', 'showAddGoodsStorageOut',700,560);
+    	}
       }
     };
     

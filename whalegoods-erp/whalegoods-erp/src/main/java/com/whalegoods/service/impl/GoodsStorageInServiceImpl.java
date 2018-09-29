@@ -2,6 +2,7 @@ package com.whalegoods.service.impl;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,8 @@ public class GoodsStorageInServiceImpl extends BaseServiceImpl<GoodsStorageIn,St
 	  }
 
 	@Override
-	public List<GoodsStorageIn> getStorageInListByGoodsSkuId(String goodsSkuId) {
-		 return goodsStorageInMapper.getStorageInListByGoodsSkuId(goodsSkuId);
+	public List<GoodsStorageIn> getStorageInListByGoodsSkuId(Map<String,Object> mapCdt) {
+		 return goodsStorageInMapper.getStorageInListByGoodsSkuId(mapCdt);
 	}
 
 	@Override

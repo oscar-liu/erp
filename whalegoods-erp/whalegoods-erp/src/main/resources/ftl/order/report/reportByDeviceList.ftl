@@ -18,6 +18,7 @@
 <body>
 <div class="erp-search">
   <div class="select">
+   <@shiro.hasPermission name="order:deviceSelect:show">
                设备：
    <div class="layui-inline">
        <div class="layui-input-inline">
@@ -28,7 +29,7 @@
     </#list>
     </select>
    </div>
-   </div>
+   </div></@shiro.hasPermission>
            日期范围：  <div class="layui-inline">
               <div class="layui-input-inline"><input type="text" class="layui-input" id="iptDayRange" placeholder="开始 到 结束" style="width:177px;"></div>
   </div>&nbsp;&nbsp;

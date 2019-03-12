@@ -50,6 +50,37 @@
     WHERE a.id=#{id}
   </select>
   
+  <!-- 查找某个设备某个商品最新的出库数据的主键ID -->
+   <select id="selectTopOneOutIdByMapCdt" parameterType="java.util.Map" resultType="java.lang.String">
+    SELECT a.id FROM goods_storage_out a 
+   <where>
+     <if test="goodsSkuId !=null and goodsSkuId !=''">
+     AND a.goods_sku_id=#{goodsSkuId}
+     </if>
+     <if test="deviceId !=null and deviceId !=''">
+     AND a.device_id=#{deviceId}
+     </if>
+    </where>
+  ORDER BY a.apply_date DESC LIMIT 1 
+  </select>
+  
+    <!-- 查找某个设备某个商品最新的出库数据的主键ID（根据供应商和鲸品两个设备ID查询） -->
+   <select id="selectTopOneOutIdByMapCdtSpecial" parameterType="com.whalegoods.entity.DeviceRoad" resultType="java.lang.String">
+    SELECT a.id FROM goods_storage_out a INNER JOIN device b ON a.device_id=b.id
+   <where>
+     <if test="goodsSkuId !=null and goodsSkuId !=''">
+     AND a.goods_sku_id=#{goodsSkuId}
+     </if>
+     <if test="deviceIdJp !=null and deviceIdJp !=''">
+     AND b.device_id_jp=#{deviceIdJp}
+     </if>
+     <if test="deviceIdSupp !=null and deviceIdSupp !=''">
+     AND b.device_id_supp=#{deviceIdSupp}
+     </if>
+    </where>
+  ORDER BY a.apply_date DESC LIMIT 1 
+  </select>
+  
     <select id="selectListByObjCdt" parameterType="com.whalegoods.entity.GoodsStorageOut" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" />
    FROM goods_storage_out a 

@@ -84,7 +84,7 @@ public class OrderListController {
 	   * 查询订单列表列表接口
 	   * @author henrysun
 	   * 2018年4月26日 下午3:29:23
-	 * @throws SystemException 
+	 * @throws SystemException
 	   */
 	  @GetMapping(value = "showOrderList")
 	  @ResponseBody
@@ -94,6 +94,11 @@ public class OrderListController {
 			if(orderList.getOrderType()==2){
 				orderList.setCreateBy(ShiroUtil.getCurrentUserId());
 			}
+		}
+		//这里写死，如果是东海景田银座的加盟商
+		String currentUserId=ShiroUtil.getCurrentUserId();
+		if("675f48336aef442e88f14abdff789e92".equals(currentUserId)){
+			orderList.setDeviceId("312a574a6fbd411e89a2b1b32b79f277");
 		}
 		return orderListService.selectByPage(orderList,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
@@ -127,6 +132,11 @@ public class OrderListController {
 				reportByDevice.setStartOrderDay(reportByDevice.getDayRange().split(ConstSysParamName.KGANG)[0]);
 				reportByDevice.setEndOrderDay(reportByDevice.getDayRange().split(ConstSysParamName.KGANG)[1]);
 		}
+		//这里写死，如果是东海景田银座的加盟商
+		String currentUserId=ShiroUtil.getCurrentUserId();
+		if("675f48336aef442e88f14abdff789e92".equals(currentUserId)){
+			reportByDevice.setDeviceId("312a574a6fbd411e89a2b1b32b79f277");
+		}
 		return reportByDeviceService.selectByPage(reportByDevice,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
 	  
@@ -154,11 +164,16 @@ public class OrderListController {
 	   */
 	  @GetMapping(value = "showReportBaseDetailList")
 	  @ResponseBody
-	  @RequiresPermissions("order:reportDetail:show") 
+	  @RequiresPermissions("order:reportDetail:show")
 	  public ReType showReportBaseDetailList(Model model, ReportBase reportBase, String page, String limit) throws SystemException {
 		if(!StringUtil.isEmpty(reportBase.getDayRange())){
 			reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 			reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
+		}
+		//这里写死，如果是东海景田银座的加盟商
+		String currentUserId=ShiroUtil.getCurrentUserId();
+		if("675f48336aef442e88f14abdff789e92".equals(currentUserId)){
+			reportBase.setDeviceId("312a574a6fbd411e89a2b1b32b79f277");
 		}
 		return reportBaseService.selectByPage(reportBase,Integer.valueOf(page),Integer.valueOf(limit));
 	  }
@@ -174,6 +189,11 @@ public class OrderListController {
 				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
 			}
+		//这里写死，如果是东海景田银座的加盟商
+		String currentUserId=ShiroUtil.getCurrentUserId();
+		if("675f48336aef442e88f14abdff789e92".equals(currentUserId)){
+			reportBase.setDeviceId("312a574a6fbd411e89a2b1b32b79f277");
+		}
 		  FileUtil.exportExcel(reportBaseService.selectListByObjCdt(reportBase),"明细列表","明细列表",ReportBase.class,"明细列表.xls",response);
 		}
 	  
@@ -188,6 +208,11 @@ public class OrderListController {
 				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
 			}
+		//这里写死，如果是东海景田银座的加盟商
+		String currentUserId=ShiroUtil.getCurrentUserId();
+		if("675f48336aef442e88f14abdff789e92".equals(currentUserId)){
+			reportBase.setDeviceId("312a574a6fbd411e89a2b1b32b79f277");
+		}
 		  FileUtil.exportExcel(reportBaseService.selectReportListByObjCdt(reportBase),"统计明细列表","统计明细列表",ReportBaseExcel.class,"统计明细列表.xls",response);
 		}
 	  
@@ -203,6 +228,11 @@ public class OrderListController {
 				reportBase.setStartOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[0]);
 				reportBase.setEndOrderDay(reportBase.getDayRange().split(ConstSysParamName.KGANG)[1]);
 		  }
+			//这里写死，如果是东海景田银座的加盟商
+			String currentUserId=ShiroUtil.getCurrentUserId();
+			if("675f48336aef442e88f14abdff789e92".equals(currentUserId)){
+				reportBase.setDeviceId("312a574a6fbd411e89a2b1b32b79f277");
+			}
 		  return reportBaseService.selectTotalSalesCountAndAmount(reportBase);
 	  }
 	  

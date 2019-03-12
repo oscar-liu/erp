@@ -69,12 +69,14 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 	private String goodsStorageInName;
 	
 	private String goodsStorageOutId;
+	
+	private Double mSalePrice;
 
 	public DeviceRoad(){}
 	
 	public DeviceRoad(String deviceId, String deviceIdJp, String deviceIdSupp, String shortName, String goodsSkuId,
 			String goodsCode, String goodsName, Byte ctn, String stockOrderId, Byte pathCode, Byte floor,
-			Double salePrice, Byte capacity, Integer stock, Byte warningNum, Byte lackLevel, Byte lockStatus,String goodsStorageOutName,String goodsStorageInName,String goodsStorageOutId, Byte adsMiddleType) {
+			Double salePrice, Byte capacity, Integer stock, Byte warningNum, Byte lackLevel, Byte lockStatus,String goodsStorageOutName,String goodsStorageInName,String goodsStorageOutId, Byte adsMiddleType,Double mSalePrice) {
 		super();
 		this.deviceId = deviceId;
 		this.deviceIdJp = deviceIdJp;
@@ -97,6 +99,7 @@ public class DeviceRoad extends BaseEntity implements Serializable {
 		this.goodsStorageInName = goodsStorageInName;
 		this.goodsStorageOutId = goodsStorageOutId;
 		this.adsMiddleType = adsMiddleType;
+		this.mSalePrice = mSalePrice;
 	}	
 
 }

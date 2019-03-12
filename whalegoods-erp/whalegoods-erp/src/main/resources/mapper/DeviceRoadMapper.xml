@@ -332,6 +332,7 @@
       <if test="salePrice != null ">a.sale_price=#{salePrice},</if>
       <if test="capacity != null ">a.capacity=#{capacity},</if>
       <if test="warningNum != null ">a.warning_num=#{warningNum},</if>
+      <if test="goodsStorageOutId != null ">a.goods_storage_out_id=#{goodsStorageOutId},</if>
       a.update_date=now(),
       </set>
     		<where>

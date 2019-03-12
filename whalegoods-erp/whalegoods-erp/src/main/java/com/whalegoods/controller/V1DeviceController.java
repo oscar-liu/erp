@@ -38,6 +38,7 @@ import com.whalegoods.service.DeviceExlogService;
 import com.whalegoods.service.DeviceRoadService;
 import com.whalegoods.service.DeviceService;
 import com.whalegoods.service.GoodsSkuService;
+import com.whalegoods.service.GoodsStorageOutService;
 import com.whalegoods.service.OrderListService;
 import com.whalegoods.util.CommonValidateUtil;
 import com.whalegoods.util.DateUtil;
@@ -75,6 +76,9 @@ public class V1DeviceController {
 	  
 	  @Autowired
 	  FileUtil fileUtil;
+	  
+	  @Autowired
+	  GoodsStorageOutService goodsStorageOutService; 
 	  
 	  /**
 	   * 设备状态上报接口（1服务中 2停用）
@@ -214,6 +218,11 @@ public class V1DeviceController {
 		  objCdt2.setGoodsSkuId(lstGoodsSku.get(0).getId());
 		  objCdt2.setDeviceIdJp(model.getDevice_code_wg());
 		  objCdt2.setDeviceIdSupp(model.getDevice_code_sup());
+		  //重新绑定该商品最新的出库信息
+		  String outId=goodsStorageOutService.selectTopOneOutIdByMapCdtSpecial(objCdt2);
+		  if(!StringUtil.isEmpty(outId)){
+			  objCdt2.setGoodsStorageOutId(outId);
+		  }
 		  Map<String,Object> mapCdt=new HashMap<>();
 		  mapCdt.put("goodsCode",model.getGoodsCode());
 		  objCdt2.setSalePrice(deviceRoadService.selectMaxPriceByGoodsCode(mapCdt));

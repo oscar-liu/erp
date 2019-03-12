@@ -18,6 +18,7 @@
 <body>
 <div class="erp-search">
   <div class="select">
+    <@shiro.hasPermission name="order:deviceSelect:show">
                设备：
    <div class="layui-inline">
        <div class="layui-input-inline">
@@ -28,7 +29,7 @@
     </#list>
     </select>
    </div>
-   </div>
+   </div></@shiro.hasPermission>
    商品：
         <div class="layui-inline">
       <div class="layui-input-inline">

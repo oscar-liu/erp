@@ -30,7 +30,7 @@
          
     <div class="layui-form-item">
      <div class="layui-inline">
-     <!--货道柜号-->
+     <!--货道表主键ID-->
      <input value="${road.id}" type="hidden" name="id" >
      <!-- 设备编号 -->
      <input value="${road.deviceId}" type="hidden" name="deviceId" >

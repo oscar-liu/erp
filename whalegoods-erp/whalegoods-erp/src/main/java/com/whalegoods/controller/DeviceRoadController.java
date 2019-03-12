@@ -316,6 +316,14 @@ public class DeviceRoadController  {
 		  mapCdt3.put("deviceId",deviceRoad.getDeviceId());
 		  mapCdt3.put("goodsSkuId",goodsSku.getId());
 		  deviceRoadService.updateSalePrice(mapCdt3);
+		  //重新绑定该商品最新的出库信息
+		  String outId=goodsStorageOutService.selectTopOneOutIdByMapCdt(mapCdt3);
+		  if(!StringUtil.isEmpty(outId)){
+			  DeviceRoad objCdt2=new DeviceRoad();
+			  objCdt2.setId(deviceRoad.getId());
+			  objCdt2.setGoodsStorageOutId(outId);
+			  deviceRoadService.updateByObjCdtForErp(objCdt2);
+		  }
 		  return resBody;
 	  }
 	  
@@ -368,6 +376,14 @@ public class DeviceRoadController  {
 		  mapCdt2.put("deviceId",deviceRoad.getDeviceId());
 		  mapCdt2.put("goodsSkuId",goodsSku.getId());
 		  deviceRoadService.updateSalePrice(mapCdt2);
+		  //重新绑定该商品最新的出库信息
+		  String outId=goodsStorageOutService.selectTopOneOutIdByMapCdt(mapCdt2);
+		  if(!StringUtil.isEmpty(outId)){
+			  DeviceRoad objCdt2=new DeviceRoad();
+			  objCdt2.setId(deviceRoad.getId());
+			  objCdt2.setGoodsStorageOutId(outId);
+			  deviceRoadService.updateByObjCdtForErp(objCdt2);
+		  }
 		  return resBody;
 	  }
 	  
